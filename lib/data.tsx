@@ -105,7 +105,7 @@ export const experiencesData: Experience[] = [
     id: "exp-3",
     title: "Full Stack Intern",
     company: "SERVIMOS TECHNOLOGIES PVT LTD",
-    location: "Chennai, Tamil Nadu, India (On-site)",
+    location: "Chennai, Tamil Nadu, India   (On-site)",
     description: `
       • Developed a scalable MERN stack Library Management System.
       • Enhanced software quality through collaboration and teamwork.

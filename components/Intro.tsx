@@ -76,7 +76,7 @@ export default function Intro() {
               width="195"
               height="192"
               quality="95"
-              priority={true}
+              // priority={true}~
               className="h-36 w-36 rounded-full object-contain shadow-xl pointer-events-none p-1"
             />
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none"></div>
@@ -91,7 +91,7 @@ export default function Intro() {
         transition={{ duration: 0.5, delay: 0.5 }}
       >
         Hey there!{" "}
-        <span className="hover:underline"> I&apos;m <span className="font-semibold cursor-pointer">Selvin PaulRaj K</span></span> , a versatile full-stack developer from India, thriving in the remote work environment as an SDE. My passion lies in transforming raw concepts into captivating digital experiences that leave a lasting impact. Let&apos;s turn your ideas into digital brilliance! 
+        <span className="hover:underline"> I&apos;m <span className="font-semibold cursor-pointer">Selvin PaulRaj K</span></span> , a versatile Full-Stack Developer from India, thriving in the Remote work Environment as an SDE. My Passion lies in transforming raw concepts into captivating digital experiences that leave a lasting impact. Let&apos;s turn your Ideas into Digital Brilliance! 
       </motion.h1>
 
       <motion.div className="flex flex-col sm:flex-row items-center justify-center gap-4 px-4 text-lg font-medium">

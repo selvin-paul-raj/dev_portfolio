@@ -11,6 +11,8 @@ import toast from "react-hot-toast";
 import { FaPhone, FaCopy, FaWhatsapp, FaCat } from "react-icons/fa";
 import { PiButterflyLight } from "react-icons/pi";
 
+
+
 const Contact = () => {
   const { ref } = useSectionInView("Contact", 0);
 
@@ -49,7 +51,7 @@ const Contact = () => {
       <SectionHeading>Contact</SectionHeading>
       <p className="my-2">Let&apos;s talk about working together!</p>
 
-      <div className="flex justify-center items-center gap-3 flex-col sm:flex-row w-full sm:w-auto mx-auto mt-5 cursor-pointer">
+      <motion.div className="flex justify-center items-center gap-3 flex-col sm:flex-row w-full sm:w-auto mx-auto mt-5 cursor-pointer" >
         <a
           href="tel:+917893932609"
           className="group bg-gray-900  text-white/80 w-[80vw] sm:w-52 py-3 flex items-center justify-center gap-2 rounded-md outline-none focus:scale-110 active:scale-105 transition duration-300 hover:text-white text-sm xl:text-base uppercase text-center font-semibold dark:bg-[#FFD700] dark:text-black"
@@ -70,7 +72,7 @@ const Contact = () => {
         >
           <FaWhatsapp /> DM Me
         </a>
-      </div>
+      </motion.div>
       <div className="flex items-center justify-center mt-6 hover:scale-110 transition-all duration-500">
         <PiButterflyLight  size={27} className="" />
       </div>
