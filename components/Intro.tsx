@@ -59,12 +59,12 @@ export default function Intro() {
           {currentTime}
         </motion.h2>
 
-        <motion.div className="relative" drag>
+        <motion.div  >
           <motion.div
             initial={{ opacity: 0, scale: 0.5, y: 100 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{
-              // type: "spring",
+              type: "tween",
               duration: 0.6,
               delay: 0.4,
             }}
@@ -72,14 +72,13 @@ export default function Intro() {
           >
             <Image
               src={HeroImg}
-              alt="Hero image"
+              alt="Selvin PaulRaj K"
               width="195"
               height="192"
               quality="95"
-              // priority={true}~
+              priority={true}
               className="h-36 w-36 rounded-full object-contain shadow-xl pointer-events-none p-1"
             />
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none"></div>
           </motion.div>
         </motion.div>
       </motion.div>
@@ -177,7 +176,7 @@ export default function Intro() {
         href="https://www.geeksforgeeks.org/user/selvinpaulrajk/"
         aria-label="geeksforgeeks"
         target="_blank"
-        className="bg-transparent w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300"
+        className="bg-transparent  w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300"
       >
         <SiGeeksforgeeks  size={22} />
       </a>

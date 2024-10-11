@@ -7,10 +7,14 @@ import chat from "@/public/chat.png";
 
 import { GoHome } from "react-icons/go";
 import { RxPerson } from "react-icons/rx";
+
+import { CgWorkAlt } from "react-icons/cg";
 import { MdOutlineWorkOutline, MdOutlineEmail } from "react-icons/md";
 import { SiPolywork } from "react-icons/si";
 import { FaCode, FaLinkedin, FaLaptopCode, FaNetworkWired } from "react-icons/fa";
 import { StaticImageData } from "next/image";
+
+import { LuGraduationCap } from "react-icons/lu";
 
 interface Link {
   name: string;
@@ -75,7 +79,16 @@ export const projectsData: Project[] = [
 // Define the array of experiences with type annotations
 export const experiencesData: Experience[] = [
   {
-    id: "exp-1",
+    id:"exp-1",
+    title:"B.Tech Information Technology",
+    company:"DMI College of Engineering",
+    location:"Chennai , Tamil Nadu , India",
+    description:"CGPA : 8.4",
+    date:"May 2021 - Prasent",
+    icon:React.createElement(LuGraduationCap),
+  },
+  {
+    id: "exp-2",
     title: "Python Development Intern",
     company: "OCTANET SERVICES PVT LTD",
     location: "Bhubaneswar, Odisha, India (Remote)",
@@ -85,10 +98,10 @@ export const experiencesData: Experience[] = [
       • Developed frontend with HTML5, JavaScript, and Firebase.
     `,
     date: "May 2024 - Jul 2024",
-    icon: <FaLaptopCode />,
+    icon: React.createElement(FaLaptopCode),
   },
   {
-    id: "exp-2",
+    id: "exp-3",
     title: "Web Development Intern",
     company: "VERITECH SOFTWARE IT SERVICES",
     location: "Chennai, Tamil Nadu, India (Remote)",
@@ -99,10 +112,10 @@ export const experiencesData: Experience[] = [
       • Built a MERN stack Expense Tracker with dynamic charts.
     `,
     date: "Mar 2024 - May 2024",
-    icon: <FaNetworkWired />,
+    icon:React.createElement(CgWorkAlt),
   },
   {
-    id: "exp-3",
+    id: "exp-4",
     title: "Full Stack Intern",
     company: "SERVIMOS TECHNOLOGIES PVT LTD",
     location: "Chennai, Tamil Nadu, India   (On-site)",
@@ -111,7 +124,7 @@ export const experiencesData: Experience[] = [
       • Enhanced software quality through collaboration and teamwork.
     `,
     date: "Jul 2023 - Aug 2023",
-    icon: <FaCode />,
+    icon: React.createElement(CgWorkAlt),
   },
 ];
 

@@ -9,7 +9,8 @@ const SocialLinks = (props: Props) => {
       <a
         href="https://www.linkedin.com/in/selvinpaulraj"
         target="_blank"
-        className="bg-transparent w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300 "
+        title="LinkedIn"
+        className="bg-transparent  w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300 "
       >
         <SiLinkedin  size={22} />
       </a>
@@ -17,6 +18,7 @@ const SocialLinks = (props: Props) => {
       <a
         href="https://github.com/selvin-paul-raj"
         target="_blank"
+        title="Github"
         className="bg-transparent w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300"
       >
         <SiGithub size={22} />
@@ -24,6 +26,7 @@ const SocialLinks = (props: Props) => {
       <a
         href="https://www.hackerrank.com/profile/selvinpaulraj"
         target="_blank"
+        title="hackerrank"
         className="bg-transparent w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300"
       >
         <FaHackerrank size={22} />
@@ -31,6 +34,7 @@ const SocialLinks = (props: Props) => {
       <a
         href="https://leetcode.com/u/selvinpaulraj/"
         target="_blank"
+        title="Leetcode"
         className="bg-transparent w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300"
       >
         <SiLeetcode size={22} />
@@ -39,6 +43,7 @@ const SocialLinks = (props: Props) => {
         href="https://www.geeksforgeeks.org/user/selvinpaulrajk/"
         aria-label="geeksforgeeks"
         target="_blank"
+        title="GeeksforGeeks"
         className="bg-transparent w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300"
       >
         <SiGeeksforgeeks  size={22} />
@@ -46,6 +51,7 @@ const SocialLinks = (props: Props) => {
       <a
         href="https://www.codechef.com/users/selvinpaulraj"
         target="_blank"
+        title="Codechef"
         className="bg-transparent w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300"
       >
         <SiCodechef   size={22} />

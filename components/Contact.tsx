@@ -17,7 +17,7 @@ const Contact = () => {
   const { ref } = useSectionInView("Contact", 0);
 
   const handleBookCall = () => {
-    window.location.href = "tel:+91917299049";
+    window.location.href = "tel:9176299049";
   };
 
   const handleCopyEmail = () => {
@@ -27,13 +27,13 @@ const Contact = () => {
   };
 
   const handleWhatsappDM = () => {
-    window.location.href = "https://wa.me/+91917299049";
+    window.location.href = "https://wa.me/9176299049";
   };
   return (
     <motion.section
       id="contact"
       ref={ref}
-      className="mb-20 sm:mb-28 w-[min(100%,35rem)] text-center sm:text-left scroll-mt-28"
+      className="mb-20 sm:mb-28 w-[min(100%,35rem)] text-center sm:text-left scroll-mt-28 mt-28"
       initial={{
         opacity: 0,
       }}
@@ -53,7 +53,7 @@ const Contact = () => {
 
       <motion.div className="flex justify-center items-center gap-3 flex-col sm:flex-row w-full sm:w-auto mx-auto mt-5 cursor-pointer" >
         <a
-          href="tel:+917893932609"
+          href="tel:9176299049"
           className="group bg-gray-900  text-white/80 w-[80vw] sm:w-52 py-3 flex items-center justify-center gap-2 rounded-md outline-none focus:scale-110 active:scale-105 transition duration-300 hover:text-white text-sm xl:text-base uppercase text-center font-semibold dark:bg-[#FFD700] dark:text-black"
           onClick={handleBookCall}
         >
@@ -67,7 +67,7 @@ const Contact = () => {
         </a>
         <a
           className="group bg-gray-900  text-white/80 w-[80vw] sm:w-52 py-3 flex items-center justify-center gap-2 rounded-md outline-none focus:scale-110 active:scale-105 transition duration-300 hover:text-white text-sm xl:text-base uppercase text-center font-semibold dark:bg-[#FFD700] dark:text-black"
-          href="https://wa.me/+91917299049"
+          href="https://wa.me/+919176299049"
           onClick={handleWhatsappDM}
         >
           <FaWhatsapp /> DM Me
