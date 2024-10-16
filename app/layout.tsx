@@ -9,10 +9,15 @@ import ThemeSwitch from "@/components/ThemeSwitch";
 import ThemeContextProvider from "@/context/theme-context";
 
 const inter = Inter({ subsets: ["latin"] });
+//<meta name="google-site-verification" content="y8_t3SKugG2qZzqDFrgclLRNRh5m62dhX-OTUWKlthc" />
 
 export const metadata: Metadata = {
   title: "SPR | Portfolio",
   description: "Selvin PaulRaj K is a full-stack MERN web developer based india.",
+  verification:{
+    google: "y8_t3SKugG2qZzqDFrgclLRNRh5m62dhX-OTUWKlthc",
+  },
+  
 };
 
 export default function RootLayout({

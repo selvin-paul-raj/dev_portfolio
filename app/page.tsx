@@ -7,6 +7,7 @@ import SectionDivider from "@/components/SectionDivider";
 import Experience from "@/components/Experience";
 import Contact from "@/components/Contact";
 import SocialLinks from "@/components/SocialLinks";
+import { Analytics } from "@vercel/analytics/react"
 
 const DynamicProjects = dynamic(() => import("@/components/Projects"));
 const DynamicSkills = dynamic(() => import("@/components/Skills"));
@@ -44,6 +45,7 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center px-4">
+      <Analytics/>
       <Intro />
       <SocialLinks />
       <SectionDivider />
