@@ -16,7 +16,6 @@ export const metadata: Metadata = {
   description: "Selvin PaulRaj K is a full-stack MERN web developer based india.",
   verification:{
     google: "y8_t3SKugG2qZzqDFrgclLRNRh5m62dhX-OTUWKlthc",
-    google: "jY7UTLQP-lMq55A8R0tqn7tYC3qdpVIU9CUUN1nfAl8,
   },
   
 };
