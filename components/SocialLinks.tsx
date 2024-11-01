@@ -5,7 +5,7 @@ type Props = {};
 
 const SocialLinks = (props: Props) => {
   return (
-    <div className="fixed top-1/2 right-5 transform -translate-y-1/2 hidden md:flex flex-col items-center gap-6 ">
+    <div className="fixed top-1/2 right-5 transform -translate-y-1/2 hidden md:flex flex-col items-center gap-6  md:scale-150">
       <a
         href="https://www.linkedin.com/in/selvinpaulraj"
         target="_blank"

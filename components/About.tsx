@@ -26,16 +26,16 @@ export default function About() {
   return (
     <motion.section
       ref={ref}
-      className="mb-28 max-w-[45rem] text-center leading-8 sm:mb-40 scroll-mt-28"
-      initial={{ opacity: 0, y: 100 }}
+      className="mb-28 max-w-[66rem] text-center leading-8 sm:mb-40 scroll-mt-28  "
+      initial={{ opacity: 0, y: 100 }} 
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.175 }}
       id="about"
     >
-      <SectionHeading>About</SectionHeading>
+      <SectionHeading >About</SectionHeading>
 
-      <div className="text-center sm:text-start text-base lg:text-lg font-medium px-2">
-        <motion.p className="mb-4" 
+      <div className="text-center sm:text-start text-base lg:text-lg font-medium px-2 md:space-y-10">
+        <motion.p className="mb-4 md:text-3xl " 
          variants={fadeInAnimationVariants}
             initial="initial"
             whileInView="animate"
@@ -49,7 +49,7 @@ export default function About() {
           fabric of my freelance career. Building and fixing things, especially
           in the dynamic world of the web, bring me genuine joy.
         </motion.p>
-        <motion.p className="mb-4"  variants={fadeInAnimationVariants}
+        <motion.p className="mb-4 md:text-3xl"  variants={fadeInAnimationVariants}
             initial="initial"
             whileInView="animate"
             viewport={{
@@ -64,7 +64,7 @@ export default function About() {
         impact.
       </motion.p>
 
-        <motion.p className="mb-4"  variants={fadeInAnimationVariants}
+        <motion.p className="mb-4 md:text-3xl"  variants={fadeInAnimationVariants}
             initial="initial"
             whileInView="animate"
             viewport={{

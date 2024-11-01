@@ -10,8 +10,9 @@ import { useActiveSectionContext } from "@/context/active-section-context";
 const Header = () => {
   const { activeSection, setActiveSection, setTimeOfLastClick } =
     useActiveSectionContext();
+    
   return (
-    <header className="z-[999] md:border-r border-black/20 fixed bottom-0 border-t-2 left-0 right-0 w-full h-16 sm:bottom-0 md:bottom-0 md:w-16 md:h-screen dark:border-white/20">
+    <header className="z-[999] md:border-r border-black/20 fixed bottom-0 border-t-2 left-0 right-0 w-full h-16 sm:bottom-0 md:bottom-0 md:w-16 md:h-screen dark:border-white/20 md:scale-150">
       <nav className="bg-white/50 md:bg-transparent bg-opacity-80 shadow-lg shadow-black/[0.03] backdrop-blur-[0.5rem] text-gray-800 h-full w-full px-4 py-2 flex items-center justify-center dark:bg-black/50">
         <ul className="w-full flex justify-between md:justify-center flex-row md:flex-col gap-6 md:gap-4  font-bold text-gray-500 h-full transition-all ease-in duration-300">
           {links.map((link) => (

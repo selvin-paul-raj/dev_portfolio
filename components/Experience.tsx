@@ -37,7 +37,7 @@ export default function Experience() {
 
    <section
    id="experience"
-   className="mx-auto text-center scroll-mt-[10rem]">
+   className="mx-auto text-center scroll-mt-[10rem] md:scale-105">
     <SectionHeading >My Experience</SectionHeading>
     <VerticalTimeline lineColor={theme === "light" ? "#000" : "#fff"} className="h-full" >
         {

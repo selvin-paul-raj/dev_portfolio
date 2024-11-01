@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+
 import "./globals.css";
 import Header from "@/components/Header";
 import ActiveSectionContextProvider from "@/context/active-section-context";
@@ -7,12 +7,18 @@ import { Toaster } from "react-hot-toast";
 import Footer from "@/components/Footer";
 import ThemeSwitch from "@/components/ThemeSwitch";
 import ThemeContextProvider from "@/context/theme-context";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
-const inter = Inter({ subsets: ["latin"] });
-//<meta name="google-site-verification" content="y8_t3SKugG2qZzqDFrgclLRNRh5m62dhX-OTUWKlthc" />
+
+
 
 export const metadata: Metadata = {
-  title: "SPR | Portfolio",
+  icons:{
+    icon: "/profile.png",
+    shortcut: "/profile.png",
+    
+  },
+  title: "Selvin PaulRaj | Portfolio",
   description: "Selvin PaulRaj K is a full-stack MERN web developer based india.",
   verification:{
     google: "y8_t3SKugG2qZzqDFrgclLRNRh5m62dhX-OTUWKlthc",
@@ -28,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} bg-[#FAFAF9] text-gray-950 relative pt-20 dark:bg-[#000] dark:text-white dark:text-opacity-80`}
+        className={` bg-[#FAFAF9] text-gray-950 relative pt-20 dark:bg-[#000] dark:text-white dark:text-opacity-80 `}
       >
         <script
         dangerouslySetInnerHTML={{
@@ -46,6 +52,7 @@ export default function RootLayout({
           <ActiveSectionContextProvider>
             <Header />
             {children}
+            <SpeedInsights />
             <Toaster position="top-right" />
             <Footer />
             <ThemeSwitch />
