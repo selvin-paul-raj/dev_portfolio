@@ -75,10 +75,10 @@ interface Project {
 export const projectsData: Project[] = [
   {
     title: "AI Calculator",
-    description: "Developed a full-stack AI calculator with FastAPI and Vite-React, enabling natural language math input via Google AI for responsive calculations.",
-    tags: ["React Js", "TypeScript", "Tailwind css", "fastapi", "Gemini ai", "lazy-brush"],
+    description: "Developed a full-stack AI calculator with Nextjs 15 and TypeScript with Clerk, enabling drawing with AI for instant responsive calculations via Google AI's Gemini model",
+    tags: ["Nextjs 15", "TypeScript", "Tailwind css", "clerk", "Gemini ai", "lazy-brush"],
     imageUrl: aicalculator,
-    code: "https://github.com/selvin-paul-raj/AI-Calculator",
+    code: "https://github.com/selvin-paul-raj/SPR-AI-Calculator",
     live: "https://spr-ai-calculator.vercel.app",
   },
   {
