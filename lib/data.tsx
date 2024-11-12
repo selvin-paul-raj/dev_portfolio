@@ -76,7 +76,7 @@ export const projectsData: Project[] = [
   {
     title: "AI Calculator",
     description: "Developed a full-stack AI calculator with Nextjs 15 and TypeScript with Clerk, enabling drawing with AI for instant responsive calculations via Google AI's Gemini model",
-    tags: ["Nextjs 15", "TypeScript", "Tailwind css", "clerk", "Gemini ai", "lazy-brush"],
+    tags: ["Nextjs 15", "TypeScript", "Tailwind css", "clerk", "Gemini ai"],
     imageUrl: aicalculator,
     code: "https://github.com/selvin-paul-raj/SPR-AI-Calculator",
     live: "https://spr-ai-calculator.vercel.app",
