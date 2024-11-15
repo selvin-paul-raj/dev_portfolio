@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 
 import "./globals.css";
 import Header from "@/components/Header";
@@ -45,6 +46,19 @@ export default function RootLayout({
           })(window, document, "clarity", "script", "oo7sqjfgyt");`
         }}
       />
+        <Script
+        src="https://www.googletagmanager.com/gtag/js?id=G-3P168T3CC1"
+        strategy="afterInteractive"
+      />
+      {/* Configure Google Analytics */}
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3P168T3CC1');
+        `}
+      </Script>
         <div className="bg-[#805c8b] absolute top-[-6rem] -z-10 right-[11rem] h-[31.25rem] w-[31.25rem] rounded-full blur-[10rem] sm:w-[68.75rem] dark:bg-[#000]"></div>
         <div className="bg-[#CDECFF] absolute top-[-1rem] -z-10 left-[-35rem] h-[31.25rem] w-[50rem] rounded-full blur-[10rem] sm:w-[68.75rem] md:left-[-33rem] lg:left-[-28rem] xl:left-[-15rem] 2xl:left-[-5rem] dark:bg-[#000]"></div>
 
