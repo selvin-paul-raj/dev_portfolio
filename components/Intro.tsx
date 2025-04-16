@@ -152,7 +152,7 @@ export default function Intro() {
           </a>
 
           <a
-            href="https://github.com/iamjabeed"
+            href="https://github.com/selvin-paul-raj"
             target="_blank"
             className="bg-transparent w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300"
           >
