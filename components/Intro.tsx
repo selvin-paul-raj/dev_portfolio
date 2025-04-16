@@ -8,7 +8,7 @@ import { FaLinkedin,  FaGithub } from "react-icons/fa";
 import { PiButterflyLight } from "react-icons/pi";
 import { HiDownload } from "react-icons/hi";
 import {FaHackerrank } from "react-icons/fa";
-import HeroImg from "../public/profile.jpg";
+import HeroImg from "../public/selvinpaulrajK_profile.png";
 
 import { useSectionInView } from "@/lib/hooks";
 import { useActiveSectionContext } from "@/context/active-section-context";
