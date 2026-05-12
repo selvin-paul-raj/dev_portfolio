@@ -19,6 +19,7 @@
 # misc
 .DS_Store
 *.pem
+Thumbs.db
 
 # debug
 npm-debug.log*
@@ -35,3 +36,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Claude Code — local agent config and memory (not for repo)
+.claude/
+
+# RuVector / local vector databases
+ruvector.db
+*.db
+
+# OS files
+.DS_Store
+desktop.ini

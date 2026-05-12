@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" 
+  xmlns:atom="http://www.w3.org/2005/Atom"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Selvin PaulRaj K - Full-Stack Developer Portfolio</title>
+    <link>https://selvinpaulraj.vercel.app</link>
+    <description>Portfolio updates, projects, and insights from Selvin PaulRaj K - Full-Stack Developer &amp; AI Engineer specializing in MERN Stack, Next.js, and enterprise automation.</description>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 10 Dec 2025 00:00:00 GMT</lastBuildDate>
+    <managingEditor>selvinpaulraj@example.com (Selvin PaulRaj K)</managingEditor>
+    <webMaster>selvinpaulraj@example.com (Selvin PaulRaj K)</webMaster>
+    <atom:link href="https://selvinpaulraj.vercel.app/feed.xml" rel="self" type="application/rss+xml"/>
+    <image>
+      <url>https://selvinpaulraj.vercel.app/selvinpaulraj_profile.png</url>
+      <title>Selvin PaulRaj K Portfolio</title>
+      <link>https://selvinpaulraj.vercel.app</link>
+      <width>144</width>
+      <height>144</height>
+    </image>
+    
+    <item>
+      <title>AI Calculator - Full-Stack AI Drawing Calculator</title>
+      <link>https://spr-ai-calculator.vercel.app</link>
+      <guid isPermaLink="true">https://github.com/selvin-paul-raj/SPR-AI-Calculator</guid>
+      <pubDate>Mon, 11 Nov 2024 00:00:00 GMT</pubDate>
+      <description>Developed a full-stack AI calculator with Next.js 15 and TypeScript with Clerk, enabling drawing with AI for instant responsive calculations via Google AI's Gemini model.</description>
+      <dc:creator>Selvin PaulRaj K</dc:creator>
+      <category>AI</category>
+      <category>Next.js</category>
+      <category>TypeScript</category>
+    </item>
+    
+    <item>
+      <title>TroothView - AI Image Trustworthiness Verification</title>
+      <link>https://trooth-view.vercel.app</link>
+      <guid isPermaLink="true">https://github.com/selvin-paul-raj/TroothView</guid>
+      <pubDate>Thu, 10 Oct 2024 00:00:00 GMT</pubDate>
+      <description>Created a React project that allows users to input photos, uses a Gradio AI model to confirm their trustworthiness, and displays the results in a doughnut chart.</description>
+      <dc:creator>Selvin PaulRaj K</dc:creator>
+      <category>AI</category>
+      <category>React</category>
+      <category>Machine Learning</category>
+    </item>
+    
+    <item>
+      <title>Speed Typing - Animation-Rich Typing Test App</title>
+      <link>https://spr-speed-typing.vercel.app</link>
+      <guid isPermaLink="true">https://github.com/selvin-paul-raj/Speed-Typing</guid>
+      <pubDate>Fri, 12 Apr 2024 00:00:00 GMT</pubDate>
+      <description>Created an animation-rich React and TypeScript application with comprehensive testing using Framer Motion, Jest, and Tailwind CSS.</description>
+      <dc:creator>Selvin PaulRaj K</dc:creator>
+      <category>React</category>
+      <category>TypeScript</category>
+      <category>Testing</category>
+    </item>
+    
+    <item>
+      <title>Phishing Detection System - Browser Extension + ML Backend</title>
+      <link>https://github.com/selvin-paul-raj/Phishing-Detection-Extension</link>
+      <guid isPermaLink="true">https://github.com/selvin-paul-raj/Phishing_Detection_ML_FastAPI</guid>
+      <pubDate>Wed, 10 Sep 2025 00:00:00 GMT</pubDate>
+      <description>Browser extension for detecting phishing websites using machine learning, with a FastAPI backend for ML model inference.</description>
+      <dc:creator>Selvin PaulRaj K</dc:creator>
+      <category>Security</category>
+      <category>Machine Learning</category>
+      <category>Python</category>
+    </item>
+    
+    <item>
+      <title>Copy-ME - Real-Time Text Sharing Application</title>
+      <link>https://github.com/selvin-paul-raj/copy-me</link>
+      <guid isPermaLink="true">https://github.com/selvin-paul-raj/copy-me</guid>
+      <pubDate>Tue, 15 Jul 2025 00:00:00 GMT</pubDate>
+      <description>Copy-ME is a minimalistic, real-time web application designed to facilitate instant text sharing across multiple devices using WebSockets.</description>
+      <dc:creator>Selvin PaulRaj K</dc:creator>
+      <category>WebSockets</category>
+      <category>Real-time</category>
+      <category>JavaScript</category>
+    </item>
+    
+  </channel>
+</rss>

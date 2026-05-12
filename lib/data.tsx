@@ -1,187 +1,100 @@
 import React from "react";
 
-import aicalculator from "@/public/aicalculator.png"
-import troothview from "@/public/troothview.png"
-import speedtyping from "@/public/speedtype.png"
-
-import { GoHome } from "react-icons/go";
-import { RxPerson } from "react-icons/rx";
-
 import { CgWorkAlt } from "react-icons/cg";
-import { MdOutlineWorkOutline, MdOutlineEmail } from "react-icons/md";
-import { SiPolywork } from "react-icons/si";
-import { FaCode, FaLinkedin, FaLaptopCode, FaNetworkWired } from "react-icons/fa";
-import { StaticImageData } from "next/image";
+import { FaLaptopCode } from "react-icons/fa";
+import {
+  LuGraduationCap,
+  LuHouse,
+  LuUser,
+  LuBrain,
+  LuLayoutGrid,
+  LuMail,
+} from "react-icons/lu";
 
-import { LuGraduationCap } from "react-icons/lu";
+import rawProjects from "./data/projects.json";
+import rawExperiences from "./data/experiences.json";
+import rawSkillsJson from "./data/skills.json";
 import calculateDuration from "@/utils/calculateDuration";
 
 interface Link {
   name: string;
   hash: string;
-  icon: JSX.Element;
+  icon: React.ReactElement;
 }
 
-
-
-interface Experience {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  description: string;
-  date: string;
-  icon: JSX.Element;
-}
-
-// Define the array of links with type annotations
 export const links: Link[] = [
   {
     name: "Home",
     hash: "#home",
-    icon: <GoHome />,
+    icon: <LuHouse />,
   },
   {
     name: "About",
     hash: "#about",
-    icon: <RxPerson />,
-  },
-  {
-    name: "Projects",
-    hash: "#projects",
-    icon: <SiPolywork />,
+    icon: <LuUser />,
   },
   {
     name: "Skills",
     hash: "#skills",
-    icon: <MdOutlineWorkOutline />,
+    icon: <LuBrain />,
+  },
+  {
+    name: "Projects",
+    hash: "#projects",
+    icon: <LuLayoutGrid />,
   },
   {
     name: "Contact",
     hash: "#contact",
-    icon: <MdOutlineEmail />,
+    icon: <LuMail />,
   },
 ];
 
-interface Project {
-  title: string;
-  description: string;
-  tags: string[];
-  imageUrl: StaticImageData;
-  live: string;
-  code: string;
+const iconMap: Record<string, React.ReactElement> = {
+  graduation: React.createElement(LuGraduationCap),
+  work: React.createElement(CgWorkAlt),
+  laptop: React.createElement(FaLaptopCode),
+};
+
+export const experiencesData = [...rawExperiences]
+  .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+  .map((exp) => ({
+    id: exp.id,
+    title: exp.title,
+    company: exp.company,
+    location: exp.location,
+    description: exp.description,
+    date: `${exp.dateStart} - ${exp.dateEnd} (${calculateDuration(exp.dateStart, exp.dateEnd)})`,
+    icon: iconMap[exp.icon] ?? React.createElement(CgWorkAlt),
+    iconType: exp.icon as "graduation" | "work" | "laptop",
+    isCurrent: exp.dateEnd === "Present",
+  }));
+
+export const projectsData = [...rawProjects]
+  .filter((p) => p.show)
+  .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+export const skillsData: Record<string, string[]> =
+  rawSkillsJson.skills as Record<string, string[]>;
+
+export const skillsFlat: readonly string[] = Object.values(skillsData).flat();
+
+function _parseTotalMonths(durStr: string): number {
+  const yrMatch = durStr.match(/(\d+)\s*yr/);
+  const moMatch = durStr.match(/(\d+)\s*month/);
+  return (yrMatch ? parseInt(yrMatch[1]) * 12 : 0) + (moMatch ? parseInt(moMatch[1]) : 0);
 }
-// Define the array of projects with type annotations
-export const projectsData: Project[] = [
-  {
-    title: "AI Calculator",
-    description: "Developed a full-stack AI calculator with Nextjs 15 and TypeScript with Clerk, enabling drawing with AI for instant responsive calculations via Google AI's Gemini model",
-    tags: ["Nextjs 15", "TypeScript", "Tailwind css", "clerk", "Gemini ai" ],
-    imageUrl: aicalculator,
-    code: "https://github.com/selvin-paul-raj/SPR-AI-Calculator",
-    live: "https://spr-ai-calculator.vercel.app",
-  },
-  {
-    title: "TroothView",
-    description: "Created a React project that allows users to input photos, uses a Gradio AI model to confirm their trustworthiness, and displays the results in a doughnut chart.",
-    tags: ["React Js", "framer-motion", "Tailwind css", "chart.js", "Gradio AI", "dropzone"],
-    imageUrl: troothview,
-    code: "https://github.com/selvin-paul-raj/TroothView",
-    live: "https://trooth-view.vercel.app",
-  },{
-    title: "Speed Typing",
-    description: "created an Animation-rich React and TypeScript Application. Testing and styling were done using Framer-motion, Jest, and Tailwind CSS.",
-    tags: ["React Js", "framer-motion", "Tailwind css", "Typescript", "Jest", "custom Hooks"],
-    imageUrl: speedtyping,
-    code: "https://github.com/selvin-paul-raj/Speed-Typing",
-    live: "https://spr-speed-typing.vercel.app",
-  }
 
+const _internMonths = rawExperiences
+  .filter((e) => e.title.toLowerCase().includes("intern") && e.icon !== "graduation" && e.icon !== "laptop")
+  .reduce((total, e) => total + _parseTotalMonths(calculateDuration(e.dateStart, e.dateEnd)), 0);
 
+const _workRoleMonths = rawExperiences
+  .filter((e) => !e.title.toLowerCase().includes("intern") && e.icon !== "graduation" && e.icon !== "laptop")
+  .reduce((total, e) => total + _parseTotalMonths(calculateDuration(e.dateStart, e.dateEnd)), 0);
 
-];
-
-// Define the array of experiences with type annotations
-export const experiencesData: Experience[] = [
-  {
-    id: "exp-1",
-    title: "B.Tech Information Technology",
-    company: "DMI College of Engineering",
-    location: "Chennai, Tamil Nadu, India",
-    description: "CGPA: 8.4",
-    date: `May 2021 - Present`,
-    icon: React.createElement(LuGraduationCap),
-  },
-  {
-    id: "exp-2",
-    title: "Full Stack Intern",
-    company: "SERVIMOS TECHNOLOGIES PVT LTD",
-    location: "Chennai, Tamil Nadu, India (On-site)",
-    description: `
-      • Developed a scalable MERN stack Library Management System.\n
-      • Enhanced software quality through collaboration and teamwork.\n
-    `,
-    date: `Jul 2023 - Aug 2023 (${calculateDuration("Jul 2023", "Aug 2023")})`,
-    icon: React.createElement(CgWorkAlt),
-  },
-  {
-    id: "exp-3",
-    title: "Web Development Intern",
-    company: "VERITECH SOFTWARE IT SERVICES",
-    location: "Chennai, Tamil Nadu, India (Remote)",
-    description: `
-      • Created a responsive React portfolio site, boosting engagement by 35%.\n
-      • Integrated a Generative-AI chatbot, increasing interactions by 40%.\n
-      • Developed 3D landing page using Next.js and React-Spline.\n
-      • Built a MERN stack Expense Tracker with dynamic charts.
-    `,
-    date: `Mar 2024 - May 2024 (${calculateDuration("Mar 2024", "May 2024")})`,
-    icon: React.createElement(CgWorkAlt),
-  },
-  {
-    id: "exp-4",
-    title: "Python Development Intern",
-    company: "OCTANET SERVICES PVT LTD",
-    location: "Bhubaneswar, Odisha, India (Remote)",
-    description: `
-      • Built a Flask-based predictive model for 1,000+ users.\n
-      • Optimized FutureFunds using Python, NumPy, pandas, TensorFlow.\n
-      • Developed frontend with HTML5, JavaScript, and Firebase.
-    `,
-    date: `May 2024 - Jul 2024 (${calculateDuration("May 2024", "Jul 2024")})`,
-    icon: React.createElement(FaLaptopCode),
-  },
-  {
-    id: "exp-5",
-    title: "Founder & CEO",
-    company: "GenXRverse",
-    location: "Chennai, Tamil Nadu, India (Hybrid)",
-    description: ``,
-    date: `Mar 2024 - Present (${calculateDuration("Mar 2024", "Present")})`,
-    icon: React.createElement(FaLaptopCode),
-  }
-];
-
-// Define the array of skills with type annotations
-export const skillsData: readonly string[] = [
-  "HTML",
-  "CSS",
-  "Tailwind CSS",
-  "SCSS",
-  "JavaScript",
-  "React",
-  "Redux",
-  "TypeScript",
-  "Next.js",
-  "Node.js",
-  "Express.js",
-  "MongoDB",
-  "MySQL",
-  "Postman",
-  "Frame motion",
-  "Java",
-  "Python",
-  "Git",
-  "VsCode",
-  "Vercel",
-];
+export const experienceMetrics = {
+  internMonths: _internMonths,
+  workRoleMonths: _workRoleMonths,
+  totalMonths: _internMonths + _workRoleMonths,
+};

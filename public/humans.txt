@@ -1,0 +1,42 @@
+/* TEAM */
+
+Developer & Designer: Selvin PaulRaj K
+Role: Full-Stack Developer & Associate Data Analyst
+Site: https://selvinpaulraj.vercel.app
+Location: Chennai, Tamil Nadu, India
+GitHub: https://github.com/selvinpaulrajK
+LinkedIn: https://linkedin.com/in/selvinpaulraj
+Twitter: @selvinpaulrajk
+
+/* SITE */
+
+Last update: 2025/12/10
+Standards: HTML5, CSS3, JavaScript ES6+
+Language: English
+Doctype: HTML5
+IDE: Visual Studio Code
+Framework: Next.js 15
+Styling: Tailwind CSS
+Animations: Framer Motion, GSAP
+Components: React, TypeScript
+Deployment: Vercel
+Analytics: Vercel Analytics, Microsoft Clarity
+Email Service: Resend with React Email
+
+/* THANKS */
+
+Open Source Community
+React Team
+Vercel Team
+Next.js Team
+Tailwind CSS Team
+Framer Motion Team
+All npm package maintainers
+
+/* NOTE */
+
+Thank you for checking out my portfolio!
+I'm always open to connecting with fellow developers
+and exploring new opportunities.
+
+Built with ❤️ and lots of ☕ in Chennai, India.

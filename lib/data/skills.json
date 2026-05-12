@@ -1,0 +1,263 @@
+{
+  "skills": {
+    "frontend": [
+      "HTML",
+      "CSS",
+      "SCSS",
+      "Tailwind CSS",
+      "JavaScript",
+      "TypeScript",
+      "React",
+      "Redux",
+      "Next.js",
+      "Framer Motion"
+    ],
+    "backend": [
+      "Node.js",
+      "Express.js",
+      "FastAPI",
+      "Flask",
+      "REST APIs",
+      "GraphQL",
+      "WebSockets",
+      "Authentication (JWT, OAuth, SSO)",
+      "Microservices Architecture"
+    ],
+    "databases": [
+      "MongoDB",
+      "MySQL",
+      "PostgreSQL",
+      "SQLite",
+      "Redis"
+    ],
+    "data_engineering": [
+      "ETL Pipelines",
+      "Data Cleaning",
+      "Data Processing",
+      "Apache Spark",
+      "Pandas",
+      "Apache Airflow"
+    ],
+    "ai_ml": [
+      "Python",
+      "Java",
+      "NumPy",
+      "Pandas",
+      "Scikit-learn",
+      "TensorFlow",
+      "PyTorch",
+      "Machine Learning",
+      "Deep Learning",
+      "Natural Language Processing (NLP)"
+    ],
+    "llms": [
+      "Large Language Models (LLMs)",
+      "Prompt Engineering",
+      "Tokenization",
+      "Function Calling",
+      "Structured Output",
+      "JSON Mode",
+      "Pydantic",
+      "Instructor",
+      "Model Evaluation",
+      "Fine-tuning",
+      "Quantization",
+      "Inference Optimization"
+    ],
+    "llm_providers_and_apis": [
+      "OpenAI API",
+      "Gemini AI",
+      "Anthropic Claude API",
+      "Hugging Face Transformers",
+      "Groq API",
+      "Mistral AI",
+      "AWS Bedrock",
+      "Azure AI Foundry",
+      "Google Vertex AI"
+    ],
+    "rag": [
+      "Retrieval-Augmented Generation (RAG)",
+      "Embeddings",
+      "Chunking Strategies",
+      "Semantic Search",
+      "Hybrid Search",
+      "BM25",
+      "TF-IDF",
+      "Re-ranking",
+      "Context Compression",
+      "Citation Generation",
+      "Knowledge Graph RAG",
+      "Agentic RAG"
+    ],
+    "vector_databases": [
+      "FAISS",
+      "Chroma",
+      "Pinecone",
+      "Weaviate",
+      "Qdrant",
+      "Milvus",
+      "pgvector",
+      "Vector Databases"
+    ],
+    "agentic_ai": [
+      "AI Agents",
+      "Agentic AI",
+      "Single-Agent Systems",
+      "Multi-Agent Systems",
+      "Tool Calling",
+      "Function Calling",
+      "Chain-of-Thought (CoT)",
+      "ReAct",
+      "Planning and Reasoning",
+      "Task Decomposition",
+      "Hierarchical Planning",
+      "Reflection",
+      "Self-Correction",
+      "Error Recovery",
+      "Self-Healing Strategies",
+      "Human-in-the-Loop (HITL)"
+    ],
+    "agent_memory": [
+      "Short-term Memory",
+      "Long-term Semantic Memory",
+      "Episodic Memory",
+      "State Management",
+      "Persistence Layers"
+    ],
+    "agent_frameworks": [
+      "LangChain",
+      "LangGraph",
+      "LlamaIndex",
+      "AutoGen",
+      "CrewAI",
+      "PydanticAI",
+      "Semantic Kernel",
+      "OpenAI Agents SDK",
+      "Agno",
+      "Haystack"
+    ],
+    "agent_harness_and_runtimes": [
+      "Agent Harness",
+      "Claude Code",
+      "Claude Managed Agents",
+      "OpenAI Codex CLI",
+      "OpenClaw",
+      "Aider",
+      "Cursor",
+      "Windsurf",
+      "Cline",
+      "Roo Code"
+    ],
+    "sandbox_and_execution": [
+      "Sandboxed Code Execution",
+      "Docker Sandboxes",
+      "E2B",
+      "Modal",
+      "Daytona",
+      "Firecracker MicroVMs",
+      "Secure Python Execution",
+      "Browser Sandboxes"
+    ],
+    "protocols_and_standards": [
+      "Model Context Protocol (MCP)",
+      "A2A (Agent-to-Agent Protocol)",
+      "OpenAPI",
+      "JSON Schema"
+    ],
+    "search_and_retrieval": [
+      "Keyword Search",
+      "Semantic Search",
+      "Hybrid Retrieval",
+      "Search API Integration"
+    ],
+    "evaluation_and_reliability": [
+      "RAGAS",
+      "DeepEval",
+      "Prompt Evaluation",
+      "Benchmarking",
+      "Tool-Use Accuracy Evaluation",
+      "Red-Teaming",
+      "Adversarial Testing"
+    ],
+    "observability_and_monitoring": [
+      "LangSmith",
+      "Phoenix",
+      "Weights & Biases",
+      "Honeycomb",
+      "Tracing",
+      "Monitoring",
+      "Cost Tracking",
+      "Rate Limiting"
+    ],
+    "guardrails_and_safety": [
+      "Guardrails",
+      "LlamaGuard",
+      "NeMo Guardrails",
+      "PII Detection and Sanitization",
+      "Content Moderation",
+      "Safety Policies"
+    ],
+    "ethics_and_compliance": [
+      "ISO 42001",
+      "NIST AI RMF",
+      "EU AI Act",
+      "GDPR",
+      "HIPAA",
+      "Bias Detection and Mitigation",
+      "Explainability",
+      "Auditability"
+    ],
+    "web_scraping_and_automation": [
+      "BeautifulSoup",
+      "Scrapy",
+      "Playwright",
+      "Selenium",
+      "Async Web Scraping"
+    ],
+    "deployment_and_devops": [
+      "Docker",
+      "Docker Compose",
+      "Kubernetes",
+      "Serverless Deployment",
+      "CI/CD",
+      "GitHub Actions",
+      "Vercel",
+      "AWS",
+      "Google Cloud Platform (GCP)",
+      "Azure"
+    ],
+    "tools_and_platforms": [
+      "VS Code",
+      "Git",
+      "GitHub",
+      "Postman",
+      "Jupyter Notebook",
+      "Google Colab"
+    ],
+    "software_engineering": [
+      "Data Structures and Algorithms (DSA)",
+      "Object-Oriented Programming (OOP)",
+      "System Design",
+      "Low-Level Design (LLD)",
+      "Design Patterns",
+      "Clean Code",
+      "SOLID Principles"
+    ],
+    "testing": [
+      "Pytest",
+      "Jest",
+      "Unit Testing",
+      "Integration Testing",
+      "API Testing",
+      "End-to-End Testing"
+    ],
+    "soft_skills": [
+      "Product Mindset",
+      "UX Focus",
+      "Complex Problem Solving",
+      "Iterative Testing and Debugging",
+      "Stakeholder Communication",
+      "Technical Documentation"
+    ]
+  }
+}

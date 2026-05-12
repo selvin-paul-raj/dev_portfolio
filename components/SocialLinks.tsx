@@ -1,61 +1,41 @@
-import {FaHackerrank} from "react-icons/fa";
-import { SiLeetcode,SiGeeksforgeeks ,SiGithub,SiLinkedin ,SiCodechef } from "react-icons/si";
+import { FaHackerrank, FaLinkedin } from "react-icons/fa";
+import { SiLeetcode, SiGeeksforgeeks, SiGithub, SiCodechef } from "react-icons/si";
 
-type Props = {};
+const LINKS = [
+  { href: "https://www.linkedin.com/in/selvinpaulraj", icon: <FaLinkedin size={18} />, label: "LinkedIn" },
+  { href: "https://github.com/selvin-paul-raj", icon: <SiGithub size={18} />, label: "GitHub" },
+  { href: "https://www.hackerrank.com/profile/selvinpaulraj", icon: <FaHackerrank size={18} />, label: "HackerRank" },
+  { href: "https://leetcode.com/u/selvinpaulraj/", icon: <SiLeetcode size={18} />, label: "LeetCode" },
+  { href: "https://www.geeksforgeeks.org/user/selvinpaulrajk/", icon: <SiGeeksforgeeks size={18} />, label: "GeeksForGeeks" },
+  { href: "https://www.codechef.com/users/selvinpaulraj", icon: <SiCodechef size={18} />, label: "CodeChef" },
+];
 
-const SocialLinks = (props: Props) => {
+const SocialLinks = () => {
   return (
-    <div className="fixed top-1/2 right-5 transform -translate-y-1/2 hidden md:flex flex-col items-center gap-6  md:scale-150">
-      <a
-        href="https://www.linkedin.com/in/selvinpaulraj"
-        target="_blank"
-        title="LinkedIn"
-        className="bg-transparent  w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300 "
-      >
-        <SiLinkedin  size={22} />
-      </a>
-
-      <a
-        href="https://github.com/selvin-paul-raj"
-        target="_blank"
-        title="Github"
-        className="bg-transparent w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300"
-      >
-        <SiGithub size={22} />
-      </a>
-      <a
-        href="https://www.hackerrank.com/profile/selvinpaulraj"
-        target="_blank"
-        title="hackerrank"
-        className="bg-transparent w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300"
-      >
-        <FaHackerrank size={22} />
-      </a>
-      <a
-        href="https://leetcode.com/u/selvinpaulraj/"
-        target="_blank"
-        title="Leetcode"
-        className="bg-transparent w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300"
-      >
-        <SiLeetcode size={22} />
-      </a>
-      <a
-        href="https://www.geeksforgeeks.org/user/selvinpaulrajk/"
-        aria-label="geeksforgeeks"
-        target="_blank"
-        title="GeeksforGeeks"
-        className="bg-transparent w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300"
-      >
-        <SiGeeksforgeeks  size={22} />
-      </a>
-      <a
-        href="https://www.codechef.com/users/selvinpaulraj"
-        target="_blank"
-        title="Codechef"
-        className="bg-transparent w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300"
-      >
-        <SiCodechef   size={22} />
-      </a>
+    <div className="fixed top-1/2 right-5 -translate-y-1/2 hidden md:flex flex-col items-center gap-3 z-40">
+      {LINKS.map(({ href, icon, label }) => (
+        <a
+          key={label}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={label}
+          title={label}
+          className="flex items-center justify-center w-11 h-11 rounded-full
+            bg-white/70 dark:bg-white/[0.05]
+            border border-black/10 dark:border-white/10
+            text-gray-500 dark:text-white/45
+            hover:text-gray-900 dark:hover:text-white/85
+            hover:border-black/20 dark:hover:border-white/20
+            active:scale-[0.97]"
+          style={{
+            transition:
+              "color 130ms ease, transform 150ms cubic-bezier(0.23,1,0.32,1), border-color 130ms ease, background-color 130ms ease",
+          }}
+        >
+          {icon}
+        </a>
+      ))}
     </div>
   );
 };

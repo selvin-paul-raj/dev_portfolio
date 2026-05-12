@@ -5,7 +5,7 @@ type SectionHeadingProps = {
 
 export default function SectionHeading({ children }: SectionHeadingProps) {
   return (
-    <h2 className="text-xl lg:text-4xl font-medium uppercase mb-8 text-center tracking-[20px] text-gray-900 dark:text-gray-50">
+    <h2 className="text-2xl lg:text-3xl font-semibold uppercase mb-8 text-center tracking-[0.15em] text-gray-900 dark:text-gray-50">
       {children}
     </h2>
   );

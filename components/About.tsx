@@ -3,22 +3,36 @@
 import React from "react";
 import SectionHeading from "./SectionHeading";
 import { motion } from "framer-motion";
-
 import { useSectionInView } from "@/lib/hooks";
 
-const fadeInAnimationVariants = {
-  initial: {
-    opacity: 0,
-    y: 100,
-  },
-  animate: (index: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      delay: 1 * index,
-    },
-  }),
-};
+const EASE_OUT: [number, number, number, number] = [0.23, 1, 0.32, 1];
+
+const paragraphs = [
+  <>
+    I am an{" "}
+    <span className="font-semibold text-gray-900 dark:text-white">AI Engineer</span>{" "}
+    from India, pursuing a Master&apos;s in Computer Science (AI specialisation) at Kings
+    Engineering College. My foundation is a B.Tech in Information Technology — where I discovered
+    my obsession with building systems that think, adapt, and act.
+  </>,
+  <>
+    I specialize in{" "}
+    <span className="font-semibold text-gray-900 dark:text-white">
+      agentic AI: LangGraph multi-agent pipelines, MCP servers, RAG systems, and LLM-powered
+      automation
+    </span>
+    . I design workflows where multiple AI agents collaborate, reason, and execute tasks
+    autonomously — backed by full-stack expertise across Next.js, React, Node.js, and Python.
+  </>,
+  <>
+    At{" "}
+    <span className="font-semibold text-gray-900 dark:text-white">Zinnov (Draup)</span>, I build
+    AI automation pipelines — embedding-based classification models, multi-step job-role
+    intelligence agents, and web-scraping workflows that power research for Fortune 500 clients.
+    Outside work, I ship open-source AI tooling: MCP servers, CLI agent systems, and full-stack
+    apps that push the edge of what&apos;s possible.
+  </>,
+];
 
 export default function About() {
   const { ref } = useSectionInView("About");
@@ -26,61 +40,39 @@ export default function About() {
   return (
     <motion.section
       ref={ref}
-      className="mb-28 max-w-[66rem] text-center leading-8 sm:mb-40 scroll-mt-28  "
-      initial={{ opacity: 0, y: 100 }} 
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.175 }}
       id="about"
+      className="mb-28 w-full max-w-3xl mx-auto px-4 scroll-mt-28"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, ease: EASE_OUT }}
     >
-      <SectionHeading >About</SectionHeading>
+      <SectionHeading>About</SectionHeading>
 
-      <div className="text-center sm:text-start text-base lg:text-lg font-medium px-2 md:space-y-10">
-        <motion.p className="mb-4 md:text-3xl " 
-         variants={fadeInAnimationVariants}
-            initial="initial"
-            whileInView="animate"
-            viewport={{
-              once: false,
-            }}>
-          <span className="font-bold text-4xl leading-10">I</span> am embarking
-          on a transformative journey as a{" "}
-          <span className="font-bold underline">INFORMATION TECHNOLOGY  (IT) </span>
-          graduate, I&apos;ve woven my passion for web development into the
-          fabric of my freelance career. Building and fixing things, especially
-          in the dynamic world of the web, bring me genuine joy.
-        </motion.p>
-        <motion.p className="mb-4 md:text-3xl"  variants={fadeInAnimationVariants}
-            initial="initial"
-            whileInView="animate"
-            viewport={{
-              once: false,
-            }}>
-        I specialize in crafting elevated, intuitive, and minimalistic designs
-        <span className="font-bold underline">
-          {" "}
-          for startups and small businesses{" "}
-        </span>{" "}
-        to help them stand out in the digital landscape with a powerful
-        impact.
-      </motion.p>
+      {/* Pull-quote */}
+      <motion.blockquote
+        initial={{ opacity: 0, x: -12 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4, ease: EASE_OUT, delay: 0.1 }}
+        className="border-l-4 border-[#FFD700] pl-5 mb-8 italic text-lg sm:text-xl text-gray-700 dark:text-white/70 leading-relaxed"
+      >
+        &ldquo;I design workflows where AI agents collaborate, reason, and execute.&rdquo;
+      </motion.blockquote>
 
-        <motion.p className="mb-4 md:text-3xl"  variants={fadeInAnimationVariants}
-            initial="initial"
-            whileInView="animate"
-            viewport={{
-              once: false,
-            }}>
-          <span className="">Beyond crafting websites,</span> I aim to create
-          <span className="font-bold underline">
-            {" "}
-            digital experiences that go beyond the ordinary{" "}
-          </span>
-          . Every line of code and pixel placement reflects my dedication to
-          delivering solutions that exceed expectations. In essence, I&apos;m
-          not just a web developer; I&apos;m an architect of digital landscapes,
-          a storyteller of brands.
-        </motion.p>
-  
+      <div className="space-y-5 text-left">
+        {paragraphs.map((para, i) => (
+          <motion.p
+            key={i}
+            className="text-base sm:text-lg text-gray-600 dark:text-white/60 leading-relaxed"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.38, ease: EASE_OUT, delay: 0.15 * i + 0.2 }}
+          >
+            {para}
+          </motion.p>
+        ))}
       </div>
     </motion.section>
   );

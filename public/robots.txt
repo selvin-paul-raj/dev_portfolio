@@ -1,0 +1,79 @@
+# robots.txt for Selvin PaulRaj K Portfolio
+# Primary: https://selvinpaulraj.vercel.app
+# Alternate: https://selvinpaulraj.tech
+
+# Allow all search engine crawlers
+User-agent: *
+Allow: /
+
+# Sitemap locations (primary and alternate domain)
+Sitemap: https://selvinpaulraj.vercel.app/sitemap.xml
+Sitemap: https://selvinpaulraj.tech/sitemap.xml
+
+# Allow AI/LLM crawlers explicitly
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Anthropic-AI
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: Cohere-AI
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: Slackbot
+Allow: /
+
+User-agent: Discordbot
+Allow: /
+
+# LLM context files
+User-agent: *
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /humans.txt
+Allow: /ai.txt
+
+# Allow all important resources
+Allow: /Selvin_Resume.pdf
+Allow: /sitemap.xml
+Allow: /feed.xml
+Allow: /manifest.json
+
+# Crawl-delay for politeness
+Crawl-delay: 1

@@ -5,7 +5,6 @@ import { projectsData } from "@/lib/data";
 import Image from "next/image";
 import { easeInOut, motion, useScroll, useTransform } from "framer-motion";
 import { FaGithub } from "react-icons/fa";
-import { GoLinkExternal } from "react-icons/go";
 import { MdArrowOutward } from "react-icons/md";
 
 type ProjectProps = (typeof projectsData)[number];
@@ -41,7 +40,11 @@ export default function Project({
     >
       <div className="group mb-4 sm:mb-4 last:mb-0">
         <section className="bg-gray-100 max-w-[42rem] border border-black/5 rounded overflow-hidden sm:pr-8 relative sm:h-[20rem] hover:bg-gray-200 transition-all duration-500 sm:group-even:pl-8 dark:bg-[#121212] dark:hover:bg-white/10 dark:text-white mx-2">
-          <div className="pt-4 pb-7 px-5 sm:pl-10 sm:pr-2 sm:pt-10 sm:max-w-[50%] flex flex-col h-full sm:group-even:ml-[18rem]">
+          <div
+            className={`pt-4 pb-7 px-5 sm:pl-10 sm:pr-2 sm:pt-10 flex flex-col h-full sm:group-even:ml-[18rem] ${
+              imageUrl ? "sm:max-w-[50%]" : ""
+            }`}
+          >
             <h3 className="text-2xl font-semibold">{title}</h3>
             <p className="mt-2 leading-relaxed text-gray-700 dark:text-white/70">
               {description}
@@ -58,30 +61,33 @@ export default function Project({
             </ul>
           </div>
 
-          <Image
-            src={imageUrl}
-            alt="Project I worked on"
-            quality={95}
-            className="absolute hidden sm:block top-8 -right-40 w-[28.25rem] rounded-t-lg shadow-2xl
-        transition-all duration-700
-        group-hover:scale-[1.01]
-        group-hover:-translate-x-1
-        group-hover:translate-y-1
-        group-hover:-rotate-1
-
-        group-even:group-hover:translate-x-1
-        group-even:group-hover:translate-y-1
-        group-even:group-hover:rotate-1
-
-        group-even:right-[initial] group-even:-left-40 "
-          />
+          {imageUrl && (
+            <Image
+              src={imageUrl}
+              alt={title}
+              width={452}
+              height={300}
+              quality={85}
+              sizes="(max-width: 640px) 0px, 452px"
+              className="absolute hidden sm:block top-8 -right-40 w-[28.25rem] rounded-t-lg shadow-2xl
+              transition-all duration-700
+              group-hover:scale-[1.01]
+              group-hover:-translate-x-1
+              group-hover:translate-y-1
+              group-hover:-rotate-1
+              group-even:group-hover:translate-x-1
+              group-even:group-hover:translate-y-1
+              group-even:group-hover:rotate-1
+              group-even:right-[initial] group-even:-left-40"
+            />
+          )}
         </section>
       </div>
       <div className="flex mb-2 justify-end gap-6 mx-2">
         <a
           href={code}
           target="_blank"
-          className="group bg-gray-900  text-white/80 w-1/2 sm:w-1/3 py-2 flex items-center justify-center gap-2 rounded-md outline-none focus:scale-110 active:scale-105 transition duration-300 hover:text-white text-sm xl:text-base uppercase text-center font-semibold dark:bg-[#FFD700] dark:text-black"
+          className="group bg-gray-900 text-white/80 w-1/2 sm:w-1/3 py-2 flex items-center justify-center gap-2 rounded-md outline-none focus:scale-110 active:scale-105 transition duration-300 hover:text-white text-sm xl:text-base uppercase text-center font-semibold dark:bg-[#FFD700] dark:text-black"
         >
           GitHub
           <FaGithub
@@ -89,17 +95,23 @@ export default function Project({
             className="opacity-70 transition group-hover:opacity-100"
           />
         </a>
-        <a
-          href={live}
-          target="_blank"
-          className="group bg-white  w-1/2 sm:w-1/3 py-2 flex items-center justify-center gap-2 rounded-md outline-none focus:scale-110 active:scale-105 transition cursor-pointer borderBlack  dark:bg-white/10 text-sm xl:text-base uppercase text-center font-semibold "
-        >
-          Live
-          <MdArrowOutward
-            size={26}
-            className="opacity-70 group-hover:-translate-y-1 transition group-hover:opacity-100"
-          />
-        </a>
+        {live ? (
+          <a
+            href={live}
+            target="_blank"
+            className="group bg-white w-1/2 sm:w-1/3 py-2 flex items-center justify-center gap-2 rounded-md outline-none focus:scale-110 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 text-sm xl:text-base uppercase text-center font-semibold"
+          >
+            Live
+            <MdArrowOutward
+              size={26}
+              className="opacity-70 group-hover:-translate-y-1 transition group-hover:opacity-100"
+            />
+          </a>
+        ) : (
+          <span className="group bg-white w-1/2 sm:w-1/3 py-2 flex items-center justify-center gap-2 rounded-md borderBlack dark:bg-white/10 text-sm xl:text-base uppercase text-center font-semibold opacity-40 cursor-not-allowed">
+            No Demo
+          </span>
+        )}
       </div>
     </motion.div>
   );

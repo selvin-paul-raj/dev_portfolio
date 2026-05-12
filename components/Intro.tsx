@@ -1,186 +1,456 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
 import { BsArrowRight } from "react-icons/bs";
-import { FaLinkedin,  FaGithub } from "react-icons/fa";
-import { PiButterflyLight } from "react-icons/pi";
+import { FaLinkedin, FaGithub } from "react-icons/fa";
+import { FaHackerrank } from "react-icons/fa";
 import { HiDownload } from "react-icons/hi";
-import {FaHackerrank } from "react-icons/fa";
-import HeroImg from "../public/selvinpaulrajK_profile.png";
+import { SiLeetcode } from "react-icons/si";
+import dynamic from "next/dynamic";
+import HeroImg from "../public/selvinpaulraj_profile.png";
 
 import { useSectionInView } from "@/lib/hooks";
 import { useActiveSectionContext } from "@/context/active-section-context";
-import { SiLeetcode,SiGeeksforgeeks  ,SiCodechef } from "react-icons/si";
+import { projectsData, experienceMetrics } from "@/lib/data";
+
+const ParticleTextEffect = dynamic(
+  () =>
+    import("@/components/ui/particle-text-effect").then(
+      (m) => ({ default: m.ParticleTextEffect })
+    ),
+  { ssr: false }
+);
+
+const EASE_OUT: [number, number, number, number] = [0.23, 1, 0.32, 1];
+
+const SOCIAL_LINKS = [
+  {
+    href: "https://www.linkedin.com/in/selvinpaulraj",
+    icon: <FaLinkedin size={17} />,
+    label: "LinkedIn",
+  },
+  {
+    href: "https://github.com/selvin-paul-raj",
+    icon: <FaGithub size={17} />,
+    label: "GitHub",
+  },
+  {
+    href: "https://www.hackerrank.com/profile/selvinpaulraj",
+    icon: <FaHackerrank size={17} />,
+    label: "HackerRank",
+  },
+  {
+    href: "https://leetcode.com/u/selvinpaulraj/",
+    icon: <SiLeetcode size={17} />,
+    label: "LeetCode",
+  },
+];
+
+const _projectCount = projectsData.length;
+
+function useCountUp(target: number, durationMs: number, trigger: boolean) {
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    if (!trigger) return;
+    let rafId: number;
+    let start: number | null = null;
+    const step = (ts: number) => {
+      if (start === null) start = ts;
+      const p = Math.min((ts - start) / durationMs, 1);
+      const eased = 1 - Math.pow(1 - p, 4); // ease-out-quart
+      setVal(Math.round(eased * target));
+      if (p < 1) rafId = requestAnimationFrame(step);
+    };
+    rafId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafId);
+  }, [target, durationMs, trigger]);
+  return val;
+}
+
+const _fmtDur = (n: number) => {
+  const y = Math.floor(n / 12);
+  const m = n % 12;
+  if (y === 0) return `${m} mo`;
+  if (m === 0) return `${y} yr`;
+  return `${y} yr ${m} mo`;
+};
+
+const TECH_BADGES = [
+  "LangGraph",
+  "MCP",
+  "RAG",
+  "LangChain",
+  "Python",
+  "CrewAI",
+  "FastAPI",
+  "Next.js",
+  "FAISS",
+  "OpenAI",
+];
+
+const PARTICLE_WORDS = [
+  "AI ENGINEER",
+  "MCP BUILDER",
+  "LANGGRAPH",
+  "RAG SYSTEMS",
+  "AGENTIC AI",
+  "MULTI-AGENT",
+  "LLM ENGINEER",
+];
 
 export default function Intro() {
   const { ref } = useSectionInView("Home", 0.5);
   const { setActiveSection, setTimeOfLastClick } = useActiveSectionContext();
+  const [time, setTime] = useState("");
 
-  const [currentTime, setCurrentTime] = useState("");
+  const statsRef = useRef<HTMLDivElement>(null);
+  const statsInView = useInView(statsRef, { once: true, margin: "0px 0px -60px 0px" });
+  const animatedProjects = useCountUp(_projectCount, 2800, statsInView);
+  const animatedTotal = useCountUp(experienceMetrics.totalMonths, 3500, statsInView);
+  const animatedIntern = useCountUp(experienceMetrics.internMonths, 3200, statsInView);
+  const animatedRole = useCountUp(experienceMetrics.workRoleMonths, 2900, statsInView);
+
+  const mobileStatsRef = useRef<HTMLDivElement>(null);
+  const mobileStatsInView = useInView(mobileStatsRef, { once: true, amount: 0 });
+  const mobileAnimProjects = useCountUp(_projectCount, 2800, mobileStatsInView);
+  const mobileAnimTotal = useCountUp(experienceMetrics.totalMonths, 3500, mobileStatsInView);
 
   useEffect(() => {
-    const updateTime = () => {
+    const tick = () => {
       const now = new Date();
-      let hours = now.getHours();
-      const minutes = now.getMinutes();
-      const amPm = hours >= 12 ? "PM" : "AM";
-
-      // Convert to 12-hour format
-      hours = hours % 12 || 12;
-
-      const formattedTime = `${hours}:${
-        minutes < 10 ? "0" : ""
-      }${minutes} ${amPm}`;
-      setCurrentTime(formattedTime);
+      let h = now.getHours();
+      const m = now.getMinutes();
+      const ampm = h >= 12 ? "PM" : "AM";
+      h = h % 12 || 12;
+      setTime(`${h}:${m < 10 ? "0" : ""}${m} ${ampm}`);
     };
-    updateTime();
-
-    //* Update time every minute
-    const intervalId = setInterval(updateTime, 15000);
-
-    return () => clearInterval(intervalId);
+    tick();
+    const id = setInterval(tick, 15000);
+    return () => clearInterval(id);
   }, []);
 
   return (
     <section
       ref={ref}
       id="home"
-      className="mb-28 max-w-[50rem] text-center sm:mb-0 scroll-mt-[100rem] md:scale-150 md:mt-16 md:mb-4"
+      className="w-full max-w-5xl mx-auto px-4 mb-16 scroll-mt-[100rem] md:pt-8"
     >
-      <motion.div className="flex items-center justify-center flex-col">
-        <motion.h2
-          initial={{ opacity: 0, y: 100 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut", delay: 0.3 }}
-          className="py-4 font-mono text-base text md:text-xl text-center text-gray-800 dark:text-gray-200 mb-2"
-        >
-          {currentTime}
-        </motion.h2>
-
-        <motion.div  >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5, y: 100 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{
-              type: "tween",
-              duration: 0.6,
-              delay: 0.4,
-            }}
-            className="ring-2 rounded-[50%] dark:ring-[#FFD700] ring-gray-900"
-          >
-            <Image
-              src={HeroImg}
-              alt="Selvin PaulRaj K"
-              width="195"
-              height="192"
-              quality="95"
-              priority={true}
-              className="h-36 w-36 rounded-full object-contain shadow-xl pointer-events-none p-1"
-            />
-          </motion.div>
-        </motion.div>
+      {/* ── Mobile-only status pill — above hero row ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.38, ease: EASE_OUT, delay: 0.05 }}
+        className="lg:hidden flex items-center justify-center gap-2 mb-5 font-mono text-xs
+          text-gray-400 dark:text-white/30"
+      >
+        <span className="flex items-center gap-2 bg-black/[0.04] dark:bg-white/[0.05]
+          border border-black/6 dark:border-white/8 rounded-full px-4 py-1.5">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+          </span>
+          Chennai, India &nbsp;·&nbsp; {time}
+        </span>
       </motion.div>
 
-      <motion.h1
-        className="mb-10 mt-4 px-4 text-base font-medium !leading-[1.5] sm:text-base lg:text-[17px] 2xl:text-[20px] w-full sm:w-[60%] mx-auto dark:text-gray-300 dark:font-medium text-center"
-        initial={{ opacity: 0, y: 100 }}
+      {/* ── Main hero row — col-reverse on mobile puts profile above text ── */}
+      <div className="flex flex-col-reverse lg:flex-row items-center lg:items-start gap-6 lg:gap-16 mb-14">
+
+        {/* Left: text */}
+        <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
+
+          {/* Desktop-only status pill */}
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.38, ease: EASE_OUT, delay: 0.05 }}
+            className="hidden lg:flex items-center gap-2 mb-5 font-mono text-xs text-gray-400 dark:text-white/30
+              bg-black/[0.04] dark:bg-white/[0.05] border border-black/6 dark:border-white/8
+              rounded-full px-4 py-1.5"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+            </span>
+            Chennai, India &nbsp;·&nbsp; {time}
+          </motion.div>
+
+          {/* Name */}
+          <motion.h1
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.46, ease: EASE_OUT, delay: 0.15 }}
+            className="text-4xl sm:text-5xl lg:text-[3.6rem] font-bold tracking-tight text-gray-900 dark:text-white leading-[1.08] mb-3"
+          >
+            Selvin{" "}
+            <span className="text-gray-400 dark:text-white/35">PaulRaj K</span>
+          </motion.h1>
+
+          {/* Role */}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: EASE_OUT, delay: 0.22 }}
+            className="font-mono text-sm sm:text-[0.9rem] text-[#9a7d2a] dark:text-[#FFD700]/65 mb-4 tracking-wide"
+          >
+            AI Engineer &nbsp;·&nbsp; MCP &nbsp;·&nbsp; Agentic Systems &nbsp;·&nbsp; RAG &nbsp;·&nbsp; LangGraph
+          </motion.p>
+
+          {/* Mobile-only inline stats — projects + YOE after role, animated ── */}
+          <motion.div
+            ref={mobileStatsRef}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.36, ease: EASE_OUT, delay: 0.28 }}
+            className="lg:hidden flex items-center justify-center gap-3 mt-1 mb-5 font-mono"
+          >
+            <span className="text-lg font-bold text-gray-900 dark:text-white/90 tabular-nums">
+              {mobileAnimProjects}+
+            </span>
+            <span className="text-[0.58rem] uppercase tracking-[0.15em] text-gray-400 dark:text-white/30">
+              Projects
+            </span>
+            <span className="w-px h-3.5 bg-black/10 dark:bg-white/10" />
+            <span className="text-lg font-bold text-gray-900 dark:text-white/90 tabular-nums">
+              {_fmtDur(mobileAnimTotal)}
+            </span>
+            <span className="text-[0.58rem] uppercase tracking-[0.15em] text-gray-400 dark:text-white/30">
+              YOE
+            </span>
+          </motion.div>
+
+          {/* Bio */}
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: EASE_OUT, delay: 0.3 }}
+            className="text-base text-gray-600 dark:text-white/50 leading-relaxed max-w-xl mb-3"
+          >
+            I build intelligent{" "}
+            <span className="text-gray-900 dark:text-white/80 font-medium">
+              AI Agents, MCP servers, and multi-agent LangGraph pipelines
+            </span>{" "}
+            that turn complex problems into shipped products — backed by full-stack
+            MERN/Next.js expertise and a Master&apos;s in Computer Science (AI).
+          </motion.p>
+
+          {/* Secondary bio */}
+          <motion.p
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.38, ease: EASE_OUT, delay: 0.36 }}
+            className="text-sm text-gray-500 dark:text-white/40 leading-relaxed max-w-xl mb-7"
+          >
+            At{" "}
+            <span className="text-gray-700 dark:text-white/60 font-medium">
+              Zinnov (Draup)
+            </span>
+            , I architect embedding-based classification models, multi-step job-role
+            intelligence agents, and RAG pipelines that power Fortune 500 research.
+            Open-source contributor: MCP servers, CLI agent systems, vector search tooling.
+          </motion.p>
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.36, ease: EASE_OUT, delay: 0.42 }}
+            className="flex flex-row gap-2.5 w-full sm:w-auto mb-7"
+          >
+            <a
+              href="#contact"
+              onClick={() => {
+                setActiveSection("Contact");
+                setTimeOfLastClick(Date.now());
+              }}
+              className="flex-1 sm:flex-none group flex items-center justify-between gap-3
+                pl-4 sm:pl-5 pr-1.5 py-1.5 rounded-full
+                bg-gray-900 dark:bg-[#FFD700] text-white dark:text-black
+                text-sm font-semibold tracking-wide active:scale-[0.97]"
+              style={{ transition: "opacity 150ms ease, transform 160ms cubic-bezier(0.23,1,0.32,1)" }}
+            >
+              <span className="whitespace-nowrap">Get in touch</span>
+              <span
+                className="flex items-center justify-center w-8 h-8 rounded-full shrink-0
+                  bg-white/15 dark:bg-black/15
+                  group-hover:scale-110 group-hover:bg-white/25 dark:group-hover:bg-black/25"
+                style={{ transition: "transform 150ms cubic-bezier(0.23,1,0.32,1), background-color 150ms ease" }}
+              >
+                <BsArrowRight size={13} />
+              </span>
+            </a>
+            <a
+              href="/Selvin_Resume.pdf"
+              download
+              className="flex-1 sm:flex-none group flex items-center justify-between gap-3
+                pl-4 sm:pl-5 pr-1.5 py-1.5 rounded-full
+                bg-white dark:bg-white/[0.06] border border-black/10 dark:border-white/10
+                text-sm font-semibold tracking-wide text-gray-800 dark:text-white/75
+                hover:bg-gray-50 dark:hover:bg-white/10 active:scale-[0.97]"
+              style={{ transition: "background-color 150ms ease, transform 160ms cubic-bezier(0.23,1,0.32,1)" }}
+            >
+              <span className="whitespace-nowrap">Download CV</span>
+              <span
+                className="flex items-center justify-center w-8 h-8 rounded-full
+                  bg-black/[0.06] dark:bg-white/10
+                  group-hover:scale-110 group-hover:bg-black/10 dark:group-hover:bg-white/15"
+                style={{ transition: "transform 150ms cubic-bezier(0.23,1,0.32,1), background-color 150ms ease" }}
+              >
+                <HiDownload size={13} />
+              </span>
+            </a>
+          </motion.div>
+
+          {/* Socials */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.34, ease: EASE_OUT, delay: 0.5 }}
+            className="flex items-center gap-2.5"
+          >
+            {SOCIAL_LINKS.map(({ href, icon, label }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="flex items-center justify-center w-11 h-11 rounded-full
+                  bg-black/[0.05] dark:bg-white/[0.05] border border-black/8 dark:border-white/10
+                  text-gray-500 dark:text-white/40
+                  hover:text-gray-900 dark:hover:text-white/85 hover:scale-110 active:scale-[0.93]"
+                style={{
+                  transition:
+                    "color 130ms ease, transform 150ms cubic-bezier(0.23,1,0.32,1)",
+                }}
+              >
+                {icon}
+              </a>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Right: profile image */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.94 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.55, ease: EASE_OUT, delay: 0.2 }}
+          className="shrink-0 "
+        >
+          <motion.div
+            animate={{ y: [0, -8, 0] }}
+            transition={{ duration: 4.5, ease: "easeInOut", repeat: Infinity }}
+          >
+            <div className="relative w-52 h-52 sm:w-64 sm:h-64 lg:w-80 lg:h-80 rounded-full ring-2 ring-zinc-200 dark:ring-white/35 overflow-hidden shadow-2xl ">
+              <Image
+                src={HeroImg}
+                alt="Selvin PaulRaj K — AI Engineer"
+                width={320}
+                height={320}
+                quality={90}
+                priority
+                sizes="(max-width: 640px) 208px, (max-width: 1024px) 256px, 320px"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            {/* Gold glow */}
+            <div className="absolute inset-0 rounded-full bg-[#FFD700]/8 blur-3xl scale-125 -z-10" />
+          </motion.div>
+        </motion.div>
+      </div>
+
+      {/* ── Stats strip ── */}
+      <motion.div
+        ref={statsRef}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.5 }}
+        transition={{ duration: 0.4, ease: EASE_OUT, delay: 0.58 }}
+        className="hidden lg:flex items-stretch rounded-2xl overflow-hidden border border-black/6 dark:border-white/8 bg-white dark:bg-white/[0.04] mb-8"
       >
-        Hey there!{" "}
-        <span className="hover:underline"> I&apos;m <span className="font-semibold cursor-pointer">Selvin PaulRaj K</span></span> , a versatile Full-Stack Developer from India, thriving in the Remote work Environment as an SDE. My Passion lies in transforming raw concepts into captivating digital experiences that leave a lasting impact. Let&apos;s turn your Ideas into Digital Brilliance! 
-      </motion.h1>
+        {/* Projects */}
+        <div className="flex flex-col items-center justify-center py-5 sm:px-5 px-3 flex-1 gap-1">
+          <span className="font-mono text-[1.75rem] sm:text-[2rem] font-bold tracking-tight text-gray-900 dark:text-white/90 leading-none tabular-nums">
+            {animatedProjects}+
+          </span>
+          <span className="font-mono text-[0.56rem] uppercase tracking-[0.18em] text-gray-400 dark:text-white/30">
+            Projects
+          </span>
+        </div>
 
-      <motion.div className="flex flex-col sm:flex-row items-center justify-center gap-4 px-4 text-lg font-medium">
-        <motion.div
-          initial={{ opacity: 0, x: -100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
-        >
-          <motion.a
-            href="#contact"
-            className="group bg-gray-900  text-white/80 w-[80vw] sm:w-52 py-3 flex items-center justify-center gap-2 rounded-md outline-none focus:scale-110 active:scale-105 transition duration-300 hover:text-white text-sm xl:text-base uppercase text-center font-semibold dark:bg-[#FFD700] dark:text-black"
-            onClick={() => {
-              setActiveSection("Contact");
-              setTimeOfLastClick(Date.now());
-            }}
-          >
-            Get in touch{" "}
-            <BsArrowRight className="opacity-70 group-hover:translate-x-1 transition group-hover:opacity-100" />
-          </motion.a>
-        </motion.div>
+        <div className="w-px bg-black/5 dark:bg-white/5 self-stretch" />
 
-        <motion.span
-          initial={{ opacity: 0, y: 100 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
-          className="hidden sm:block"
-          drag
-        >
-          <PiButterflyLight  size={27} className="hover:scale-110 duration-300" />
-        </motion.span>
+        {/* Total YOE */}
+        <div className="flex flex-col items-center justify-center py-5 sm:px-5 px-3 flex-[1.5] gap-0.5">
+          <span className="font-mono text-[0.48rem] uppercase tracking-[0.22em] text-[#9a7d2a] dark:text-[#FFD700]/50">
+            YOE
+          </span>
+          <span className="font-mono text-[1.75rem] sm:text-[2rem] font-bold tracking-tight text-gray-900 dark:text-white/90 leading-none tabular-nums">
+            {_fmtDur(animatedTotal)}
+          </span>
+          <span className="font-mono text-[0.56rem] uppercase tracking-[0.18em] text-gray-400 dark:text-white/30">
+            Total Exp
+          </span>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.7 }}
-        >
-          <motion.a
-            className="group bg-white w-[80vw] sm:w-52 py-3 flex items-center justify-center gap-2 rounded-md outline-none focus:scale-110 active:scale-105 transition cursor-pointer borderBlack dark:bg-white/10 text-sm xl:text-base uppercase text-center font-semibold "
-            href="/SPR_Resume.pdf"
-            download
-          >
-            Download CV{" "}
-            <HiDownload className="opacity-60 group-hover:translate-y-1 transition group-hover:opacity-100" />
-          </motion.a>
-        </motion.div>
+        <div className="w-px bg-black/5 dark:bg-white/5 self-stretch" />
 
-        <motion.div
-          initial={{ opacity: 0, y: 100 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.9 }}
-          className="flex items-center gap-6 md:hidden mt-4"
-        >
-          <a
-            href="https://www.linkedin.com/in/selvinpaulraj"
-            target="_blank"
-            className="bg-transparent w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300 "
-          >
-            <FaLinkedin size={22} />
-          </a>
+        {/* Intern + Role */}
+        <div className="flex flex-col flex-1">
+          <div className="flex flex-col items-center justify-center py-3.5 sm:px-4 px-2 flex-1 gap-0.5">
+            <span className="font-mono text-sm font-bold text-gray-700 dark:text-white/70 tabular-nums">
+              {_fmtDur(animatedIntern)}
+            </span>
+            <span className="font-mono text-[0.52rem] uppercase tracking-widest text-gray-400 dark:text-white/25">
+              Intern
+            </span>
+          </div>
+          <div className="h-px bg-black/5 dark:bg-white/5" />
+          <div className="flex flex-col items-center justify-center py-3.5 sm:px-4 px-2 flex-1 gap-0.5">
+            <span className="font-mono text-sm font-bold text-gray-700 dark:text-white/70 tabular-nums">
+              {_fmtDur(animatedRole)}
+            </span>
+            <span className="font-mono text-[0.52rem] uppercase tracking-widest text-gray-400 dark:text-white/25">
+              Role
+            </span>
+          </div>
+        </div>
+      </motion.div>
 
-          <a
-            href="https://github.com/selvin-paul-raj"
-            target="_blank"
-            className="bg-transparent w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300"
-          >
-            <FaGithub size={22} />
-          </a>
-          <a
-        href="https://www.hackerrank.com/profile/selvinpaulraj"
-        target="_blank"
-        className="bg-transparent w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300"
+      {/* ── Tech stack badges ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.38, ease: EASE_OUT, delay: 0.66 }}
+        className="hidden lg:flex flex-wrap justify-start gap-2 mb-12"
       >
-        <FaHackerrank size={22} />
-      </a>
-      <a
-        href="https://leetcode.com/u/selvinpaulraj/"
-        target="_blank"
-        className="bg-transparent w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300"
+        <span className="font-mono text-[0.65rem] text-gray-400 dark:text-white/25 self-center mr-1 tracking-widest uppercase">
+          Core stack
+        </span>
+        {TECH_BADGES.map((tech) => (
+          <span
+            key={tech}
+            className="font-mono text-xs px-3 py-1 rounded-full
+              bg-black/[0.05] dark:bg-white/[0.06] border border-black/8 dark:border-white/8
+              text-gray-600 dark:text-white/50"
+          >
+            {tech}
+          </span>
+        ))}
+      </motion.div>
+
+      {/* ── Particle text canvas — hidden on mobile ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8, delay: 0.8 }}
+        className="hidden sm:block w-full rounded-2xl overflow-hidden border border-black/6 dark:border-white/8"
       >
-        <SiLeetcode size={22} />
-      </a>
-      <a
-        href="https://www.geeksforgeeks.org/user/selvinpaulrajk/"
-        aria-label="geeksforgeeks"
-        target="_blank"
-        className="bg-transparent  w-[2rem] h-[2rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all  opacity-80 hover:opacity-100 hover:scale-105 duration-300"
-      >
-        <SiGeeksforgeeks  size={22} />
-      </a>
-        </motion.div>
+        <ParticleTextEffect
+          words={PARTICLE_WORDS}
+          className="w-full bg-black flex items-center justify-center py-2"
+        />
       </motion.div>
     </section>
   );

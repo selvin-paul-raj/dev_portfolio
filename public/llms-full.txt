@@ -1,0 +1,193 @@
+# Selvin PaulRaj K — Complete AI Engineer Portfolio Documentation
+
+## COMPREHENSIVE PROFILE
+
+### Personal Information
+- **Full Name:** Selvin PaulRaj K
+- **Professional Title:** AI Engineer
+- **Location:** Chennai, Tamil Nadu, India
+- **Work Preference:** On-site / Hybrid / Remote
+- **Languages:** English, Tamil
+- **Primary Website:** https://selvinpaulraj.vercel.app
+- **Alternate Website:** https://selvinpaulraj.tech
+
+### Professional Summary
+Selvin PaulRaj K is an AI Engineer specializing in agentic AI systems, MCP (Model Context Protocol) servers, RAG pipelines, and LangGraph multi-agent workflows. Currently working as an Associate Data Analyst at Zinnov (Draup), building AI automation pipelines and embedding-based intelligence systems for Fortune 500 clients. Pursuing a Master's in Computer Science (AI specialization) at Kings Engineering College.
+
+---
+
+## DETAILED WORK EXPERIENCE
+
+### 1. Associate Data Analyst — Zinnov (Draup)
+**Duration:** September 2025 – Present
+**Location:** Arakkonam, Tamil Nadu, India (On-site)
+**Key Responsibilities & Achievements:**
+- Supporting AI-driven enterprise research by analyzing structured and unstructured data
+- Improved classification and matching accuracy by 40% through embedding-based similarity models
+- Built internal automation pipelines for job-role intelligence, cutting manual analysis time by 30%
+- Collaborating with cross-functional teams to deliver data-backed insights for Fortune 500 clients
+- Technologies: Python, LLMs, NLP, Data Analytics, Embeddings, FAISS, Machine Learning
+
+### 2. Tech Intern — Zinnov (Draup)
+**Duration:** June 2025 – September 2025
+**Location:** Arakkonam, Tamil Nadu, India (On-site)
+**Key Responsibilities & Achievements:**
+- Built AI automation prototypes using LLMs, agentic flows, and data-driven workflows
+- Improved research data accuracy by 35% using automated web scraping and validation pipelines
+- Designed internal tools to streamline business research operations, reducing manual workload by 25%
+- Contributed to multi-step job role classification, website extraction agents, and skill-mapping systems
+- Technologies: Python, LLMs, LangChain, Web Scraping, Automation, AI Agents
+
+### 3. Python Development Intern — Octanet Services Pvt Ltd
+**Duration:** May 2024 – July 2024
+**Location:** Bhubaneswar, Odisha, India (Remote)
+**Key Responsibilities & Achievements:**
+- Built a Flask-based predictive financial model used by 1,000+ users to estimate investment outcomes
+- Optimized the FutureFunds engine using NumPy, pandas, and TensorFlow, reducing computation time by 40%
+- Created a responsive frontend with HTML, JS, and Firebase, improving load speed by 28%
+- Technologies: Python, Flask, TensorFlow, NumPy, Pandas, Firebase, HTML, JavaScript
+
+### 4. Web Development Intern — Veritech Software IT Services
+**Duration:** March 2024 – May 2024
+**Location:** Chennai, Tamil Nadu, India (Remote)
+**Key Responsibilities & Achievements:**
+- Built a responsive React portfolio that increased visitor engagement by 35%
+- Integrated a Generative-AI chatbot that increased user interactions by 40%
+- Developed a 3D landing page using Next.js + React-Spline, improving time-on-page by 25%
+- Built a MERN Expense Tracker with dynamic analytics, reducing manual tracking effort by 60%
+- Technologies: React, Next.js, React-Spline, MERN Stack, Generative AI
+
+### 5. Full Stack Intern — Servimos Technologies Pvt Ltd
+**Duration:** July 2023 – August 2023
+**Location:** Chennai, Tamil Nadu, India (On-site)
+**Key Responsibilities & Achievements:**
+- Developed a scalable MERN-stack Library Management System used by 200+ internal users
+- Improved UI performance by 30% through optimized component structuring and state management
+- Collaborated with senior developers to enhance code quality and reduce defects by 25%
+- Technologies: MongoDB, Express.js, React, Node.js, MERN Stack
+
+---
+
+## EDUCATION
+
+### Master of Engineering (M.E) — Computer Science and Engineering
+**Institution:** Kings Engineering College
+**Location:** Chennai, Tamil Nadu, India
+**Duration:** August 2025 – Present (Expected 2027)
+**Specialization:** Artificial Intelligence, Agentic Systems, Machine Learning, Intelligent Automation
+
+### Bachelor of Technology (B.Tech) — Information Technology
+**Institution:** DMI College of Engineering
+**Location:** Chennai, Tamil Nadu, India
+**Duration:** May 2021 – May 2025
+**CGPA:** 8.4/10
+
+---
+
+## COMPLETE PROJECT PORTFOLIO (44+)
+
+### AI & Agentic Projects
+1. **AI Calculator** — Next.js 15, TypeScript, Google Gemini AI drawing calculator | [Live](https://spr-ai-calculator.vercel.app) | [Code](https://github.com/selvin-paul-raj/SPR-AI-Calculator)
+2. **AI Content Generator** — LLM-powered content platform, Gemini AI, PostgreSQL, Drizzle ORM | [Code](https://github.com/selvin-paul-raj/AI-Content-Generator)
+3. **TroothView** — AI photo trustworthiness verification with doughnut charts | [Live](https://trooth-view.vercel.app) | [Code](https://github.com/selvin-paul-raj/TroothView)
+4. **Phishing Detection Extension** — Browser extension + FastAPI ML backend | [Code](https://github.com/selvin-paul-raj/Phishing-Detection-Extension)
+5. **Phishing Detection ML FastAPI** — FastAPI phishing detection backend | [Code](https://github.com/selvin-paul-raj/Phishing_Detection_ML_FastAPI)
+
+### Web Development Projects
+6. **Developer Portfolio** — This site: Next.js 16, TypeScript, Tailwind CSS, Framer Motion | [Live](https://selvinpaulraj.vercel.app) | [Code](https://github.com/selvin-paul-raj/dev_portfolio)
+7. **Speed Typing** — React/TypeScript typing test with animations | [Live](https://spr-speed-typing.vercel.app) | [Code](https://github.com/selvin-paul-raj/Speed-Typing)
+8. **Copy-ME** — Real-time text sharing via WebSockets | [Code](https://github.com/selvin-paul-raj/copy-me)
+
+---
+
+## TECHNICAL SKILLS (200+)
+
+### Agentic AI & LLMs
+- LangGraph, LangChain, CrewAI, AutoGen, LlamaIndex, Swarm
+- MCP (Model Context Protocol), RAG, FAISS, ChromaDB, Pinecone, Weaviate
+- OpenAI GPT-4o, Anthropic Claude 3.5/4, Google Gemini 2.0, Mistral, LLaMA
+
+### Frontend Development
+- React 19, Next.js 16, TypeScript, Tailwind CSS, Framer Motion
+- Redux, Zustand, Context API, Radix UI, Shadcn UI
+
+### Backend Development
+- Node.js, Express.js, FastAPI, Flask, Python
+- REST APIs, GraphQL basics, JWT, Clerk, NextAuth.js
+
+### Database & Storage
+- MongoDB, PostgreSQL, MySQL, Firebase, Redis
+- Drizzle ORM, Prisma, Mongoose
+
+### DevOps & Tools
+- Git, Docker, Vercel, GitHub Actions
+- VS Code, PyCharm, Postman
+
+---
+
+## E-E-A-T SIGNALS
+
+### Experience
+- 5+ years engineering experience (since May 2021)
+- Multiple internships and full-time roles
+- Live projects with real users (200–1,000+ users)
+
+### Expertise
+- Published AI/agentic projects with source code
+- Active GitHub contributions
+- Specialized in modern AI infrastructure (MCP, LangGraph, RAG)
+
+### Authoritativeness
+- Work experience with Fortune 500 clients via Zinnov/Draup
+- M.E in Computer Science (AI specialization)
+- Active on GitHub, LinkedIn, HackerRank, LeetCode
+
+### Trustworthiness
+- Verified educational background
+- Transparent project portfolios with source code
+- Public code repositories
+
+---
+
+## QUANTIFIED ACHIEVEMENTS
+
+1. Improved classification accuracy by **40%** through embedding-based models
+2. Built systems serving **200+ to 1,000+ users**
+3. Reduced manual analysis time by **30%** via AI automation pipelines
+4. Reduced computation time by **40%** in financial prediction models
+5. Increased user engagement by **35–40%** through AI-integrated features
+6. Improved page load speeds by **25–28%** via optimization
+7. Reduced manual workload by **25–60%** through automation
+
+---
+
+## CONTACT & SOCIAL LINKS
+
+- **Portfolio:** https://selvinpaulraj.vercel.app
+- **Alternate:** https://selvinpaulraj.tech
+- **GitHub:** https://github.com/selvin-paul-raj
+- **LinkedIn:** https://linkedin.com/in/selvinpaulraj
+- **HackerRank:** https://www.hackerrank.com/profile/selvinpaulraj
+- **LeetCode:** https://leetcode.com/u/selvinpaulraj/
+- **Resume:** https://selvinpaulraj.vercel.app/Selvin_Resume.pdf
+
+---
+
+## SITE TECHNICAL SPECIFICATIONS
+
+- **Framework:** Next.js 16.2.6 (App Router, Turbopack)
+- **Language:** TypeScript 5
+- **Styling:** Tailwind CSS 3
+- **Animations:** Framer Motion 12
+- **Hosting:** Vercel
+- **Analytics:** Vercel Speed Insights, Microsoft Clarity
+- **Email Service:** Resend with React Email
+- **Fonts:** Geist + Geist Mono (via next/font)
+
+---
+
+**Last Updated:** May 2026
+**Document Version:** 2.0
+
+---
+*Extended llms.txt for comprehensive AI/LLM context. See /llms.txt for the concise version.*

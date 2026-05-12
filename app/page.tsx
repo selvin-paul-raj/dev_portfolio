@@ -4,14 +4,21 @@ import dynamic from "next/dynamic";
 import About from "@/components/About";
 import Intro from "@/components/Intro";
 import SectionDivider from "@/components/SectionDivider";
-import Experience from "@/components/Experience";
-import Contact from "@/components/Contact";
 import SocialLinks from "@/components/SocialLinks";
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react";
 
-
-const DynamicProjects = dynamic(() => import("@/components/Projects"));
-const DynamicSkills = dynamic(() => import("@/components/Skills"));
+const DynamicProjects = dynamic(() => import("@/components/Projects"), {
+  loading: () => <div className="h-64 w-full animate-pulse rounded-2xl bg-gray-100 dark:bg-white/5 mb-8" />,
+});
+const DynamicSkills = dynamic(() => import("@/components/Skills"), {
+  loading: () => <div className="h-48 w-full animate-pulse rounded-2xl bg-gray-100 dark:bg-white/5 mb-8" />,
+});
+const DynamicExperience = dynamic(() => import("@/components/Experience"), {
+  loading: () => <div className="h-80 w-full animate-pulse rounded-2xl bg-gray-100 dark:bg-white/5 mb-8" />,
+});
+const DynamicContact = dynamic(() => import("@/components/Contact"), {
+  loading: () => <div className="h-64 w-full animate-pulse rounded-2xl bg-gray-100 dark:bg-white/5 mb-8" />,
+});
 
 interface ClearAndLogMessageProps {
   message: string;
@@ -26,14 +33,13 @@ const clearAndLogMessage = ({ message, styles }: ClearAndLogMessageProps) => {
 export default function Home() {
   useEffect(() => {
     const customMessage = `
-      🚀 Welcome to My Portfolio! 🚀
+      Welcome to Selvin PaulRaj K's Portfolio
 
-      Thanks for stopping by. I'm here to bring your ideas to life and create something extraordinary.
+      AI Engineer — AI Agents, MCP Servers, RAG Systems, LangGraph Pipelines.
+      Based in Chennai, India.
 
-      Let's build something amazing together!
-
-      Cheers,
-      Selvin PaulRaj
+      Portfolio: https://selvinpaulraj.vercel.app
+      GitHub: https://github.com/selvin-paul-raj
     `;
 
     const styles = `
@@ -52,10 +58,10 @@ export default function Home() {
       <SectionDivider />
       <About />
       <SectionDivider/>
-      <DynamicProjects />
       <DynamicSkills />
-      <Experience />
-      <Contact />
+      <DynamicProjects />
+      <DynamicExperience />
+      <DynamicContact />
     </main>
   );
 }

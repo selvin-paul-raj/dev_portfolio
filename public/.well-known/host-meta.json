@@ -1,0 +1,26 @@
+{
+  "subject": "acct:selvinpaulrajk@selvinpaulraj.vercel.app",
+  "aliases": [
+    "https://selvinpaulraj.tech",
+    "https://selvinpaulraj.vercel.app",
+    "https://github.com/selvinpaulrajK",
+    "https://linkedin.com/in/selvinpaulraj"
+  ],
+  "links": [
+    {
+      "rel": "self",
+      "type": "application/activity+json",
+      "href": "https://selvinpaulraj.vercel.app"
+    },
+    {
+      "rel": "http://webfinger.net/rel/profile-page",
+      "type": "text/html",
+      "href": "https://selvinpaulraj.vercel.app"
+    },
+    {
+      "rel": "http://webfinger.net/rel/avatar",
+      "type": "image/png",
+      "href": "https://selvinpaulraj.vercel.app/selvinpaulraj_profile.png"
+    }
+  ]
+}

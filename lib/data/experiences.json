@@ -1,0 +1,90 @@
+[
+  {
+    "id": "exp-1",
+    "order":4,
+    "title": "B.Tech Information Technology",
+    "company": "DMI College of Engineering",
+    "location": "Chennai, Tamil Nadu, India",
+    "description": "Graduated with a CGPA of 8.4 while completing multiple AI, web development, and automation projects that strengthened full-stack engineering and problem-solving skills.",
+    "dateStart": "May 2021",
+    "dateEnd": "May 2025",
+    "icon": "graduation"
+  },
+  {
+    "id": "exp-2",
+    "title": "M.E Computer Science and Engineering",
+    "order": 3,
+    "company": "Kings Engineering College",
+    "location": "Chennai, Tamil Nadu, India",
+    "description": "Pursuing a Master's degree with specialization in Artificial Intelligence, Agentic Systems, Machine Learning, and Intelligent Automation. Building advanced research projects involving LLMs and distributed AI agent workflows.",
+    "dateStart": "Aug 2025",
+    "dateEnd": "Present",
+    "icon": "graduation"
+  },
+  {
+    "id": "exp-3",
+    "title": "Full Stack Intern",
+    "order": 7,
+    "company": "SERVIMOS TECHNOLOGIES PVT LTD",
+    "location": "Chennai, Tamil Nadu, India (On-site)",
+    "description": "• Developed a scalable MERN-stack Library Management System used by 200+ internal users.\n• Improved UI performance by 30% through optimized component structuring and state management.\n• Collaborated with senior developers to enhance code quality and reduce defects by 25%.",
+    "dateStart": "Jul 2023",
+    "dateEnd": "Aug 2023",
+    "icon": "work"
+  },
+  {
+    "id": "exp-4",
+    "title": "Web Development Intern",
+    "order": 6,
+    "company": "VERITECH SOFTWARE IT SERVICES",
+    "location": "Chennai, Tamil Nadu, India (Remote)",
+    "description": "• Built a responsive React portfolio that increased visitor engagement by 35%.\n• Integrated a Generative-AI chatbot that increased user interactions by 40%.\n• Developed a 3D landing page using Next.js + React-Spline, improving time-on-page by 25%.\n• Built a MERN Expense Tracker with dynamic analytics, reducing manual tracking effort by 60%.",
+    "dateStart": "Mar 2024",
+    "dateEnd": "May 2024",
+    "icon": "work"
+  },
+  {
+    "id": "exp-5",
+    "title": "Python Development Intern",
+    "order": 5,
+    "company": "OCTANET SERVICES PVT LTD",
+    "location": "Bhubaneswar, Odisha, India (Remote)",
+    "description": "• Built a Flask-based predictive financial model used by 1,000+ users to estimate investment outcomes.\n• Optimized the FutureFunds engine using NumPy, pandas, and TensorFlow, reducing computation time by 40%.\n• Created a responsive frontend with HTML, JS, and Firebase, improving load speed by 28%.",
+    "dateStart": "May 2024",
+    "dateEnd": "Jul 2024",
+    "icon": "work"
+  },
+  {
+    "id": "exp-6",
+    "title": "Crafter",
+    "order": 8,
+    "company": "GenXRverse",
+    "location": "Chennai, Tamil Nadu, India (Hybrid)",
+    "description": "• Leading development of AI-driven automation and agentic systems for productivity and business intelligence.\n• Built MVP prototypes using LLMs, RAG, MCP and multi-agent workflows.\n• Managing product roadmap, technical execution, and user experience design for early adopters.",
+    "dateStart": "Mar 2024",
+    "dateEnd": "Present",
+    "icon": "laptop"
+  },
+  {
+    "id": "exp-7",
+    "title": "Tech Intern",
+    "order": 2,
+    "company": "Zinnov (Draup)",
+    "location": "Arakkonam, Tamil Nadu, India (On-site)",
+    "description": "• Built AI automation prototypes using LLMs, agentic flows, and data-driven workflows.\n• Improved research data accuracy by 35% using automated web scraping and validation pipelines.\n• Designed internal tools to streamline business research operations, reducing manual workload by 25%.\n• Contributed to multi-step job role classification, website extraction agents, and skill-mapping systems.",
+    "dateStart": "Jun 2025",
+    "dateEnd": "Sep 2025",
+    "icon": "work"
+  },
+  {
+    "id": "exp-8",
+    "title": "Associate Data Analyst",
+    "order": 1,
+    "company": "Zinnov (Draup)",
+    "location": "Arakkonam, Tamil Nadu, India (On-site)",
+    "description": "• Supporting AI-driven enterprise research by analyzing structured and unstructured data.\n• Improved classification and matching accuracy by 40% through embedding-based similarity models.\n• Built internal automation pipelines for job-role intelligence, cutting manual analysis time by 30%.\n• Collaborating with cross-functional teams to deliver data-backed insights for Fortune 500 clients.",
+    "dateStart": "Sep 2025",
+    "dateEnd": "Present",
+    "icon": "work"
+  }
+]

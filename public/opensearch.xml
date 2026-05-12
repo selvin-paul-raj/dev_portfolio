@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>Selvin PaulRaj K</ShortName>
+  <Description>Search Selvin PaulRaj K's AI Engineer portfolio — projects, skills, experience, and contact</Description>
+  <Tags>ai engineer portfolio mcp agents langgraph rag python nextjs agentic-ai llm</Tags>
+  <Contact>https://selvinpaulraj.vercel.app/#contact</Contact>
+  <Url type="text/html" template="https://selvinpaulraj.vercel.app/?q={searchTerms}"/>
+  <Image height="16" width="16" type="image/png">https://selvinpaulraj.vercel.app/selvinpaulraj_profile.png</Image>
+  <InputEncoding>UTF-8</InputEncoding>
+  <OutputEncoding>UTF-8</OutputEncoding>
+</OpenSearchDescription>

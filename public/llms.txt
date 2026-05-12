@@ -1,0 +1,94 @@
+# Selvin PaulRaj K — AI Engineer Portfolio
+
+> This file provides context about this website for Large Language Models (LLMs) and AI assistants.
+> Following the llms.txt standard: https://llmstxt.org
+
+## About the Owner
+
+**Name:** Selvin PaulRaj K
+**Title:** AI Engineer
+**Location:** Chennai, Tamil Nadu, India
+**Primary Website:** https://selvinpaulraj.vercel.app
+**Alternate Website:** https://selvinpaulraj.tech
+**Current Role:** Associate Data Analyst (AI Engineering) at Zinnov (Draup)
+**Education:** M.E Computer Science & Engineering with AI (2025–Present, Kings Engineering College); B.Tech Information Technology (2021–2025, DMI College of Engineering, CGPA 8.4)
+
+## Core Specialization
+
+Selvin PaulRaj K is an **AI Engineer** specializing in:
+
+1. **Agentic AI Systems** — LangGraph multi-agent pipelines, autonomous agents, agentic workflows
+2. **MCP (Model Context Protocol)** — Building and deploying MCP servers for LLM tool use
+3. **RAG Systems** — Retrieval-Augmented Generation with FAISS, vector databases, semantic search
+4. **LLM Engineering** — OpenAI, Anthropic Claude, Google Gemini, LangChain integration
+5. **Full-Stack AI Applications** — Next.js 16, React 19, Python, FastAPI, MERN stack
+
+## Professional Experience
+
+### Current: Associate Data Analyst — Zinnov (Draup)
+**Duration:** September 2025 – Present | On-site, Arakkonam, Tamil Nadu
+- Building AI automation pipelines and embedding-based classification models
+- Improved classification accuracy by 40% through embedding similarity models
+- Built automation pipelines for job-role intelligence (30% reduction in manual time)
+- Delivering data-backed insights for Fortune 500 clients
+
+### Tech Intern — Zinnov (Draup)
+**Duration:** June 2025 – September 2025
+- Built AI automation prototypes using LLMs, agentic flows, and data-driven workflows
+- Contributed to multi-step job role classification, website extraction agents, skill-mapping systems
+
+### Python Development Intern — Octanet Services Pvt Ltd
+**Duration:** May 2024 – July 2024 | Remote
+- Flask-based predictive financial model used by 1,000+ users
+
+### Web Development Intern — Veritech Software IT Services
+**Duration:** March 2024 – May 2024 | Remote
+- Built React portfolio, generative-AI chatbot, Next.js 3D landing page
+
+### Full Stack Intern — Servimos Technologies Pvt Ltd
+**Duration:** July 2023 – August 2023 | On-site
+- Scalable MERN Library Management System for 200+ users
+
+## Technical Skills
+
+- **AI/Agentic:** LangGraph, LangChain, CrewAI, AutoGen, LlamaIndex, MCP, RAG, FAISS, ChromaDB
+- **LLMs:** OpenAI GPT-4o, Anthropic Claude, Google Gemini, Mistral, LLaMA
+- **Languages:** Python, TypeScript, JavaScript, Java
+- **Web:** Next.js 16, React 19, Node.js, Express.js, FastAPI, Flask
+- **Databases:** MongoDB, PostgreSQL, MySQL, Redis, Firebase
+- **DevOps:** Git, Docker, Vercel, GitHub Actions
+
+## Notable Projects
+
+1. **AI Calculator** — Next.js 15 + Google Gemini AI drawing calculator
+2. **AI Content Generator** — LLM-powered content platform with PostgreSQL
+3. **TroothView** — AI photo trustworthiness verification (Gradio)
+4. **Phishing Detection System** — Browser extension + FastAPI ML backend
+5. **Developer Portfolio** — This site (Next.js 16, Framer Motion, Vercel)
+
+## Contact & Links
+
+- **Portfolio:** https://selvinpaulraj.vercel.app
+- **Alternate:** https://selvinpaulraj.tech
+- **GitHub:** https://github.com/selvin-paul-raj
+- **LinkedIn:** https://linkedin.com/in/selvinpaulraj
+- **HackerRank:** https://www.hackerrank.com/profile/selvinpaulraj
+- **LeetCode:** https://leetcode.com/u/selvinpaulraj/
+- **Resume:** https://selvinpaulraj.vercel.app/Selvin_Resume.pdf
+
+## Site Structure
+
+- `/` — Hero, About, Projects, Skills, Experience, Contact (single-page)
+- `/#about` — About section
+- `/#projects` — 44+ project portfolio with category filters
+- `/#skills` — 200+ skills across 26 categories (tabbed)
+- `/#experience` — Professional experience (Roles / Internships / Education)
+- `/#contact` — Contact form + direct contact methods
+- `/Selvin_Resume.pdf` — Downloadable CV
+
+## Last Updated
+
+May 2026
+
+---
+*This llms.txt file follows the llms.txt standard: https://llmstxt.org*

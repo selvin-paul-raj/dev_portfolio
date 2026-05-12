@@ -1,0 +1,61 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://selvinpaulraj.vercel.app/#person",
+  "name": "Selvin PaulRaj K",
+  "givenName": "Selvin",
+  "familyName": "PaulRaj K",
+  "url": "https://selvinpaulraj.vercel.app",
+  "image": "https://selvinpaulraj.vercel.app/selvinpaulraj_profile.png",
+  "description": "Full-Stack Developer & Associate Data Analyst with expertise in MERN Stack, Next.js, AI/ML, and enterprise automation.",
+  "jobTitle": ["Full-Stack Developer", "Associate Data Analyst", "AI Engineer"],
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Zinnov (Draup)",
+    "url": "https://www.zinnov.com"
+  },
+  "alumniOf": [
+    {
+      "@type": "CollegeOrUniversity",
+      "name": "DMI College of Engineering",
+      "url": "https://dmice.ac.in"
+    },
+    {
+      "@type": "CollegeOrUniversity",
+      "name": "Kings Engineering College"
+    }
+  ],
+  "knowsAbout": [
+    "Full-Stack Web Development",
+    "MERN Stack",
+    "React.js",
+    "Next.js",
+    "Node.js",
+    "TypeScript",
+    "JavaScript",
+    "Python",
+    "MongoDB",
+    "PostgreSQL",
+    "Machine Learning",
+    "Artificial Intelligence",
+    "Large Language Models",
+    "Agentic AI Systems",
+    "RAG Systems",
+    "Data Analytics"
+  ],
+  "sameAs": [
+    "https://github.com/selvinpaulrajK",
+    "https://linkedin.com/in/selvinpaulraj",
+    "https://twitter.com/selvinpaulrajk",
+    "https://leetcode.com/u/selvinpaulraj/",
+    "https://www.hackerrank.com/profile/selvinpaulraj",
+    "https://www.geeksforgeeks.org/user/selvinpaulrajk/"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Chennai",
+    "addressRegion": "Tamil Nadu",
+    "addressCountry": "India"
+  },
+  "nationality": "Indian"
+}
