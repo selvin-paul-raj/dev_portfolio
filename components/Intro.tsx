@@ -14,10 +14,23 @@ import { useSectionInView } from "@/lib/hooks";
 import { useActiveSectionContext } from "@/context/active-section-context";
 import { projectsData, experienceMetrics } from "@/lib/data";
 
-const DeepMlIcon = () => (
-  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="3" />
-    <path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" />
+const DeepMlIcon = ({ size = 17 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
+    <circle cx="2.5"  cy="6.5"  r="1.7" fill="currentColor" opacity="0.75"/>
+    <circle cx="2.5"  cy="13.5" r="1.7" fill="currentColor" opacity="0.75"/>
+    <circle cx="10"   cy="3.5"  r="1.7" fill="currentColor"/>
+    <circle cx="10"   cy="10"   r="1.7" fill="currentColor"/>
+    <circle cx="10"   cy="16.5" r="1.7" fill="currentColor"/>
+    <circle cx="17.5" cy="10"   r="1.7" fill="currentColor" opacity="0.9"/>
+    <line x1="4.2"  y1="6.5"  x2="8.3"  y2="3.5"  stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
+    <line x1="4.2"  y1="6.5"  x2="8.3"  y2="10"   stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
+    <line x1="4.2"  y1="6.5"  x2="8.3"  y2="16.5" stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
+    <line x1="4.2"  y1="13.5" x2="8.3"  y2="3.5"  stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
+    <line x1="4.2"  y1="13.5" x2="8.3"  y2="10"   stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
+    <line x1="4.2"  y1="13.5" x2="8.3"  y2="16.5" stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
+    <line x1="11.7" y1="3.5"  x2="15.8" y2="10"   stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
+    <line x1="11.7" y1="10"   x2="15.8" y2="10"   stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
+    <line x1="11.7" y1="16.5" x2="15.8" y2="10"   stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
   </svg>
 );
 
@@ -27,7 +40,7 @@ const SOCIAL_LINKS = [
   { href: "https://www.hackerrank.com/profile/selvinpaulraj", icon: <FaHackerrank size={17} />, label: "HackerRank" },
   { href: "https://leetcode.com/u/selvinpaulraj/", icon: <SiLeetcode size={17} />, label: "LeetCode" },
   { href: "https://www.kaggle.com/selvinpaulrajk", icon: <SiKaggle size={17} />, label: "Kaggle" },
-  { href: "https://www.deep-ml.com/profile/fdmYEE5bBFgqLwHxlBFW1lgLUR22", icon: <DeepMlIcon />, label: "deep-ml" },
+  { href: "https://www.deep-ml.com/profile/fdmYEE5bBFgqLwHxlBFW1lgLUR22", icon: <DeepMlIcon size={17} />, label: "deep-ml" },
 ];
 
 const PERSONALITY_TAGS = ["Technical", "Precise", "Open Source", "Problem Solver"];
@@ -258,23 +271,18 @@ export default function Intro() {
             transition={{ duration: 4.5, ease: "easeInOut", repeat: Infinity }}
           >
             <div className="relative w-52 h-52 sm:w-64 sm:h-64 lg:w-80 lg:h-80">
-              {/* Rotating conic gradient ring */}
+              {/* Conic arc ring — 2px strip outside image edge; no mask needed, works in any bg */}
               <div
-                className="absolute inset-0 rounded-full"
-                style={{ animation: "ring-spin 5s linear infinite" }}
-              >
-                <div
-                  className="absolute inset-0 rounded-full"
-                  style={{
-                    background:
-                      "conic-gradient(from 0deg, #FFD700 0deg, #FFA500 40deg, transparent 85deg, transparent 300deg, #FFD700 360deg)",
-                  }}
-                />
-              </div>
-              {/* Mask — creates ring gap effect */}
-              <div className="absolute inset-[3px] rounded-full bg-[#FAFAF9] dark:bg-[#09090b]" />
-              {/* Image sits on top of mask */}
-              <div className="absolute inset-[4px] rounded-full overflow-hidden shadow-2xl">
+                className="absolute rounded-full"
+                style={{
+                  inset: "-2px",
+                  animation: "ring-spin 5s linear infinite",
+                  background:
+                    "conic-gradient(from 0deg, #FFD700 0deg, #FFA500 40deg, transparent 90deg, transparent 300deg, #FFD700 360deg)",
+                }}
+              />
+              {/* Image container clips gradient center — creates ring with no color dependency */}
+              <div className="absolute inset-0 rounded-full overflow-hidden shadow-2xl">
                 <Image
                   src={HeroImg}
                   alt="Selvin PaulRaj K — AI Engineer"

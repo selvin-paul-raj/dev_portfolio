@@ -1,13 +1,25 @@
 import { FaHackerrank, FaLinkedin } from "react-icons/fa";
 import { SiLeetcode, SiGeeksforgeeks, SiGithub, SiCodechef, SiKaggle } from "react-icons/si";
 
-const DeepMlIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="3" />
-    <path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" />
+const DeepMlIcon = ({ size = 17 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
+    <circle cx="2.5"  cy="6.5"  r="1.7" fill="currentColor" opacity="0.75"/>
+    <circle cx="2.5"  cy="13.5" r="1.7" fill="currentColor" opacity="0.75"/>
+    <circle cx="10"   cy="3.5"  r="1.7" fill="currentColor"/>
+    <circle cx="10"   cy="10"   r="1.7" fill="currentColor"/>
+    <circle cx="10"   cy="16.5" r="1.7" fill="currentColor"/>
+    <circle cx="17.5" cy="10"   r="1.7" fill="currentColor" opacity="0.9"/>
+    <line x1="4.2"  y1="6.5"  x2="8.3"  y2="3.5"  stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
+    <line x1="4.2"  y1="6.5"  x2="8.3"  y2="10"   stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
+    <line x1="4.2"  y1="6.5"  x2="8.3"  y2="16.5" stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
+    <line x1="4.2"  y1="13.5" x2="8.3"  y2="3.5"  stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
+    <line x1="4.2"  y1="13.5" x2="8.3"  y2="10"   stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
+    <line x1="4.2"  y1="13.5" x2="8.3"  y2="16.5" stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
+    <line x1="11.7" y1="3.5"  x2="15.8" y2="10"   stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
+    <line x1="11.7" y1="10"   x2="15.8" y2="10"   stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
+    <line x1="11.7" y1="16.5" x2="15.8" y2="10"   stroke="currentColor" strokeWidth="0.75" opacity="0.4"/>
   </svg>
 );
-
 const LINKS = [
   { href: "https://www.linkedin.com/in/selvinpaulraj", icon: <FaLinkedin size={18} />, label: "LinkedIn" },
   { href: "https://github.com/selvin-paul-raj", icon: <SiGithub size={18} />, label: "GitHub" },

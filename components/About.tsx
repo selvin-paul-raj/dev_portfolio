@@ -20,7 +20,7 @@ function useCountUp(target: number, durationMs: number, trigger: boolean) {
     const step = (ts: number) => {
       if (start === null) start = ts;
       const p = Math.min((ts - start) / durationMs, 1);
-      const eased = 1 - Math.pow(1 - p, 4);
+      const eased = 1 - Math.pow(1 - p, 2);
       setVal(Math.round(eased * target));
       if (p < 1) rafId = requestAnimationFrame(step);
     };
@@ -44,10 +44,10 @@ export default function About() {
   const statsRef = useRef<HTMLDivElement>(null);
   const statsInView = useInView(statsRef, { once: true, margin: "0px 0px -40px 0px" });
 
-  const animProjects = useCountUp(projectsData.length, 2000, statsInView);
-  const animTotalMonths = useCountUp(experienceMetrics.totalMonths, 2500, statsInView);
-  const animRole = useCountUp(experienceMetrics.workRoleMonths, 2200, statsInView);
-  const animIntern = useCountUp(experienceMetrics.internMonths, 2200, statsInView);
+  const animProjects = useCountUp(projectsData.length, 3500, statsInView);
+  const animTotalMonths = useCountUp(experienceMetrics.totalMonths, 4500, statsInView);
+  const animRole = useCountUp(experienceMetrics.workRoleMonths, 4000, statsInView);
+  const animIntern = useCountUp(experienceMetrics.internMonths, 4000, statsInView);
 
   const animYr = Math.floor(animTotalMonths / 12);
   const animMo = animTotalMonths % 12;
@@ -177,7 +177,7 @@ export default function About() {
                 {animProjects}<span className="text-[#f5c518]">+</span>
               </div>
               <div
-                className="mt-2 text-[10px] tracking-[0.22em] text-gray-400 dark:text-[#8a8a93] uppercase"
+                className="mt-2 text-[10px] tracking-[0.22em] text-gray-500 dark:text-[#8a8a93] uppercase"
                 style={{ fontFamily: MONO }}
               >
                 Projects Shipped
@@ -197,7 +197,7 @@ export default function About() {
                 )}
               </div>
               <div
-                className="mt-2 text-[10px] tracking-[0.22em] text-gray-400 dark:text-[#8a8a93] uppercase"
+                className="mt-2 text-[10px] tracking-[0.22em] text-gray-500 dark:text-[#8a8a93] uppercase"
                 style={{ fontFamily: MONO }}
               >
                 Total YOE
@@ -208,7 +208,7 @@ export default function About() {
             <div className="border-l border-white/[0.07] dark:border-white/[0.07] border-black/10 grid grid-rows-2">
               <div className="px-[14px] py-3 flex items-center justify-between gap-2 border-b border-white/[0.07] dark:border-white/[0.07] border-black/10">
                 <span
-                  className="text-[10px] tracking-[0.18em] text-gray-400 dark:text-[#8a8a93] uppercase"
+                  className="text-[10px] tracking-[0.18em] text-gray-500 dark:text-[#8a8a93] uppercase"
                   style={{ fontFamily: MONO }}
                 >
                   Role
@@ -219,7 +219,7 @@ export default function About() {
               </div>
               <div className="px-[14px] py-3 flex items-center justify-between gap-2">
                 <span
-                  className="text-[10px] tracking-[0.18em] text-gray-400 dark:text-[#8a8a93] uppercase"
+                  className="text-[10px] tracking-[0.18em] text-gray-500 dark:text-[#8a8a93] uppercase"
                   style={{ fontFamily: MONO }}
                 >
                   Intern
@@ -234,7 +234,7 @@ export default function About() {
           {/* Tech chips */}
           <div className="flex flex-wrap gap-[6px] pt-[6px]">
             <span
-              className="text-[10px] text-gray-400 dark:text-[#8a8a93] tracking-[0.22em] uppercase pr-1"
+              className="text-[10px] text-gray-500 dark:text-[#8a8a93] tracking-[0.22em] uppercase pr-1"
               style={{ fontFamily: MONO }}
             >
               Now Stack
@@ -242,7 +242,7 @@ export default function About() {
             {CHIPS.map((chip) => (
               <span
                 key={chip}
-                className="text-[10px] text-gray-600 dark:text-[#d8d8de] tracking-[0.06em] px-[10px] py-[5px] border border-black/[0.08] dark:border-white/[0.07] rounded-full bg-white dark:bg-white/[0.015]"
+                className="text-[10px] text-gray-600 dark:text-[#d8d8de] tracking-[0.06em] px-[10px] py-[5px] border border-black/[0.14] dark:border-white/[0.07] rounded-full bg-white dark:bg-white/[0.015]"
                 style={{ fontFamily: MONO }}
               >
                 {chip}
