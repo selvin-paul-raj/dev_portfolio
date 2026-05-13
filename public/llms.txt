@@ -78,13 +78,25 @@ Selvin PaulRaj K is an **AI Engineer** specializing in:
 
 ## Site Structure
 
-- `/` — Hero, About, Projects, Skills, Experience, Contact (single-page)
+- `/` — Hero, About, Skills, Projects, Experience, Recognition, Certifications, Contact (single-page)
 - `/#about` — About section
-- `/#projects` — 44+ project portfolio with category filters
 - `/#skills` — 200+ skills across 26 categories (tabbed)
+- `/#projects` — 44+ project portfolio with category filters
 - `/#experience` — Professional experience (Roles / Internships / Education)
+- `/#recognition` — Publications and competition achievements
+- `/#certifications` — 11+ certifications with issuer/category filters and search
 - `/#contact` — Contact form + direct contact methods
 - `/Selvin_Resume.pdf` — Downloadable CV
+
+## REST API
+
+All endpoints are public (CORS open), JSON, cached 1 hour.
+
+- `GET /api/projects` — All projects (44+ entries with show/order/categories/live/imageUrl)
+- `GET /api/skills` — Skills by category (26 categories, 200+ skills)
+- `GET /api/experiences` — Work experience entries (roles, internships, education)
+- `GET /api/recognition` — Publications and competition achievements
+- `GET /api/certifications` — Certifications (issuer, category, date, skills, verifyUrl)
 
 ## Last Updated
 

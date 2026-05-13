@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FaLinkedin, FaGithub } from "react-icons/fa";
+import { FaLinkedin, FaGithub,FaInstagram } from "react-icons/fa";
 import { FaHackerrank } from "react-icons/fa";
 import { SiLeetcode } from "react-icons/si";
 import { links } from "@/lib/data";
@@ -24,7 +24,11 @@ const SOCIAL_LINKS = [
     href: "https://leetcode.com/u/selvinpaulraj/",
     icon: <SiLeetcode size={13} />,
     label: "LeetCode",
-  },
+  },{
+    href: "https://www.instagram.com/selvin_paul_raj",
+    icon: <FaInstagram size={13} />,
+    label: "Instagram",
+  }
 ];
 
 const TECH_STACK = [

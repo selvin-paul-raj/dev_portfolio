@@ -15,6 +15,20 @@ const MONO = "var(--font-geist-mono)";
 const SERIF = "var(--font-instrument-serif), ui-serif, Georgia, serif";
 const EASE: [number, number, number, number] = [0.23, 1, 0.32, 1];
 
+const MONTHS_S = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const MONTHS_L = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+/* Deterministic date helpers — no new Date() to avoid SSR/client hydration mismatch */
+function fmtDate(d: string): string {
+  const [y, m] = d.split("-");
+  return `${MONTHS_S[+m - 1]} ${y}`;
+}
+function fmtDateLong(d: string): string {
+  const [y, m, day] = d.split("-");
+  return `${MONTHS_L[+m - 1]} ${+day}, ${y}`;
+}
+function yearOf(d: string): number { return +d.split("-")[0]; }
+
 const ISSUER_COLORS: Record<string, string> = {
   "GUVI": "#00C896",
   "LinkedIn Learning": "#0a66c2",
@@ -32,13 +46,6 @@ const ISSUER_COLORS: Record<string, string> = {
   "NPTEL": "#f47b20",
 };
 
-function fmtDate(d: string) {
-  return new Date(d).toLocaleString("en-US", { month: "short", year: "numeric" });
-}
-function fmtDateLong(d: string) {
-  return new Date(d).toLocaleString("en-US", { month: "long", day: "numeric", year: "numeric" });
-}
-function yearOf(d: string) { return new Date(d).getFullYear(); }
 function initials(s: string) {
   return s.split(/\s+/).map((w) => w[0]).slice(0, 2).join("").toUpperCase();
 }
@@ -511,6 +518,88 @@ function FilterChip({
   );
 }
 
+/* ─── Pagination ─── */
+function CertPagination({
+  currentPage,
+  totalPages,
+  onChange,
+}: {
+  currentPage: number;
+  totalPages: number;
+  onChange: (p: number) => void;
+}) {
+  if (totalPages <= 1) return null;
+
+  const raw: number[] = [];
+  for (let i = 1; i <= totalPages; i++) {
+    if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+      raw.push(i);
+    }
+  }
+
+  const withEllipsis: (number | "…")[] = [];
+  let prev = 0;
+  for (const p of raw) {
+    if (prev && p - prev > 1) withEllipsis.push("…");
+    withEllipsis.push(p);
+    prev = p;
+  }
+
+  return (
+    <div className="flex justify-center items-center gap-1.5 mt-8" style={{ fontFamily: MONO }}>
+      <button
+        onClick={() => onChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className="w-9 h-9 rounded-full flex items-center justify-center border border-black/[0.08] dark:border-white/[0.07] text-gray-500 dark:text-[#8a8a93] disabled:opacity-30 hover:not-disabled:border-black/[0.18] dark:hover:not-disabled:border-white/[0.14] hover:not-disabled:text-gray-900 dark:hover:not-disabled:text-white transition-all text-[14px]"
+        aria-label="Previous page"
+      >
+        ←
+      </button>
+
+      {withEllipsis.map((p, i) =>
+        p === "…" ? (
+          <span
+            key={`ellipsis-${i}`}
+            className="w-9 h-9 flex items-center justify-center text-gray-400 dark:text-[#54545c] text-[12px]"
+          >
+            ···
+          </span>
+        ) : (
+          <button
+            key={p}
+            onClick={() => onChange(p as number)}
+            aria-current={p === currentPage ? "page" : undefined}
+            className={`w-9 h-9 rounded-full flex items-center justify-center text-[12px] transition-all border ${
+              p === currentPage
+                ? "bg-[#f5c518] text-[#1a1500] border-[#f5c518] font-semibold"
+                : "border-black/[0.08] dark:border-white/[0.07] text-gray-600 dark:text-[#c9c9cf] hover:border-black/[0.18] dark:hover:border-white/[0.14] hover:text-gray-900 dark:hover:text-white"
+            }`}
+          >
+            {p}
+          </button>
+        )
+      )}
+
+      <button
+        onClick={() => onChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className="w-9 h-9 rounded-full flex items-center justify-center border border-black/[0.08] dark:border-white/[0.07] text-gray-500 dark:text-[#8a8a93] disabled:opacity-30 hover:not-disabled:border-black/[0.18] dark:hover:not-disabled:border-white/[0.14] hover:not-disabled:text-gray-900 dark:hover:not-disabled:text-white transition-all text-[14px]"
+        aria-label="Next page"
+      >
+        →
+      </button>
+    </div>
+  );
+}
+
+/* Stat strip border per cell: mobile 2-col / desktop 4-col */
+const STAT_BORDER = [
+  "",
+  "border-l border-black/[0.08] dark:border-white/[0.07]",
+  "border-t sm:border-t-0 sm:border-l border-black/[0.08] dark:border-white/[0.07]",
+  "border-t border-l border-black/[0.08] dark:border-white/[0.07]",
+];
+
 /* ─── Main section ─── */
 export default function Certifications() {
   const { ref } = useSectionInView("Certifications", 0.05);
@@ -521,7 +610,7 @@ export default function Certifications() {
   const [selectedYear, setSelectedYear] = useState("All");
   const [sort, setSort] = useState<SortMode>("newest");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
-  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedCert, setSelectedCert] = useState<Cert | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
@@ -556,9 +645,7 @@ export default function Certifications() {
 
   const stats = useMemo(() => {
     const topEntry = Object.entries(issuerCounts).sort((a, b) => b[1] - a[1])[0];
-    const latest = [...rawCerts].sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    )[0];
+    const latest = [...rawCerts].sort((a, b) => b.date.localeCompare(a.date))[0];
     return {
       total: rawCerts.length,
       topIssuer: topEntry?.[0] ?? "—",
@@ -582,20 +669,18 @@ export default function Certifications() {
 
     arr = [...arr].sort((a, b) => {
       switch (sort) {
-        case "newest": return new Date(b.date).getTime() - new Date(a.date).getTime();
-        case "oldest": return new Date(a.date).getTime() - new Date(b.date).getTime();
+        case "newest": return b.date.localeCompare(a.date);
+        case "oldest": return a.date.localeCompare(b.date);
         case "az": return a.title.localeCompare(b.title);
         case "issuer":
-          return a.issuer.localeCompare(b.issuer) ||
-            new Date(b.date).getTime() - new Date(a.date).getTime();
+          return a.issuer.localeCompare(b.issuer) || b.date.localeCompare(a.date);
       }
     });
     return arr;
   }, [query, selectedIssuer, selectedCategory, selectedYear, sort]);
 
-  const showCount = Math.min(page * PAGE_SIZE, filtered.length);
-  const visible = filtered.slice(0, showCount);
-  const hasMore = showCount < filtered.length;
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const visible = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
   const isFiltered = query !== "" || selectedIssuer !== "All" || selectedCategory !== "All" || selectedYear !== "All";
 
   const clearAll = useCallback(() => {
@@ -603,14 +688,14 @@ export default function Certifications() {
     setSelectedIssuer("All");
     setSelectedCategory("All");
     setSelectedYear("All");
-    setPage(1);
+    setCurrentPage(1);
     if (searchRef.current) searchRef.current.value = "";
   }, []);
 
-  // Reset page when filters change
-  useEffect(() => { setPage(1); }, [query, selectedIssuer, selectedCategory, selectedYear, sort]);
+  /* Reset to page 1 whenever filters/sort change */
+  useEffect(() => { setCurrentPage(1); }, [query, selectedIssuer, selectedCategory, selectedYear, sort]);
 
-  // Cmd/Ctrl + K → focus search
+  /* Cmd/Ctrl + K → focus search */
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
@@ -621,6 +706,9 @@ export default function Certifications() {
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
   }, []);
+
+  /* Suppress unused-var warnings for yearSet/yearCounts — kept for future year-filter UI */
+  void yearSet; void yearCounts;
 
   return (
     <section
@@ -653,19 +741,14 @@ export default function Certifications() {
       </motion.div>
 
       {/* Stat strip */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 border border-black/[0.08] dark:border-white/[0.07] rounded-[14px] overflow-hidden mb-8 bg-white dark:bg-gradient-to-b dark:from-[rgba(17,17,22,0.5)] dark:to-[rgba(10,10,13,0.5)]">
+      <div className="grid grid-cols-2 sm:grid-cols-4 border border-black/[0.08] dark:border-white/[0.07] rounded-[14px] overflow-hidden mb-8 bg-white dark:bg-[#101015]">
         {[
-          { k: "Total", v: stats.total, accent: true },
-          { k: "Top Issuer", v: stats.topIssuer, big: false },
-          { k: "Latest", v: stats.latest, big: false },
-          { k: "Categories", v: stats.categories, accent: false },
+          { k: "Total", v: stats.total, accent: true, big: true },
+          { k: "Top Issuer", v: stats.topIssuer, accent: false, big: false },
+          { k: "Latest", v: stats.latest, accent: false, big: false },
+          { k: "Categories", v: stats.categories, accent: false, big: true },
         ].map(({ k, v, accent, big }, i) => (
-          <div
-            key={k}
-            className={`px-5 py-4 ${i > 0 ? "border-l border-black/[0.08] dark:border-white/[0.07]" : ""} ${
-              i >= 2 ? "border-t sm:border-t-0 border-black/[0.08] dark:border-white/[0.07]" : ""
-            } ${i === 2 ? "sm:border-l border-black/[0.08] dark:border-white/[0.07]" : ""}`}
-          >
+          <div key={k} className={`px-5 py-4 ${STAT_BORDER[i]}`}>
             <div
               className="text-[10px] uppercase tracking-[0.22em] text-gray-400 dark:text-[#8a8a93] mb-1"
               style={{ fontFamily: MONO }}
@@ -674,7 +757,7 @@ export default function Certifications() {
             </div>
             <div
               className={`font-semibold leading-none text-gray-900 dark:text-white flex items-baseline gap-1 ${
-                big === false ? "text-[18px]" : "text-[26px]"
+                big ? "text-[26px]" : "text-[18px]"
               }`}
             >
               {v}
@@ -687,10 +770,7 @@ export default function Certifications() {
       {/* Toolbar */}
       <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3 mb-4">
         {/* Search */}
-        <div
-          className="relative flex items-center gap-2.5 px-4 border rounded-xl bg-white dark:bg-white/[0.025] transition-colors focus-within:border-[#f5c518]/40"
-          style={{ borderColor: "rgba(0,0,0,0.08)" }}
-        >
+        <div className="relative flex items-center gap-2.5 px-4 border border-black/[0.08] dark:border-white/[0.07] rounded-xl bg-white dark:bg-[#101015] transition-colors focus-within:border-[#f5c518]/40">
           <svg className="w-4 h-4 shrink-0 text-gray-400 dark:text-[#8a8a93]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
             <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
           </svg>
@@ -723,7 +803,7 @@ export default function Certifications() {
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortMode)}
-            className="flex-1 sm:flex-none appearance-none bg-white dark:bg-white/[0.025] border border-black/[0.08] dark:border-white/[0.07] text-gray-700 dark:text-white px-3 py-2.5 rounded-xl text-[12px] outline-none focus:border-[#f5c518]/40 cursor-pointer pr-8"
+            className="flex-1 sm:flex-none appearance-none bg-white dark:bg-[#101015] dark:[color-scheme:dark] border border-black/[0.08] dark:border-white/[0.07] text-gray-700 dark:text-white px-3 py-2.5 rounded-xl text-[12px] outline-none focus:border-[#f5c518]/40 cursor-pointer pr-8"
             style={{ fontFamily: MONO, letterSpacing: "0.12em", textTransform: "uppercase" }}
             aria-label="Sort certifications"
           >
@@ -735,7 +815,7 @@ export default function Certifications() {
           <button
             onClick={() => setViewMode((v) => (v === "grid" ? "list" : "grid"))}
             aria-label={`Switch to ${viewMode === "grid" ? "list" : "grid"} view`}
-            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-black/[0.08] dark:border-white/[0.07] bg-white dark:bg-white/[0.025] text-gray-600 dark:text-white text-[11px] hover:border-black/[0.16] dark:hover:border-white/[0.14] transition-colors"
+            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-black/[0.08] dark:border-white/[0.07] bg-white dark:bg-[#101015] text-gray-600 dark:text-white text-[11px] hover:border-black/[0.16] dark:hover:border-white/[0.14] transition-colors"
             style={{ fontFamily: MONO, letterSpacing: "0.14em", textTransform: "uppercase" }}
           >
             {viewMode === "grid" ? (
@@ -767,7 +847,7 @@ export default function Certifications() {
             label="All"
             count={rawCerts.length}
             active={selectedIssuer === "All"}
-            onClick={() => { setSelectedIssuer("All"); setPage(1); }}
+            onClick={() => { setSelectedIssuer("All"); setCurrentPage(1); }}
           />
           {issuerSet.map((iss) => (
             <FilterChip
@@ -775,7 +855,7 @@ export default function Certifications() {
               label={iss}
               count={issuerCounts[iss] ?? 0}
               active={selectedIssuer === iss}
-              onClick={() => { setSelectedIssuer(iss); setPage(1); }}
+              onClick={() => { setSelectedIssuer(iss); setCurrentPage(1); }}
             />
           ))}
         </div>
@@ -791,7 +871,7 @@ export default function Certifications() {
             label="All"
             count={rawCerts.length}
             active={selectedCategory === "All"}
-            onClick={() => { setSelectedCategory("All"); setPage(1); }}
+            onClick={() => { setSelectedCategory("All"); setCurrentPage(1); }}
           />
           {catSet.map((cat) => (
             <FilterChip
@@ -799,7 +879,7 @@ export default function Certifications() {
               label={cat}
               count={catCounts[cat] ?? 0}
               active={selectedCategory === cat}
-              onClick={() => { setSelectedCategory(cat); setPage(1); }}
+              onClick={() => { setSelectedCategory(cat); setCurrentPage(1); }}
             />
           ))}
         </div>
@@ -808,7 +888,10 @@ export default function Certifications() {
       {/* Results meta */}
       <div className="flex items-center justify-between mb-4" style={{ fontFamily: MONO }}>
         <span className="text-[11px] uppercase tracking-[0.14em] text-gray-400 dark:text-[#8a8a93]">
-          Showing <span className="text-gray-900 dark:text-white font-medium">{visible.length}</span>
+          Showing{" "}
+          <span className="text-gray-900 dark:text-white font-medium">
+            {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, filtered.length)}
+          </span>
           {" "}of{" "}
           <span className="text-gray-900 dark:text-white font-medium">{filtered.length}</span>
         </span>
@@ -846,7 +929,7 @@ export default function Certifications() {
           </motion.div>
         ) : (
           <motion.div
-            key={viewMode}
+            key={`${viewMode}-${currentPage}`}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
@@ -870,23 +953,15 @@ export default function Certifications() {
         )}
       </AnimatePresence>
 
-      {/* Load more */}
-      {hasMore && (
-        <div className="flex justify-center mt-7">
-          <button
-            onClick={() => setPage((p) => p + 1)}
-            className="inline-flex items-center gap-2.5 px-5 py-3 rounded-full bg-[#f5c518] text-[#1a1500] font-semibold text-[13px] hover:bg-[#ffd93a] hover:-translate-y-[1px] transition-all duration-150"
-          >
-            Load more
-            <span
-              className="text-[11px] px-[7px] py-[2px] rounded-full bg-black/[0.18]"
-              style={{ fontFamily: MONO }}
-            >
-              {Math.min(PAGE_SIZE, filtered.length - showCount)}
-            </span>
-          </button>
-        </div>
-      )}
+      {/* Pagination */}
+      <CertPagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onChange={(p) => {
+          setCurrentPage(p);
+          document.getElementById("certifications")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }}
+      />
 
       {/* Modal */}
       <AnimatePresence>
