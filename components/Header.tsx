@@ -25,7 +25,7 @@ const Header = () => {
             >
               <Link
                 className={clsx(
-                  "group flex w-full items-center justify-center p-1",
+                  "group flex w-full items-center justify-center p-1 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700]",
                   {
                     "text-gray-950 dark:text-gray-50":
                       activeSection === link.name,

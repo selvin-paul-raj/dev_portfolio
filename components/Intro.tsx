@@ -229,7 +229,8 @@ export default function Intro() {
               className="flex-1 sm:flex-none group flex items-center justify-between gap-3
                 pl-4 sm:pl-5 pr-1.5 py-1.5 rounded-full
                 bg-gray-900 dark:bg-[#FFD700] text-white dark:text-black
-                text-sm font-semibold tracking-wide active:scale-[0.97]"
+                text-sm font-semibold tracking-wide active:scale-[0.97]
+                outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700] focus-visible:ring-offset-2"
               style={{ transition: "opacity 150ms ease, transform 160ms cubic-bezier(0.23,1,0.32,1)" }}
             >
               <span className="whitespace-nowrap">Get in touch</span>
@@ -249,7 +250,8 @@ export default function Intro() {
                 pl-4 sm:pl-5 pr-1.5 py-1.5 rounded-full
                 bg-white dark:bg-white/[0.06] border border-black/10 dark:border-white/10
                 text-sm font-semibold tracking-wide text-gray-800 dark:text-white/75
-                hover:bg-gray-50 dark:hover:bg-white/10 active:scale-[0.97]"
+                hover:bg-gray-50 dark:hover:bg-white/10 active:scale-[0.97]
+                outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700] focus-visible:ring-offset-2"
               style={{ transition: "background-color 150ms ease, transform 160ms cubic-bezier(0.23,1,0.32,1)" }}
             >
               <span className="whitespace-nowrap">Download CV</span>
@@ -276,7 +278,8 @@ export default function Intro() {
                 className="flex items-center justify-center w-11 h-11 rounded-full
                   bg-black/[0.05] dark:bg-white/[0.05] border border-black/8 dark:border-white/10
                   text-gray-500 dark:text-white/40
-                  hover:text-gray-900 dark:hover:text-white/85 hover:scale-110 active:scale-[0.93]"
+                  hover:text-gray-900 dark:hover:text-white/85 hover:scale-110 active:scale-[0.93]
+                  outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700] focus-visible:ring-offset-1"
                 style={{
                   transition:
                     "color 130ms ease, transform 150ms cubic-bezier(0.23,1,0.32,1)",
