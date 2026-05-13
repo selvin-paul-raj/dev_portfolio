@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import Image from "next/image";
 import { useSectionInView } from "@/lib/hooks";
+import Pagination from "./Pagination";
 import rawCertsAll from "@/lib/data/certifications.json";
 
 const rawCerts = rawCertsAll.filter((c) => c.show);
@@ -538,79 +539,6 @@ function FilterChip({
   );
 }
 
-/* ─── Pagination ─── */
-function CertPagination({
-  currentPage,
-  totalPages,
-  onChange,
-}: {
-  currentPage: number;
-  totalPages: number;
-  onChange: (p: number) => void;
-}) {
-  if (totalPages <= 1) return null;
-
-  const raw: number[] = [];
-  for (let i = 1; i <= totalPages; i++) {
-    if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
-      raw.push(i);
-    }
-  }
-
-  const withEllipsis: (number | "…")[] = [];
-  let prev = 0;
-  for (const p of raw) {
-    if (prev && p - prev > 1) withEllipsis.push("…");
-    withEllipsis.push(p);
-    prev = p;
-  }
-
-  return (
-    <div className="flex justify-center items-center gap-1.5 mt-8" style={{ fontFamily: MONO }}>
-      <button
-        onClick={() => onChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        className="w-9 h-9 rounded-full flex items-center justify-center border border-black/[0.08] dark:border-white/[0.07] text-gray-500 dark:text-[#8a8a93] disabled:opacity-30 hover:not-disabled:border-black/[0.18] dark:hover:not-disabled:border-white/[0.14] hover:not-disabled:text-gray-900 dark:hover:not-disabled:text-white transition-all text-[14px]"
-        aria-label="Previous page"
-      >
-        ←
-      </button>
-
-      {withEllipsis.map((p, i) =>
-        p === "…" ? (
-          <span
-            key={`ellipsis-${i}`}
-            className="w-9 h-9 flex items-center justify-center text-gray-400 dark:text-[#54545c] text-[12px]"
-          >
-            ···
-          </span>
-        ) : (
-          <button
-            key={p}
-            onClick={() => onChange(p as number)}
-            aria-current={p === currentPage ? "page" : undefined}
-            className={`w-9 h-9 rounded-full flex items-center justify-center text-[12px] transition-all border ${
-              p === currentPage
-                ? "bg-[#f5c518] text-[#1a1500] border-[#f5c518] font-semibold"
-                : "border-black/[0.08] dark:border-white/[0.07] text-gray-600 dark:text-[#c9c9cf] hover:border-black/[0.18] dark:hover:border-white/[0.14] hover:text-gray-900 dark:hover:text-white"
-            }`}
-          >
-            {p}
-          </button>
-        )
-      )}
-
-      <button
-        onClick={() => onChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className="w-9 h-9 rounded-full flex items-center justify-center border border-black/[0.08] dark:border-white/[0.07] text-gray-500 dark:text-[#8a8a93] disabled:opacity-30 hover:not-disabled:border-black/[0.18] dark:hover:not-disabled:border-white/[0.14] hover:not-disabled:text-gray-900 dark:hover:not-disabled:text-white transition-all text-[14px]"
-        aria-label="Next page"
-      >
-        →
-      </button>
-    </div>
-  );
-}
 
 /* Stat strip border per cell: mobile 2-col / desktop 4-col */
 const STAT_BORDER = [
@@ -974,13 +902,14 @@ export default function Certifications() {
       </AnimatePresence>
 
       {/* Pagination */}
-      <CertPagination
+      <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
         onChange={(p) => {
           setCurrentPage(p);
           document.getElementById("certifications")?.scrollIntoView({ behavior: "smooth", block: "start" });
         }}
+        variant="pill"
       />
 
       {/* Modal */}

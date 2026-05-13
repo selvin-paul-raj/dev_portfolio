@@ -6,24 +6,32 @@ import Intro from "@/components/Intro";
 import SectionDivider from "@/components/SectionDivider";
 import SocialLinks from "@/components/SocialLinks";
 import { Analytics } from "@vercel/analytics/react";
+import {
+  ProjectsSkeleton,
+  SkillsSkeleton,
+  ExperienceSkeleton,
+  RecognitionSkeleton,
+  CertificationsSkeleton,
+  ContactSkeleton,
+} from "@/components/Skeletons";
 
 const DynamicProjects = dynamic(() => import("@/components/Projects"), {
-  loading: () => <div className="h-64 w-full animate-pulse rounded-2xl bg-gray-100 dark:bg-white/5 mb-8" />,
+  loading: () => <ProjectsSkeleton />,
 });
 const DynamicSkills = dynamic(() => import("@/components/Skills"), {
-  loading: () => <div className="h-48 w-full animate-pulse rounded-2xl bg-gray-100 dark:bg-white/5 mb-8" />,
+  loading: () => <SkillsSkeleton />,
 });
 const DynamicExperience = dynamic(() => import("@/components/Experience"), {
-  loading: () => <div className="h-80 w-full animate-pulse rounded-2xl bg-gray-100 dark:bg-white/5 mb-8" />,
+  loading: () => <ExperienceSkeleton />,
 });
 const DynamicRecognition = dynamic(() => import("@/components/Recognition"), {
-  loading: () => <div className="h-64 w-full animate-pulse rounded-2xl bg-gray-100 dark:bg-white/5 mb-8" />,
+  loading: () => <RecognitionSkeleton />,
 });
 const DynamicCertifications = dynamic(() => import("@/components/Certifications"), {
-  loading: () => <div className="h-96 w-full animate-pulse rounded-2xl bg-gray-100 dark:bg-white/5 mb-8" />,
+  loading: () => <CertificationsSkeleton />,
 });
 const DynamicContact = dynamic(() => import("@/components/Contact"), {
-  loading: () => <div className="h-64 w-full animate-pulse rounded-2xl bg-gray-100 dark:bg-white/5 mb-8" />,
+  loading: () => <ContactSkeleton />,
 });
 
 interface ClearAndLogMessageProps {

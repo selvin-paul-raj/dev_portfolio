@@ -4,8 +4,9 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaGithub } from "react-icons/fa";
-import { MdArrowOutward, MdChevronLeft, MdChevronRight } from "react-icons/md";
+import { MdArrowOutward } from "react-icons/md";
 import SectionHeading from "./SectionHeading";
+import Pagination from "./Pagination";
 import { projectsData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
 
@@ -113,96 +114,6 @@ function ProjectCard({ title, description, tags, imageUrl, live, code }: Project
   );
 }
 
-function Pagination({
-  currentPage,
-  totalPages,
-  onPageChange,
-}: {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (p: number) => void;
-}) {
-  if (totalPages <= 1) return null;
-
-  const pages: (number | "…")[] = [];
-  if (totalPages <= 7) {
-    for (let i = 1; i <= totalPages; i++) pages.push(i);
-  } else {
-    pages.push(1);
-    if (currentPage > 3) pages.push("…");
-    for (
-      let i = Math.max(2, currentPage - 1);
-      i <= Math.min(totalPages - 1, currentPage + 1);
-      i++
-    )
-      pages.push(i);
-    if (currentPage < totalPages - 2) pages.push("…");
-    pages.push(totalPages);
-  }
-
-  return (
-    <nav
-      aria-label="Project pages"
-      className="flex items-center justify-center gap-1 mt-10"
-    >
-      <button
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        aria-label="Previous page"
-        className="flex items-center justify-center w-9 h-9 rounded-lg
-          bg-white dark:bg-white/5 border border-black/8 dark:border-white/10
-          text-gray-500 dark:text-white/40
-          disabled:opacity-30 disabled:cursor-not-allowed
-          hover:not-disabled:bg-gray-50 dark:hover:not-disabled:bg-white/10
-          active:scale-95"
-        style={{ transition: "transform 120ms cubic-bezier(0.23,1,0.32,1)" }}
-      >
-        <MdChevronLeft size={20} />
-      </button>
-
-      {pages.map((p, i) =>
-        p === "…" ? (
-          <span
-            key={`ellipsis-${i}`}
-            className="w-9 h-9 flex items-center justify-center text-sm text-gray-400 dark:text-white/25 select-none"
-          >
-            …
-          </span>
-        ) : (
-          <button
-            key={p}
-            onClick={() => onPageChange(p as number)}
-            aria-label={`Page ${p}`}
-            aria-current={currentPage === p ? "page" : undefined}
-            className={`w-9 h-9 rounded-lg text-sm font-medium active:scale-95 ${
-              currentPage === p
-                ? "bg-gray-900 dark:bg-[#FFD700] text-white dark:text-black shadow-sm"
-                : "bg-white dark:bg-white/5 border border-black/8 dark:border-white/10 text-gray-600 dark:text-white/50 hover:bg-gray-50 dark:hover:bg-white/10"
-            }`}
-            style={{ transition: "transform 120ms cubic-bezier(0.23,1,0.32,1)" }}
-          >
-            {p}
-          </button>
-        )
-      )}
-
-      <button
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        aria-label="Next page"
-        className="flex items-center justify-center w-9 h-9 rounded-lg
-          bg-white dark:bg-white/5 border border-black/8 dark:border-white/10
-          text-gray-500 dark:text-white/40
-          disabled:opacity-30 disabled:cursor-not-allowed
-          hover:not-disabled:bg-gray-50 dark:hover:not-disabled:bg-white/10
-          active:scale-95"
-        style={{ transition: "transform 120ms cubic-bezier(0.23,1,0.32,1)" }}
-      >
-        <MdChevronRight size={20} />
-      </button>
-    </nav>
-  );
-}
 
 export default function Projects() {
   const { ref } = useSectionInView("Projects", 0.1);
@@ -289,7 +200,8 @@ export default function Projects() {
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
-        onPageChange={handlePageChange}
+        onChange={handlePageChange}
+        variant="square"
       />
     </section>
   );
