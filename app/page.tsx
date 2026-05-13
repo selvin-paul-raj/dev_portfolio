@@ -19,6 +19,7 @@ const DynamicExperience = dynamic(() => import("@/components/Experience"), {
 const DynamicContact = dynamic(() => import("@/components/Contact"), {
   loading: () => <div className="h-64 w-full animate-pulse rounded-2xl bg-gray-100 dark:bg-white/5 mb-8" />,
 });
+const DynamicPageLoader = dynamic(() => import("@/components/ui/PageLoader"), { ssr: false });
 
 interface ClearAndLogMessageProps {
   message: string;
@@ -52,6 +53,7 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center px-4 ">
+      <DynamicPageLoader />
       <Analytics/>
       <Intro />
       <SocialLinks />

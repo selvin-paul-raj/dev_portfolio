@@ -61,6 +61,9 @@ pre {
   from { opacity: 0; }
   to   { opacity: 1; }
 }
+@keyframes ring-spin {
+  to { transform: rotate(360deg); }
+}
 
 .anim-fade-up  { animation: fadeUp  0.45s cubic-bezier(0.23,1,0.32,1) both; }
 .anim-fade-in  { animation: fadeIn  0.45s cubic-bezier(0.23,1,0.32,1) both; }
