@@ -47,9 +47,9 @@ export default function Recognition() {
           RECOGNITION
         </h2>
         <p className="font-mono text-[11px] tracking-[0.32em] text-gray-400 dark:text-[#8a8a93] uppercase mb-2" style={{ fontFamily: MONO }}>
-          <span className="text-[#f5c518] font-medium">0{pubs.length}</span> publication
+          <span className="text-amber-700 dark:text-[#f5c518] font-medium">0{pubs.length}</span> publication
           {" · "}
-          <span className="text-[#f5c518] font-medium">0{achs.length}</span> awards
+          <span className="text-amber-700 dark:text-[#f5c518] font-medium">0{achs.length}</span> awards
         </p>
       </div>
 
@@ -115,13 +115,13 @@ export default function Recognition() {
                   className="flex items-center flex-wrap gap-[10px] text-[10px] tracking-[0.22em] uppercase text-gray-400 dark:text-[#8a8a93] mb-[18px]"
                   style={{ fontFamily: MONO }}
                 >
-                  <span className="inline-flex items-center gap-[7px] px-[10px] py-1 rounded-full bg-[#6fcf97]/10 text-[#6fcf97] border border-[#6fcf97]/25">
-                    <span className="w-[6px] h-[6px] rounded-full bg-[#6fcf97] shadow-[0_0_8px_#6fcf97]" />
+                  <span className="inline-flex items-center gap-[7px] px-[10px] py-1 rounded-full bg-green-50 dark:bg-[#6fcf97]/10 text-green-700 dark:text-[#6fcf97] border border-green-200 dark:border-[#6fcf97]/25">
+                    <span className="w-[6px] h-[6px] rounded-full bg-green-600 dark:bg-[#6fcf97] shadow-[0_0_8px_#6fcf97]" />
                     {pub.status}
                   </span>
-                  <span className="text-gray-200 dark:text-[#54545c]">/</span>
+                  <span className="text-gray-400 dark:text-[#54545c]">/</span>
                   <span>{formatDate(pub.publication_date)}</span>
-                  <span className="text-gray-200 dark:text-[#54545c]">/</span>
+                  <span className="text-gray-400 dark:text-[#54545c]">/</span>
                   <span className="px-[10px] py-1 rounded-full border border-black/[0.08] dark:border-white/[0.07]">{pub.type}</span>
                 </div>
 
@@ -134,7 +134,7 @@ export default function Recognition() {
 
                 {/* Publisher */}
                 <div className="flex items-center flex-wrap gap-[10px] text-[14px] text-gray-600 dark:text-[#c9c9cf] mb-[18px]">
-                  <span className="text-[#f5c518] font-medium">{pub.publisher}</span>
+                  <span className="text-amber-700 dark:text-[#f5c518] font-medium">{pub.publisher}</span>
                   <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-[#54545c]" />
                   <span>{pub.publisherFull}</span>
                 </div>
@@ -146,11 +146,11 @@ export default function Recognition() {
 
                 {/* Abstract */}
                 <div
-                  className="relative pl-4 py-1 mb-[22px] border-l-2 border-[#f5c518] max-w-[880px]"
+                  className="relative pl-4 py-1 mb-[22px] border-l-2 border-amber-500 dark:border-[#f5c518] max-w-[880px]"
                   style={{ fontFamily: SERIF, fontStyle: "italic" }}
                 >
                   <span
-                    className="block not-italic text-[10px] tracking-[0.24em] text-[#f5c518] uppercase mb-[6px]"
+                    className="block not-italic text-[10px] tracking-[0.24em] text-amber-700 dark:text-[#f5c518] uppercase mb-[6px]"
                     style={{ fontFamily: MONO, fontStyle: "normal" }}
                   >
                     Abstract
@@ -168,13 +168,13 @@ export default function Recognition() {
                       className="flex items-center gap-2 text-[10px] tracking-[0.24em] text-gray-400 dark:text-[#8a8a93] uppercase mb-3"
                       style={{ fontFamily: MONO }}
                     >
-                      <span className="text-[#f5c518]">01</span> · Key Features
+                      <span className="text-amber-700 dark:text-[#f5c518]">01</span> · Key Features
                     </div>
                     <ul className="list-none p-0 m-0 grid gap-2">
                       {pub.features.map((f) => (
                         <li key={f} className="flex items-start gap-[10px] text-[13.5px] text-gray-600 dark:text-[#d5d5db] leading-[1.5]">
                           <span
-                            className="flex-none w-[18px] h-[18px] mt-[1px] flex items-center justify-center rounded-[4px] bg-[#f5c518]/[0.08] border border-[#f5c518]/30 text-[#f5c518]"
+                            className="flex-none w-[18px] h-[18px] mt-[1px] flex items-center justify-center rounded-[4px] bg-amber-50 dark:bg-[#f5c518]/[0.08] border border-amber-300 dark:border-[#f5c518]/30 text-amber-700 dark:text-[#f5c518]"
                             style={{ fontFamily: MONO, fontSize: "9px", lineHeight: 1 }}
                           >
                             ✓
@@ -191,7 +191,7 @@ export default function Recognition() {
                       className="flex items-center gap-2 text-[10px] tracking-[0.24em] text-gray-400 dark:text-[#8a8a93] uppercase mb-3"
                       style={{ fontFamily: MONO }}
                     >
-                      <span className="text-[#f5c518]">02</span> · Stack
+                      <span className="text-amber-700 dark:text-[#f5c518]">02</span> · Stack
                     </div>
                     <div className="flex flex-wrap gap-[6px]">
                       {pub.technologies.map((t) => (
@@ -313,10 +313,10 @@ export default function Recognition() {
                     </div>
                     {ach.certificate_available && (
                       <div
-                        className="flex items-center gap-[6px] text-[10px] tracking-[0.16em] uppercase text-[#6fcf97] mt-[4px]"
+                        className="flex items-center gap-[6px] text-[10px] tracking-[0.16em] uppercase text-green-700 dark:text-[#6fcf97] mt-[4px]"
                       >
                         <span
-                          className="w-[5px] h-[5px] rounded-full bg-[#6fcf97] shrink-0"
+                          className="w-[5px] h-[5px] rounded-full bg-green-600 dark:bg-[#6fcf97] shrink-0"
                           style={{ boxShadow: "0 0 6px #6fcf97" }}
                         />
                         Certificate Available

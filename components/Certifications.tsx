@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import Image from "next/image";
 import { useSectionInView } from "@/lib/hooks";
 import rawCertsAll from "@/lib/data/certifications.json";
@@ -32,21 +32,39 @@ function fmtDateLong(d: string): string {
 function yearOf(d: string): number { return +d.split("-")[0]; }
 
 const ISSUER_COLORS: Record<string, string> = {
-  "GUVI": "#00C896",
-  "LinkedIn Learning": "#0a66c2",
-  "HackerRank": "#2ec866",
-  "IBM": "#5fa0ff",
-  "DeepLearning.AI": "#ff6b9d",
-  "Hugging Face": "#ffb84d",
-  "Anthropic": "#e8966e",
-  "AWS": "#ff9900",
-  "Coursera": "#4f7df0",
-  "Meta": "#5d8bf0",
-  "Google": "#ea7e6a",
-  "Microsoft": "#5ec4eb",
-  "Udemy": "#a435f0",
-  "NPTEL": "#f47b20",
+  /* AI platforms */
+  "Anthropic":          "#e8966e",
+  "DeepLearning.AI":    "#ff6b9d",
+  "Hugging Face":       "#ffb84d",
+  /* Cloud / tech giants */
+  "AWS":                "#ff9900",
+  "IBM":                "#5fa0ff",
+  "Microsoft":          "#5ec4eb",
+  "Google":             "#ea7e6a",
+  "Meta":               "#5d8bf0",
+  /* Learning platforms */
+  "Coursera":           "#4f7df0",
+  "LinkedIn":           "#0a66c2",
+  "LinkedIn Learning":  "#0a66c2",
+  "Udemy":              "#a435f0",
+  "Simplilearn":        "#f94f4f",
+  "Cognitive Class":    "#be6ef5",
+  /* Regional / niche */
+  "HackerRank":         "#2ec866",
+  "GUVI":               "#00C896",
+  "HCL GUVI":           "#00b89c",
+  "NPTEL":              "#f47b20",
+  "Edunet Foundation":  "#34c98a",
 };
+
+function hashIssuerColor(name: string): string {
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) & 0xffffff;
+  return `hsl(${(h % 300) + 30}, 62%, 60%)`;
+}
+function issuerColor(name: string): string {
+  return ISSUER_COLORS[name] ?? hashIssuerColor(name);
+}
 
 function initials(s: string) {
   return s.split(/\s+/).map((w) => w[0]).slice(0, 2).join("").toUpperCase();
@@ -54,7 +72,7 @@ function initials(s: string) {
 
 /* ─── Placeholder thumb ─── */
 function PlaceholderThumb({ cert, listMode }: { cert: Cert; listMode: boolean }) {
-  const color = ISSUER_COLORS[cert.issuer] ?? "#888";
+  const color = issuerColor(cert.issuer);
   return (
     <div
       className={`relative overflow-hidden flex flex-col p-5 shrink-0 ${
@@ -110,7 +128,7 @@ function DatePill({ date }: { date: string }) {
 
 /* ─── Issuer pill ─── */
 function IssuerPill({ issuer }: { issuer: string }) {
-  const color = ISSUER_COLORS[issuer] ?? "#888";
+  const color = issuerColor(issuer);
   return (
     <span
       className="inline-flex items-center gap-1.5 px-[9px] py-[3px] rounded-full text-[10px] font-semibold uppercase tracking-[0.14em] border"
@@ -248,7 +266,7 @@ function CertCard({
             {date}
           </span>
           <span
-            className="text-[10px] uppercase tracking-[0.14em] text-[#f5c518]"
+            className="text-[10px] uppercase tracking-[0.14em] text-amber-700 dark:text-[#f5c518]"
             style={{ fontFamily: MONO }}
           >
             View ↗
@@ -261,7 +279,7 @@ function CertCard({
 
 /* ─── Modal ─── */
 function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
-  const color = ISSUER_COLORS[cert.issuer] ?? "#888";
+  const color = issuerColor(cert.issuer);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -734,11 +752,11 @@ export default function Certifications() {
           className="font-mono text-[11px] tracking-[0.32em] text-gray-400 dark:text-[#8a8a93] uppercase mb-2"
           style={{ fontFamily: MONO }}
         >
-          <span className="text-[#f5c518] font-medium">{stats.total}</span> certificates
+          <span className="text-amber-700 dark:text-[#f5c518] font-medium">{stats.total}</span> certificates
           {" · "}
-          <span className="text-[#f5c518] font-medium">{issuerSet.length}</span> issuers
+          <span className="text-amber-700 dark:text-[#f5c518] font-medium">{issuerSet.length}</span> issuers
           {" · "}
-          <span className="text-[#f5c518] font-medium">{stats.categories}</span> categories
+          <span className="text-amber-700 dark:text-[#f5c518] font-medium">{stats.categories}</span> categories
         </p>
       </motion.div>
 
@@ -763,7 +781,7 @@ export default function Certifications() {
               }`}
             >
               {v}
-              {accent && <span className="text-[#f5c518] text-[18px]">+</span>}
+              {accent && <span className="text-amber-700 dark:text-[#f5c518] text-[18px]">+</span>}
             </div>
           </div>
         ))}
@@ -900,7 +918,7 @@ export default function Certifications() {
         {isFiltered && (
           <button
             onClick={clearAll}
-            className="text-[11px] uppercase tracking-[0.14em] text-[#f5c518] hover:underline transition-opacity"
+            className="text-[11px] uppercase tracking-[0.14em] text-amber-700 dark:text-[#f5c518] hover:underline transition-opacity"
           >
             Clear filters ✕
           </button>
