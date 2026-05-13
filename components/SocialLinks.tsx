@@ -21,7 +21,7 @@ const SocialLinks = () => {
           rel="noopener noreferrer"
           aria-label={label}
           title={label}
-          className="flex items-center justify-center w-11 h-11 rounded-full
+          className="flex items-center justify-center w-11 h-11 rounded-full cursor-pointer
             bg-white/70 dark:bg-white/[0.05]
             border border-black/10 dark:border-white/10
             text-gray-500 dark:text-white/45

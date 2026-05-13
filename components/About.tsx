@@ -51,11 +51,11 @@ export default function About() {
 
       {/* Pull-quote */}
       <motion.blockquote
-        initial={{ opacity: 0, x: -12 }}
-        whileInView={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, y: 12 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.4, ease: EASE_OUT, delay: 0.1 }}
-        className="border-l-4 border-[#FFD700] pl-5 mb-8 italic text-lg sm:text-xl text-gray-700 dark:text-white/70 leading-relaxed"
+        className="py-5 mb-8 border-y border-black/8 dark:border-white/8 italic text-lg sm:text-xl text-gray-700 dark:text-white/70 leading-relaxed"
       >
         &ldquo;I design workflows where AI agents collaborate, reason, and execute.&rdquo;
       </motion.blockquote>

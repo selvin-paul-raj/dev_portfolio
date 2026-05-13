@@ -75,3 +75,12 @@ pre {
 .anim-d7 { animation-delay: 0.58s; }
 .anim-d8 { animation-delay: 0.66s; }
 .anim-d9 { animation-delay: 0.80s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-fade-up,
+  .anim-fade-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

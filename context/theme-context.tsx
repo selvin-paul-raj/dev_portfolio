@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, createContext, useContext, startTransition } from "react";
+import { MotionConfig } from "framer-motion";
 import toast from "react-hot-toast";
 
 type Theme = "light" | "dark";
@@ -66,9 +67,11 @@ export default function ThemeContextProvider({
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
+    <MotionConfig reducedMotion="user">
+      <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        {children}
+      </ThemeContext.Provider>
+    </MotionConfig>
   );
 }
 
