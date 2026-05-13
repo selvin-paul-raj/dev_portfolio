@@ -10,12 +10,14 @@ import {
   LuLayoutGrid,
   LuMail,
   LuTrophy,
+  LuAward,
 } from "react-icons/lu";
 
 import rawProjects from "./data/projects.json";
 import rawExperiences from "./data/experiences.json";
 import rawSkillsJson from "./data/skills.json";
 import rawRecognition from "./data/recognition.json";
+import rawCertifications from "./data/certifications.json";
 import calculateDuration from "@/utils/calculateDuration";
 
 interface Link {
@@ -49,6 +51,11 @@ export const links: Link[] = [
     name: "Recognition",
     hash: "#recognition",
     icon: <LuTrophy />,
+  },
+  {
+    name: "Certifications",
+    hash: "#certifications",
+    icon: <LuAward />,
   },
   {
     name: "Contact",
@@ -107,3 +114,4 @@ export const experienceMetrics = {
 };
 
 export const recognitionData = rawRecognition;
+export const certificationsData = rawCertifications;

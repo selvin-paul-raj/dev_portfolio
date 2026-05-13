@@ -19,6 +19,9 @@ const DynamicExperience = dynamic(() => import("@/components/Experience"), {
 const DynamicRecognition = dynamic(() => import("@/components/Recognition"), {
   loading: () => <div className="h-64 w-full animate-pulse rounded-2xl bg-gray-100 dark:bg-white/5 mb-8" />,
 });
+const DynamicCertifications = dynamic(() => import("@/components/Certifications"), {
+  loading: () => <div className="h-96 w-full animate-pulse rounded-2xl bg-gray-100 dark:bg-white/5 mb-8" />,
+});
 const DynamicContact = dynamic(() => import("@/components/Contact"), {
   loading: () => <div className="h-64 w-full animate-pulse rounded-2xl bg-gray-100 dark:bg-white/5 mb-8" />,
 });
@@ -65,6 +68,7 @@ export default function Home() {
       <DynamicProjects />
       <DynamicExperience />
       <DynamicRecognition />
+      <DynamicCertifications />
       <DynamicContact />
     </main>
   );
