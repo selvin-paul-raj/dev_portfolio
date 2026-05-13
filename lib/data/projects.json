@@ -60,13 +60,13 @@
   },
   {
     "title": "Developer Portfolio",
-    "description": "Selvin PaulRaj K's portfolio, built with Next.js 14, TypeScript, Tailwind CSS, and Framer Motion, offers a sleek, responsive design and dynamic animations. It includes features like styled email integration, Vercel Analytics, and optimized performance",
-    "tags": ["Next.js 14", "TypeScript", "Tailwind CSS", "Framer Motion", "Vercel Analytics", "React Email"],
+    "description": "Selvin PaulRaj K's portfolio, built with Next.js 16, TypeScript, Tailwind CSS, and Framer Motion, offers a sleek, responsive design and dynamic animations. It includes features like styled email integration, Vercel Analytics, and optimized performance",
+    "tags": ["Next.js 16", "TypeScript", "Tailwind CSS", "Framer Motion", "Vercel Analytics", "React Email"],
     "date": "2024-08-20",
     "imageUrl": "",
     "categories": ["all", "web"],
     "code": "https://github.com/selvin-paul-raj/dev_portfolio",
-    "live": "https://selvin-paul-raj.vercel.app",
+    "live": "https://selvinpaulraj.vercel.app",
     "order": 5,
     "show": true
   },
@@ -140,7 +140,7 @@
     "code": "https://github.com/selvin-paul-raj/Linkedin-MCP-Server",
     "live": null,
     "order": 11,
-    "show": true
+    "show": false
   },
   {
     "title": "AI Agent MCP Server",

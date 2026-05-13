@@ -41,7 +41,8 @@ function ProjectCard({ title, description, tags, imageUrl, live, code }: Project
             src={imageUrl}
             alt={title}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            quality={80}
+            sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover group-hover:scale-105"
             style={{ transition: "transform 500ms cubic-bezier(0.23,1,0.32,1)" }}
           />
@@ -279,7 +280,7 @@ export default function Projects() {
           className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5"
         >
           {visible.map((project) => (
-            <ProjectCard key={project.title} {...project} />
+            <ProjectCard key={`${project.title}-${project.date}`} {...project} />
           ))}
         </motion.div>
       </AnimatePresence>

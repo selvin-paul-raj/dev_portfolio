@@ -16,6 +16,7 @@ export default function AgentMeshCanvas() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const DPR = Math.min(window.devicePixelRatio || 1, 2);
     let W = 0, H = 0;
     let dots: Dot[] = [];
@@ -130,7 +131,10 @@ export default function AgentMeshCanvas() {
     const observer = new ResizeObserver(() => fit());
     observer.observe(container);
     fit();
-    rafId = requestAnimationFrame(frame);
+    // Skip animation loop entirely if user prefers reduced motion — single static frame already drawn by fit()
+    if (!prefersReduced) {
+      rafId = requestAnimationFrame(frame);
+    }
 
     return () => {
       cancelAnimationFrame(rafId);
