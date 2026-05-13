@@ -9,7 +9,7 @@ import { FaHackerrank } from "react-icons/fa";
 import { HiDownload } from "react-icons/hi";
 import { SiLeetcode } from "react-icons/si";
 import dynamic from "next/dynamic";
-import HeroImg from "../public/selvinpaulraj_profile.png";
+import HeroImg from "../public/Selvin_PaulRaj.webp";
 
 import { useSectionInView } from "@/lib/hooks";
 import { useActiveSectionContext } from "@/context/active-section-context";
@@ -23,7 +23,6 @@ const ParticleTextEffect = dynamic(
   { ssr: false }
 );
 
-const EASE_OUT: [number, number, number, number] = [0.23, 1, 0.32, 1];
 
 const SOCIAL_LINKS = [
   {
@@ -138,13 +137,8 @@ export default function Intro() {
       className="w-full max-w-5xl mx-auto px-4 mb-16 scroll-mt-[100rem] md:pt-8"
     >
       {/* ── Mobile-only status pill — above hero row ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 14 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.38, ease: EASE_OUT, delay: 0.05 }}
-        className="lg:hidden flex items-center justify-center gap-2 mb-5 font-mono text-xs
-          text-gray-400 dark:text-white/30"
-      >
+      <div className="anim-fade-up anim-d0 lg:hidden flex items-center justify-center gap-2 mb-5 font-mono text-xs
+          text-gray-400 dark:text-white/30">
         <span className="flex items-center gap-2 bg-black/[0.04] dark:bg-white/[0.05]
           border border-black/6 dark:border-white/8 rounded-full px-4 py-1.5">
           <span className="relative flex h-2 w-2">
@@ -153,7 +147,7 @@ export default function Intro() {
           </span>
           Chennai, India &nbsp;·&nbsp; {time}
         </span>
-      </motion.div>
+      </div>
 
       {/* ── Main hero row — col-reverse on mobile puts profile above text ── */}
       <div className="flex flex-col-reverse lg:flex-row items-center lg:items-start gap-6 lg:gap-16 mb-14">
@@ -162,49 +156,31 @@ export default function Intro() {
         <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
 
           {/* Desktop-only status pill */}
-          <motion.div
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.38, ease: EASE_OUT, delay: 0.05 }}
-            className="hidden lg:flex items-center gap-2 mb-5 font-mono text-xs text-gray-400 dark:text-white/30
+          <div className="anim-fade-up anim-d0 hidden lg:flex items-center gap-2 mb-5 font-mono text-xs text-gray-400 dark:text-white/30
               bg-black/[0.04] dark:bg-white/[0.05] border border-black/6 dark:border-white/8
-              rounded-full px-4 py-1.5"
-          >
+              rounded-full px-4 py-1.5">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
             </span>
             Chennai, India &nbsp;·&nbsp; {time}
-          </motion.div>
+          </div>
 
           {/* Name */}
-          <motion.h1
-            initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.46, ease: EASE_OUT, delay: 0.15 }}
-            className="text-4xl sm:text-5xl lg:text-[3.6rem] font-bold tracking-tight text-gray-900 dark:text-white leading-[1.08] mb-3"
-          >
+          <h1 className="anim-fade-up anim-d1 text-4xl sm:text-5xl lg:text-[3.6rem] font-bold tracking-tight text-gray-900 dark:text-white leading-[1.08] mb-3">
             Selvin{" "}
             <span className="text-gray-400 dark:text-white/35">PaulRaj K</span>
-          </motion.h1>
+          </h1>
 
           {/* Role */}
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: EASE_OUT, delay: 0.22 }}
-            className="font-mono text-sm sm:text-[0.9rem] text-[#9a7d2a] dark:text-[#FFD700]/65 mb-4 tracking-wide"
-          >
+          <p className="anim-fade-up anim-d2 font-mono text-sm sm:text-[0.9rem] text-[#9a7d2a] dark:text-[#FFD700]/65 mb-4 tracking-wide">
             AI Engineer &nbsp;·&nbsp; MCP &nbsp;·&nbsp; Agentic Systems &nbsp;·&nbsp; RAG &nbsp;·&nbsp; LangGraph
-          </motion.p>
+          </p>
 
           {/* Mobile-only inline stats — projects + YOE after role, animated ── */}
-          <motion.div
+          <div
             ref={mobileStatsRef}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.36, ease: EASE_OUT, delay: 0.28 }}
-            className="lg:hidden flex items-center justify-center gap-3 mt-1 mb-5 font-mono"
+            className="anim-fade-up anim-d3 lg:hidden flex items-center justify-center gap-3 mt-1 mb-5 font-mono"
           >
             <span className="text-lg font-bold text-gray-900 dark:text-white/90 tabular-nums">
               {mobileAnimProjects}+
@@ -219,30 +195,20 @@ export default function Intro() {
             <span className="text-[0.58rem] uppercase tracking-[0.15em] text-gray-400 dark:text-white/30">
               YOE
             </span>
-          </motion.div>
+          </div>
 
           {/* Bio */}
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: EASE_OUT, delay: 0.3 }}
-            className="text-base text-gray-600 dark:text-white/50 leading-relaxed max-w-xl mb-3"
-          >
+          <p className="anim-fade-up anim-d3 text-base text-gray-600 dark:text-white/50 leading-relaxed max-w-xl mb-3">
             I build intelligent{" "}
             <span className="text-gray-900 dark:text-white/80 font-medium">
               AI Agents, MCP servers, and multi-agent LangGraph pipelines
             </span>{" "}
             that turn complex problems into shipped products — backed by full-stack
             MERN/Next.js expertise and a Master&apos;s in Computer Science (AI).
-          </motion.p>
+          </p>
 
           {/* Secondary bio */}
-          <motion.p
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.38, ease: EASE_OUT, delay: 0.36 }}
-            className="text-sm text-gray-500 dark:text-white/40 leading-relaxed max-w-xl mb-7"
-          >
+          <p className="anim-fade-up anim-d4 text-sm text-gray-500 dark:text-white/40 leading-relaxed max-w-xl mb-7">
             At{" "}
             <span className="text-gray-700 dark:text-white/60 font-medium">
               Zinnov (Draup)
@@ -250,15 +216,10 @@ export default function Intro() {
             , I architect embedding-based classification models, multi-step job-role
             intelligence agents, and RAG pipelines that power Fortune 500 research.
             Open-source contributor: MCP servers, CLI agent systems, vector search tooling.
-          </motion.p>
+          </p>
 
           {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.36, ease: EASE_OUT, delay: 0.42 }}
-            className="flex flex-row gap-2.5 w-full sm:w-auto mb-7"
-          >
+          <div className="anim-fade-up anim-d5 flex flex-row gap-2.5 w-full sm:w-auto mb-7">
             <a
               href="#contact"
               onClick={() => {
@@ -301,15 +262,10 @@ export default function Intro() {
                 <HiDownload size={13} />
               </span>
             </a>
-          </motion.div>
+          </div>
 
           {/* Socials */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.34, ease: EASE_OUT, delay: 0.5 }}
-            className="flex items-center gap-2.5"
-          >
+          <div className="anim-fade-up anim-d6 flex items-center gap-2.5">
             {SOCIAL_LINKS.map(({ href, icon, label }) => (
               <a
                 key={label}
@@ -329,16 +285,11 @@ export default function Intro() {
                 {icon}
               </a>
             ))}
-          </motion.div>
+          </div>
         </div>
 
         {/* Right: profile image */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.94 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.55, ease: EASE_OUT, delay: 0.2 }}
-          className="shrink-0 "
-        >
+        <div className="anim-fade-in anim-d1 shrink-0">
           <motion.div
             animate={{ y: [0, -8, 0] }}
             transition={{ duration: 4.5, ease: "easeInOut", repeat: Infinity }}
@@ -349,7 +300,7 @@ export default function Intro() {
                 alt="Selvin PaulRaj K — AI Engineer"
                 width={320}
                 height={320}
-                quality={90}
+                quality={75}
                 priority
                 sizes="(max-width: 640px) 208px, (max-width: 1024px) 256px, 320px"
                 className="w-full h-full object-cover"
@@ -358,16 +309,13 @@ export default function Intro() {
             {/* Gold glow */}
             <div className="absolute inset-0 rounded-full bg-[#FFD700]/8 blur-3xl scale-125 -z-10" />
           </motion.div>
-        </motion.div>
+        </div>
       </div>
 
       {/* ── Stats strip ── */}
-      <motion.div
+      <div
         ref={statsRef}
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: EASE_OUT, delay: 0.58 }}
-        className="hidden lg:flex items-stretch rounded-2xl overflow-hidden border border-black/6 dark:border-white/8 bg-white dark:bg-white/[0.04] mb-8"
+        className="anim-fade-up anim-d7 hidden lg:flex items-stretch rounded-2xl overflow-hidden border border-black/6 dark:border-white/8 bg-white dark:bg-white/[0.04] mb-8"
       >
         {/* Projects */}
         <div className="flex flex-col items-center justify-center py-5 sm:px-5 px-3 flex-1 gap-1">
@@ -416,15 +364,10 @@ export default function Intro() {
             </span>
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* ── Tech stack badges ── */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.38, ease: EASE_OUT, delay: 0.66 }}
-        className="hidden lg:flex flex-wrap justify-start gap-2 mb-12"
-      >
+      <div className="anim-fade-up anim-d8 hidden lg:flex flex-wrap justify-start gap-2 mb-12">
         <span className="font-mono text-[0.65rem] text-gray-400 dark:text-white/25 self-center mr-1 tracking-widest uppercase">
           Core stack
         </span>
@@ -438,20 +381,15 @@ export default function Intro() {
             {tech}
           </span>
         ))}
-      </motion.div>
+      </div>
 
       {/* ── Particle text canvas — hidden on mobile ── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.8 }}
-        className="hidden sm:block w-full rounded-2xl overflow-hidden border border-black/6 dark:border-white/8"
-      >
+      <div className="anim-fade-in anim-d9 hidden sm:block w-full rounded-2xl overflow-hidden border border-black/6 dark:border-white/8">
         <ParticleTextEffect
           words={PARTICLE_WORDS}
           className="w-full bg-black flex items-center justify-center py-2"
         />
-      </motion.div>
+      </div>
     </section>
   );
 }

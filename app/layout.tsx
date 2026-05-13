@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
@@ -83,7 +84,7 @@ export const metadata: Metadata = {
       { url: "/favicon.ico", type: "image/x-icon" },
     ],
     shortcut: "/favicon.ico",
-    apple: "/selvinpaulraj_profile.png",
+    apple: "/favicon.svg",
   },
   alternates: {
     canonical: "https://selvinpaulraj.vercel.app",
@@ -109,11 +110,11 @@ export const metadata: Metadata = {
       "AI Engineer from Chennai, India building intelligent AI Agents, MCP servers, RAG systems, and LLM-powered agentic workflows. Full-stack MERN/Next.js expertise.",
     images: [
       {
-        url: "/selvinpaulraj_profile.png",
+        url: "/Selvin_PaulRaj.webp",
         width: 1200,
         height: 630,
         alt: "Selvin PaulRaj K — AI Engineer & Agentic AI Developer",
-        type: "image/png",
+        type: "image/webp",
       },
     ],
   },
@@ -123,7 +124,7 @@ export const metadata: Metadata = {
     description:
       "Building AI Agents, MCP servers, RAG pipelines, and agentic workflows. Full-stack MERN/Next.js expertise. Based in Chennai, India.",
     creator: "@selvinpaulrajk",
-    images: ["/selvinpaulraj_profile.png"],
+    images: ["/Selvin_PaulRaj.webp"],
   },
   verification: {
     google: "y8_t3SKugG2qZzqDFrgclLRNRh5m62dhX-OTUWKlthc",
@@ -165,6 +166,10 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://leetcode.com" />
         <link rel="dns-prefetch" href="https://www.hackerrank.com" />
 
+        {/* Preconnect for analytics CDN */}
+        <link rel="preconnect" href="https://www.clarity.ms" />
+        <link rel="dns-prefetch" href="https://www.clarity.ms" />
+
         {/* Person structured data */}
         <script
           type="application/ld+json"
@@ -174,7 +179,7 @@ export default function RootLayout({
               "@type": "Person",
               name: "Selvin PaulRaj K",
               url: "https://selvinpaulraj.vercel.app",
-              image: "https://selvinpaulraj.vercel.app/selvinpaulraj_profile.png",
+              image: "https://selvinpaulraj.vercel.app/Selvin_PaulRaj.webp",
               sameAs: [
                 "https://selvinpaulraj.tech",
                 "https://github.com/selvin-paul-raj",
@@ -278,8 +283,10 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-[#FAFAF9] text-gray-950 relative pt-20 pb-16 md:pb-0 dark:bg-[#09090b] dark:text-white/90">
-        {/* Microsoft Clarity Analytics */}
-        <script
+        {/* Microsoft Clarity Analytics — deferred until page is idle */}
+        <Script
+          id="clarity-analytics"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `(function(c,l,a,r,i,t,y){
               c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
