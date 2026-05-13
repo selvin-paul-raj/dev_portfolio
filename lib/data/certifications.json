@@ -8,8 +8,15 @@
     "certId": "f6qk5bev7int",
     "verifyUrl": "https://verify.skilljar.com/c/f6qk5bev7int",
     "imageUrl": null,
-    "skills": ["MCP", "Model Context Protocol", "AI Agents", "Claude", "Tool Integration"],
-    "duration": null
+    "skills": [
+      "MCP",
+      "Model Context Protocol",
+      "AI Agents",
+      "Claude",
+      "Tool Integration"
+    ],
+    "duration": null,
+    "show": true
   },
   {
     "id": "cert-anthropic-mcp-intro",
@@ -20,8 +27,15 @@
     "certId": "fxx4rw6fwj8j",
     "verifyUrl": "https://verify.skilljar.com/c/fxx4rw6fwj8j",
     "imageUrl": null,
-    "skills": ["MCP", "Claude", "AI Integration", "Tool Use", "LLMs"],
-    "duration": null
+    "skills": [
+      "MCP",
+      "Claude",
+      "AI Integration",
+      "Tool Use",
+      "LLMs"
+    ],
+    "duration": null,
+    "show": true
   },
   {
     "id": "cert-deeplearningai-acp",
@@ -32,8 +46,14 @@
     "certId": "d53d97ca-80d5-4d54-b8fd-46b18f1bc9a4",
     "verifyUrl": "https://learn.deeplearning.ai/accomplishments/d53d97ca-80d5-4d54-b8fd-46b18f1bc9a4?usp=sharing",
     "imageUrl": null,
-    "skills": ["AI Agents", "ACP Protocol", "Multi-Agent Systems", "Agent Communication"],
-    "duration": null
+    "skills": [
+      "AI Agents",
+      "ACP Protocol",
+      "Multi-Agent Systems",
+      "Agent Communication"
+    ],
+    "duration": null,
+    "show": true
   },
   {
     "id": "cert-deeplearningai-knowledge-graph",
@@ -44,8 +64,15 @@
     "certId": "921d7871-853e-417c-ae96-79de18685f0e",
     "verifyUrl": "https://learn.deeplearning.ai/accomplishments/921d7871-853e-417c-ae96-79de18685f0e?usp=sharing",
     "imageUrl": null,
-    "skills": ["Knowledge Graphs", "AI Agents", "LLMs", "Graph Databases", "Neo4j"],
-    "duration": null
+    "skills": [
+      "Knowledge Graphs",
+      "AI Agents",
+      "LLMs",
+      "Graph Databases",
+      "Neo4j"
+    ],
+    "duration": null,
+    "show": true
   },
   {
     "id": "cert-huggingface-mcp-course",
@@ -56,8 +83,14 @@
     "certId": "selvinpaulraj-mcp-2025",
     "verifyUrl": "https://huggingface.co/datasets/mcp-course/certificates/resolve/main/certificates/selvinpaulraj/2025-07-03.png",
     "imageUrl": null,
-    "skills": ["MCP", "Model Context Protocol", "AI Integration", "Hugging Face"],
-    "duration": null
+    "skills": [
+      "MCP",
+      "Model Context Protocol",
+      "AI Integration",
+      "Hugging Face"
+    ],
+    "duration": null,
+    "show": true
   },
   {
     "id": "cert-huggingface-ai-agents",
@@ -68,8 +101,15 @@
     "certId": "selvinpaulraj-agents-2025",
     "verifyUrl": "https://huggingface.co/datasets/agents-course/certificates/resolve/main/certificates/selvinpaulraj/2025-06-25.png",
     "imageUrl": null,
-    "skills": ["AI Agents", "LLMs", "Tool Use", "Hugging Face", "Transformers"],
-    "duration": null
+    "skills": [
+      "AI Agents",
+      "LLMs",
+      "Tool Use",
+      "Hugging Face",
+      "Transformers"
+    ],
+    "duration": null,
+    "show": true
   },
   {
     "id": "cert-linkedin-aws-amplify",
@@ -80,8 +120,15 @@
     "certId": "fcdc9745813017dda958b01c6b610906a54c1d515c6a7773dd6ae47befa61f0b",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/fcdc9745813017dda958b01c6b610906a54c1d515c6a7773dd6ae47befa61f0b/",
     "imageUrl": null,
-    "skills": ["Full-Stack Development", "JavaScript", "AWS", "AWS Amplify", "React"],
-    "duration": "44 min"
+    "skills": [
+      "Full-Stack Development",
+      "JavaScript",
+      "AWS",
+      "AWS Amplify",
+      "React"
+    ],
+    "duration": "44 min",
+    "show": true
   },
   {
     "id": "cert-guvi-figma",
@@ -92,8 +139,15 @@
     "certId": "P7i7b1755V780Z4g3J",
     "verifyUrl": "https://www.guvi.in/certificate.html?id=P7i7b1755V780Z4g3J",
     "imageUrl": "/certs/figma-guvi.png",
-    "skills": ["Figma", "UI/UX", "Prototyping", "Design Systems", "Wireframing"],
-    "duration": null
+    "skills": [
+      "Figma",
+      "UI/UX",
+      "Prototyping",
+      "Design Systems",
+      "Wireframing"
+    ],
+    "duration": null,
+    "show": false
   },
   {
     "id": "cert-ibm-kali-linux",
@@ -104,8 +158,14 @@
     "certId": "PLAN-DC0D0568B3BB",
     "verifyUrl": "https://skills.yourlearning.ibm.com/certificate/share/ec5a1a8a0cewogICJvYmplY3RJZCIgOiAiUExBTi1EQzBEMDU2OEIzQkIiLAogICJvYmplY3RUeXBlIiA6ICJBQ1RJVklUWSIsCiAgImxlYXJuZXJDTlVNIiA6ICIyMzU2MzQ0UkVHIgp929c1542ff3-10",
     "imageUrl": null,
-    "skills": ["Kali Linux", "Penetration Testing", "Cybersecurity", "Linux"],
-    "duration": null
+    "skills": [
+      "Kali Linux",
+      "Penetration Testing",
+      "Cybersecurity",
+      "Linux"
+    ],
+    "duration": null,
+    "show": false
   },
   {
     "id": "cert-hackerrank-css-basic",
@@ -116,8 +176,14 @@
     "certId": "ADB84BF0E734",
     "verifyUrl": "https://www.hackerrank.com/certificates/adb84bf0e734",
     "imageUrl": null,
-    "skills": ["CSS", "Selectors", "Box Model", "Flexbox"],
-    "duration": null
+    "skills": [
+      "CSS",
+      "Selectors",
+      "Box Model",
+      "Flexbox"
+    ],
+    "duration": null,
+    "show": false
   },
   {
     "id": "cert-linkedin-nodejs",
@@ -128,7 +194,14 @@
     "certId": "a3e37a403b15f0cb3bc95972098209e8ec26e160221cd157366b0cda87c3f789",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/a3e37a403b15f0cb3bc95972098209e8ec26e160221cd157366b0cda87c3f789/",
     "imageUrl": null,
-    "skills": ["Node.js", "Express", "Testing", "Deployment", "Web Servers"],
-    "duration": null
+    "skills": [
+      "Node.js",
+      "Express",
+      "Testing",
+      "Deployment",
+      "Web Servers"
+    ],
+    "duration": null,
+    "show": true
   }
 ]

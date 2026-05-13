@@ -114,4 +114,4 @@ export const experienceMetrics = {
 };
 
 export const recognitionData = rawRecognition;
-export const certificationsData = rawCertifications;
+export const certificationsData = rawCertifications.filter((c) => c.show);

@@ -7,5 +7,5 @@ const HEADERS = {
 } as const;
 
 export function GET() {
-  return NextResponse.json(data, { headers: HEADERS });
+  return NextResponse.json(data.filter((c) => c.show), { headers: HEADERS });
 }

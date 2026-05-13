@@ -4,9 +4,11 @@ import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useSectionInView } from "@/lib/hooks";
-import rawCerts from "@/lib/data/certifications.json";
+import rawCertsAll from "@/lib/data/certifications.json";
 
-type Cert = (typeof rawCerts)[number];
+const rawCerts = rawCertsAll.filter((c) => c.show);
+
+type Cert = (typeof rawCertsAll)[number];
 type SortMode = "newest" | "oldest" | "az" | "issuer";
 type ViewMode = "grid" | "list";
 
