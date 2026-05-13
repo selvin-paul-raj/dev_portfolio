@@ -1,0 +1,72 @@
+{
+  "publications": [
+    {
+      "title": "Event Management System for College Symposium and Events with Facial Recognition Image Sharing System",
+      "publisher": "IRJMETS",
+      "publisherFull": "International Research Journal of Modernization in Engineering Technology and Science",
+      "publication_date": "2025-06-01",
+      "type": "Research Publication",
+      "status": "Published",
+      "description": "Proposed and developed a smart Event Management System (EMS) integrated with an AI-powered Facial Recognition-Based Image Sharing System (FRISS). The platform streamlines the complete event lifecycle including registration, QR-based check-ins, scheduling, secure image sharing, and GDPR-compliant consent management.",
+      "abstract": "The system leverages Next.js, Convex, Clerk, Razorpay, TensorFlow, and Cloudinary to automate event workflows and deliver personalized image galleries using facial recognition. It demonstrates a scalable, privacy-conscious, and user-centric approach to academic event digitization.",
+      "technologies": ["Next.js", "TypeScript", "Convex", "Clerk", "Razorpay", "TensorFlow", "Cloudinary", "Facial Recognition", "QR Codes", "AI / ML"],
+      "features": [
+        "Online event registration",
+        "QR code-based check-in",
+        "Real-time event scheduling",
+        "Automated facial recognition tagging",
+        "Personalized image galleries",
+        "Consent-based privacy workflows",
+        "Secure image delivery"
+      ],
+      "paperId": "894d96730a2ee611c151ac26525c774d",
+      "research_link": "https://www.ijprems.com/paperdetail.php?paperId=894d96730a2ee611c151ac26525c774d"
+    }
+  ],
+  "achievements": [
+    {
+      "title": "1st Place — Hackathon",
+      "issuer": "Alpha College of Engineering",
+      "date": "2024-03",
+      "category": "Hackathon",
+      "rank": 1,
+      "roman": "I",
+      "ordinal": "st",
+      "associated_with": "DMI College of Engineering",
+      "certificate_available": true
+    },
+    {
+      "title": "1st Place — Website Development",
+      "issuer": "Alpha College of Engineering",
+      "date": "2024-03",
+      "category": "Web Dev",
+      "rank": 1,
+      "roman": "I",
+      "ordinal": "st",
+      "associated_with": "DMI College of Engineering",
+      "certificate_available": true
+    },
+    {
+      "title": "2nd Place — National Technical Symposium",
+      "issuer": "Chennai Institute of Technology",
+      "date": "2023-09",
+      "category": "Coding",
+      "rank": 2,
+      "roman": "II",
+      "ordinal": "nd",
+      "associated_with": "DMI College of Engineering",
+      "certificate_available": true
+    },
+    {
+      "title": "3rd Place — SheInnovates Hackathon",
+      "issuer": "Women Techmakers Chennai",
+      "date": "2024-03",
+      "category": "Hackathon",
+      "rank": 3,
+      "roman": "III",
+      "ordinal": "rd",
+      "associated_with": "DMI College of Engineering",
+      "certificate_available": true
+    }
+  ]
+}
