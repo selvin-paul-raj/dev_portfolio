@@ -37,6 +37,15 @@ const nextConfig = {
         ],
       },
       {
+        source: "/view/SPR_Resume.pdf",
+        headers: [
+          {
+            key: "Content-Disposition",
+            value: "inline; filename=\"SPR_Resume.pdf\"",
+          },
+        ],
+      },
+      {
         source: "/(.*)\\.(ico|png|jpg|jpeg|webp|avif|svg|gif|woff|woff2)",
         headers: [
           {
