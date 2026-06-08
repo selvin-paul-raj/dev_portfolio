@@ -47,3 +47,4 @@ ruvector.db
 # OS files
 .DS_Store
 desktop.ini
+dist/

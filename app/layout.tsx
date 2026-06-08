@@ -11,7 +11,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import ThemeContextProvider from "@/context/theme-context";
-import McpBadge from "@/components/McpBadge";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -377,7 +376,6 @@ export default function RootLayout({
               <Toaster position="top-right" />
               <Footer />
               <ThemeSwitch />
-              <McpBadge />
             </main>
           </ActiveSectionContextProvider>
         </ThemeContextProvider>
