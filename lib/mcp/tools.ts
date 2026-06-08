@@ -10,6 +10,15 @@ const projects = projectsData as any[];
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const certifications = certificationsData as any[];
 
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export function listTools(): McpTool[] {
   return [
     {
@@ -45,7 +54,7 @@ export function listTools(): McpTool[] {
         properties: {
           per_page: { type: "number", description: "Results per page, max 100 (default: 20)" },
           page: { type: "number", description: "Page number (default: 1)" },
-          sort: { type: "string", description: "Sort by 'updated', 'stars', or 'created' (default: 'updated')" },
+          sort: { type: "string", description: "Sort by 'updated', 'created', or 'pushed' (default: 'updated')" },
         },
       },
     },
@@ -214,13 +223,17 @@ async function dispatch(name: string, args: Record<string, unknown>): Promise<st
       if (message.length > 5000) return JSON.stringify({ error: "message too long (max 5000 chars)" });
 
       const resend = new Resend(process.env.RESEND_API_KEY);
-      await resend.emails.send({
-        from: "SPR Portfolio MCP <onboarding@resend.dev>",
-        to: "selvinpaulgomathi@gmail.com",
-        subject: `[MCP Contact] ${name}`,
-        replyTo: email,
-        html: `<h2>New message via Portfolio MCP</h2><p><strong>From:</strong> ${name} (${email})</p><hr/><p>${message.replace(/\n/g, "<br>")}</p>`,
-      });
+      try {
+        await resend.emails.send({
+          from: "SPR Portfolio MCP <onboarding@resend.dev>",
+          to: "selvinpaulgomathi@gmail.com",
+          subject: `[MCP Contact] ${name}`,
+          replyTo: email,
+          html: `<h2>New message via Portfolio MCP</h2><p><strong>From:</strong> ${escapeHtml(name)} (${escapeHtml(email)})</p><hr/><p>${escapeHtml(message).replace(/\n/g, "<br>")}</p>`,
+        });
+      } catch {
+        return JSON.stringify({ error: "Failed to send message. Please try again later." });
+      }
 
       return JSON.stringify({
         success: true,
