@@ -5,10 +5,9 @@ import { Resend } from "resend";
 import projectsData from "@/lib/data/projects.json";
 import certificationsData from "@/lib/data/certifications.json";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const projects = projectsData as any[];
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const certifications = certificationsData as any[];
+// JSON imports — typed loosely since lib/data/*.json has no strict schema
+const projects: any[] = projectsData as any[];
+const certifications: any[] = certificationsData as any[];
 
 function escapeHtml(s: string): string {
   return s
