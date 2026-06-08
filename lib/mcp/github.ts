@@ -54,7 +54,7 @@ export async function listRepos({
 }: {
   per_page?: number;
   page?: number;
-  sort?: string;
+  sort?: "created" | "updated" | "pushed" | "full_name";
 } = {}): Promise<ReturnType<typeof shape>[]> {
   const url = `${API}/users/${OWNER}/repos?per_page=${per_page}&page=${page}&sort=${sort}&type=public`;
   const res = await fetch(url, {
