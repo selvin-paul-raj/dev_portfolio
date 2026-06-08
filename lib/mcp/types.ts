@@ -6,19 +6,16 @@ export interface McpRequest {
   params?: Record<string, unknown>;
 }
 
-export interface McpResponse {
-  jsonrpc: "2.0";
-  id: string | number | null;
-  result?: unknown;
-  error?: { code: number; message: string; data?: unknown };
-}
+export type McpResponse =
+  | { jsonrpc: "2.0"; id: string | number | null; result: unknown; error?: never }
+  | { jsonrpc: "2.0"; id: string | number | null; result?: never; error: { code: number; message: string; data?: unknown } };
 
 export interface McpTool {
   name: string;
   description: string;
   inputSchema: {
     type: "object";
-    properties: Record<string, { type: string; description: string }>;
+    properties: Record<string, { type: string; description?: string }>;
     required?: string[];
   };
 }
@@ -33,5 +30,6 @@ export interface McpResource {
 export interface McpContent {
   uri: string;
   mimeType: string;
+  type: "text" | "blob";
   text: string;
 }
