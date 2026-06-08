@@ -6,10 +6,57 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-12-FF0055?style=flat-square&logo=framer&logoColor=white)](https://www.framer.com/motion/)
 [![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000?style=flat-square&logo=vercel&logoColor=white)](https://vercel.com/)
+[![MCP Enabled](https://img.shields.io/badge/MCP-2024--11--05-7c3aed?style=flat-square)](https://selvinpaulraj.vercel.app/api/mcp)
+[![Alpic](https://img.shields.io/badge/Deployed_on-Alpic.ai-6366f1?style=flat-square)](https://alpic.ai)
 
 Personal portfolio for **Selvin PaulRaj K** — AI Engineer at Zinnov (Draup), specialising in AI Agents, MCP servers, RAG pipelines, LangGraph multi-agent systems, and full-stack Next.js/Python applications.
 
-**Live:** [selvinpaulraj.vercel.app](https://selvinpaulraj.vercel.app)
+**Live:** [selvinpaulraj.vercel.app](https://selvinpaulraj.vercel.app)  
+**MCP endpoint:** [selvinpaulraj.vercel.app/api/mcp](https://selvinpaulraj.vercel.app/api/mcp)
+
+---
+
+## MCP Server
+
+This portfolio is MCP-enabled. AI assistants (Claude, Cursor, Zed) can connect directly to portfolio data.
+
+**Protocol:** MCP 2024-11-05 · HTTP JSON-RPC · CORS open
+
+### Resources
+
+| URI | Data |
+|-----|------|
+| `selvin://profile` | Bio, contact, social links, expertise |
+| `selvin://projects` | 44+ projects with tags and links |
+| `selvin://skills` | Full technical skill set |
+| `selvin://experience` | Work history and education |
+| `selvin://certifications` | 20+ verified certifications |
+| `selvin://recognition` | Awards and achievements |
+
+### Tools
+
+| Tool | Description |
+|------|-------------|
+| `search_projects(query, category, tech)` | Filter projects |
+| `get_project_by_title(title)` | Single project lookup |
+| `list_github_repos(per_page, page, sort)` | Live GitHub stats |
+| `get_github_repo(repo)` | Single repo details |
+| `filter_certifications(category, issuer)` | Filter certifications |
+| `get_profile_summary()` | Full profile JSON |
+| `contact_selvin(name, email, message)` | Send email via Resend |
+
+### Connect
+
+Add to your MCP config:
+```json
+{
+  "mcpServers": {
+    "selvin-portfolio": {
+      "url": "https://selvinpaulraj.vercel.app/api/mcp"
+    }
+  }
+}
+```
 
 ---
 
@@ -123,25 +170,19 @@ dev_portfolio/
 
 ## Getting started
 
-**Requirements:** Node.js 18+, an `.env.local` file with `RESEND_API_KEY`.
+**Requirements:** Node.js 18+, `.env.local` with required keys.
 
 ```bash
-# Install dependencies
 npm install
-
-# Start dev server (localhost:3000)
-npm run dev
-
-# Production build
+npm run dev    # http://localhost:3000
 npm run build
-
-# Lint
 npm run lint
 ```
 
 `.env.local`:
 ```
 RESEND_API_KEY=re_xxxxxxxxxxxx
+GITHUB_TOKEN=ghp_xxxxxxxxxxxx   # public_repo read scope
 ```
 
 ---
@@ -157,9 +198,14 @@ RESEND_API_KEY=re_xxxxxxxxxxxx
 
 ## Deployment
 
-Deployed on Vercel. Any push to `main` triggers a production build automatically.
+See **[DEPLOY.md](./DEPLOY.md)** for full instructions.
 
-Set the `RESEND_API_KEY` environment variable in the Vercel dashboard under Project Settings > Environment Variables.
+| Platform | Purpose | Trigger |
+|----------|---------|---------|
+| **Vercel** | Portfolio website + MCP endpoint | Push to `main` |
+| **Alpic.ai** | Standalone MCP server registration | Push to `main` |
+
+`alpic.json` at the project root configures the Alpic build (`buildOutputDir: ".next"` fixes the default `dist/` mismatch).
 
 ---
 
