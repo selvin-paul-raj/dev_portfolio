@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build:mcp": "tsc -p tsconfig.server.json && node -e \"const{cpSync}=require('fs');cpSync('lib/data','dist/data',{recursive:true})\""
   },
   "dependencies": {
     "@react-email/components": "^1.0.12",
