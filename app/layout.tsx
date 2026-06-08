@@ -179,6 +179,11 @@ export default function RootLayout({
         <link rel="preconnect" href="https://www.clarity.ms" />
         <link rel="dns-prefetch" href="https://www.clarity.ms" />
 
+        {/* AI/LLM discovery link-rels */}
+        <link rel="llms-txt" href="/llms.txt" />
+        <link rel="ai-plugin" type="application/json" href="/.well-known/ai-plugin.json" />
+        <link rel="mcp-server" type="application/json" href="/.well-known/mcp.json" />
+
         {/* Person structured data */}
         <script
           type="application/ld+json"
