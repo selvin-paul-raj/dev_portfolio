@@ -1,106 +1,79 @@
-# Selvin PaulRaj K — AI Engineer Portfolio
+# Selvin PaulRaj K — AI Engineer
 
-> This file provides context about this website for Large Language Models (LLMs) and AI assistants.
-> Following the llms.txt standard: https://llmstxt.org
+> Selvin PaulRaj K is an AI Engineer from Chennai, India, specializing in intelligent AI Agents, MCP servers, RAG systems, LangGraph multi-agent pipelines, and agentic workflows.
 
-## About the Owner
+## About
 
-**Name:** Selvin PaulRaj K
-**Title:** AI Engineer
-**Location:** Chennai, Tamil Nadu, India
-**Primary Website:** https://selvinpaulraj.vercel.app
-**Alternate Website:** https://selvinpaulraj.tech
-**Current Role:** Associate Data Analyst (AI Engineering) at Zinnov (Draup)
-**Education:** M.E Computer Science & Engineering with AI (2025–Present, Kings Engineering College); B.Tech Information Technology (2021–2025, DMI College of Engineering, CGPA 8.4)
+- **Name**: Selvin PaulRaj K
+- **Role**: AI Engineer | Associate Data Analyst (AI Automation)
+- **Location**: Chennai, Tamil Nadu, India
+- **Company**: Zinnov / Draup
+- **Education**: M.E Computer Science (AI), Kings Engineering College
+- **Portfolio**: https://selvinpaulraj.vercel.app
+- **GitHub**: https://github.com/selvin-paul-raj
+- **LinkedIn**: https://linkedin.com/in/selvinpaulraj
+- **Email**: selvinpaulgomathi@gmail.com
 
-## Core Specialization
+## Core Expertise
 
-Selvin PaulRaj K is an **AI Engineer** specializing in:
+- **AI Agents & Agentic Systems** — building autonomous multi-step agents
+- **Model Context Protocol (MCP)** — Anthropic-certified MCP developer
+- **LangGraph / LangChain** — multi-agent pipeline architecture
+- **Retrieval-Augmented Generation (RAG)** — FAISS, vector search, embedding pipelines
+- **LLM Engineering** — Claude, GPT-4, Gemini integration and prompt engineering
+- **Full-Stack** — Next.js 16, React 19, Node.js, Python, FastAPI
 
-1. **Agentic AI Systems** — LangGraph multi-agent pipelines, autonomous agents, agentic workflows
-2. **MCP (Model Context Protocol)** — Building and deploying MCP servers for LLM tool use
-3. **RAG Systems** — Retrieval-Augmented Generation with FAISS, vector databases, semantic search
-4. **LLM Engineering** — OpenAI, Anthropic Claude, Google Gemini, LangChain integration
-5. **Full-Stack AI Applications** — Next.js 16, React 19, Python, FastAPI, MERN stack
+## This Site Is MCP-Enabled
 
-## Professional Experience
+Connect any MCP-compatible AI assistant directly to Selvin's portfolio data.
 
-### Current: Associate Data Analyst — Zinnov (Draup)
-**Duration:** September 2025 – Present | On-site, Arakkonam, Tamil Nadu
-- Building AI automation pipelines and embedding-based classification models
-- Improved classification accuracy by 40% through embedding similarity models
-- Built automation pipelines for job-role intelligence (30% reduction in manual time)
-- Delivering data-backed insights for Fortune 500 clients
+**Endpoint**: https://selvinpaulraj.vercel.app/api/mcp
+**Protocol**: MCP 2024-11-05 (JSON-RPC 2.0 over HTTP)
 
-### Tech Intern — Zinnov (Draup)
-**Duration:** June 2025 – September 2025
-- Built AI automation prototypes using LLMs, agentic flows, and data-driven workflows
-- Contributed to multi-step job role classification, website extraction agents, skill-mapping systems
+### MCP Resources
 
-### Python Development Intern — Octanet Services Pvt Ltd
-**Duration:** May 2024 – July 2024 | Remote
-- Flask-based predictive financial model used by 1,000+ users
+| URI | Description |
+|-----|-------------|
+| selvin://profile | Bio, contact, social links, expertise |
+| selvin://projects | 44+ projects with tags, links, categories |
+| selvin://skills | Full technical skill set |
+| selvin://experience | Work history and education |
+| selvin://certifications | 20+ verified certifications |
+| selvin://recognition | Awards and achievements |
 
-### Web Development Intern — Veritech Software IT Services
-**Duration:** March 2024 – May 2024 | Remote
-- Built React portfolio, generative-AI chatbot, Next.js 3D landing page
+### MCP Tools
 
-### Full Stack Intern — Servimos Technologies Pvt Ltd
-**Duration:** July 2023 – August 2023 | On-site
-- Scalable MERN Library Management System for 200+ users
+| Tool | Description |
+|------|-------------|
+| search_projects(query, category, tech) | Filter projects by keyword, category, or tech |
+| get_project_by_title(title) | Get a specific project |
+| list_github_repos(per_page, page, sort) | Live GitHub repo stats |
+| get_github_repo(repo) | Detailed stats for one repo |
+| filter_certifications(category, issuer) | Filter certifications |
+| get_profile_summary() | Full professional summary |
+| contact_selvin(name, email, message) | Send Selvin a message |
 
-## Technical Skills
+## Selected Projects
 
-- **AI/Agentic:** LangGraph, LangChain, CrewAI, AutoGen, LlamaIndex, MCP, RAG, FAISS, ChromaDB
-- **LLMs:** OpenAI GPT-4o, Anthropic Claude, Google Gemini, Mistral, LLaMA
-- **Languages:** Python, TypeScript, JavaScript, Java
-- **Web:** Next.js 16, React 19, Node.js, Express.js, FastAPI, Flask
-- **Databases:** MongoDB, PostgreSQL, MySQL, Redis, Firebase
-- **DevOps:** Git, Docker, Vercel, GitHub Actions
+- **LinkedIn MCP Server** — Python MCP server for LinkedIn automation with GPT-4
+- **AI Calculator** — Next.js 15 drawing-based math solver using Gemini AI
+- **AI Content Generator** — Gemini-powered content platform with Next.js + PostgreSQL
+- **DRI Agent** — LangGraph v3 multi-agent pipeline: NL to SQL to deliverable
+- Full list: https://selvinpaulraj.vercel.app/#projects
 
-## Notable Projects
+## AI Engineering Certifications
 
-1. **AI Calculator** — Next.js 15 + Google Gemini AI drawing calculator
-2. **AI Content Generator** — LLM-powered content platform with PostgreSQL
-3. **TroothView** — AI photo trustworthiness verification (Gradio)
-4. **Phishing Detection System** — Browser extension + FastAPI ML backend
-5. **Developer Portfolio** — This site (Next.js 16, Framer Motion, Vercel)
+- Introduction to Model Context Protocol — Anthropic (2026)
+- Claude Code in Action — Anthropic (2026)
+- Claude with the Anthropic API — Anthropic (2026)
+- ACP: Agent Communication Protocol — DeepLearning.AI (2025)
+- AI Agents Fundamentals — Hugging Face (2025)
+- MCP Course — Hugging Face (2025)
+- Agentic Knowledge Graph Construction — DeepLearning.AI (2025)
+- Full list: https://selvinpaulraj.vercel.app/#certifications
 
-## Contact & Links
+## Contact
 
-- **Portfolio:** https://selvinpaulraj.vercel.app
-- **Alternate:** https://selvinpaulraj.tech
-- **GitHub:** https://github.com/selvin-paul-raj
-- **LinkedIn:** https://linkedin.com/in/selvinpaulraj
-- **HackerRank:** https://www.hackerrank.com/profile/selvinpaulraj
-- **LeetCode:** https://leetcode.com/u/selvinpaulraj/
-- **Resume:** https://selvinpaulraj.vercel.app/Selvin_Resume.pdf
-
-## Site Structure
-
-- `/` — Hero, About, Skills, Projects, Experience, Recognition, Certifications, Contact (single-page)
-- `/#about` — About section
-- `/#skills` — 200+ skills across 26 categories (tabbed)
-- `/#projects` — 44+ project portfolio with category filters
-- `/#experience` — Professional experience (Roles / Internships / Education)
-- `/#recognition` — Publications and competition achievements
-- `/#certifications` — 11+ certifications with issuer/category filters and search
-- `/#contact` — Contact form + direct contact methods
-- `/Selvin_Resume.pdf` — Downloadable CV
-
-## REST API
-
-All endpoints are public (CORS open), JSON, cached 1 hour.
-
-- `GET /api/projects` — All projects (44+ entries with show/order/categories/live/imageUrl)
-- `GET /api/skills` — Skills by category (26 categories, 200+ skills)
-- `GET /api/experiences` — Work experience entries (roles, internships, education)
-- `GET /api/recognition` — Publications and competition achievements
-- `GET /api/certifications` — Certifications (issuer, category, date, skills, verifyUrl)
-
-## Last Updated
-
-May 2026
-
----
-*This llms.txt file follows the llms.txt standard: https://llmstxt.org*
+- **Email**: selvinpaulgomathi@gmail.com
+- **MCP Tool**: Use contact_selvin to send a message programmatically
+- **LinkedIn**: https://linkedin.com/in/selvinpaulraj
