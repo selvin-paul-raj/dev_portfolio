@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "server_name": "selvin-portfolio-mcp",
+  "server_version": "1.0.0",
+  "display_name": "Selvin PaulRaj K — Portfolio MCP Server",
+  "description": "MCP server for Selvin PaulRaj K's portfolio — AI engineer from Chennai, India specializing in AI Agents, MCP, LangGraph, RAG.",
+  "endpoint": "https://selvinpaulraj.vercel.app/api/mcp",
+  "protocol_version": "2024-11-05",
+  "transport": "http",
+  "capabilities": {
+    "tools": true,
+    "resources": true,
+    "prompts": false,
+    "sampling": false
+  },
+  "resources": [
+    { "uri": "selvin://profile", "name": "Professional Profile" },
+    { "uri": "selvin://projects", "name": "Projects (44+)" },
+    { "uri": "selvin://skills", "name": "Technical Skills" },
+    { "uri": "selvin://experience", "name": "Work & Education" },
+    { "uri": "selvin://certifications", "name": "Certifications (20+)" },
+    { "uri": "selvin://recognition", "name": "Recognition & Awards" }
+  ],
+  "tools": [
+    { "name": "search_projects", "description": "Search projects by keyword, category, or tech" },
+    { "name": "get_project_by_title", "description": "Get project by title" },
+    { "name": "list_github_repos", "description": "Live GitHub repo stats" },
+    { "name": "get_github_repo", "description": "Detailed stats for one repo" },
+    { "name": "filter_certifications", "description": "Filter certifications" },
+    { "name": "get_profile_summary", "description": "Full professional summary" },
+    { "name": "contact_selvin", "description": "Send a contact message" }
+  ],
+  "owner": {
+    "name": "Selvin PaulRaj K",
+    "email": "selvinpaulgomathi@gmail.com",
+    "url": "https://selvinpaulraj.vercel.app"
+  }
+}

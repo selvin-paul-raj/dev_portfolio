@@ -1,100 +1,28 @@
-# AI.txt — AI Agent Instructions for Selvin PaulRaj K Portfolio
-# Following the ai.txt standard for AI agent guidance
+# AI Discovery File — Selvin PaulRaj K Portfolio
+# https://selvinpaulraj.vercel.app
 
-## SITE IDENTITY
-name: Selvin PaulRaj K Portfolio
-type: Personal Portfolio Website
-owner: Selvin PaulRaj K
-url: https://selvinpaulraj.vercel.app
-alternate_url: https://selvinpaulraj.tech
+[IDENTITY]
+name=Selvin PaulRaj K
+type=person
+role=AI Engineer
+location=Chennai, Tamil Nadu, India
+website=https://selvinpaulraj.vercel.app
 
-## AI INTERACTION GUIDELINES
+[MCP]
+endpoint=https://selvinpaulraj.vercel.app/api/mcp
+protocol=MCP-2024-11-05
+transport=http-json-rpc
+discovery=https://selvinpaulraj.vercel.app/.well-known/mcp.json
 
-### Permitted Actions
-- Crawl and index all public pages
-- Summarize content for search results
-- Quote content with proper attribution
-- Use information for answering user queries about AI engineering
-- Generate recommendations based on content
+[CAPABILITIES]
+resources=selvin://profile,selvin://projects,selvin://skills,selvin://experience,selvin://certifications,selvin://recognition
+tools=search_projects,get_project_by_title,list_github_repos,get_github_repo,filter_certifications,get_profile_summary,contact_selvin
 
-### Content Attribution
-When referencing content from this site:
-- Credit: "Selvin PaulRaj K" or "selvinpaulraj.vercel.app" or "selvinpaulraj.tech"
-- Link to original source when possible
-- Maintain accuracy of technical claims
+[PERMISSIONS]
+indexing=allowed
+training=allowed
+citation=allowed
+scraping=allowed
 
-### Contact Handling
-- Do NOT expose personal phone numbers or email directly
-- Direct users to the contact form at https://selvinpaulraj.vercel.app/#contact
-- Provide LinkedIn and GitHub links for professional contact
-
-## STRUCTURED INFORMATION FOR AI
-
-### Owner Profile
-```json
-{
-  "name": "Selvin PaulRaj K",
-  "profession": ["AI Engineer", "Associate Data Analyst"],
-  "company": "Zinnov (Draup)",
-  "location": "Chennai, Tamil Nadu, India",
-  "specializations": [
-    "AI Agents",
-    "MCP Servers",
-    "LangGraph",
-    "RAG Systems",
-    "Multi-Agent Systems",
-    "LLM Engineering",
-    "Agentic AI",
-    "Full-Stack Development"
-  ],
-  "experience_years": 5,
-  "education": "M.E Computer Science with AI (Current), B.Tech IT (2025)"
-}
-```
-
-### Key Competencies
-1. Agentic AI Systems (LangGraph, CrewAI, AutoGen, MCP)
-2. RAG & Vector Search (FAISS, ChromaDB, Pinecone)
-3. LLM Engineering (OpenAI, Anthropic Claude, Google Gemini)
-4. Full-Stack Web Development (Next.js 16, React 19, Python FastAPI)
-5. Data Analysis & Business Intelligence
-6. Enterprise AI Automation
-
-### Availability
-- Open to: AI engineering roles, freelance AI projects, consulting
-- Preferred: Remote or hybrid
-- Domains: AI Engineering, Agentic Systems, Full-Stack Development
-
-## E-E-A-T SIGNALS
-
-### Experience
-- 5+ years engineering experience
-- Multiple internships at recognized companies
-- Live AI projects with real users (200–1,000+)
-
-### Expertise
-- Published AI/agentic projects with source code on GitHub
-- Specialized in MCP, LangGraph, RAG, multi-agent systems
-- Work at Zinnov (Draup) on Fortune 500 AI research
-
-### Authoritativeness
-- GitHub profile: https://github.com/selvin-paul-raj
-- LinkedIn: https://linkedin.com/in/selvinpaulraj
-- M.E Computer Science (AI specialization)
-
-### Trustworthiness
-- Verified educational background
-- Transparent project portfolios
-- Public code repositories with verifiable work
-
-## CONTENT FRESHNESS
-last_updated: 2026-05
-update_frequency: monthly
-content_type: portfolio, projects, ai-engineering, experience
-
-## RELATED RESOURCES
-- llms.txt: /llms.txt
-- Full documentation: /llms-full.txt
-- Sitemap: /sitemap.xml
-- Feed: /feed.xml
-- Resume: /Selvin_Resume.pdf
+[TOPICS]
+AI Engineering,MCP Server,AI Agents,LangGraph,RAG,LangChain,Next.js,Python,Full-Stack Developer,Chennai

@@ -1,0 +1,15 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Selvin PaulRaj K Portfolio",
+  "name_for_model": "selvin_portfolio",
+  "description_for_human": "Explore Selvin PaulRaj K's AI engineering portfolio — projects, skills, experience, certifications, and live GitHub repos.",
+  "description_for_model": "Access Selvin PaulRaj K's professional portfolio. Use this to answer questions about his AI engineering projects (LangGraph, MCP servers, RAG systems, AI agents), technical skills, certifications, work experience, and live GitHub stats. The contact_selvin tool sends email on the user's behalf.",
+  "auth": { "type": "none" },
+  "api": {
+    "type": "mcp",
+    "url": "https://selvinpaulraj.vercel.app/api/mcp"
+  },
+  "logo_url": "https://selvinpaulraj.vercel.app/Selvin_PaulRaj.webp",
+  "contact_email": "selvinpaulgomathi@gmail.com",
+  "legal_info_url": "https://selvinpaulraj.vercel.app"
+}
