@@ -11,6 +11,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import ThemeContextProvider from "@/context/theme-context";
+import McpBadge from "@/components/McpBadge";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -289,6 +290,60 @@ export default function RootLayout({
             }),
           }}
         />
+
+        {/* Top AI projects structured data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "ItemList",
+              name: "Selvin PaulRaj K — Featured AI Engineering Projects",
+              itemListElement: [
+                {
+                  "@type": "ListItem",
+                  position: 1,
+                  item: {
+                    "@type": "SoftwareApplication",
+                    name: "LinkedIn MCP Server",
+                    description: "A lightweight MCP server for LinkedIn automation with GPT-4 integration",
+                    author: { "@type": "Person", name: "Selvin PaulRaj K" },
+                    programmingLanguage: ["Python", "MCP"],
+                    url: "https://github.com/selvin-paul-raj/Linkedin-MCP-Server",
+                    applicationCategory: "DeveloperApplication",
+                  },
+                },
+                {
+                  "@type": "ListItem",
+                  position: 2,
+                  item: {
+                    "@type": "SoftwareApplication",
+                    name: "AI Calculator",
+                    description:
+                      "Full-stack AI calculator using Next.js 15 and Google Gemini — draw math problems for instant answers",
+                    author: { "@type": "Person", name: "Selvin PaulRaj K" },
+                    programmingLanguage: ["TypeScript", "Next.js"],
+                    url: "https://spr-ai-calculator.vercel.app",
+                    applicationCategory: "WebApplication",
+                  },
+                },
+                {
+                  "@type": "ListItem",
+                  position: 3,
+                  item: {
+                    "@type": "SoftwareApplication",
+                    name: "AI Content Generator",
+                    description:
+                      "Scalable AI content generation platform with Gemini AI, Next.js 15, and PostgreSQL",
+                    author: { "@type": "Person", name: "Selvin PaulRaj K" },
+                    programmingLanguage: ["TypeScript", "Next.js", "Python"],
+                    applicationCategory: "WebApplication",
+                  },
+                },
+              ],
+            }),
+          }}
+        />
       </head>
       <body className="bg-[#FAFAF9] text-gray-950 relative pt-20 pb-16 md:pb-0 dark:bg-[#09090b] dark:text-white/90">
         {/* Microsoft Clarity Analytics — deferred until page is idle */}
@@ -317,6 +372,7 @@ export default function RootLayout({
               <Toaster position="top-right" />
               <Footer />
               <ThemeSwitch />
+              <McpBadge />
             </main>
           </ActiveSectionContextProvider>
         </ThemeContextProvider>
