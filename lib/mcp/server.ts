@@ -37,6 +37,7 @@ export async function handleMcpRequest(body: McpRequest): Promise<McpResponse> {
         return { jsonrpc: "2.0", id, result: { tools: listTools() } };
 
       case "tools/call": {
+        if (!params) return { jsonrpc: "2.0", id, error: { code: -32602, message: "params required for tools/call" } };
         const p = params as { name: string; arguments?: Record<string, unknown> };
         const result = await handleToolCall(p.name, p.arguments ?? {});
         return { jsonrpc: "2.0", id, result };
@@ -46,6 +47,7 @@ export async function handleMcpRequest(body: McpRequest): Promise<McpResponse> {
         return { jsonrpc: "2.0", id, result: { resources: listResources() } };
 
       case "resources/read": {
+        if (!params) return { jsonrpc: "2.0", id, error: { code: -32602, message: "params required for resources/read" } };
         const p = params as { uri: string };
         const contents = readResource(p.uri);
         return { jsonrpc: "2.0", id, result: { contents } };
