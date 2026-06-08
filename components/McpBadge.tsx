@@ -8,10 +8,14 @@ const ENDPOINT = "https://selvinpaulraj.vercel.app/api/mcp";
 export default function McpBadge() {
   const [copied, setCopied] = useState(false);
 
-  function copy() {
-    navigator.clipboard.writeText(ENDPOINT);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(ENDPOINT);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // clipboard denied — do not show false confirmation
+    }
   }
 
   return (
