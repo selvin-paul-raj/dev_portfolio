@@ -8,7 +8,8 @@
 - **Role**: AI Engineer | Associate Data Analyst (AI Automation)
 - **Location**: Chennai, Tamil Nadu, India
 - **Company**: Zinnov / Draup
-- **Education**: M.E Computer Science (AI), Kings Engineering College
+- **Award**: SPOT Recognition — Automation CoE, Zinnov/Draup (June 2026)
+- **Education**: M.E Computer Science (AI), Kings Engineering College | B.Tech IT, DMI College of Engineering (CGPA 8.4)
 - **Portfolio**: https://selvinpaulraj.vercel.app
 - **GitHub**: https://github.com/selvin-paul-raj
 - **LinkedIn**: https://linkedin.com/in/selvinpaulraj
@@ -53,6 +54,13 @@ Connect any MCP-compatible AI assistant directly to Selvin's portfolio data.
 | get_profile_summary() | Full professional summary |
 | contact_selvin(name, email, message) | Send Selvin a message |
 
+## Key Work at Zinnov/Draup
+
+- **DRI-MAS** — LangGraph v3 multi-agent system: NL → Trino SQL → structured Excel; reduced analyst turnaround from hours to <1 min
+- **Company Synonym Agent** — FAISS+BM25 hybrid retrieval across 2.4M company records; sub-second entity resolution
+- **Deal Origination Framework** — automated business-signal monitoring across 537 enterprise accounts
+- **RMS Agent** — AI-powered role mapping and workforce taxonomy alignment using Gemini + FAISS
+
 ## Selected Projects
 
 - **LinkedIn MCP Server** — Python MCP server for LinkedIn automation with GPT-4
@@ -61,11 +69,15 @@ Connect any MCP-compatible AI assistant directly to Selvin's portfolio data.
 - **DRI Agent** — LangGraph v3 multi-agent pipeline: NL to SQL to deliverable
 - Full list: https://selvinpaulraj.vercel.app/#projects
 
-## AI Engineering Certifications
+## AI Engineering Certifications (20+)
 
 - Introduction to Model Context Protocol — Anthropic (2026)
+- Introduction to Agentic AI Skills — Anthropic (2026)
 - Claude Code in Action — Anthropic (2026)
 - Claude with the Anthropic API — Anthropic (2026)
+- Finetuning Your Own R1 Reasoning Model on Unsloth — AMD (2026)
+- Introduction to AI on AMD AI PC — AMD (2026)
+- Introduction to Quantization — AMD (2026)
 - ACP: Agent Communication Protocol — DeepLearning.AI (2025)
 - AI Agents Fundamentals — Hugging Face (2025)
 - MCP Course — Hugging Face (2025)

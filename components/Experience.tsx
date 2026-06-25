@@ -31,6 +31,15 @@ export default function Experience() {
   const [activeTab, setActiveTab] = useState<TabKey>("roles");
 
   const entries = getTabEntries(activeTab);
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+
+  const toggleExpand = (id: string) => {
+    setExpandedIds(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
 
   return (
     <section
@@ -85,9 +94,13 @@ export default function Experience() {
           <div className="absolute left-5 top-0 bottom-0 w-px bg-zinc-200 dark:bg-zinc-800" />
 
           <ol className="space-y-0">
-            {entries.map((exp, index) => (
+            {entries.map((exp, index) => {
+              const entryKey = exp.id ?? String(index);
+              const isExpanded = expandedIds.has(entryKey);
+              const isLong = (exp.description?.length ?? 0) > 300;
+              return (
               <motion.li
-                key={exp.id ?? index}
+                key={entryKey}
                 initial={{ opacity: 0, x: -14 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{
@@ -148,13 +161,38 @@ export default function Experience() {
                   )}
 
                   {exp.description && (
-                    <p className="mt-3 text-sm text-gray-600 dark:text-white/55 leading-relaxed whitespace-pre-line">
-                      {exp.description}
-                    </p>
+                    <div className="mt-3">
+                      <motion.div
+                        initial={false}
+                        animate={{ maxHeight: isExpanded || !isLong ? 1200 : 88 }}
+                        transition={{ duration: 0.35, ease: EASE_OUT }}
+                        className="overflow-hidden"
+                      >
+                        <p className="text-sm text-gray-600 dark:text-white/55 leading-relaxed whitespace-pre-line">
+                          {exp.description}
+                        </p>
+                      </motion.div>
+                      {isLong && (
+                        <button
+                          onClick={() => toggleExpand(entryKey)}
+                          className="mt-2 text-xs font-medium text-[#9a7d2a] dark:text-[#FFD700]/70 hover:text-[#b8973b] dark:hover:text-[#FFD700] transition-colors duration-150 inline-flex items-center gap-1 outline-none focus-visible:ring-1 focus-visible:ring-[#FFD700]/40 rounded"
+                        >
+                          {isExpanded ? "Read less" : "Read more"}
+                          <motion.span
+                            animate={{ rotate: isExpanded ? 180 : 0 }}
+                            transition={{ duration: 0.25 }}
+                            className="inline-block text-[0.65rem]"
+                          >
+                            ↓
+                          </motion.span>
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
               </motion.li>
-            ))}
+              );
+            })}
           </ol>
         </motion.div>
       </AnimatePresence>

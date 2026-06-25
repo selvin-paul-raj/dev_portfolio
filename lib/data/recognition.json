@@ -9,7 +9,18 @@
       "status": "Published",
       "description": "Proposed and developed a smart Event Management System (EMS) integrated with an AI-powered Facial Recognition-Based Image Sharing System (FRISS). The platform streamlines the complete event lifecycle including registration, QR-based check-ins, scheduling, secure image sharing, and GDPR-compliant consent management.",
       "abstract": "The system leverages Next.js, Convex, Clerk, Razorpay, TensorFlow, and Cloudinary to automate event workflows and deliver personalized image galleries using facial recognition. It demonstrates a scalable, privacy-conscious, and user-centric approach to academic event digitization.",
-      "technologies": ["Next.js", "TypeScript", "Convex", "Clerk", "Razorpay", "TensorFlow", "Cloudinary", "Facial Recognition", "QR Codes", "AI / ML"],
+      "technologies": [
+        "Next.js",
+        "TypeScript",
+        "Convex",
+        "Clerk",
+        "Razorpay",
+        "TensorFlow",
+        "Cloudinary",
+        "Facial Recognition",
+        "QR Codes",
+        "AI / ML"
+      ],
       "features": [
         "Online event registration",
         "QR code-based check-in",
@@ -24,6 +35,18 @@
     }
   ],
   "achievements": [
+    {
+  "title": "SPOT Recognition",
+  "issuer": "Zinnov (Draup)",
+  "date": "2026-06",
+  "category": "Employee Recognition",
+  "associated_with": "Automation CoE",
+  "certificate_available": true,
+  "description": "Awarded the SPOT Recognition for designing AI agents and automation solutions that streamlined internal processes, improved operational efficiency, strengthened cross-team collaboration, and drove innovation within the Automation CoE team.",
+  "links": {
+    "linkedin": "https://www.linkedin.com/posts/selvinpaulraj_draup-zinnov-automation-activity-7395072524759330816-l3st"
+  }
+},
     {
       "title": "1st Place — Hackathon",
       "issuer": "Alpha College of Engineering",

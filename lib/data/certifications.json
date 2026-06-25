@@ -1,5 +1,164 @@
 [
   {
+    "id": "cert-amd-finetuning-r1-unsloth",
+    "title": "Finetuning Your Own R1 Reasoning Model on Unsloth",
+    "issuer": "AMD",
+    "category": "AI Engineering",
+    "date": "2026-06-01",
+    "certId": "BB6DCCABE4634B06BBDA51A54116FB19166284",
+    "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166284.pdf",
+    "imageUrl": null,
+    "skills": [
+      "Unsloth",
+      "LLM Fine-tuning",
+      "Reasoning Models",
+      "Supervised Fine-Tuning"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
+  "id": "cert-amd-introduction-ai-amd-ai-pc",
+  "title": "Introduction to AI on AMD AI PC",
+  "issuer": "AMD",
+  "category": "AI Engineering",
+  "date": "2026-06-01",
+  "certId": "BB6DCCABE4634B06BBDA51A54116FB19166315",
+  "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166315.pdf",
+  "imageUrl": null,
+  "skills": [
+    "AI PCs",
+    "AMD Ryzen AI",
+    "Edge AI",
+    "On-Device AI",
+    "Generative AI"
+  ],
+  "duration": null,
+  "show": true
+},
+  {
+    "id": "cert-amd-introduction-quantization",
+    "title": "Introduction to Quantization",
+    "issuer": "AMD",
+    "category": "AI Engineering",
+    "date": "2026-06-01",
+    "certId": "BB6DCCABE4634B06BBDA51A54116FB19166326",
+    "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166326.pdf",
+    "imageUrl": null,
+    "skills": [
+      "Quantization Techniques",
+      "Model Optimization",
+      "LLM Inference"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
+    "id": "cert-amd-huggingface-amd",
+    "title": "Hugging Face on AMD",
+    "issuer": "AMD",
+    "category": "AI Engineering",
+    "date": "2026-06-01",
+    "certId": "BB6DCCABE4634B06BBDA51A54116FB19166321",
+    "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166321.pdf",
+    "imageUrl": null,
+    "skills": [
+      "Transformers",
+      "Hugging Face",
+      "Inference"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
+    "id": "cert-amd-diffusion-models",
+    "title": "Diffusion Models: From Prompts to Images and Video",
+    "issuer": "AMD",
+    "category": "Generative AI",
+    "date": "2026-06-01",
+    "certId": "BB6DCCABE4634B06BBDA51A54116FB19166283",
+    "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166283.pdf",
+    "imageUrl": null,
+    "skills": [
+      "Diffusion Models",
+      "Image Generation",
+      "Video Generation",
+      "Generative AI"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
+    "id": "cert-amd-introduction-rag",
+    "title": "Introduction to RAG",
+    "issuer": "AMD",
+    "category": "AI Engineering",
+    "date": "2026-06-01",
+    "certId": "BB6DCCABE4634B06BBDA51A54116FB19166325",
+    "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166325.pdf",
+    "imageUrl": null,
+    "skills": [
+      "Retrieval-Augmented Generation (RAG)",
+      "Vector Databases",
+      "Embeddings"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
+    "id": "cert-amd-ai-agents-201",
+    "title": "AI Agents 201: Design to Deployment: A Hands-On Guide to Multi-Agent Systems",
+    "issuer": "AMD",
+    "category": "Agentic AI",
+    "date": "2026-06-01",
+    "certId": "BB6DCCABE4634B06BBDA51A54116FB19166282",
+    "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166282.pdf",
+    "imageUrl": null,
+    "skills": [
+      "Agent2Agent",
+      "Google Agent Development Kit (ADK)",
+      "Multi-Agent Systems",
+      "AI Agents"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
+    "id": "cert-amd-ai-agents-101",
+    "title": "AI Agents 101: Building AI Agents with MCP and Open-Source Inference",
+    "issuer": "AMD",
+    "category": "Agentic AI",
+    "date": "2026-06-01",
+    "certId": "BB6DCCABE4634B06BBDA51A54116FB19166281",
+    "verifyUrl":"https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166281.pdf",
+    "imageUrl": null,
+    "skills": [
+      "Model Context Protocol (MCP)",
+      "Pydantic AI",
+      "Open-Source LLMs",
+      "AI Agents"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
+    "id": "cert-amd-introduction-ai-agents",
+    "title": "Introduction to AI Agents",
+    "issuer": "AMD",
+    "category": "Agentic AI",
+    "date": "2025-06-01",
+    "certId": "BB6DCCABE4634B06BBDA51A54116FB19166324",
+    "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166324.pdf",
+    "imageUrl": null,
+    "skills": [
+      "AI Agents",
+      "Agent Workflows",
+      "LLMs"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
     "id": "cert-anthropic-mcp-advanced",
     "title": "Model Context Protocol: Advanced Topics",
     "issuer": "Anthropic",

@@ -1,7 +1,7 @@
 [
   {
     "id": "exp-1",
-    "order":4,
+    "order": 4,
     "title": "B.Tech Information Technology",
     "company": "DMI College of Engineering",
     "location": "Chennai, Tamil Nadu, India",
@@ -60,7 +60,7 @@
     "order": 8,
     "company": "GenXRverse",
     "location": "Chennai, Tamil Nadu, India (Hybrid)",
-    "description": "• Leading development of AI-driven automation and agentic systems for productivity and business intelligence.\n• Built MVP prototypes using LLMs, RAG, MCP and multi-agent workflows.\n• Managing product roadmap, technical execution, and user experience design for early adopters.",
+    "description": "GenXRverse started during my college days when a few friends and I decided to build real projects instead of just completing assignments. We believed the best way to learn was by solving real problems, not just solving exam questions.\n\nOver time, we delivered 20+ projects with proper documentation and production deployments for students and clients. Every project taught us something beyond coding—how to split work, collaborate as a team, communicate clearly, meet deadlines, and take ownership.\n\nAs our team grew, we helped friends gain internship opportunities through the projects we built together. We also organized and sponsored a hackathon at our college, conducted workshops through our Data Science Club, and encouraged more students to start building instead of waiting for opportunities.\n\nTogether, we participated in hackathons, celebrated wins, learned from setbacks, built our own MVP, and discovered what it really means to build products with users in mind. Every success gave us confidence, and every failure gave us experience.\n\nLooking back, GenXRverse wasn't just a team or a collection of projects—it was the place where we became builders, teammates, and problem solvers. It taught us that every great product starts with a simple idea and the courage to build the first version.\n\nThis wasn't the end of the journey—it was the first step. Everything I'm building today started here, and the best is yet to come.",
     "dateStart": "Mar 2024",
     "dateEnd": "Present",
     "icon": "laptop"
@@ -71,7 +71,7 @@
     "order": 2,
     "company": "Zinnov (Draup)",
     "location": "Arakkonam, Tamil Nadu, India (On-site)",
-    "description": "• Built AI automation prototypes using LLMs, agentic flows, and data-driven workflows.\n• Improved research data accuracy by 35% using automated web scraping and validation pipelines.\n• Designed internal tools to streamline business research operations, reducing manual workload by 25%.\n• Contributed to multi-step job role classification, website extraction agents, and skill-mapping systems.",
+    "description": "- Contributed to AI-powered automation, workforce intelligence, and enterprise data engineering initiatives supporting large-scale business operations.\n\n- Developed the RMS Agent, an AI-powered role mapping and recommendation system that standardized job descriptions against Draup's workforce taxonomy.\n\n- Built LLM-driven job description enrichment and skill extraction workflows using Gemini and FAISS semantic search.\n\n- Implemented automated classification pipelines for Existing Role, New Role, and Intern Role identification.\n\n- Enabled scalable batch processing through parallel execution frameworks.\n\n- Validated 537 enterprise company URLs and categorized 535 websites based on JavaScript rendering requirements.\n\n- Built foundational scraper modules using Requests, BeautifulSoup, Playwright, GNews APIs, and deduplication mechanisms.\n\n- Designed architecture documentation and workflow diagrams for a 6-stage business-signal intelligence pipeline.\n\n- Automated previously manual workforce intelligence and market intelligence workflows.\n\n- Established foundational systems that were later expanded into production-scale enterprise solutions.\n\n- Improved scalability, consistency, and operational efficiency across multiple business processes.\n\n- Technologies: Python, FAISS, Gemini 2.0 Flash, Playwright, BeautifulSoup, Requests, GNews API, Pandas, Mermaid, OpenPyXL.",
     "dateStart": "Jun 2025",
     "dateEnd": "Sep 2025",
     "icon": "work"
@@ -82,7 +82,7 @@
     "order": 1,
     "company": "Zinnov (Draup)",
     "location": "Arakkonam, Tamil Nadu, India (On-site)",
-    "description": "• Supporting AI-driven enterprise research by analyzing structured and unstructured data.\n• Improved classification and matching accuracy by 40% through embedding-based similarity models.\n• Built internal automation pipelines for job-role intelligence, cutting manual analysis time by 30%.\n• Collaborating with cross-functional teams to deliver data-backed insights for Fortune 500 clients.",
+    "description": "- Building production-grade Agentic AI, Multi-Agent Systems, Semantic Search, and Enterprise Data Automation solutions for workforce intelligence and analytics platforms.\n\n- Architected DRI-MAS, a LangGraph-based multi-agent system that transforms natural-language business requests into validated Trino SQL queries and structured Excel reports.\n\n- Built 10 production components including Intent Agent, Manager Agent, Normalization Engine, Schema Router, SQL Generator, Memory Layer, Evaluation Framework, and FastAPI services.\n\n- Implemented hybrid retrieval (FAISS + BM25) across 2.6M company records with Human-in-the-Loop validation workflows.\n\n- Reduced analyst turnaround time from hours to under 1 minute.\n\n- Developed 30 automated test suites and 4 production API endpoints.\n\n- Built a Company Synonym Agent using FAISS and BM25 to perform semantic company matching across 2.4M company and subsidiary records with sub-second retrieval performance.\n\n- Implemented semantic matching, acronym validation, token overlap analysis, and parent-company resolution for enterprise-scale entity resolution.\n\n- Automated business-signal monitoring across 537 enterprise accounts spanning 8 industry categories through the Deal Origination Framework (DOF) Agent.\n\n- Developed web scraping, deduplication, classification, scoring, and reporting pipelines using Playwright, GNews APIs, and LLMs.\n\n- Validated 537 company websites and categorized 535 websites based on scraping strategy requirements.\n\n- Delivered automated role mapping solutions for CBRE using FAISS semantic search and LLM-powered enrichment.\n\n- Completed 746 NASDAQ role-task-skill mappings for workforce taxonomy alignment and skills intelligence initiatives.\n\n- Technologies: Python, LangGraph, Claude API, FastAPI, Trino SQL, PostgreSQL, FAISS, BM25, AWS S3, AWS Glue, Playwright, Pandas, Pydantic, pytest.",
     "dateStart": "Sep 2025",
     "dateEnd": "Present",
     "icon": "work"
