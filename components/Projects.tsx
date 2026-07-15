@@ -70,7 +70,7 @@ function ProjectCard({ title, description, tags, imageUrl, live, code }: Project
             </li>
           ))}
           {tags.length > 4 && (
-            <li className="font-mono px-1 py-0.5 text-[0.6rem] text-gray-400 dark:text-white/25 self-center">
+            <li className="font-mono px-1 py-0.5 text-[0.6rem] text-gray-500 dark:text-white/25 self-center">
               +{tags.length - 4}
             </li>
           )}
@@ -176,7 +176,7 @@ export default function Projects() {
       </div>
 
       {/* Count */}
-      <p className="text-center font-mono text-xs text-gray-400 dark:text-white/25 mb-7">
+      <p className="text-center font-mono text-xs text-gray-500 dark:text-white/25 mb-7">
         {filtered.length} projects &nbsp;·&nbsp; page {currentPage} of {totalPages}
       </p>
 

@@ -132,7 +132,7 @@ export default function Experience() {
                 >
                   {/* Date + Now badge row */}
                   <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
-                    <span className="inline-block font-mono text-[0.65rem] tracking-wider text-gray-400 dark:text-white/30 bg-black/[0.04] dark:bg-white/[0.06] border border-black/5 dark:border-white/8 rounded-full px-3 py-1">
+                    <span className="inline-block font-mono text-[0.65rem] tracking-wider text-gray-500 dark:text-white/30 bg-black/[0.04] dark:bg-white/[0.06] border border-black/5 dark:border-white/8 rounded-full px-3 py-1">
                       {exp.date}
                     </span>
                     {exp.isCurrent && (
@@ -155,7 +155,7 @@ export default function Experience() {
                   </p>
 
                   {exp.location && (
-                    <p className="text-xs text-gray-400 dark:text-white/30 mt-0.5">
+                    <p className="text-xs text-gray-500 dark:text-white/30 mt-0.5">
                       {exp.location}
                     </p>
                   )}
@@ -198,7 +198,7 @@ export default function Experience() {
       </AnimatePresence>
 
       {/* Entry count */}
-      <p className="text-center font-mono text-xs text-gray-400 dark:text-white/25 mt-6">
+      <p className="text-center font-mono text-xs text-gray-500 dark:text-white/25 mt-6">
         {entries.length} {activeTab === "education" ? "degree" : activeTab === "internships" ? "internship" : "role"}{entries.length !== 1 ? "s" : ""}
       </p>
     </section>

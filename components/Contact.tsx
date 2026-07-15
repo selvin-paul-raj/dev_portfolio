@@ -103,7 +103,7 @@ const Contact = () => {
           </div>
 
           {/* Response time */}
-          <div className="flex items-center gap-2 text-xs text-gray-400 dark:text-white/30 font-mono">
+          <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-white/30 font-mono">
             <span className="w-1.5 h-1.5 rounded-full bg-[#FFD700]/60 shrink-0" />
             Typically responds within 24h
           </div>
@@ -125,7 +125,7 @@ const Contact = () => {
                   style={{ transition: "color 130ms ease, transform 150ms cubic-bezier(0.23,1,0.32,1), border-color 130ms ease" }}
                 >
                   <span className="text-[1.1rem]">{icon}</span>
-                  <span className="font-mono text-[8px] uppercase tracking-widest text-gray-400 dark:text-white/25">{label}</span>
+                  <span className="font-mono text-[8px] uppercase tracking-widest text-gray-500 dark:text-white/25">{label}</span>
                 </button>
               ) : (
                 <a
@@ -143,7 +143,7 @@ const Contact = () => {
                   style={{ transition: "color 130ms ease, transform 150ms cubic-bezier(0.23,1,0.32,1), border-color 130ms ease" }}
                 >
                   <span className="text-[1.1rem]">{icon}</span>
-                  <span className="font-mono text-[8px] uppercase tracking-widest text-gray-400 dark:text-white/25">{label}</span>
+                  <span className="font-mono text-[8px] uppercase tracking-widest text-gray-500 dark:text-white/25">{label}</span>
                 </a>
               )
             )}
@@ -172,7 +172,7 @@ const Contact = () => {
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="flex flex-col gap-1.5">
-                <label className="font-mono text-[0.6rem] text-gray-400 dark:text-white/30 uppercase tracking-widest">
+                <label className="font-mono text-[0.6rem] text-gray-500 dark:text-white/30 uppercase tracking-widest">
                   Name
                 </label>
                 <input
@@ -189,7 +189,7 @@ const Contact = () => {
                 />
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="font-mono text-[0.6rem] text-gray-400 dark:text-white/30 uppercase tracking-widest">
+                <label className="font-mono text-[0.6rem] text-gray-500 dark:text-white/30 uppercase tracking-widest">
                   Email
                 </label>
                 <input
@@ -208,7 +208,7 @@ const Contact = () => {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="font-mono text-[0.6rem] text-gray-400 dark:text-white/30 uppercase tracking-widest">
+              <label className="font-mono text-[0.6rem] text-gray-500 dark:text-white/30 uppercase tracking-widest">
                 Message
               </label>
               <textarea

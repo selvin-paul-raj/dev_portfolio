@@ -100,7 +100,7 @@ const Footer = () => {
 
         {/* Tech stack row */}
         <div className="flex flex-wrap items-center gap-2 mb-8 pb-8 border-b border-black/5 dark:border-white/6">
-          <span className="font-mono text-[0.6rem] text-gray-400 dark:text-white/20 uppercase tracking-widest mr-1">
+          <span className="font-mono text-[0.6rem] text-gray-500 dark:text-white/20 uppercase tracking-widest mr-1">
             Built with
           </span>
           {TECH_STACK.map((tech) => (
@@ -117,10 +117,10 @@ const Footer = () => {
 
         {/* Bottom: copyright */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-          <p className="font-mono text-xs text-gray-400 dark:text-white/25">
+          <p className="font-mono text-xs text-gray-500 dark:text-white/25">
             &copy; {currentYear} Selvin PaulRaj K. All rights reserved.
           </p>
-          <p className="font-mono text-xs text-gray-400 dark:text-white/25">
+          <p className="font-mono text-xs text-gray-500 dark:text-white/25">
             Crafted with care in{" "}
             <span className="text-gray-500 dark:text-white/35">Chennai, India</span>
           </p>

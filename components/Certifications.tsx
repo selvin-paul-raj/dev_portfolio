@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
-import Image from "next/image";
 import { useSectionInView } from "@/lib/hooks";
 import Pagination from "./Pagination";
 import rawCertsAll from "@/lib/data/certifications.json";
@@ -164,6 +163,7 @@ function CertCard({
   const displaySkills = cert.skills.slice(0, 3);
   const extra = cert.skills.length - displaySkills.length;
   const date = fmtDate(cert.date);
+  const [imgError, setImgError] = useState(false);
 
   return (
     <motion.article
@@ -189,17 +189,19 @@ function CertCard({
         ${listMode ? "flex-row" : "flex-col"}`}
     >
       {/* Thumb */}
-      {cert.imageUrl ? (
+      {cert.imageUrl && !imgError ? (
         <div
           className={`relative overflow-hidden bg-[#0a0a0d] shrink-0 ${
             listMode ? "w-[180px] self-stretch" : "w-full aspect-[16/10]"
           }`}
         >
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={cert.imageUrl}
             alt={cert.title}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+            loading="lazy"
+            onError={() => setImgError(true)}
+            className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
           />
           <DatePill date={date} />
         </div>
@@ -216,7 +218,7 @@ function CertCard({
         <div className="flex items-center gap-2 flex-wrap">
           <IssuerPill issuer={cert.issuer} />
           <span
-            className="text-[10px] uppercase tracking-[0.18em] ml-auto text-gray-400 dark:text-[#8a8a93]"
+            className="text-[10px] uppercase tracking-[0.18em] ml-auto text-gray-500 dark:text-[#8a8a93]"
             style={{ fontFamily: MONO }}
           >
             {cert.category}
@@ -249,7 +251,7 @@ function CertCard({
           ))}
           {extra > 0 && (
             <span
-              className="text-[10px] text-gray-400 dark:text-[#8a8a93] px-[7px] py-[3px]"
+              className="text-[10px] text-gray-500 dark:text-[#8a8a93] px-[7px] py-[3px]"
               style={{ fontFamily: MONO }}
             >
               +{extra}
@@ -260,7 +262,7 @@ function CertCard({
         {/* Bottom row */}
         <div className="flex items-center justify-between mt-auto pt-2 border-t border-dashed border-black/[0.08] dark:border-white/[0.07]">
           <span
-            className="text-[10px] uppercase tracking-[0.14em] text-gray-400 dark:text-[#8a8a93]"
+            className="text-[10px] uppercase tracking-[0.14em] text-gray-500 dark:text-[#8a8a93]"
             style={{ fontFamily: MONO }}
           >
             {cert.duration ? `${cert.duration} · ` : ""}
@@ -282,15 +284,46 @@ function CertCard({
 function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
   const color = issuerColor(cert.issuer);
   const [copied, setCopied] = useState(false);
+  const [imgError, setImgError] = useState(false);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key === "Tab" && modalRef.current) {
+        const focusable = modalRef.current.querySelectorAll<HTMLElement>(
+          '[href], button, input, select, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first || !modalRef.current.contains(document.activeElement)) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last || !modalRef.current.contains(document.activeElement)) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    };
     document.addEventListener("keydown", handler);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", handler);
       document.body.style.overflow = prev;
+      previouslyFocused?.focus();
     };
   }, [onClose]);
 
@@ -317,6 +350,7 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
       aria-labelledby="cert-modal-title"
     >
       <motion.div
+        ref={modalRef}
         initial={{ scale: 0.96, opacity: 0, y: 8 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.96, opacity: 0, y: 8 }}
@@ -330,6 +364,7 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
       >
         {/* Close */}
         <button
+          ref={closeButtonRef}
           onClick={onClose}
           aria-label="Close"
           className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full flex items-center justify-center border border-white/[0.14] text-white text-[15px] hover:bg-white/[0.08] transition-colors backdrop-blur-md"
@@ -339,13 +374,15 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
         </button>
 
         {/* Left: image/placeholder */}
-        {cert.imageUrl ? (
+        {cert.imageUrl && !imgError ? (
           <div className="flex items-center justify-center p-6 bg-[#07070a] border-b sm:border-b-0 sm:border-r border-white/[0.07] max-h-[45vh] sm:max-h-[90vh]">
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={cert.imageUrl}
               alt={cert.title}
               width={640}
               height={420}
+              onError={() => setImgError(true)}
               className="max-w-full max-h-full object-contain rounded-lg shadow-[0_20px_60px_rgba(0,0,0,0.45)]"
             />
           </div>
@@ -481,18 +518,25 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
 
           {/* Actions */}
           <div className="mt-auto pt-[14px] border-t border-dashed border-white/[0.07] flex gap-2.5 flex-wrap">
-            <a
-              href={cert.verifyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-[10px] px-4 py-[10px] rounded-full bg-[#f5c518] text-[#1a1500] font-semibold text-[13px] hover:bg-[#ffd93a] hover:-translate-y-[1px] transition-all duration-150 focus-visible:ring-2 focus-visible:ring-[#f5c518] focus-visible:ring-offset-2 focus-visible:ring-offset-[#14141b]"
-            >
-              Verify Certificate
-              <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1a1500] text-[#f5c518] text-[11px]">
-                ↗
+            {cert.verifyUrl && (
+              <a
+                href={cert.verifyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-[10px] px-4 py-[10px] rounded-full bg-[#f5c518] text-[#1a1500] font-semibold text-[13px] hover:bg-[#ffd93a] hover:-translate-y-[1px] transition-all duration-150 focus-visible:ring-2 focus-visible:ring-[#f5c518] focus-visible:ring-offset-2 focus-visible:ring-offset-[#14141b]"
+              >
+                Verify Certificate
+                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1a1500] text-[#f5c518] text-[11px]">
+                  ↗
+                </span>
+              </a>
+            )}
+            {!cert.verifyUrl && (!cert.imageUrl || imgError) && (
+              <span className="text-[11px] text-[#8a8a93]" style={{ fontFamily: MONO }}>
+                No verification link available
               </span>
-            </a>
-            {cert.imageUrl && (
+            )}
+            {cert.imageUrl && !imgError && (
               <a
                 href={cert.imageUrl}
                 download
@@ -524,7 +568,7 @@ function FilterChip({
     <button
       onClick={onClick}
       aria-pressed={active}
-      className={`inline-flex items-center gap-1.5 px-[11px] py-[6px] rounded-full border text-[11px] transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] ${
+      className={`inline-flex items-center gap-1.5 px-[11px] py-[10px] rounded-full border text-[11px] transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] ${
         active
           ? "bg-[#f5c518] text-[#1a1500] border-[#f5c518] font-semibold"
           : "bg-black/[0.02] dark:bg-white/[0.015] text-gray-500 dark:text-[#c9c9cf] border-black/[0.08] dark:border-white/[0.07] hover:border-black/[0.16] dark:hover:border-white/[0.14] hover:text-gray-900 dark:hover:text-white"
@@ -677,7 +721,7 @@ export default function Certifications() {
           CERTIFICATIONS
         </h2>
         <p
-          className="font-mono text-[11px] tracking-[0.32em] text-gray-400 dark:text-[#8a8a93] uppercase mb-2"
+          className="font-mono text-[11px] tracking-[0.32em] text-gray-500 dark:text-[#8a8a93] uppercase mb-2"
           style={{ fontFamily: MONO }}
         >
           <span className="text-amber-700 dark:text-[#f5c518] font-medium">{stats.total}</span> certificates
@@ -698,7 +742,7 @@ export default function Certifications() {
         ].map(({ k, v, accent, big }, i) => (
           <div key={k} className={`px-5 py-4 ${STAT_BORDER[i]}`}>
             <div
-              className="text-[10px] uppercase tracking-[0.22em] text-gray-400 dark:text-[#8a8a93] mb-1"
+              className="text-[10px] uppercase tracking-[0.22em] text-gray-500 dark:text-[#8a8a93] mb-1"
               style={{ fontFamily: MONO }}
             >
               {k}
@@ -719,7 +763,7 @@ export default function Certifications() {
       <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3 mb-4">
         {/* Search */}
         <div className="relative flex items-center gap-2.5 px-4 border border-black/[0.08] dark:border-white/[0.07] rounded-xl bg-white dark:bg-[#101015] transition-colors focus-within:border-[#f5c518]/40">
-          <svg className="w-4 h-4 shrink-0 text-gray-400 dark:text-[#8a8a93]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <svg className="w-4 h-4 shrink-0 text-gray-500 dark:text-[#8a8a93]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
             <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
           </svg>
           <input
@@ -733,7 +777,7 @@ export default function Certifications() {
           {query && (
             <button
               onClick={() => { setQuery(""); if (searchRef.current) searchRef.current.value = ""; }}
-              className="text-gray-400 dark:text-[#8a8a93] hover:text-gray-900 dark:hover:text-white text-[13px] px-1"
+              className="text-gray-500 dark:text-[#8a8a93] hover:text-gray-900 dark:hover:text-white text-[13px] px-1"
             >
               ✕
             </button>
@@ -786,7 +830,7 @@ export default function Certifications() {
       <div className="flex flex-col sm:flex-row gap-4 items-start mb-4 pb-4 border-b border-dashed border-black/[0.08] dark:border-white/[0.07]">
         <div className="flex items-center flex-wrap gap-1.5">
           <span
-            className="text-[10px] uppercase tracking-[0.24em] text-gray-400 dark:text-[#8a8a93] mr-1 whitespace-nowrap"
+            className="text-[10px] uppercase tracking-[0.24em] text-gray-500 dark:text-[#8a8a93] mr-1 whitespace-nowrap"
             style={{ fontFamily: MONO }}
           >
             Issuer
@@ -810,7 +854,7 @@ export default function Certifications() {
 
         <div className="flex items-center flex-wrap gap-1.5">
           <span
-            className="text-[10px] uppercase tracking-[0.24em] text-gray-400 dark:text-[#8a8a93] mr-1 whitespace-nowrap"
+            className="text-[10px] uppercase tracking-[0.24em] text-gray-500 dark:text-[#8a8a93] mr-1 whitespace-nowrap"
             style={{ fontFamily: MONO }}
           >
             Category
@@ -835,7 +879,7 @@ export default function Certifications() {
 
       {/* Results meta */}
       <div className="flex items-center justify-between mb-4" style={{ fontFamily: MONO }}>
-        <span className="text-[11px] uppercase tracking-[0.14em] text-gray-400 dark:text-[#8a8a93]">
+        <span className="text-[11px] uppercase tracking-[0.14em] text-gray-500 dark:text-[#8a8a93]">
           Showing{" "}
           <span className="text-gray-900 dark:text-white font-medium">
             {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, filtered.length)}
@@ -864,7 +908,7 @@ export default function Certifications() {
             className="py-20 text-center border border-dashed border-black/[0.08] dark:border-white/[0.07] rounded-[14px]"
           >
             <p className="text-[22px] font-semibold text-gray-900 dark:text-white mb-2">No certifications match</p>
-            <p className="text-gray-400 dark:text-[#8a8a93] text-[14px] mb-4">
+            <p className="text-gray-500 dark:text-[#8a8a93] text-[14px] mb-4">
               Try a different search term or clear your filters.
             </p>
             <button

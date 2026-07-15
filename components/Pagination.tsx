@@ -67,7 +67,7 @@ export default function Pagination({
         p === "…" ? (
           <span
             key={`ellipsis-${i}`}
-            className="w-9 h-9 flex items-center justify-center text-sm text-gray-400 dark:text-[#54545c] select-none"
+            className="w-9 h-9 flex items-center justify-center text-sm text-gray-500 dark:text-[#54545c] select-none"
           >
             {isPill ? "···" : "…"}
           </span>

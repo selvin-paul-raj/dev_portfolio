@@ -71,6 +71,7 @@ Connect any MCP-compatible AI assistant directly to Selvin's portfolio data.
 
 ## AI Engineering Certifications (20+)
 
+- **Claude Certified Architect – Foundations — Anthropic (2026)**: credential for solution architects who design and build production-grade applications with Claude using Claude Code, the Claude Agent SDK, the Claude API, and MCP
 - Introduction to Model Context Protocol — Anthropic (2026)
 - Introduction to Agentic AI Skills — Anthropic (2026)
 - Claude Code in Action — Anthropic (2026)

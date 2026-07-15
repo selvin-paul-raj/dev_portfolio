@@ -110,7 +110,7 @@ export default function Intro() {
       className="w-full max-w-5xl mx-auto px-4 mb-16 scroll-mt-[100rem] md:pt-8"
     >
       {/* Mobile-only status pill */}
-      <div className="anim-fade-up anim-d0 lg:hidden flex items-center justify-center gap-2 mb-5 font-mono text-xs text-gray-400 dark:text-white/30">
+      <div className="anim-fade-up anim-d0 lg:hidden flex items-center justify-center gap-2 mb-5 font-mono text-xs text-gray-500 dark:text-white/30">
         <span className="flex items-center gap-2 bg-black/[0.04] dark:bg-white/[0.05] border border-black/6 dark:border-white/8 rounded-full px-4 py-1.5">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
@@ -127,7 +127,7 @@ export default function Intro() {
         <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
 
           {/* Desktop status pill */}
-          <div className="anim-fade-up anim-d0 hidden lg:flex items-center gap-2 mb-5 font-mono text-xs text-gray-400 dark:text-white/30 bg-black/[0.04] dark:bg-white/[0.05] border border-black/6 dark:border-white/8 rounded-full px-4 py-1.5">
+          <div className="anim-fade-up anim-d0 hidden lg:flex items-center gap-2 mb-5 font-mono text-xs text-gray-500 dark:text-white/30 bg-black/[0.04] dark:bg-white/[0.05] border border-black/6 dark:border-white/8 rounded-full px-4 py-1.5">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
@@ -138,7 +138,7 @@ export default function Intro() {
           {/* Name */}
           <h1 className="anim-fade-up anim-d1 text-4xl sm:text-5xl lg:text-[3.6rem] font-bold tracking-tight text-gray-900 dark:text-white leading-[1.08] mb-3">
             Selvin{" "}
-            <span className="text-gray-400 dark:text-white/35">PaulRaj K</span>
+            <span className="text-gray-500 dark:text-white/35">PaulRaj K</span>
           </h1>
 
           {/* Role */}
@@ -169,12 +169,12 @@ export default function Intro() {
             <span className="text-lg font-bold text-gray-900 dark:text-white/90 tabular-nums">
               {mobileAnimProjects}+
             </span>
-            <span className="text-[0.58rem] uppercase tracking-[0.15em] text-gray-400 dark:text-white/30">Projects</span>
+            <span className="text-[0.58rem] uppercase tracking-[0.15em] text-gray-500 dark:text-white/30">Projects</span>
             <span className="w-px h-3.5 bg-black/10 dark:bg-white/10" />
             <span className="text-lg font-bold text-gray-900 dark:text-white/90 tabular-nums">
               {_fmtDur(mobileAnimTotal)}
             </span>
-            <span className="text-[0.58rem] uppercase tracking-[0.15em] text-gray-400 dark:text-white/30">YOE</span>
+            <span className="text-[0.58rem] uppercase tracking-[0.15em] text-gray-500 dark:text-white/30">YOE</span>
           </div>
 
           {/* Bio */}
@@ -303,7 +303,7 @@ export default function Intro() {
 
       {/* Tech stack badges */}
       <div className="anim-fade-up anim-d8 hidden lg:flex flex-wrap justify-start gap-2 mb-4">
-        <span className="font-mono text-[0.65rem] text-gray-400 dark:text-white/25 self-center mr-1 tracking-widest uppercase">
+        <span className="font-mono text-[0.65rem] text-gray-500 dark:text-white/25 self-center mr-1 tracking-widest uppercase">
           Core stack
         </span>
         {TECH_BADGES.map((tech) => (

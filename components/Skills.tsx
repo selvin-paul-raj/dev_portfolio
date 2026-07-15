@@ -142,7 +142,7 @@ export default function Skills() {
       </AnimatePresence>
 
       {/* Count */}
-      <p className="text-center text-xs text-gray-400 dark:text-white/25 mt-6 font-mono">
+      <p className="text-center text-xs text-gray-500 dark:text-white/25 mt-6 font-mono">
         {pills.length} skills across {TAB_GROUPS[activeTab].keys.length} categories
       </p>
     </section>

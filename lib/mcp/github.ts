@@ -28,6 +28,12 @@ function headers(): HeadersInit {
   };
 }
 
+// Next.js augments the global `fetch`'s RequestInit with a `next` cache-control
+// option; plain `tsc` (the standalone Alpic build) doesn't know about it. This
+// type lets both targets compile — Next.js honors `next.revalidate`, and
+// Node's native fetch (used by the standalone server) just ignores the extra key.
+type FetchInitWithNext = RequestInit & { next?: { revalidate?: number } };
+
 function shape(r: GithubRepo) {
   return {
     name: r.name,
@@ -60,7 +66,7 @@ export async function listRepos({
   const res = await fetch(url, {
     headers: headers(),
     next: { revalidate: 3600 },
-  });
+  } as FetchInitWithNext);
   if (!res.ok) throw new Error(`GitHub API ${res.status}: ${await res.text()}`);
   const data: GithubRepo[] = await res.json();
   return data.map(shape);
@@ -71,7 +77,7 @@ export async function getRepo(repo: string): Promise<ReturnType<typeof shape>> {
   const res = await fetch(url, {
     headers: headers(),
     next: { revalidate: 3600 },
-  });
+  } as FetchInitWithNext);
   if (!res.ok) throw new Error(`Repo not found: ${repo} (${res.status})`);
   const data: GithubRepo = await res.json();
   return shape(data);

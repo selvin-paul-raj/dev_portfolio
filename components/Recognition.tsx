@@ -62,7 +62,7 @@ export default function Recognition() {
         <h2 className="text-[34px] font-semibold tracking-[0.18em] text-gray-900 dark:text-[#ededee] m-0">
           RECOGNITION
         </h2>
-        <p className="font-mono text-[11px] tracking-[0.32em] text-gray-400 dark:text-[#8a8a93] uppercase mb-2" style={{ fontFamily: MONO }}>
+        <p className="font-mono text-[11px] tracking-[0.32em] text-gray-500 dark:text-[#8a8a93] uppercase mb-2" style={{ fontFamily: MONO }}>
           <span className="text-amber-700 dark:text-[#f5c518] font-medium">0{pubs.length}</span> publication
           {" · "}
           <span className="text-amber-700 dark:text-[#f5c518] font-medium">0{achs.length}</span> awards
@@ -85,7 +85,7 @@ export default function Recognition() {
                 focus-visible:ring-2 focus-visible:ring-[#f5c518]
                 ${tab === t
                   ? "bg-[#f5c518] text-[#1a1500] font-medium"
-                  : "text-gray-400 dark:text-[#8a8a93] hover:text-gray-900 dark:hover:text-white"
+                  : "text-gray-500 dark:text-[#8a8a93] hover:text-gray-900 dark:hover:text-white"
                 }
               `}
               style={{ fontFamily: MONO }}
@@ -93,7 +93,7 @@ export default function Recognition() {
               {t === "pubs" ? "Publications" : "Achievements"}
               <span
                 className={`text-[10px] px-[7px] py-[1px] rounded-full
-                  ${tab === t ? "bg-black/[0.18] text-[#1a1500]" : "bg-black/[0.05] dark:bg-white/[0.05] text-gray-400 dark:text-[#8a8a93]"}
+                  ${tab === t ? "bg-black/[0.18] text-[#1a1500]" : "bg-black/[0.05] dark:bg-white/[0.05] text-gray-500 dark:text-[#8a8a93]"}
                 `}
               >
                 0{t === "pubs" ? pubs.length : achs.length}
@@ -128,16 +128,16 @@ export default function Recognition() {
 
                 {/* Meta row */}
                 <div
-                  className="flex items-center flex-wrap gap-[10px] text-[10px] tracking-[0.22em] uppercase text-gray-400 dark:text-[#8a8a93] mb-[18px]"
+                  className="flex items-center flex-wrap gap-[10px] text-[10px] tracking-[0.22em] uppercase text-gray-500 dark:text-[#8a8a93] mb-[18px]"
                   style={{ fontFamily: MONO }}
                 >
                   <span className="inline-flex items-center gap-[7px] px-[10px] py-1 rounded-full bg-green-50 dark:bg-[#6fcf97]/10 text-green-700 dark:text-[#6fcf97] border border-green-200 dark:border-[#6fcf97]/25">
                     <span className="w-[6px] h-[6px] rounded-full bg-green-600 dark:bg-[#6fcf97] shadow-[0_0_8px_#6fcf97]" />
                     {pub.status}
                   </span>
-                  <span className="text-gray-400 dark:text-[#54545c]">/</span>
+                  <span className="text-gray-500 dark:text-[#54545c]">/</span>
                   <span>{formatDate(pub.publication_date)}</span>
-                  <span className="text-gray-400 dark:text-[#54545c]">/</span>
+                  <span className="text-gray-500 dark:text-[#54545c]">/</span>
                   <span className="px-[10px] py-1 rounded-full border border-black/[0.08] dark:border-white/[0.07]">{pub.type}</span>
                 </div>
 
@@ -181,7 +181,7 @@ export default function Recognition() {
                   {/* Features */}
                   <div>
                     <div
-                      className="flex items-center gap-2 text-[10px] tracking-[0.24em] text-gray-400 dark:text-[#8a8a93] uppercase mb-3"
+                      className="flex items-center gap-2 text-[10px] tracking-[0.24em] text-gray-500 dark:text-[#8a8a93] uppercase mb-3"
                       style={{ fontFamily: MONO }}
                     >
                       <span className="text-amber-700 dark:text-[#f5c518]">01</span> · Key Features
@@ -204,7 +204,7 @@ export default function Recognition() {
                   {/* Stack */}
                   <div>
                     <div
-                      className="flex items-center gap-2 text-[10px] tracking-[0.24em] text-gray-400 dark:text-[#8a8a93] uppercase mb-3"
+                      className="flex items-center gap-2 text-[10px] tracking-[0.24em] text-gray-500 dark:text-[#8a8a93] uppercase mb-3"
                       style={{ fontFamily: MONO }}
                     >
                       <span className="text-amber-700 dark:text-[#f5c518]">02</span> · Stack
@@ -225,7 +225,7 @@ export default function Recognition() {
 
                 {/* Footer */}
                 <div className="flex items-center justify-between flex-wrap gap-[14px] mt-[26px] pt-[22px] border-t border-dashed border-black/[0.10] dark:border-white/[0.14]">
-                  <div className="text-[11px] text-gray-400 dark:text-[#8a8a93] tracking-[0.06em]" style={{ fontFamily: MONO }}>
+                  <div className="text-[11px] text-gray-500 dark:text-[#8a8a93] tracking-[0.06em]" style={{ fontFamily: MONO }}>
                     Paper ID · <span className="text-gray-900 dark:text-white font-medium">{pub.paperId}</span>
                   </div>
                   <a
@@ -267,7 +267,7 @@ export default function Recognition() {
 
                 {/* Meta row */}
                 <div
-                  className="flex items-center flex-wrap gap-[10px] text-[10px] tracking-[0.22em] uppercase text-gray-400 dark:text-[#8a8a93] mb-[16px]"
+                  className="flex items-center flex-wrap gap-[10px] text-[10px] tracking-[0.22em] uppercase text-gray-500 dark:text-[#8a8a93] mb-[16px]"
                   style={{ fontFamily: MONO }}
                 >
                   <span className="inline-flex items-center gap-[7px] px-[10px] py-1 rounded-full bg-amber-50 dark:bg-[#f5c518]/[0.1] text-amber-700 dark:text-[#f5c518] border border-amber-200 dark:border-[#f5c518]/25">
@@ -277,13 +277,13 @@ export default function Recognition() {
                     />
                     {ach.category}
                   </span>
-                  <span className="text-gray-400 dark:text-[#54545c]">/</span>
+                  <span className="text-gray-500 dark:text-[#54545c]">/</span>
                   <span>{formatDate(ach.date)}</span>
-                  <span className="text-gray-400 dark:text-[#54545c]">/</span>
+                  <span className="text-gray-500 dark:text-[#54545c]">/</span>
                   <span className="px-[10px] py-1 rounded-full border border-black/[0.08] dark:border-white/[0.07]">{ach.issuer}</span>
                   {ach.associated_with && (
                     <>
-                      <span className="text-gray-400 dark:text-[#54545c]">/</span>
+                      <span className="text-gray-500 dark:text-[#54545c]">/</span>
                       <span>{ach.associated_with}</span>
                     </>
                   )}
@@ -376,7 +376,7 @@ export default function Recognition() {
                           </span>
                         </div>
                         <span
-                          className="text-[9.5px] tracking-[0.22em] uppercase text-gray-400 dark:text-[#8a8a93] px-[9px] py-[5px] rounded-full border border-black/[0.08] dark:border-white/[0.07] whitespace-nowrap mt-1"
+                          className="text-[9.5px] tracking-[0.22em] uppercase text-gray-500 dark:text-[#8a8a93] px-[9px] py-[5px] rounded-full border border-black/[0.08] dark:border-white/[0.07] whitespace-nowrap mt-1"
                           style={{ fontFamily: MONO }}
                         >
                           {ach.category}
@@ -394,15 +394,15 @@ export default function Recognition() {
                         style={{ fontFamily: MONO }}
                       >
                         <div className="flex items-center gap-2">
-                          <span className="text-[9.5px] tracking-[0.22em] uppercase text-gray-400 dark:text-[#8a8a93] min-w-[58px]">Issuer</span>
+                          <span className="text-[9.5px] tracking-[0.22em] uppercase text-gray-500 dark:text-[#8a8a93] min-w-[58px]">Issuer</span>
                           <span className="text-gray-800 dark:text-[#e0e0e6] font-medium text-[12px]">{ach.issuer}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-[9.5px] tracking-[0.22em] uppercase text-gray-400 dark:text-[#8a8a93] min-w-[58px]">Date</span>
+                          <span className="text-[9.5px] tracking-[0.22em] uppercase text-gray-500 dark:text-[#8a8a93] min-w-[58px]">Date</span>
                           <span className="text-gray-800 dark:text-[#e0e0e6] font-medium text-[12px]">{formatDate(ach.date)}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-[9.5px] tracking-[0.22em] uppercase text-gray-400 dark:text-[#8a8a93] min-w-[58px]">Repping</span>
+                          <span className="text-[9.5px] tracking-[0.22em] uppercase text-gray-500 dark:text-[#8a8a93] min-w-[58px]">Repping</span>
                           <span className="text-gray-800 dark:text-[#e0e0e6] font-medium text-[12px] leading-[1.3]">{ach.associated_with}</span>
                         </div>
                         {ach.certificate_available && (

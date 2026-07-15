@@ -1,5 +1,208 @@
 [
   {
+    "id": "cert-anthropic-claude-architect-foundations",
+    "title": "Claude Certified Architect - Foundations",
+    "issuer": "Anthropic",
+    "category": "AI Engineering",
+    "date": "2026-07-01",
+    "certId": null,
+    "verifyUrl": "https://www.credly.com/badges/af28e020-4836-4a3f-b017-eafb3949e90f/linked_in_profile",
+    "imageUrl": null,
+    "skills": [
+      "AI System Design",
+      "Claude Agent SDK",
+      "Agentic AI",
+      "LLM Applications",
+      "AI Architecture",
+      "Claude"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
+    "id": "cert-huggingface-llm-course-unit3",
+    "title": "LLM Course Unit 3: Fine-tuning Language Models",
+    "issuer": "Hugging Face",
+    "category": "AI Engineering",
+    "date": "2026-07-01",
+    "certId": "selvinpaulraj",
+    "verifyUrl": "https://cdn-uploads.huggingface.co/production/uploads/noauth/8MMfJ4tdsCjT0rYvZgbeV.webp",
+    "imageUrl": "https://cdn-uploads.huggingface.co/production/uploads/noauth/8MMfJ4tdsCjT0rYvZgbeV.webp",
+    "skills": [
+      "LLM Fine-tuning",
+      "Transformers",
+      "PEFT",
+      "LoRA",
+      "Supervised Fine-Tuning"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
+    "id": "cert-huggingface-reasoning-course",
+    "title": "The Reasoning Course - Building AI Models that Reason",
+    "issuer": "Hugging Face",
+    "category": "AI Engineering",
+    "date": "2026-07-01",
+    "certId": "selvinpaulraj",
+    "verifyUrl": "https://cas-bridge.xethub.hf.co/xet-bridge-us/67cab77b74cef95f5003349c/20eb86a68f3639f089385e6db6b7a4c2edf7b28a26dba41389b6fc7132878d52?Expires=1784102955&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jYXMtYnJpZGdlLnhldGh1Yi5oZi5jby94ZXQtYnJpZGdlLXVzLzY3Y2FiNzdiNzRjZWY5NWY1MDAzMzQ5Yy8yMGViODZhNjhmMzYzOWYwODkzODVlNmRiNmI3YTRjMmVkZjdiMjhhMjZkYmE0MTM4OWI2ZmM3MTMyODc4ZDUyKiIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc4NDEwMjk1NX19fV19&Signature=MEUCIQCgDOwhnJHa1hSBeCbzDucHUtBwNGB6kfuollugSjxZ3gIgDWTl2T70MOOagAv5GLPbXcbaBRAmk0Cc4xg10luak54_&Key-Pair-Id=K3EPXBYC3CKDRZ&X-Xet-Cas-Uid=6707d6fec10024c07c8d6e7d&response-content-disposition=inline%3B+filename*%3DUTF-8%27%272026-07-02.png%3B+filename%3D%222026-07-02.png%22%3B&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=cas%2F20260715%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260715T070915Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=851b78180c2b6a54205960c976ebf4d844dbc94c6b95fc17b0e527f17fd23a23",
+    "imageUrl": null,
+    "skills": [
+      "Reasoning Models",
+      "Chain of Thought",
+      "LLMs",
+      "AI Reasoning",
+      "Inference"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
+    "id": "cert-huggingface-agents-course",
+    "title": "Hugging Face Agents Course",
+    "issuer": "Hugging Face",
+    "category": "AI Engineering",
+    "date": "2026-07-01",
+    "certId": "selvinpaulraj",
+    "verifyUrl": "https://cas-bridge.xethub.hf.co/xet-bridge-us/6800ea554845e4edbca48825/f738f6c64ec7bb87c3297d27b225a73aad70d65b3ef8e2a0d7863dba7a32576e?Expires=1784102467&Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9jYXMtYnJpZGdlLnhldGh1Yi5oZi5jby94ZXQtYnJpZGdlLXVzLzY4MDBlYTU1NDg0NWU0ZWRiY2E0ODgyNS9mNzM4ZjZjNjRlYzdiYjg3YzMyOTdkMjdiMjI1YTczYWFkNzBkNjViM2VmOGUyYTBkNzg2M2RiYTdhMzI1NzZlKiIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc4NDEwMjQ2N319fV19&Signature=MEQCIGT4%7EyzD-vgdyQVQdOsl4McUWbf23ZwFdFncAAg19MFnAiBxC3JvwjZEJoIFq0o2Ly-ErB7VEdaL2kJ8eyV9L%7EK27w__&Key-Pair-Id=K3EPXBYC3CKDRZ&response-content-disposition=inline%3B+filename*%3DUTF-8%27%272026-07-02.png%3B+filename%3D%222026-07-02.png%22%3B&X-Xet-Cas-Uid=6707d6fec10024c07c8d6e7d&response-content-type=image%2Fpng&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=cas%2F20260715%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260715T070107Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=102ed4b722a486d629f26eb88cb37d9d53d621430c987038de155ba5935fd20b",
+    "imageUrl": null,
+    "skills": [
+      "AI Agents",
+      "Agentic AI",
+      "Tool Calling",
+      "LLM Applications",
+      "Hugging Face"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
+    "id": "cert-amd-llm-architectures-ai-models",
+    "title": "Introduction to LLM Architectures and AMD AI Models",
+    "issuer": "AMD",
+    "category": "AI Engineering",
+    "date": "2026-06-01",
+    "certId": null,
+    "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166316.pdf",
+    "imageUrl": null,
+    "skills": [
+      "LLM Architectures",
+      "AMD AI Models",
+      "Transformers",
+      "Foundation Models"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
+    "id": "cert-amd-rl-with-llms",
+    "title": "Reinforcement Learning with Large Language Models",
+    "issuer": "AMD",
+    "category": "AI Engineering",
+    "date": "2026-06-01",
+    "certId": null,
+    "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166288.pdf",
+    "imageUrl": null,
+    "skills": [
+      "Reinforcement Learning",
+      "RLHF",
+      "LLMs",
+      "Model Alignment"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
+    "id": "cert-amd-vllm-mi300x",
+    "title": "LLM Serving Inference with vLLM and MI300X GPUs",
+    "issuer": "AMD",
+    "category": "AI Engineering",
+    "date": "2026-06-01",
+    "certId": null,
+    "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166285.pdf",
+    "imageUrl": null,
+    "skills": [
+      "vLLM",
+      "MI300X",
+      "LLM Inference",
+      "GPU Serving"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
+    "id": "cert-amd-kubernetes-instinct-gpus",
+    "title": "Kubernetes on AMD Instinct GPUs - From Zero to AI Inference",
+    "issuer": "AMD",
+    "category": "AI Engineering",
+    "date": "2026-06-01",
+    "certId": null,
+    "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166287.pdf",
+    "imageUrl": null,
+    "skills": [
+      "Kubernetes",
+      "AMD Instinct",
+      "AI Inference",
+      "Containerization"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
+    "id": "cert-amd-triton-kernel-development",
+    "title": "Triton Kernel Development on AMD Instinct GPUs",
+    "issuer": "AMD",
+    "category": "AI Engineering",
+    "date": "2026-06-01",
+    "certId": null,
+    "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166286.pdf",
+    "imageUrl": null,
+    "skills": [
+      "Triton",
+      "GPU Programming",
+      "Kernel Development",
+      "AMD Instinct"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
+    "id": "cert-amd-gpu-optimization-llm-inference",
+    "title": "GPU Optimization for LLM Inference",
+    "issuer": "AMD",
+    "category": "AI Engineering",
+    "date": "2026-06-01",
+    "certId": null,
+    "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166289.pdf",
+    "imageUrl": null,
+    "skills": [
+      "GPU Optimization",
+      "LLM Inference",
+      "Performance Tuning",
+      "AMD GPUs"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
+    "id": "cert-amd-introduction-prompting",
+    "title": "Introduction to Prompting",
+    "issuer": "AMD",
+    "category": "AI Engineering",
+    "date": "2026-06-01",
+    "certId": null,
+    "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166317.pdf",
+    "imageUrl": null,
+    "skills": [
+      "Prompt Engineering",
+      "Generative AI",
+      "LLMs",
+      "Prompt Design"
+    ],
+    "duration": null,
+    "show": true
+  },
+  {
     "id": "cert-amd-finetuning-r1-unsloth",
     "title": "Finetuning Your Own R1 Reasoning Model on Unsloth",
     "issuer": "AMD",
@@ -205,7 +408,7 @@
     "date": "2025-07-01",
     "certId": "selvinpaulraj",
     "verifyUrl": "https://huggingface.co/datasets/mcp-course/certificates/resolve/main/certificates/selvinpaulraj/2025-07-03.png",
-    "imageUrl": null,
+    "imageUrl": "https://huggingface.co/datasets/mcp-course/certificates/resolve/main/certificates/selvinpaulraj/2025-07-03.png",
     "skills": ["MCP", "Model Context Protocol", "AI Tools", "Hugging Face"],
     "duration": null,
     "show": true
@@ -218,7 +421,7 @@
     "date": "2025-06-01",
     "certId": "selvinpaulraj",
     "verifyUrl": "https://huggingface.co/datasets/agents-course/certificates/resolve/main/certificates/selvinpaulraj/2025-06-25.png",
-    "imageUrl": null,
+    "imageUrl": "https://huggingface.co/datasets/agents-course/certificates/resolve/main/certificates/selvinpaulraj/2025-06-25.png",
     "skills": ["AI Agents", "LLMs", "Tool Use", "Hugging Face", "Transformers"],
     "duration": null,
     "show": true

@@ -114,7 +114,7 @@ export default function About() {
 
           {/* Meta row */}
           <div
-            className="mt-7 flex flex-wrap gap-[10px] text-[11px] text-gray-400 dark:text-[#8a8a93] tracking-[0.14em] uppercase"
+            className="mt-7 flex flex-wrap gap-[10px] text-[11px] text-gray-500 dark:text-[#8a8a93] tracking-[0.14em] uppercase"
             style={{ fontFamily: MONO }}
           >
             <span className="inline-flex items-center gap-2">
@@ -188,11 +188,11 @@ export default function About() {
             <div className="p-[18px_20px] border-l border-white/[0.07] dark:border-white/[0.07] border-black/10">
               <div className="font-semibold text-[32px] tracking-[-0.02em] leading-none flex items-baseline gap-[4px] text-gray-900 dark:text-[#ededee] tabular-nums">
                 {animYr}
-                <span className="text-[14px] font-medium text-gray-400 dark:text-[#8a8a93]">yr</span>
+                <span className="text-[14px] font-medium text-gray-500 dark:text-[#8a8a93]">yr</span>
                 {animMo > 0 && (
                   <>
                     {animMo}
-                    <span className="text-[14px] font-medium text-gray-400 dark:text-[#8a8a93]">mo</span>
+                    <span className="text-[14px] font-medium text-gray-500 dark:text-[#8a8a93]">mo</span>
                   </>
                 )}
               </div>

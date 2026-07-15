@@ -245,6 +245,15 @@ export default function RootLayout({
               hasCredential: [
                 {
                   "@type": "EducationalOccupationalCredential",
+                  credentialCategory: "certification",
+                  name: "Claude Certified Architect - Foundations",
+                  description:
+                    "Credential for solution architects who can design and build production-grade applications with Claude using Claude Code, the Claude Agent SDK, the Claude API, and MCP.",
+                  recognizedBy: { "@type": "Organization", name: "Anthropic" },
+                  dateCreated: "2026",
+                },
+                {
+                  "@type": "EducationalOccupationalCredential",
                   credentialCategory: "certificate",
                   name: "Introduction to Model Context Protocol",
                   recognizedBy: { "@type": "Organization", name: "Anthropic" },

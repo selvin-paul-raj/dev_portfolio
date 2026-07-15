@@ -22,6 +22,8 @@ This portfolio is MCP-enabled. AI assistants (Claude, Cursor, Zed) can connect d
 
 **Protocol:** MCP 2024-11-05 · HTTP JSON-RPC · CORS open
 
+The server ships as two entry points that share one implementation: `app/api/mcp/route.ts` (Next.js, deployed on Vercel) and `mcp-server.ts` (standalone Node server, deployed on Alpic.ai). Both delegate to `lib/mcp/{definitions,dispatch,contact,github,router}.ts` — only JSON data loading differs (bundled import vs. `readFileSync`). See [DEPLOY.md § Architecture Notes](./DEPLOY.md#architecture-notes) for details.
+
 ### Resources
 
 | URI | Data |
@@ -203,9 +205,9 @@ See **[DEPLOY.md](./DEPLOY.md)** for full instructions.
 | Platform | Purpose | Trigger |
 |----------|---------|---------|
 | **Vercel** | Portfolio website + MCP endpoint | Push to `main` |
-| **Alpic.ai** | Standalone MCP server registration | Push to `main` |
+| **Alpic.ai** | Standalone MCP server (`mcp-server.ts`) | Push to `main` |
 
-`alpic.json` at the project root configures the Alpic build (`buildOutputDir: ".next"` fixes the default `dist/` mismatch).
+`alpic.json` at the project root points Alpic at the standalone server build: `buildCommand: "npm run build:mcp"`, `buildOutputDir: "dist"`, `startCommand: "node dist/mcp-server.js"`.
 
 ---
 
