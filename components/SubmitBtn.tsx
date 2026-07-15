@@ -25,7 +25,7 @@ const SubmitBtn = () => {
         style={{ transition: "transform 150ms cubic-bezier(0.23,1,0.32,1), background-color 150ms ease" }}
       >
         {pending ? (
-          <span className="h-4 w-4 animate-spin rounded-full border-b-2 border-white dark:border-black" />
+          <span className="h-4 w-4 motion-reduce:animate-none animate-spin rounded-full border-b-2 border-white dark:border-black" />
         ) : (
           <FaPaperPlane size={12} />
         )}

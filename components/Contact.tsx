@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import { motion } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import { useSectionInView } from "@/lib/hooks";
@@ -52,6 +52,7 @@ const CONTACT_METHODS = [
 
 const Contact = () => {
   const { ref } = useSectionInView("Contact", 0);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText("selvinpaulgomathi@gmail.com");
@@ -81,11 +82,11 @@ const Contact = () => {
           className="lg:col-span-2 flex flex-col gap-6"
         >
           {/* Availability badge */}
-          <div className="flex items-center gap-2.5 font-mono text-xs text-gray-500 dark:text-white/40
+          <div className="flex items-center gap-2.5 font-mono text-xs text-gray-500 dark:text-white/60
             bg-black/[0.03] dark:bg-white/[0.04] border border-black/6 dark:border-white/8
             rounded-full px-4 py-2 w-fit">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+            <span className="relative flex h-2 w-2" aria-hidden="true">
+              <span className="motion-reduce:animate-none animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
             </span>
             Open to opportunities
@@ -95,7 +96,7 @@ const Contact = () => {
             <h3 className="text-xl font-semibold text-gray-900 dark:text-white/90 mb-2">
               Let&apos;s build something together
             </h3>
-            <p className="text-sm text-gray-500 dark:text-white/40 leading-relaxed">
+            <p className="text-sm text-gray-500 dark:text-white/60 leading-relaxed">
               Whether you have a project in mind, want to explore AI engineering
               collaboration, or just want to connect — I&apos;m always up for a
               conversation.
@@ -103,7 +104,7 @@ const Contact = () => {
           </div>
 
           {/* Response time */}
-          <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-white/30 font-mono">
+          <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-white/55 font-mono">
             <span className="w-1.5 h-1.5 rounded-full bg-[#FFD700]/60 shrink-0" />
             Typically responds within 24h
           </div>
@@ -119,13 +120,14 @@ const Contact = () => {
                   title={label}
                   className="group flex flex-col items-center justify-center gap-1 px-3.5 py-3 rounded-2xl
                     bg-white dark:bg-white/[0.04] border border-black/6 dark:border-white/8 min-w-[3.5rem]
-                    text-gray-500 dark:text-white/40
+                    text-gray-500 dark:text-white/60
                     hover:text-gray-900 dark:hover:text-white/85 hover:border-black/15 dark:hover:border-white/15
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700] focus-visible:ring-offset-2
                     active:scale-[0.97]"
                   style={{ transition: "color 130ms ease, transform 150ms cubic-bezier(0.23,1,0.32,1), border-color 130ms ease" }}
                 >
                   <span className="text-[1.1rem]">{icon}</span>
-                  <span className="font-mono text-[8px] uppercase tracking-widest text-gray-500 dark:text-white/25">{label}</span>
+                  <span className="font-mono text-[8px] uppercase tracking-widest text-gray-500 dark:text-white/55">{label}</span>
                 </button>
               ) : (
                 <a
@@ -137,13 +139,14 @@ const Contact = () => {
                   title={label}
                   className="group flex flex-col items-center justify-center gap-1 px-3.5 py-3 rounded-2xl
                     bg-white dark:bg-white/[0.04] border border-black/6 dark:border-white/8 min-w-[3.5rem]
-                    text-gray-500 dark:text-white/40
+                    text-gray-500 dark:text-white/60
                     hover:text-gray-900 dark:hover:text-white/85 hover:border-black/15 dark:hover:border-white/15
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700] focus-visible:ring-offset-2
                     active:scale-[0.97]"
                   style={{ transition: "color 130ms ease, transform 150ms cubic-bezier(0.23,1,0.32,1), border-color 130ms ease" }}
                 >
                   <span className="text-[1.1rem]">{icon}</span>
-                  <span className="font-mono text-[8px] uppercase tracking-widest text-gray-500 dark:text-white/25">{label}</span>
+                  <span className="font-mono text-[8px] uppercase tracking-widest text-gray-500 dark:text-white/55">{label}</span>
                 </a>
               )
             )}
@@ -163,19 +166,22 @@ const Contact = () => {
           </h3>
 
           <form
+            ref={formRef}
             className="flex flex-col gap-4"
             action={async (formData) => {
               const { error } = await sendEmail(formData);
               if (error) { toast.error(error); return; }
               toast.success("Message sent!");
+              formRef.current?.reset();
             }}
           >
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="flex flex-col gap-1.5">
-                <label className="font-mono text-[0.6rem] text-gray-500 dark:text-white/30 uppercase tracking-widest">
+                <label htmlFor="senderName" className="font-mono text-[0.6rem] text-gray-500 dark:text-white/55 uppercase tracking-widest">
                   Name
                 </label>
                 <input
+                  id="senderName"
                   name="senderName"
                   type="text"
                   required
@@ -184,15 +190,16 @@ const Contact = () => {
                   className="h-11 px-4 rounded-xl
                     bg-gray-50 dark:bg-white/[0.06] border border-black/6 dark:border-white/8
                     text-sm text-gray-900 dark:text-white/80 placeholder-gray-400 dark:placeholder-white/20
-                    outline-none focus:border-[#FFD700]/50 dark:focus:border-[#FFD700]/30
+                    outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700] focus-visible:ring-offset-2
                     transition-colors duration-150"
                 />
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="font-mono text-[0.6rem] text-gray-500 dark:text-white/30 uppercase tracking-widest">
+                <label htmlFor="email" className="font-mono text-[0.6rem] text-gray-500 dark:text-white/55 uppercase tracking-widest">
                   Email
                 </label>
                 <input
+                  id="email"
                   name="email"
                   type="email"
                   required
@@ -201,17 +208,18 @@ const Contact = () => {
                   className="h-11 px-4 rounded-xl
                     bg-gray-50 dark:bg-white/[0.06] border border-black/6 dark:border-white/8
                     text-sm text-gray-900 dark:text-white/80 placeholder-gray-400 dark:placeholder-white/20
-                    outline-none focus:border-[#FFD700]/50 dark:focus:border-[#FFD700]/30
+                    outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700] focus-visible:ring-offset-2
                     transition-colors duration-150"
                 />
               </div>
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="font-mono text-[0.6rem] text-gray-500 dark:text-white/30 uppercase tracking-widest">
+              <label htmlFor="message" className="font-mono text-[0.6rem] text-gray-500 dark:text-white/55 uppercase tracking-widest">
                 Message
               </label>
               <textarea
+                id="message"
                 name="message"
                 required
                 maxLength={5000}
@@ -220,7 +228,7 @@ const Contact = () => {
                 className="px-4 py-3 rounded-xl resize-none
                   bg-gray-50 dark:bg-white/[0.06] border border-black/6 dark:border-white/8
                   text-sm text-gray-900 dark:text-white/80 placeholder-gray-400 dark:placeholder-white/20
-                  outline-none focus:border-[#FFD700]/50 dark:focus:border-[#FFD700]/30
+                  outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700] focus-visible:ring-offset-2
                   leading-relaxed transition-colors duration-150"
               />
             </div>

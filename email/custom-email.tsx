@@ -12,15 +12,16 @@ import {
 import { Tailwind } from "@react-email/tailwind";
 
 type contactEmailProps = {
+  senderName: string;
   message: string;
   email: string;
 };
 
-const CustomEmail = ({ message, email }: contactEmailProps) => {
+const CustomEmail = ({ senderName, message, email }: contactEmailProps) => {
   return (
     <Html>
       <Head />
-      <Preview>New message from your portfolio site🙋🏻</Preview>
+      <Preview>New message from your portfolio site</Preview>
       <Tailwind>
         <Body className="bg-gray-100 text-black">
           <Container>
@@ -30,7 +31,7 @@ const CustomEmail = ({ message, email }: contactEmailProps) => {
               </Heading>
               <Text>{message}</Text>
               <Hr />
-              <Text>From: {email}</Text>
+              <Text>From: {senderName} ({email})</Text>
             </Section>
           </Container>
         </Body>
