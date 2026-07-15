@@ -78,7 +78,7 @@ export default function Recognition() {
             <button
               key={t}
               onClick={() => setTab(t)}
-              aria-selected={tab === t}
+              aria-pressed={tab === t}
               className={`
                 flex items-center gap-2 px-[18px] py-[9px] rounded-full transition-all duration-200
                 font-mono text-[11px] tracking-[0.22em] uppercase outline-none
