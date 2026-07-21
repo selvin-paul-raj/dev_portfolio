@@ -134,7 +134,7 @@ export default function Projects() {
   );
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const pageStart = (currentPage - 1) * PAGE_SIZE;
-  const visible = filtered.slice(pageStart, pageStart + PAGE_SIZE);
+  const pageEnd = pageStart + PAGE_SIZE;
 
   const handlePageChange = (p: number) => {
     setCurrentPage(p);
@@ -190,8 +190,13 @@ export default function Projects() {
           transition={{ duration: 0.2 }}
           className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5"
         >
-          {visible.map((project) => (
-            <ProjectCard key={`${project.title}-${project.date}`} {...project} />
+          {filtered.map((project, i) => (
+            <div
+              key={`${project.title}-${project.date}`}
+              className={i >= pageStart && i < pageEnd ? undefined : "hidden"}
+            >
+              <ProjectCard {...project} />
+            </div>
           ))}
         </motion.div>
       </AnimatePresence>

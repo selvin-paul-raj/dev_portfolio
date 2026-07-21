@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { BsArrowRight } from "react-icons/bs";
 import { FaLinkedin, FaGithub } from "react-icons/fa";
 import { FaHackerrank } from "react-icons/fa";
@@ -52,25 +52,6 @@ const TECH_BADGES = [
 
 const _projectCount = projectsData.length;
 
-function useCountUp(target: number, durationMs: number, trigger: boolean) {
-  const [val, setVal] = useState(0);
-  useEffect(() => {
-    if (!trigger) return;
-    let rafId: number;
-    let start: number | null = null;
-    const step = (ts: number) => {
-      if (start === null) start = ts;
-      const p = Math.min((ts - start) / durationMs, 1);
-      const eased = 1 - Math.pow(1 - p, 4);
-      setVal(Math.round(eased * target));
-      if (p < 1) rafId = requestAnimationFrame(step);
-    };
-    rafId = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(rafId);
-  }, [target, durationMs, trigger]);
-  return val;
-}
-
 const _fmtDur = (n: number) => {
   const y = Math.floor(n / 12);
   const m = n % 12;
@@ -83,11 +64,6 @@ export default function Intro() {
   const { ref } = useSectionInView("Home", 0.5);
   const { setActiveSection, setTimeOfLastClick } = useActiveSectionContext();
   const [time, setTime] = useState("");
-
-  const mobileStatsRef = useRef<HTMLDivElement>(null);
-  const mobileStatsInView = useInView(mobileStatsRef, { once: true, amount: 0 });
-  const mobileAnimProjects = useCountUp(_projectCount, 2800, mobileStatsInView);
-  const mobileAnimTotal = useCountUp(experienceMetrics.totalMonths, 3500, mobileStatsInView);
 
   useEffect(() => {
     const tick = () => {
@@ -139,12 +115,11 @@ export default function Intro() {
           <h1 className="anim-fade-up anim-d1 text-4xl sm:text-5xl lg:text-[3.6rem] font-bold tracking-tight text-gray-900 dark:text-white leading-[1.08] mb-3">
             Selvin{" "}
             <span className="text-gray-500 dark:text-white/35">PaulRaj K</span>
+            {/* Role — kept inside the H1 so search engines see the role keyword, styled identically to the old sibling <p> */}
+            <span className="anim-fade-up anim-d2 block font-mono text-sm sm:text-[0.9rem] font-normal normal-case tracking-wide text-[#9a7d2a] dark:text-[#FFD700]/65 mt-3">
+              AI Engineer &nbsp;·&nbsp; MCP &nbsp;·&nbsp; Agentic Systems &nbsp;·&nbsp; RAG &nbsp;·&nbsp; LangGraph
+            </span>
           </h1>
-
-          {/* Role */}
-          <p className="anim-fade-up anim-d2 font-mono text-sm sm:text-[0.9rem] text-[#9a7d2a] dark:text-[#FFD700]/65 mb-3 tracking-wide">
-            AI Engineer &nbsp;·&nbsp; MCP &nbsp;·&nbsp; Agentic Systems &nbsp;·&nbsp; RAG &nbsp;·&nbsp; LangGraph
-          </p>
 
           {/* Personality tags */}
           <div className="anim-fade-up anim-d2 flex flex-wrap justify-center lg:justify-start gap-2 mb-4">
@@ -162,17 +137,14 @@ export default function Intro() {
           </div>
 
           {/* Mobile inline stats */}
-          <div
-            ref={mobileStatsRef}
-            className="anim-fade-up anim-d3 lg:hidden flex items-center justify-center gap-3 mt-1 mb-5 font-mono"
-          >
+          <div className="anim-fade-up anim-d3 lg:hidden flex items-center justify-center gap-3 mt-1 mb-5 font-mono">
             <span className="text-lg font-bold text-gray-900 dark:text-white/90 tabular-nums">
-              {mobileAnimProjects}+
+              {_projectCount}+
             </span>
             <span className="text-[0.58rem] uppercase tracking-[0.15em] text-gray-500 dark:text-white/30">Projects</span>
             <span className="w-px h-3.5 bg-black/10 dark:bg-white/10" />
             <span className="text-lg font-bold text-gray-900 dark:text-white/90 tabular-nums">
-              {_fmtDur(mobileAnimTotal)}
+              {_fmtDur(experienceMetrics.totalMonths)}
             </span>
             <span className="text-[0.58rem] uppercase tracking-[0.15em] text-gray-500 dark:text-white/30">YOE</span>
           </div>

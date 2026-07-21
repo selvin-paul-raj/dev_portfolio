@@ -11,6 +11,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import ThemeContextProvider from "@/context/theme-context";
+import { projectsData, certificationsData, recognitionData } from "@/lib/data";
 
 const geistSans = Geist({
   subsets: ["latin"],

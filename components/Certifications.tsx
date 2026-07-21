@@ -672,7 +672,8 @@ export default function Certifications() {
   }, [query, selectedIssuer, selectedCategory, selectedYear, sort]);
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const visible = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const pageStart = (currentPage - 1) * PAGE_SIZE;
+  const pageEnd = pageStart + PAGE_SIZE;
   const isFiltered = query !== "" || selectedIssuer !== "All" || selectedCategory !== "All" || selectedYear !== "All";
 
   const clearAll = useCallback(() => {
@@ -683,9 +684,6 @@ export default function Certifications() {
     setCurrentPage(1);
     if (searchRef.current) searchRef.current.value = "";
   }, []);
-
-  /* Reset to page 1 whenever filters/sort change */
-  useEffect(() => { setCurrentPage(1); }, [query, selectedIssuer, selectedCategory, selectedYear, sort]);
 
   /* Cmd/Ctrl + K → focus search */
   useEffect(() => {
@@ -771,12 +769,12 @@ export default function Certifications() {
             type="search"
             placeholder="Search by title, issuer, skill, or certificate ID…"
             className="flex-1 bg-transparent border-0 outline-none py-3 text-[14px] text-gray-900 dark:text-white placeholder-gray-300 dark:placeholder-[#54545c]"
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => { setQuery(e.target.value); setCurrentPage(1); }}
             aria-label="Search certifications"
           />
           {query && (
             <button
-              onClick={() => { setQuery(""); if (searchRef.current) searchRef.current.value = ""; }}
+              onClick={() => { setQuery(""); setCurrentPage(1); if (searchRef.current) searchRef.current.value = ""; }}
               className="text-gray-500 dark:text-[#8a8a93] hover:text-gray-900 dark:hover:text-white text-[13px] px-1"
             >
               ✕
@@ -794,7 +792,7 @@ export default function Certifications() {
         <div className="flex gap-2">
           <select
             value={sort}
-            onChange={(e) => setSort(e.target.value as SortMode)}
+            onChange={(e) => { setSort(e.target.value as SortMode); setCurrentPage(1); }}
             className="flex-1 sm:flex-none appearance-none bg-white dark:bg-[#101015] dark:[color-scheme:dark] border border-black/[0.08] dark:border-white/[0.07] text-gray-700 dark:text-white px-3 py-2.5 rounded-xl text-[12px] outline-none focus:border-[#f5c518]/40 cursor-pointer pr-8"
             style={{ fontFamily: MONO, letterSpacing: "0.12em", textTransform: "uppercase" }}
             aria-label="Sort certifications"
@@ -932,14 +930,18 @@ export default function Certifications() {
                 : "flex flex-col gap-[10px]"
             }
           >
-            {visible.map((cert, i) => (
-              <CertCard
+            {filtered.map((cert, i) => (
+              <div
                 key={cert.id}
-                cert={cert}
-                onClick={() => setSelectedCert(cert)}
-                listMode={viewMode === "list"}
-                index={i}
-              />
+                className={i >= pageStart && i < pageEnd ? undefined : "hidden"}
+              >
+                <CertCard
+                  cert={cert}
+                  onClick={() => setSelectedCert(cert)}
+                  listMode={viewMode === "list"}
+                  index={i - pageStart}
+                />
+              </div>
             ))}
           </motion.div>
         )}
