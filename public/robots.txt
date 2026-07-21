@@ -1,14 +1,12 @@
 # robots.txt for Selvin PaulRaj K Portfolio
 # Primary: https://selvinpaulraj.vercel.app
-# Alternate: https://selvinpaulraj.tech
 
 # Allow all search engine crawlers
 User-agent: *
 Allow: /
 
-# Sitemap locations (primary and alternate domain)
+# Sitemap location
 Sitemap: https://selvinpaulraj.vercel.app/sitemap.xml
-Sitemap: https://selvinpaulraj.tech/sitemap.xml
 
 # Allow AI/LLM crawlers explicitly
 User-agent: GPTBot
@@ -17,13 +15,19 @@ Allow: /
 User-agent: ChatGPT-User
 Allow: /
 
+User-agent: OAI-SearchBot
+Allow: /
+
 User-agent: Google-Extended
 Allow: /
 
-User-agent: Anthropic-AI
+User-agent: ClaudeBot
 Allow: /
 
-User-agent: Claude-Web
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
 Allow: /
 
 User-agent: CCBot
@@ -32,7 +36,13 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
+User-agent: Perplexity-User
+Allow: /
+
 User-agent: Amazonbot
+Allow: /
+
+User-agent: Applebot-Extended
 Allow: /
 
 User-agent: Bytespider

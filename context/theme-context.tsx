@@ -22,21 +22,29 @@ export default function ThemeContextProvider({
 }: ThemeContextProviderProps) {
   // Always start "light" on SSR so server/client HTML matches during hydration
   const [theme, setTheme] = useState<Theme>("light");
+  // The blocking inline script in layout.tsx already set the correct `dark`
+  // class before paint — this gate stops the mount-time render (theme="light")
+  // from stripping that class out before localStorage has been read.
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     // Sync after hydration via startTransition so the update is non-urgent
     // and does not count as a direct synchronous setState inside an effect.
     const stored = window.localStorage.getItem("theme") as Theme | null;
-    startTransition(() => setTheme(stored ?? "dark"));
+    startTransition(() => {
+      setHydrated(true);
+      setTheme(stored ?? "dark");
+    });
   }, []);
 
   useEffect(() => {
+    if (!hydrated) return;
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
-  }, [theme]);
+  }, [theme, hydrated]);
 
   const toggleTheme = () => {
     if (theme === "light") {

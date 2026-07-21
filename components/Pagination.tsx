@@ -57,7 +57,7 @@ export default function Pagination({
         onClick={() => onChange(currentPage - 1)}
         disabled={currentPage === 1}
         aria-label="Previous page"
-        className={`w-9 h-9 ${r} flex items-center justify-center transition-all active:scale-95 ${navBtn}`}
+        className={`w-11 h-11 ${r} flex items-center justify-center transition-all active:scale-95 ${navBtn}`}
         style={{ transition: "transform 120ms cubic-bezier(0.23,1,0.32,1)" }}
       >
         {isPill ? "←" : <MdChevronLeft size={20} />}
@@ -67,7 +67,7 @@ export default function Pagination({
         p === "…" ? (
           <span
             key={`ellipsis-${i}`}
-            className="w-9 h-9 flex items-center justify-center text-sm text-gray-500 dark:text-[#54545c] select-none"
+            className="w-11 h-11 flex items-center justify-center text-sm text-gray-500 dark:text-[#54545c] select-none"
           >
             {isPill ? "···" : "…"}
           </span>
@@ -77,7 +77,7 @@ export default function Pagination({
             onClick={() => onChange(p as number)}
             aria-label={`Page ${p}`}
             aria-current={p === currentPage ? "page" : undefined}
-            className={`w-9 h-9 ${r} flex items-center justify-center text-[12px] transition-all border active:scale-95 ${
+            className={`w-11 h-11 ${r} flex items-center justify-center text-[12px] transition-all border active:scale-95 ${
               p === currentPage ? activeBtn : inactiveBtn
             }`}
             style={{ transition: "transform 120ms cubic-bezier(0.23,1,0.32,1)" }}
@@ -91,7 +91,7 @@ export default function Pagination({
         onClick={() => onChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         aria-label="Next page"
-        className={`w-9 h-9 ${r} flex items-center justify-center transition-all active:scale-95 ${navBtn}`}
+        className={`w-11 h-11 ${r} flex items-center justify-center transition-all active:scale-95 ${navBtn}`}
         style={{ transition: "transform 120ms cubic-bezier(0.23,1,0.32,1)" }}
       >
         {isPill ? "→" : <MdChevronRight size={20} />}

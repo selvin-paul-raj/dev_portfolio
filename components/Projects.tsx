@@ -161,7 +161,7 @@ export default function Projects() {
             key={value}
             onClick={() => setActiveCategory(value)}
             aria-pressed={activeCategory === value}
-            className={`px-4 py-1.5 rounded-full text-sm font-medium outline-none
+            className={`px-4 py-2.5 sm:py-1.5 rounded-full text-sm font-medium outline-none
               focus-visible:ring-2 focus-visible:ring-[#FFD700]/60
               ${
                 activeCategory === value

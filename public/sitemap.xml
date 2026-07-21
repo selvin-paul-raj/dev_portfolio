@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
   <url>
     <loc>https://selvinpaulraj.vercel.app</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://selvinpaulraj.tech"/>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://selvinpaulraj.vercel.app/selvinpaulraj_profile.png</image:loc>
+      <image:loc>https://selvinpaulraj.vercel.app/Selvin_PaulRaj.webp</image:loc>
       <image:title>Selvin PaulRaj K — AI Engineer &amp; Agentic AI Developer</image:title>
       <image:caption>Portfolio of Selvin PaulRaj K — AI Agents, MCP servers, RAG, LangGraph</image:caption>
     </image:image>
@@ -27,21 +24,21 @@
   <!-- LLM/AI Context Files -->
   <url>
     <loc>https://selvinpaulraj.vercel.app/llms.txt</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-07-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
     <loc>https://selvinpaulraj.vercel.app/llms-full.txt</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-07-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
     <loc>https://selvinpaulraj.vercel.app/ai.txt</loc>
-    <lastmod>2026-05-12</lastmod>
+    <lastmod>2026-06-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>

@@ -11,7 +11,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import ThemeContextProvider from "@/context/theme-context";
-import { projectsData, certificationsData, recognitionData } from "@/lib/data";
+import { projectsData } from "@/lib/data";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -32,6 +32,24 @@ const instrumentSerif = Instrument_Serif({
   variable: "--font-instrument-serif",
   display: "swap",
 });
+
+const featuredProjectsItemList = projectsData.slice(0, 6).map((p, i) => ({
+  "@type": "ListItem",
+  position: i + 1,
+  item: {
+    "@type": "SoftwareApplication",
+    name: p.title,
+    description: p.description,
+    author: { "@type": "Person", name: "Selvin PaulRaj K" },
+    programmingLanguage: p.tags,
+    url: p.live ?? p.code,
+    applicationCategory: p.categories.includes("app")
+      ? "MobileApplication"
+      : p.categories.includes("tool")
+        ? "DeveloperApplication"
+        : "WebApplication",
+  },
+}));
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://selvinpaulraj.vercel.app"),
@@ -79,7 +97,6 @@ export const metadata: Metadata = {
     "AI Automation",
     "Intelligence Automation",
     "Embedding Models",
-    "selvinpaulraj.tech",
     "selvinpaulrajK",
     "selvinpaulraj",
     "Anthropic Claude",
@@ -176,9 +193,6 @@ export default function RootLayout({
         {/* OpenSearch + Feed discovery */}
         <link rel="search" type="application/opensearchdescription+xml" title="Selvin PaulRaj K" href="/opensearch.xml" />
         <link rel="alternate" type="application/rss+xml" title="Selvin PaulRaj K — Projects Feed" href="/feed.xml" />
-        {/* Alternate domain association */}
-        <link rel="me" href="https://selvinpaulraj.tech" />
-
         {/* SVG favicon — scales perfectly, modern browsers prefer it */}
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
@@ -209,7 +223,6 @@ export default function RootLayout({
               url: "https://selvinpaulraj.vercel.app",
               image: "https://selvinpaulraj.vercel.app/Selvin_PaulRaj.webp",
               sameAs: [
-                "https://selvinpaulraj.tech",
                 "https://github.com/selvin-paul-raj",
                 "https://linkedin.com/in/selvinpaulraj",
                 "https://www.hackerrank.com/profile/selvinpaulraj",
@@ -331,6 +344,9 @@ export default function RootLayout({
               mainEntity: {
                 "@type": "Person",
                 "@id": "https://selvinpaulraj.vercel.app/#person",
+                name: "Selvin PaulRaj K",
+                image: "https://selvinpaulraj.vercel.app/Selvin_PaulRaj.webp",
+                url: "https://selvinpaulraj.vercel.app",
               },
             }),
           }}
@@ -351,10 +367,6 @@ export default function RootLayout({
               },
               description:
                 "Portfolio of Selvin PaulRaj K — AI Engineer building AI Agents, MCP servers, RAG systems, and agentic workflows.",
-              potentialAction: {
-                "@type": "SearchAction",
-                target: "https://selvinpaulraj.vercel.app/#projects",
-              },
             }),
           }}
         />
@@ -428,48 +440,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "ItemList",
               name: "Selvin PaulRaj K — Featured AI Engineering Projects",
-              itemListElement: [
-                {
-                  "@type": "ListItem",
-                  position: 1,
-                  item: {
-                    "@type": "SoftwareApplication",
-                    name: "LinkedIn MCP Server",
-                    description: "A lightweight MCP server for LinkedIn automation with GPT-4 integration",
-                    author: { "@type": "Person", name: "Selvin PaulRaj K" },
-                    programmingLanguage: ["Python", "MCP"],
-                    url: "https://github.com/selvin-paul-raj/Linkedin-MCP-Server",
-                    applicationCategory: "DeveloperApplication",
-                  },
-                },
-                {
-                  "@type": "ListItem",
-                  position: 2,
-                  item: {
-                    "@type": "SoftwareApplication",
-                    name: "AI Calculator",
-                    description:
-                      "Full-stack AI calculator using Next.js 15 and Google Gemini — draw math problems for instant answers",
-                    author: { "@type": "Person", name: "Selvin PaulRaj K" },
-                    programmingLanguage: ["TypeScript", "Next.js"],
-                    url: "https://spr-ai-calculator.vercel.app",
-                    applicationCategory: "WebApplication",
-                  },
-                },
-                {
-                  "@type": "ListItem",
-                  position: 3,
-                  item: {
-                    "@type": "SoftwareApplication",
-                    name: "AI Content Generator",
-                    description:
-                      "Scalable AI content generation platform with Gemini AI, Next.js 15, and PostgreSQL",
-                    author: { "@type": "Person", name: "Selvin PaulRaj K" },
-                    programmingLanguage: ["TypeScript", "Next.js", "Python"],
-                    applicationCategory: "WebApplication",
-                  },
-                },
-              ],
+              itemListElement: featuredProjectsItemList,
             }),
           }}
         />

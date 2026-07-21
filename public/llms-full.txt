@@ -9,7 +9,6 @@
 - **Work Preference:** On-site / Hybrid / Remote
 - **Languages:** English, Tamil
 - **Primary Website:** https://selvinpaulraj.vercel.app
-- **Alternate Website:** https://selvinpaulraj.tech
 
 ### Professional Summary
 Selvin PaulRaj K is an AI Engineer specializing in agentic AI systems, MCP (Model Context Protocol) servers, RAG pipelines, and LangGraph multi-agent workflows. Currently working as an Associate Data Analyst at Zinnov (Draup), building AI automation pipelines and embedding-based intelligence systems for Fortune 500 clients. Pursuing a Master's in Computer Science (AI specialization) at Kings Engineering College.
@@ -164,7 +163,6 @@ Selvin PaulRaj K is an AI Engineer specializing in agentic AI systems, MCP (Mode
 ## CONTACT & SOCIAL LINKS
 
 - **Portfolio:** https://selvinpaulraj.vercel.app
-- **Alternate:** https://selvinpaulraj.tech
 - **GitHub:** https://github.com/selvin-paul-raj
 - **LinkedIn:** https://linkedin.com/in/selvinpaulraj
 - **HackerRank:** https://www.hackerrank.com/profile/selvinpaulraj
@@ -186,8 +184,8 @@ Selvin PaulRaj K is an AI Engineer specializing in agentic AI systems, MCP (Mode
 
 ---
 
-**Last Updated:** May 2026
-**Document Version:** 2.0
+**Last Updated:** July 2026
+**Document Version:** 2.1
 
 ---
 *Extended llms.txt for comprehensive AI/LLM context. See /llms.txt for the concise version.*

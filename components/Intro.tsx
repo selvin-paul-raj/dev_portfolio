@@ -159,8 +159,8 @@ export default function Intro() {
             MERN/Next.js expertise and a Master&apos;s in Computer Science (AI).
           </p>
 
-          {/* Secondary bio */}
-          <p className="anim-fade-up anim-d4 text-sm text-gray-500 dark:text-white/40 leading-relaxed max-w-xl mb-7">
+          {/* Secondary bio — hidden on mobile so the CTAs land above the fold */}
+          <p className="anim-fade-up anim-d4 hidden sm:block text-sm text-gray-500 dark:text-white/40 leading-relaxed max-w-xl mb-7">
             At{" "}
             <span className="text-gray-700 dark:text-white/60 font-medium">Zinnov (Draup)</span>
             , I architect embedding-based classification models, multi-step job-role

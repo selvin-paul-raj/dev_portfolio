@@ -1,541 +1,1526 @@
-[{
-    "title": "LinkedIn MCP Server",
-    "description": "A lightweight MCP server for LinkedIn automation. Supports profile, job, company and post scraping. Enables post creation, reactions and media upload for agent workflows, and integrated with OpenAI's GPT-4 for intelligent code analysis",
-    "tags": ["Python", "MCP", "LinkedIn API", "uv"],
-    "date": "2025-12-10",
+[
+  {
+    "title": "Instagram Alpic MCP Server",
+    "description": "Production-ready Instagram MCP Server for ChatGPT & Claude with Composio integration, OAuth automation, Instagram Graph API tools, health monitoring, insights, messaging, and Alpic deployment support.",
+    "tags": [
+      "Python"
+    ],
+    "date": "2026-07-21",
     "imageUrl": "",
-    "categories": ["all", "web", "ai", "tool"],
-    "code": "https://github.com/selvin-paul-raj/Linkedin-MCP-Server",
+    "categories": [
+      "all",
+      "ai",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Instagram-Alpic-mcp",
     "live": null,
     "order": 0,
     "show": true
   },
   {
-    "title": "AI Calculator",
-    "description": "Developed a full-stack AI calculator with Next.js 15 and TypeScript with Clerk, enabling drawing with AI for instant responsive calculations via Google AI's Gemini model",
-    "tags": ["Next.js 15", "TypeScript", "Tailwind CSS", "Clerk", "Gemini AI", "Framer Motion"],
-    "date": "2024-11-11",
-    "imageUrl": "/projects/aicalculator.png",
-    "categories": ["all", "web", "ai", "tool"],
-    "code": "https://github.com/selvin-paul-raj/SPR-AI-Calculator",
-    "live": "https://spr-ai-calculator.vercel.app",
+    "title": "Developer Portfolio",
+    "description": "Selvin PaulRaj K's portfolio, built with Next.js 16, TypeScript, Tailwind CSS, and Framer Motion, offers a sleek, responsive design and dynamic animations. It includes features like styled email integration, Vercel Analytics, and optimized performance",
+    "tags": [
+      "Next.js 16",
+      "TypeScript",
+      "Tailwind CSS",
+      "Framer Motion",
+      "Vercel Analytics",
+      "React Email"
+    ],
+    "date": "2024-08-20",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/dev_portfolio",
+    "live": "https://selvinpaulraj.vercel.app",
     "order": 1,
     "show": true
   },
   {
-    "title": "AI Content Generator",
-    "description": "A scalable AI content generator app using Next.js, React, Tailwind CSS, TypeScript, Gemini AI, and Clerk. Features include dynamic templates, searchable filters, adaptive forms, and rich text editing. Drizzle ORM and PostgreSQL enable secure data management",
-    "tags": ["Next.js 15", "TypeScript", "Tailwind CSS", "Clerk", "Gemini AI", "Radix UI", "Toast UI Editor"],
-    "date": "2024-11-12",
+    "title": "LinkedIn Alpic MCP Server",
+    "description": "Production-ready LinkedIn MCP Server for ChatGPT & Claude with Composio integration, OAuth automation, LinkedIn API tools, health monitoring, analytics, and Alpic deployment support.",
+    "tags": [
+      "Python"
+    ],
+    "date": "2026-07-20",
     "imageUrl": "",
-    "categories": ["all", "web", "ai", "tool"],
-    "code": "https://github.com/selvin-paul-raj/AI-Content-Generator",
+    "categories": [
+      "all",
+      "ai",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Linkedin-Alpic-Mcp",
     "live": null,
     "order": 2,
     "show": true
   },
   {
-    "title": "TroothView",
-    "description": "Created a React project that allows users to input photos, uses a Gradio AI model to confirm their trustworthiness, and displays the results in a doughnut chart",
-    "tags": ["React.js", "Framer Motion", "Tailwind CSS", "Chart.js", "Gradio AI", "Dropzone"],
-    "date": "2024-10-10",
-    "imageUrl": "/projects/troothview.png",
-    "categories": ["all", "web", "ai", "tool"],
-    "code": "https://github.com/selvin-paul-raj/TroothView",
-    "live": "https://trooth-view.vercel.app",
+    "title": "LinkedIn MCP Server",
+    "description": "A lightweight MCP server for LinkedIn automation. Supports profile, job, company and post scraping. Enables post creation, reactions and media upload for agent workflows, and integrated with OpenAI's GPT-4 for intelligent code analysis",
+    "tags": [
+      "Python",
+      "MCP",
+      "LinkedIn API",
+      "uv"
+    ],
+    "date": "2025-12-10",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "ai",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Linkedin-MCP-Server",
+    "live": null,
     "order": 3,
-    "show": true
-  },
-  {
-    "title": "Speed Typing",
-    "description": "Created an animation-rich React and TypeScript application. Testing and styling were done using Framer Motion, Jest, and Tailwind CSS",
-    "tags": ["React.js", "TypeScript", "Framer Motion", "Tailwind CSS", "Jest", "Custom Hooks"],
-    "date": "2024-04-12",
-    "imageUrl": "/projects/speedtype.png",
-    "categories": ["all", "web", "tool"],
-    "code": "https://github.com/selvin-paul-raj/Speed-Typing",
-    "live": "https://spr-speed-typing.vercel.app",
-    "order": 4,
-    "show": true
-  },
-  {
-    "title": "Developer Portfolio",
-    "description": "Selvin PaulRaj K's portfolio, built with Next.js 16, TypeScript, Tailwind CSS, and Framer Motion, offers a sleek, responsive design and dynamic animations. It includes features like styled email integration, Vercel Analytics, and optimized performance",
-    "tags": ["Next.js 16", "TypeScript", "Tailwind CSS", "Framer Motion", "Vercel Analytics", "React Email"],
-    "date": "2024-08-20",
-    "imageUrl": "",
-    "categories": ["all", "web"],
-    "code": "https://github.com/selvin-paul-raj/dev_portfolio",
-    "live": "https://selvinpaulraj.vercel.app",
-    "order": 5,
-    "show": true
-  },
-  {
-    "title": "Copy-ME",
-    "description": "Copy-ME is a minimalistic, real-time web application designed to facilitate instant text sharing across multiple devices. It functions as a live, shared clipboard where users can draft content privately and then explicitly 'Publish' it to synchronize with all connected participants",
-    "tags": ["Real-time", "WebSockets", "JavaScript", "HTML", "CSS"],
-    "date": "2025-07-15",
-    "imageUrl": "",
-    "categories": ["all", "web", "tool"],
-    "code": "https://github.com/selvin-paul-raj/copy-me",
-    "live": null,
-    "order": 6,
-    "show": true
-  },
-  {
-    "title": "Phishing Detection Extension",
-    "description": "Browser extension for detecting phishing websites using machine learning",
-    "tags": ["JavaScript", "Chrome Extension", "ML", "Security"],
-    "date": "2025-09-11",
-    "imageUrl": "",
-    "categories": ["all", "tool", "ai"],
-    "code": "https://github.com/selvin-paul-raj/Phishing-Detection-Extension",
-    "live": null,
-    "order": 7,
-    "show": true
-  },
-  {
-    "title": "Phishing Detection ML FastAPI",
-    "description": "FastAPI backend for phishing detection using machine learning models",
-    "tags": ["Python", "FastAPI", "Machine Learning", "Security"],
-    "date": "2025-09-10",
-    "imageUrl": "",
-    "categories": ["all", "ai", "tool"],
-    "code": "https://github.com/selvin-paul-raj/Phishing_Detection_ML_FastAPI",
-    "live": null,
-    "order": 8,
-    "show": true
-  },
-  {
-    "title": "Gift Buddy",
-    "description": "AI-powered gift recommendation application",
-    "tags": ["React.js", "AI", "JavaScript"],
-    "date": "2025-10-29",
-    "imageUrl": "",
-    "categories": ["all", "web", "ai"],
-    "code": "https://github.com/selvin-paul-raj/Gift-Buddy",
-    "live": null,
-    "order": 9,
-    "show": true
-  },
-  {
-    "title": "Casita Fashion",
-    "description": "E-commerce fashion website",
-    "tags": ["React.js", "E-commerce", "JavaScript"],
-    "date": "2025-10-31",
-    "imageUrl": "",
-    "categories": ["all", "web"],
-    "code": "https://github.com/selvin-paul-raj/Casita-Fashion",
-    "live": null,
-    "order": 10,
     "show": true
   },
   {
     "title": "LinkedIn MCP Server",
     "description": "Model Context Protocol server for LinkedIn integration",
-    "tags": ["MCP", "LinkedIn API", "TypeScript"],
+    "tags": [
+      "MCP",
+      "LinkedIn API",
+      "TypeScript"
+    ],
     "date": "2025-11-14",
     "imageUrl": "",
-    "categories": ["all", "tool"],
+    "categories": [
+      "all",
+      "tool"
+    ],
     "code": "https://github.com/selvin-paul-raj/Linkedin-MCP-Server",
     "live": null,
+    "order": 4,
+    "show": false
+  },
+  {
+    "title": "Company Logo Finder",
+    "description": "RealTime Company Logo Finder",
+    "tags": [
+      "Python"
+    ],
+    "date": "2026-05-28",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Company-logo-finder",
+    "live": null,
+    "order": 5,
+    "show": true
+  },
+  {
+    "title": "Outlook CLI",
+    "description": "Production-ready CLI and MCP server for Microsoft Outlook through Microsoft Graph",
+    "tags": [
+      "JavaScript"
+    ],
+    "date": "2026-04-02",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/outlook-cli",
+    "live": "https://www.npmjs.com/package/outlook-cli",
+    "order": 6,
+    "show": true
+  },
+  {
+    "title": "Gift Buddy",
+    "description": "AI-powered gift recommendation application",
+    "tags": [
+      "React.js",
+      "AI",
+      "JavaScript"
+    ],
+    "date": "2025-10-29",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "ai"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Gift-Buddy",
+    "live": null,
+    "order": 7,
+    "show": true
+  },
+  {
+    "title": "ChatDex AI",
+    "description": "ChatDex AI is a Chrome extension that indexes and organizes your ChatGPT and Gemini conversations.  Search prompts, export chats as Markdown/JSON, and sync selected conversations directly to Notion.",
+    "tags": [
+      "JavaScript"
+    ],
+    "date": "2026-03-11",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/ChatDex-AI",
+    "live": null,
+    "order": 8,
+    "show": true
+  },
+  {
+    "title": "Casita Fashion",
+    "description": "E-commerce fashion website",
+    "tags": [
+      "React.js",
+      "E-commerce",
+      "JavaScript"
+    ],
+    "date": "2025-10-31",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Casita-Fashion",
+    "live": null,
+    "order": 9,
+    "show": true
+  },
+  {
+    "title": "Prompt Test Sandbox",
+    "description": "Prompt Test Sandbox",
+    "tags": [
+      "TypeScript"
+    ],
+    "date": "2025-10-13",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/prompt-test",
+    "live": "https://prompt-test-three.vercel.app",
+    "order": 10,
+    "show": false
+  },
+  {
+    "title": "Manager App",
+    "description": "Manager App",
+    "tags": [
+      "TypeScript"
+    ],
+    "date": "2025-10-10",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/manager",
+    "live": "https://manager-kohl-chi.vercel.app",
     "order": 11,
     "show": false
   },
   {
-    "title": "AI Agent MCP Server",
-    "description": "Model Context Protocol server for AI agents",
-    "tags": ["MCP", "AI", "TypeScript"],
-    "date": "2025-08-04",
+    "title": "Phishing Detection Extension",
+    "description": "Browser extension for detecting phishing websites using machine learning",
+    "tags": [
+      "JavaScript",
+      "Chrome Extension",
+      "ML",
+      "Security"
+    ],
+    "date": "2025-09-11",
     "imageUrl": "",
-    "categories": ["all", "ai", "tool"],
-    "code": "https://github.com/selvin-paul-raj/AI-Agent-MCP-Server",
+    "categories": [
+      "all",
+      "tool",
+      "ai"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Phishing-Detection-Extension",
     "live": null,
     "order": 12,
     "show": true
   },
   {
-    "title": "Dynamic AI Agent CLI System",
-    "description": "Command-line interface for dynamic AI agent management",
-    "tags": ["CLI", "AI", "Node.js"],
-    "date": "2025-08-06",
+    "title": "Phishing Detection ML FastAPI",
+    "description": "FastAPI backend for phishing detection using machine learning models",
+    "tags": [
+      "Python",
+      "FastAPI",
+      "Machine Learning",
+      "Security"
+    ],
+    "date": "2025-09-10",
     "imageUrl": "",
-    "categories": ["all", "ai", "tool"],
-    "code": "https://github.com/selvin-paul-raj/Dynamic-AI-Agent-CLI-System",
+    "categories": [
+      "all",
+      "ai",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Phishing_Detection_ML_FastAPI",
     "live": null,
     "order": 13,
     "show": true
   },
   {
-    "title": "Vitersim",
-    "description": "Vitersim is a CLI tool for optimizing Vite React projects, automating cleanup of unnecessary files, simplifying component structure, and preparing for Tailwind CSS setup. Perfect for developers needing a clean and efficient Vite React starter template",
-    "tags": ["CLI", "Vite", "React.js", "Node.js", "npm"],
-    "date": "2024-11-06",
+    "title": "Quote Generator",
+    "description": "A React app that fetches and displays random inspirational quotes from the quotable.io API. Click 'New Quote' for daily inspiration",
+    "tags": [
+      "React.js",
+      "API",
+      "JavaScript"
+    ],
+    "date": "2023-09-03",
     "imageUrl": "",
-    "categories": ["all", "tool"],
-    "code": "https://github.com/selvin-paul-raj/vitersim",
-    "live": "https://www.npmjs.com/package/vitersim",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Quote-Generator-React-App",
+    "live": "https://spr-quote-generator.vercel.app",
     "order": 14,
     "show": true
   },
   {
-    "title": "Deepfake Video Detection",
-    "description": "AI-powered deepfake video detection system",
-    "tags": ["Python", "AI", "Machine Learning", "Computer Vision"],
-    "date": "2024-11-18",
+    "title": "OAuth Generated Repo",
+    "description": "Repository created via OAuth",
+    "tags": [],
+    "date": "2025-02-18",
     "imageUrl": "",
-    "categories": ["all", "ai", "tool"],
-    "code": "https://github.com/selvin-paul-raj/deepfake_Video",
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/generated-1",
     "live": null,
     "order": 15,
-    "show": true
+    "show": false
   },
   {
-    "title": "Files Share App",
-    "description": "Drag and drop your file directly on our cloud and share it with your friends securely with password and send it on email",
-    "tags": ["React.js", "Node.js", "Express.js", "Cloud Storage"],
-    "date": "2024-05-24",
+    "title": "Dynamic AI Agent CLI System",
+    "description": "Command-line interface for dynamic AI agent management",
+    "tags": [
+      "CLI",
+      "AI",
+      "Node.js"
+    ],
+    "date": "2025-08-06",
     "imageUrl": "",
-    "categories": ["all", "web", "tool"],
-    "code": "https://github.com/selvin-paul-raj/Files-Share-App",
+    "categories": [
+      "all",
+      "ai",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Dynamic-AI-Agent-CLI-System",
     "live": null,
     "order": 16,
     "show": true
   },
   {
-    "title": "MERN Blog",
-    "description": "Full-stack blogging platform built with MERN stack",
-    "tags": ["MongoDB", "Express.js", "React.js", "Node.js", "MERN"],
-    "date": "2024-05-28",
+    "title": "AI Agent MCP Server",
+    "description": "Model Context Protocol server for AI agents",
+    "tags": [
+      "MCP",
+      "AI",
+      "TypeScript"
+    ],
+    "date": "2025-08-04",
     "imageUrl": "",
-    "categories": ["all", "web"],
-    "code": "https://github.com/selvin-paul-raj/MERN-Blog",
+    "categories": [
+      "all",
+      "ai",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/AI-Agent-MCP-Server",
     "live": null,
     "order": 17,
     "show": true
   },
   {
-    "title": "React Food Delivery",
-    "description": "Food ordering website using React, Redux toolkit and ReactStrap",
-    "tags": ["React.js", "Redux Toolkit", "ReactStrap"],
-    "date": "2023-08-03",
+    "title": "Copy-ME",
+    "description": "Copy-ME is a minimalistic, real-time web application designed to facilitate instant text sharing across multiple devices. It functions as a live, shared clipboard where users can draft content privately and then explicitly 'Publish' it to synchronize with all connected participants",
+    "tags": [
+      "Real-time",
+      "WebSockets",
+      "JavaScript",
+      "HTML",
+      "CSS"
+    ],
+    "date": "2025-07-15",
     "imageUrl": "",
-    "categories": ["all", "web"],
-    "code": "https://github.com/selvin-paul-raj/React_Food_Delivery",
+    "categories": [
+      "all",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/copy-me",
     "live": null,
     "order": 18,
     "show": true
   },
   {
-    "title": "Food Delivery Website",
-    "description": "Full-stack food delivery platform",
-    "tags": ["React.js", "Node.js", "Express.js"],
-    "date": "2024-11-14",
+    "title": "Test Repo",
+    "description": "Test Repo",
+    "tags": [],
+    "date": "2025-06-23",
     "imageUrl": "",
-    "categories": ["all", "web"],
-    "code": "https://github.com/selvin-paul-raj/Food-Delivery-Website",
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/test",
     "live": null,
     "order": 19,
-    "show": true
+    "show": false
   },
   {
-    "title": "EzSumZ - Article Summarizer",
-    "description": "Summize: AI-Powered Article Summarization. Effortlessly summarize lengthy articles with Summize. Powered by OpenAI GPT-4, it delivers clear and concise summaries, saving you time and simplifying your reading",
-    "tags": ["React.js", "OpenAI GPT-4", "API", "Tailwind CSS"],
-    "date": "2023-09-10",
+    "title": "IBISWorld Web Scraper",
+    "description": "Web scraper for IBISWorld industry data",
+    "tags": [
+      "Python",
+      "Web Scraping",
+      "Data Analysis"
+    ],
+    "date": "2025-06-17",
     "imageUrl": "",
-    "categories": ["all", "web", "ai"],
-    "code": "https://github.com/selvin-paul-raj/EzSumZ-Article_Summarizer-React-App",
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/-IBISWorld_Web_Scraper",
     "live": null,
     "order": 20,
     "show": true
   },
   {
-    "title": "React Redux Todo App",
-    "description": "A minimalist Todo App built with React and Redux Toolkit for efficient task management. Features include adding, completing, updating, and removing tasks with dynamic sorting",
-    "tags": ["React.js", "Redux Toolkit", "TypeScript", "Tailwind CSS"],
-    "date": "2023-09-05",
+    "title": "Screener Companies Web Scraping",
+    "description": "Web scraping tool for company data from Screener",
+    "tags": [
+      "Python",
+      "Web Scraping",
+      "BeautifulSoup"
+    ],
+    "date": "2025-06-17",
     "imageUrl": "",
-    "categories": ["all", "web", "tool"],
-    "code": "https://github.com/selvin-paul-raj/React-Redux-Todo-App",
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/screener_companies_Web_Scrapping",
     "live": null,
     "order": 21,
     "show": true
   },
   {
-    "title": "Quote Generator",
-    "description": "A React app that fetches and displays random inspirational quotes from the quotable.io API. Click 'New Quote' for daily inspiration",
-    "tags": ["React.js", "API", "JavaScript"],
-    "date": "2023-09-03",
+    "title": "Deepfake Video Detection",
+    "description": "AI-powered deepfake video detection system",
+    "tags": [
+      "Python",
+      "AI",
+      "Machine Learning",
+      "Computer Vision"
+    ],
+    "date": "2024-11-18",
     "imageUrl": "",
-    "categories": ["all", "web"],
-    "code": "https://github.com/selvin-paul-raj/Quote-Generator-React-App",
-    "live": "https://spr-quote-generator.vercel.app",
+    "categories": [
+      "all",
+      "ai",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/deepfake_Video",
+    "live": null,
     "order": 22,
     "show": true
   },
   {
-    "title": "React Weather App",
-    "description": "Modern React Weather App: Real-time weather details with dynamic icons. Utilizes OpenWeatherMap API for temperature, humidity, and wind speed. Clean UI, modular code, and a seamless user experience",
-    "tags": ["React.js", "OpenWeatherMap API", "JavaScript", "CSS"],
-    "date": "2023-11-15",
+    "title": "SPR Next Ink",
+    "description": "SPR Next Ink",
+    "tags": [
+      "JavaScript"
+    ],
+    "date": "2024-11-15",
     "imageUrl": "",
-    "categories": ["all", "web", "tool"],
-    "code": "https://github.com/selvin-paul-raj/React-Weather-App",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/spr-nxt-ink",
     "live": null,
     "order": 23,
     "show": true
   },
   {
-    "title": "React Calculator",
-    "description": "React Calculator App: A simple and efficient calculator web application built with React. Perform basic and advanced mathematical operations with ease",
-    "tags": ["React.js", "JavaScript", "CSS"],
-    "date": "2023-11-15",
+    "title": "AI Content Generator",
+    "description": "A scalable AI content generator app using Next.js, React, Tailwind CSS, TypeScript, Gemini AI, and Clerk. Features include dynamic templates, searchable filters, adaptive forms, and rich text editing. Drizzle ORM and PostgreSQL enable secure data management",
+    "tags": [
+      "Next.js 15",
+      "TypeScript",
+      "Tailwind CSS",
+      "Clerk",
+      "Gemini AI",
+      "Radix UI",
+      "Toast UI Editor"
+    ],
+    "date": "2024-11-12",
     "imageUrl": "",
-    "categories": ["all", "web", "tool"],
-    "code": "https://github.com/selvin-paul-raj/React_Calculator",
+    "categories": [
+      "all",
+      "web",
+      "ai",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/AI-Content-Generator",
     "live": null,
     "order": 24,
     "show": true
   },
   {
-    "title": "Electron.js Calculator App",
-    "description": "Electron Calculator App: A simple yet powerful cross-platform calculator app built with Electron. Perform basic arithmetic operations effortlessly on Windows and Mac. Experience smooth animations with Framer Motion",
-    "tags": ["Electron.js", "React.js", "Framer Motion", "JavaScript"],
-    "date": "2023-09-08",
+    "title": "Food Delivery Website",
+    "description": "Full-stack food delivery platform",
+    "tags": [
+      "React.js",
+      "Node.js",
+      "Express.js"
+    ],
+    "date": "2024-11-14",
     "imageUrl": "",
-    "categories": ["all", "app", "tool"],
-    "code": "https://github.com/selvin-paul-raj/Electronjs-Calculator-App",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Food-Delivery-Website",
     "live": null,
     "order": 25,
     "show": true
   },
   {
-    "title": "BMI Calculator React Native App",
-    "description": "BMI Calculator App My First React Native App: A mobile app to quickly calculate and assess your Body Mass Index (BMI) based on your height and weight. Built with React Native, it provides instant results and BMI category classification",
-    "tags": ["React Native", "Mobile App", "JavaScript"],
-    "date": "2023-09-16",
-    "imageUrl": "",
-    "categories": ["all", "app"],
-    "code": "https://github.com/selvin-paul-raj/BMI-Calculator-React-Native-App",
-    "live": null,
+    "title": "AI Calculator",
+    "description": "Developed a full-stack AI calculator with Next.js 15 and TypeScript with Clerk, enabling drawing with AI for instant responsive calculations via Google AI's Gemini model",
+    "tags": [
+      "Next.js 15",
+      "TypeScript",
+      "Tailwind CSS",
+      "Clerk",
+      "Gemini AI",
+      "Framer Motion"
+    ],
+    "date": "2024-11-11",
+    "imageUrl": "/projects/aicalculator.png",
+    "categories": [
+      "all",
+      "web",
+      "ai",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/SPR-AI-Calculator",
+    "live": "https://spr-ai-calculator.vercel.app",
     "order": 26,
     "show": true
   },
   {
-    "title": "Random Dog Pic Generator",
-    "description": "Built a dynamic React project that fetches random dog images from an API. Users can click 'Generate Dogs' to load a new dog image. Error handling included",
-    "tags": ["React.js", "API", "JavaScript"],
-    "date": "2023-09-10",
+    "title": "Vitersim",
+    "description": "Vitersim is a CLI tool for optimizing Vite React projects, automating cleanup of unnecessary files, simplifying component structure, and preparing for Tailwind CSS setup. Perfect for developers needing a clean and efficient Vite React starter template",
+    "tags": [
+      "CLI",
+      "Vite",
+      "React.js",
+      "Node.js",
+      "npm"
+    ],
+    "date": "2024-11-06",
     "imageUrl": "",
-    "categories": ["all", "web", "tool"],
-    "code": "https://github.com/selvin-paul-raj/Random-Dog-Pic-Generate",
-    "live": null,
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/vitersim",
+    "live": "https://www.npmjs.com/package/vitersim",
     "order": 27,
     "show": true
   },
   {
-    "title": "Random Meme Generator",
-    "description": "Random meme generator using React",
-    "tags": ["React.js", "API", "JavaScript"],
-    "date": "2023-11-27",
+    "title": "AI Calculator (Early Version)",
+    "description": "AI Calculator (Early Version)",
+    "tags": [
+      "TypeScript"
+    ],
+    "date": "2024-10-26",
     "imageUrl": "",
-    "categories": ["all", "web", "tool"],
-    "code": "https://github.com/selvin-paul-raj/Random-Meme-React",
-    "live": null,
+    "categories": [
+      "all",
+      "ai",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/AI-Calculator",
+    "live": "https://spr-ai-calculator.vercel.app",
     "order": 28,
-    "show": true
+    "show": false
   },
   {
-    "title": "QR Code Generator",
-    "description": "QR code generator built with React",
-    "tags": ["React.js", "JavaScript", "QR Code"],
-    "date": "2024-02-06",
+    "title": "PicoFoilo",
+    "description": "PicoFoilo",
+    "tags": [
+      "TypeScript"
+    ],
+    "date": "2024-10-16",
     "imageUrl": "",
-    "categories": ["all", "web", "tool"],
-    "code": "https://github.com/selvin-paul-raj/QR-Code-Generator-React",
-    "live": null,
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/PicoFoilo",
+    "live": "https://picofolio.vercel.app",
     "order": 29,
     "show": true
   },
   {
-    "title": "Drag and Drop Notes",
-    "description": "Interactive drag and drop notes application",
-    "tags": ["React.js", "Drag & Drop", "JavaScript"],
-    "date": "2024-04-12",
-    "imageUrl": "",
-    "categories": ["all", "web", "tool"],
-    "code": "https://github.com/selvin-paul-raj/Drag-and-Drop-Notes",
-    "live": null,
+    "title": "TroothView",
+    "description": "Created a React project that allows users to input photos, uses a Gradio AI model to confirm their trustworthiness, and displays the results in a doughnut chart",
+    "tags": [
+      "React.js",
+      "Framer Motion",
+      "Tailwind CSS",
+      "Chart.js",
+      "Gradio AI",
+      "Dropzone"
+    ],
+    "date": "2024-10-10",
+    "imageUrl": "/projects/troothview.png",
+    "categories": [
+      "all",
+      "web",
+      "ai",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/TroothView",
+    "live": "https://trooth-view.vercel.app",
     "order": 30,
     "show": true
   },
   {
-    "title": "Own Amazon Scraper API",
-    "description": "An open-source web scraper for Amazon data. Retrieve product details, reviews, offers, and search results using this Node.js and Express-based API. Ideal for integrating Amazon data into your applications and analysis",
-    "tags": ["Node.js", "Express.js", "Web Scraping", "API"],
-    "date": "2023-10-27",
+    "title": "Expense Tracker — Client",
+    "description": "Expense Tracker — Client",
+    "tags": [
+      "JavaScript"
+    ],
+    "date": "2024-02-13",
     "imageUrl": "",
-    "categories": ["all", "tool"],
-    "code": "https://github.com/selvin-paul-raj/Own_Amazon_Scraper_API",
-    "live": null,
+    "categories": [
+      "all",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Client_Expense_Tracker",
+    "live": "https://spr-expense-tracker.vercel.app",
     "order": 31,
-    "show": true
-  },
-  {
-    "title": "Screener Companies Web Scraping",
-    "description": "Web scraping tool for company data from Screener",
-    "tags": ["Python", "Web Scraping", "BeautifulSoup"],
-    "date": "2025-06-17",
-    "imageUrl": "",
-    "categories": ["all", "tool"],
-    "code": "https://github.com/selvin-paul-raj/screener_companies_Web_Scrapping",
-    "live": null,
-    "order": 32,
-    "show": true
-  },
-  {
-    "title": "IBISWorld Web Scraper",
-    "description": "Web scraper for IBISWorld industry data",
-    "tags": ["Python", "Web Scraping", "Data Analysis"],
-    "date": "2025-06-17",
-    "imageUrl": "",
-    "categories": ["all", "tool"],
-    "code": "https://github.com/selvin-paul-raj/-IBISWorld_Web_Scraper",
-    "live": null,
-    "order": 33,
-    "show": true
-  },
-  {
-    "title": "SPR Censorify",
-    "description": "Enhance content integrity using CustomCensorify: a JavaScript module. Efficiently replace sensitive words for respectful communication",
-    "tags": ["JavaScript", "npm", "Content Moderation"],
-    "date": "2023-08-15",
-    "imageUrl": "",
-    "categories": ["all", "tool"],
-    "code": "https://github.com/selvin-paul-raj/spr-censorify",
-    "live": "https://www.npmjs.com/package/spr-censorify",
-    "order": 34,
-    "show": true
-  },
-  {
-    "title": "Expense Tracker",
-    "description": "Full-stack expense tracking application with client and server",
-    "tags": ["React.js", "Node.js", "Express.js", "MongoDB"],
-    "date": "2024-02-13",
-    "imageUrl": "",
-    "categories": ["all", "web", "tool"],
-    "code": "https://github.com/selvin-paul-raj/codealpha_expense_tracker",
-    "live": null,
-    "order": 35,
-    "show": true
-  },
-  {
-    "title": "Cursor Hearts",
-    "description": "Cursor Hearts: A playful cursor animation project with heart-shaped cursors that follow the user's mouse movements. Add a touch of charm to your website!",
-    "tags": ["JavaScript", "CSS Animation", "HTML"],
-    "date": "2023-11-14",
-    "imageUrl": "",
-    "categories": ["all", "web"],
-    "code": "https://github.com/selvin-paul-raj/Cursor_Hearts",
-    "live": null,
-    "order": 36,
-    "show": true
-  },
-  {
-    "title": "3D Cube Three.js",
-    "description": "3D cube animation using Three.js",
-    "tags": ["Three.js", "JavaScript", "WebGL", "3D"],
-    "date": "2023-11-22",
-    "imageUrl": "",
-    "categories": ["all", "web"],
-    "code": "https://github.com/selvin-paul-raj/Cube-Threejs",
-    "live": null,
-    "order": 37,
-    "show": true
-  },
-  {
-    "title": "New Year Countdown",
-    "description": "A simple New Year countdown webpage with customizable date and a countdown timer. When you switch tabs, it reminds you to come back for the celebration",
-    "tags": ["JavaScript", "HTML", "CSS"],
-    "date": "2023-11-02",
-    "imageUrl": "",
-    "categories": ["all", "web"],
-    "code": "https://github.com/selvin-paul-raj/New_Year_CountDown",
-    "live": null,
-    "order": 38,
-    "show": true
-  },
-  {
-    "title": "PRODIGY WD 01",
-    "description": "Responsive Landing Page with Spline 3D Model for Prodigy InfoTech Web Dev Internship",
-    "tags": ["HTML", "CSS", "JavaScript", "Spline 3D"],
-    "date": "2024-02-06",
-    "imageUrl": "",
-    "categories": ["all", "web"],
-    "code": "https://github.com/selvin-paul-raj/PRODIGY_WD_01",
-    "live": null,
-    "order": 39,
-    "show": true
-  },
-  {
-    "title": "PRODIGY WD 02",
-    "description": "Stop Watch using HTML, CSS, Javascript for Prodigy InfoTech Web Dev Internship",
-    "tags": ["HTML", "CSS", "JavaScript"],
-    "date": "2024-02-12",
-    "imageUrl": "",
-    "categories": ["all", "web", "tool"],
-    "code": "https://github.com/selvin-paul-raj/PRODIGY-WD-02",
-    "live": null,
-    "order": 40,
-    "show": true
-  },
-  {
-    "title": "Oasis Landing Page",
-    "description": "Responsive Landing Page with Spline 3D Model for Oasis InfoByte Web Dev Internship",
-    "tags": ["HTML", "CSS", "JavaScript", "Spline 3D"],
-    "date": "2024-02-13",
-    "imageUrl": "",
-    "categories": ["all", "web"],
-    "code": "https://github.com/selvin-paul-raj/Oasis_Landing_Page",
-    "live": null,
-    "order": 41,
-    "show": true
-  },
-  {
-    "title": "Multi Language App",
-    "description": "Multi-language support React application",
-    "tags": ["React.js", "i18n", "JavaScript"],
-    "date": "2024-03-19",
-    "imageUrl": "",
-    "categories": ["all", "web"],
-    "code": "https://github.com/selvin-paul-raj/Multi-Lang-App-React",
-    "live": null,
-    "order": 42,
-    "show": true
-  },
-  {
-    "title": "Tic-Tac-Toe Flutter",
-    "description": "Tic-Tac-Toe game built with Flutter",
-    "tags": ["Flutter", "Dart", "Mobile App"],
-    "date": "2024-02-01",
-    "imageUrl": "",
-    "categories": ["all", "app"],
-    "code": "https://github.com/selvin-paul-raj/Tic-Tac-Toe-Game-in-Flutter",
-    "live": null,
-    "order": 43,
     "show": true
   },
   {
     "title": "Raspberry Pi 4 Projects",
     "description": "Collection of Raspberry Pi 4 projects",
-    "tags": ["Raspberry Pi", "Python", "IoT"],
+    "tags": [
+      "Raspberry Pi",
+      "Python",
+      "IoT"
+    ],
     "date": "2024-10-04",
     "imageUrl": "",
-    "categories": ["all", "tool"],
+    "categories": [
+      "all",
+      "tool"
+    ],
     "code": "https://github.com/selvin-paul-raj/RPi4",
     "live": null,
+    "order": 32,
+    "show": true
+  },
+  {
+    "title": "MERN Blog",
+    "description": "Full-stack blogging platform built with MERN stack",
+    "tags": [
+      "MongoDB",
+      "Express.js",
+      "React.js",
+      "Node.js",
+      "MERN"
+    ],
+    "date": "2024-05-28",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/MERN-Blog",
+    "live": null,
+    "order": 33,
+    "show": true
+  },
+  {
+    "title": "Files Share App",
+    "description": "Drag and drop your file directly on our cloud and share it with your friends securely with password and send it on email",
+    "tags": [
+      "React.js",
+      "Node.js",
+      "Express.js",
+      "Cloud Storage"
+    ],
+    "date": "2024-05-24",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Files-Share-App",
+    "live": null,
+    "order": 34,
+    "show": true
+  },
+  {
+    "title": "Azure Experiments",
+    "description": "Azure Experiments",
+    "tags": [],
+    "date": "2024-04-16",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/azure",
+    "live": null,
+    "order": 35,
+    "show": false
+  },
+  {
+    "title": "Drag and Drop Notes",
+    "description": "Interactive drag and drop notes application",
+    "tags": [
+      "React.js",
+      "Drag & Drop",
+      "JavaScript"
+    ],
+    "date": "2024-04-12",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Drag-and-Drop-Notes",
+    "live": null,
+    "order": 36,
+    "show": true
+  },
+  {
+    "title": "Speed Typing",
+    "description": "Created an animation-rich React and TypeScript application. Testing and styling were done using Framer Motion, Jest, and Tailwind CSS",
+    "tags": [
+      "React.js",
+      "TypeScript",
+      "Framer Motion",
+      "Tailwind CSS",
+      "Jest",
+      "Custom Hooks"
+    ],
+    "date": "2024-04-12",
+    "imageUrl": "/projects/speedtype.png",
+    "categories": [
+      "all",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Speed-Typing",
+    "live": "https://spr-speed-typing.vercel.app",
+    "order": 37,
+    "show": true
+  },
+  {
+    "title": "Naan Mudhalvan Cybersecurity",
+    "description": "Naan Mudhalvan Cybersecurity",
+    "tags": [
+      "Python"
+    ],
+    "date": "2024-04-05",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Naan-Mudhalvan-Cybersecurity-",
+    "live": null,
+    "order": 38,
+    "show": true
+  },
+  {
+    "title": "Next.js AI Thief Detection",
+    "description": "Next.js AI Thief Detection",
+    "tags": [
+      "JavaScript"
+    ],
+    "date": "2024-03-21",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Nextjs-AI-Thief-Detection",
+    "live": "https://thief-alarm.vercel.app",
+    "order": 39,
+    "show": true
+  },
+  {
+    "title": "Multi Language App",
+    "description": "Multi-language support React application",
+    "tags": [
+      "React.js",
+      "i18n",
+      "JavaScript"
+    ],
+    "date": "2024-03-19",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Multi-Lang-App-React",
+    "live": null,
+    "order": 40,
+    "show": true
+  },
+  {
+    "title": "HTML Map Layout",
+    "description": "HTML Map Layout",
+    "tags": [
+      "HTML"
+    ],
+    "date": "2024-03-06",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/html_map",
+    "live": null,
+    "order": 41,
+    "show": false
+  },
+  {
+    "title": "CodeAlpha Gemini AI Task",
+    "description": "CodeAlpha Gemini AI Task",
+    "tags": [
+      "JavaScript"
+    ],
+    "date": "2024-02-27",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/codealpha_gemini",
+    "live": null,
+    "order": 42,
+    "show": true
+  },
+  {
+    "title": "CodeAlpha Portfolio Task",
+    "description": "CodeAlpha Portfolio Task",
+    "tags": [
+      "JavaScript"
+    ],
+    "date": "2024-02-27",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/codealpha_portfolio",
+    "live": null,
+    "order": 43,
+    "show": true
+  },
+  {
+    "title": "Oasis Landing Page",
+    "description": "Responsive Landing Page with Spline 3D Model for Oasis InfoByte Web Dev Internship",
+    "tags": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Spline 3D"
+    ],
+    "date": "2024-02-13",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Oasis_Landing_Page",
+    "live": null,
     "order": 44,
+    "show": true
+  },
+  {
+    "title": "Expense Tracker",
+    "description": "Full-stack expense tracking application with client and server",
+    "tags": [
+      "React.js",
+      "Node.js",
+      "Express.js",
+      "MongoDB"
+    ],
+    "date": "2024-02-13",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/codealpha_expense_tracker",
+    "live": null,
+    "order": 45,
+    "show": true
+  },
+  {
+    "title": "Expense Tracker — Server",
+    "description": "Expense Tracker — Server",
+    "tags": [
+      "JavaScript"
+    ],
+    "date": "2024-02-13",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Server_Expense_Tracker",
+    "live": null,
+    "order": 46,
+    "show": true
+  },
+  {
+    "title": "PRODIGY WD 02",
+    "description": "Stop Watch using HTML, CSS, Javascript for Prodigy InfoTech Web Dev Internship",
+    "tags": [
+      "HTML",
+      "CSS",
+      "JavaScript"
+    ],
+    "date": "2024-02-12",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/PRODIGY-WD-02",
+    "live": null,
+    "order": 47,
+    "show": true
+  },
+  {
+    "title": "Flutter API Demo",
+    "description": "Flutter API Demo",
+    "tags": [
+      "C++"
+    ],
+    "date": "2024-02-08",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "app"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Flutter_API",
+    "live": null,
+    "order": 48,
+    "show": true
+  },
+  {
+    "title": "PRODIGY WD 01",
+    "description": "Responsive Landing Page with Spline 3D Model for Prodigy InfoTech Web Dev Internship",
+    "tags": [
+      "HTML",
+      "CSS",
+      "JavaScript",
+      "Spline 3D"
+    ],
+    "date": "2024-02-06",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/PRODIGY_WD_01",
+    "live": null,
+    "order": 49,
+    "show": true
+  },
+  {
+    "title": "QR Code Generator",
+    "description": "QR code generator built with React",
+    "tags": [
+      "React.js",
+      "JavaScript",
+      "QR Code"
+    ],
+    "date": "2024-02-06",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/QR-Code-Generator-React",
+    "live": null,
+    "order": 50,
+    "show": true
+  },
+  {
+    "title": "Tic-Tac-Toe Flutter",
+    "description": "Tic-Tac-Toe game built with Flutter",
+    "tags": [
+      "Flutter",
+      "Dart",
+      "Mobile App"
+    ],
+    "date": "2024-02-01",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "app"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Tic-Tac-Toe-Game-in-Flutter",
+    "live": null,
+    "order": 51,
+    "show": true
+  },
+  {
+    "title": "First Flutter App",
+    "description": "First Flutter App",
+    "tags": [
+      "C++"
+    ],
+    "date": "2024-02-01",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "app"
+    ],
+    "code": "https://github.com/selvin-paul-raj/First_Flutter_App",
+    "live": null,
+    "order": 52,
+    "show": true
+  },
+  {
+    "title": "Random Meme Generator",
+    "description": "Random meme generator using React",
+    "tags": [
+      "React.js",
+      "API",
+      "JavaScript"
+    ],
+    "date": "2023-11-27",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Random-Meme-React",
+    "live": null,
+    "order": 53,
+    "show": true
+  },
+  {
+    "title": "3D Cube Three.js",
+    "description": "3D cube animation using Three.js",
+    "tags": [
+      "Three.js",
+      "JavaScript",
+      "WebGL",
+      "3D"
+    ],
+    "date": "2023-11-22",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Cube-Threejs",
+    "live": null,
+    "order": 54,
+    "show": true
+  },
+  {
+    "title": "React Weather App",
+    "description": "Modern React Weather App: Real-time weather details with dynamic icons. Utilizes OpenWeatherMap API for temperature, humidity, and wind speed. Clean UI, modular code, and a seamless user experience",
+    "tags": [
+      "React.js",
+      "OpenWeatherMap API",
+      "JavaScript",
+      "CSS"
+    ],
+    "date": "2023-11-15",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/React-Weather-App",
+    "live": null,
+    "order": 55,
+    "show": true
+  },
+  {
+    "title": "Simple Todo App",
+    "description": "Simple Todo App",
+    "tags": [
+      "JavaScript"
+    ],
+    "date": "2023-11-15",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/simple_Todo_app",
+    "live": null,
+    "order": 56,
+    "show": true
+  },
+  {
+    "title": "React Calculator",
+    "description": "React Calculator App: A simple and efficient calculator web application built with React. Perform basic and advanced mathematical operations with ease",
+    "tags": [
+      "React.js",
+      "JavaScript",
+      "CSS"
+    ],
+    "date": "2023-11-15",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/React_Calculator",
+    "live": null,
+    "order": 57,
+    "show": true
+  },
+  {
+    "title": "Cursor Hearts",
+    "description": "Cursor Hearts: A playful cursor animation project with heart-shaped cursors that follow the user's mouse movements. Add a touch of charm to your website!",
+    "tags": [
+      "JavaScript",
+      "CSS Animation",
+      "HTML"
+    ],
+    "date": "2023-11-14",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Cursor_Hearts",
+    "live": null,
+    "order": 58,
+    "show": true
+  },
+  {
+    "title": "HireMe Landing Page",
+    "description": "HireMe Landing Page",
+    "tags": [
+      "CSS"
+    ],
+    "date": "2023-11-08",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Hireme",
+    "live": null,
+    "order": 59,
+    "show": true
+  },
+  {
+    "title": "New Year Countdown",
+    "description": "A simple New Year countdown webpage with customizable date and a countdown timer. When you switch tabs, it reminds you to come back for the celebration",
+    "tags": [
+      "JavaScript",
+      "HTML",
+      "CSS"
+    ],
+    "date": "2023-11-02",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/New_Year_CountDown",
+    "live": null,
+    "order": 60,
+    "show": true
+  },
+  {
+    "title": "Food Ordering UI",
+    "description": "Food Ordering UI",
+    "tags": [
+      "JavaScript"
+    ],
+    "date": "2023-10-31",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/food",
+    "live": null,
+    "order": 61,
+    "show": true
+  },
+  {
+    "title": "PaLM AI Server",
+    "description": "PaLM AI Server",
+    "tags": [
+      "JavaScript"
+    ],
+    "date": "2023-10-27",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/palm-Server",
+    "live": null,
+    "order": 62,
+    "show": true
+  },
+  {
+    "title": "Own Amazon Scraper API",
+    "description": "An open-source web scraper for Amazon data. Retrieve product details, reviews, offers, and search results using this Node.js and Express-based API. Ideal for integrating Amazon data into your applications and analysis",
+    "tags": [
+      "Node.js",
+      "Express.js",
+      "Web Scraping",
+      "API"
+    ],
+    "date": "2023-10-27",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Own_Amazon_Scraper_API",
+    "live": null,
+    "order": 63,
+    "show": true
+  },
+  {
+    "title": "BMI Calculator React Native App",
+    "description": "BMI Calculator App My First React Native App: A mobile app to quickly calculate and assess your Body Mass Index (BMI) based on your height and weight. Built with React Native, it provides instant results and BMI category classification",
+    "tags": [
+      "React Native",
+      "Mobile App",
+      "JavaScript"
+    ],
+    "date": "2023-09-16",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "app"
+    ],
+    "code": "https://github.com/selvin-paul-raj/BMI-Calculator-React-Native-App",
+    "live": null,
+    "order": 64,
+    "show": true
+  },
+  {
+    "title": "Random Dog Pic Generator",
+    "description": "Built a dynamic React project that fetches random dog images from an API. Users can click 'Generate Dogs' to load a new dog image. Error handling included",
+    "tags": [
+      "React.js",
+      "API",
+      "JavaScript"
+    ],
+    "date": "2023-09-10",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Random-Dog-Pic-Generate",
+    "live": null,
+    "order": 65,
+    "show": true
+  },
+  {
+    "title": "EzSumZ - Article Summarizer",
+    "description": "Summize: AI-Powered Article Summarization. Effortlessly summarize lengthy articles with Summize. Powered by OpenAI GPT-4, it delivers clear and concise summaries, saving you time and simplifying your reading",
+    "tags": [
+      "React.js",
+      "OpenAI GPT-4",
+      "API",
+      "Tailwind CSS"
+    ],
+    "date": "2023-09-10",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "ai"
+    ],
+    "code": "https://github.com/selvin-paul-raj/EzSumZ-Article_Summarizer-React-App",
+    "live": null,
+    "order": 66,
+    "show": true
+  },
+  {
+    "title": "React Redux Todo App",
+    "description": "A minimalist Todo App built with React and Redux Toolkit for efficient task management. Features include adding, completing, updating, and removing tasks with dynamic sorting",
+    "tags": [
+      "React.js",
+      "Redux Toolkit",
+      "TypeScript",
+      "Tailwind CSS"
+    ],
+    "date": "2023-09-05",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/React-Redux-Todo-App",
+    "live": null,
+    "order": 67,
+    "show": true
+  },
+  {
+    "title": "Electron.js Calculator App",
+    "description": "Electron Calculator App: A simple yet powerful cross-platform calculator app built with Electron. Perform basic arithmetic operations effortlessly on Windows and Mac. Experience smooth animations with Framer Motion",
+    "tags": [
+      "Electron.js",
+      "React.js",
+      "Framer Motion",
+      "JavaScript"
+    ],
+    "date": "2023-09-08",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "app",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Electronjs-Calculator-App",
+    "live": null,
+    "order": 68,
+    "show": true
+  },
+  {
+    "title": "Portfolio (Early Version)",
+    "description": "Portfolio (Early Version)",
+    "tags": [
+      "CSS"
+    ],
+    "date": "2023-09-06",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Portfolio",
+    "live": null,
+    "order": 69,
+    "show": false
+  },
+  {
+    "title": "SPR Censorify — Example",
+    "description": "Enhance content integrity using CustomCensorify: a JavaScript module. Efficiently replace sensitive words for respectful communication. Code and example included.",
+    "tags": [
+      "JavaScript"
+    ],
+    "date": "2023-08-15",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/spr_censorify_Example",
+    "live": null,
+    "order": 70,
+    "show": true
+  },
+  {
+    "title": "SPR Censorify",
+    "description": "Enhance content integrity using CustomCensorify: a JavaScript module. Efficiently replace sensitive words for respectful communication",
+    "tags": [
+      "JavaScript",
+      "npm",
+      "Content Moderation"
+    ],
+    "date": "2023-08-15",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/spr-censorify",
+    "live": "https://www.npmjs.com/package/spr-censorify",
+    "order": 71,
+    "show": true
+  },
+  {
+    "title": "Form Validation UI",
+    "description": "Form Validation UI",
+    "tags": [
+      "CSS"
+    ],
+    "date": "2023-08-16",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Form_Validation",
+    "live": "https://sprhackz.github.io/Form_Validation/",
+    "order": 72,
+    "show": false
+  },
+  {
+    "title": "React Food Delivery",
+    "description": "Food ordering website using React, Redux toolkit and ReactStrap",
+    "tags": [
+      "React.js",
+      "Redux Toolkit",
+      "ReactStrap"
+    ],
+    "date": "2023-08-03",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/React_Food_Delivery",
+    "live": null,
+    "order": 73,
+    "show": true
+  },
+  {
+    "title": "FLAMES Web App",
+    "description": "FLAMES Web App",
+    "tags": [
+      "CSS"
+    ],
+    "date": "2023-06-27",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Flames_Web_App",
+    "live": "https://sprhackz.github.io/Flames_Web_App/",
+    "order": 74,
+    "show": true
+  },
+  {
+    "title": "Library Management System",
+    "description": "Library Management System",
+    "tags": [
+      "HTML"
+    ],
+    "date": "2023-07-23",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Library-Management-System",
+    "live": null,
+    "order": 75,
+    "show": true
+  },
+  {
+    "title": "React Personal Portfolio (v1)",
+    "description": "React Personal Portfolio (v1)",
+    "tags": [
+      "JavaScript"
+    ],
+    "date": "2023-06-29",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/React_Personal_Portfolio",
+    "live": null,
+    "order": 76,
+    "show": false
+  },
+  {
+    "title": "Animated Login Page",
+    "description": "3D Login Page",
+    "tags": [
+      "CSS"
+    ],
+    "date": "2023-06-20",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Animation_Login_Page",
+    "live": "https://sprhackz.github.io/Animation_Login_Page/",
+    "order": 77,
+    "show": false
+  },
+  {
+    "title": "Login Page UI",
+    "description": "Login Page UI",
+    "tags": [
+      "CSS"
+    ],
+    "date": "2023-06-20",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Login_Page_01",
+    "live": "https://sprhackz.github.io/Login_Page_01/",
+    "order": 78,
+    "show": false
+  },
+  {
+    "title": "FLAMES Game (Python)",
+    "description": "FLAMES Game (Python)",
+    "tags": [
+      "Python"
+    ],
+    "date": "2022-10-22",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/FLAMES.py",
+    "live": null,
+    "order": 79,
     "show": true
   }
 ]

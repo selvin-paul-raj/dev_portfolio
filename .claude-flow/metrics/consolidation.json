@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-07-21T05:51:31.234Z",
+  "timestamp": "2026-07-21T10:21:31.610Z",
   "distillationEnabled": true,
   "patternsConsolidated": 1,
-  "memoryCleaned": 1,
-  "duplicatesRemoved": 0,
+  "memoryCleaned": 10,
+  "duplicatesRemoved": 9,
   "episodes": 1,
   "patternEmbeddings": 1,
   "causalEdges": 0,

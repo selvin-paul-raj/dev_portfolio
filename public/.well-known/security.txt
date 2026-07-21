@@ -1,7 +1,7 @@
 # Security Policy for Selvin PaulRaj K Portfolio
-# https://selvinpaulraj.tech
+# https://selvinpaulraj.vercel.app
 
-Contact: https://selvinpaulraj.tech/#contact
+Contact: https://selvinpaulraj.vercel.app/#contact
 Contact: https://linkedin.com/in/selvinpaulraj
 Contact: https://github.com/selvinpaulrajK
 
@@ -9,13 +9,11 @@ Expires: 2027-01-27T23:59:59.000Z
 
 Preferred-Languages: en
 
-Canonical: https://selvinpaulraj.tech/.well-known/security.txt
+Canonical: https://selvinpaulraj.vercel.app/.well-known/security.txt
 
 # Policy
 # If you discover a security vulnerability, please report it responsibly
 # through the contact methods listed above. I appreciate your help in
 # keeping this portfolio secure.
 
-Acknowledgments: https://selvinpaulraj.tech/thanks
-
-Hiring: https://selvinpaulraj.tech/#contact
+Hiring: https://selvinpaulraj.vercel.app/#contact

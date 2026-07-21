@@ -175,7 +175,7 @@ export default function Experience() {
                       {isLong && (
                         <button
                           onClick={() => toggleExpand(entryKey)}
-                          className="mt-2 text-xs font-medium text-[#9a7d2a] dark:text-[#FFD700]/70 hover:text-[#b8973b] dark:hover:text-[#FFD700] transition-colors duration-150 inline-flex items-center gap-1 outline-none focus-visible:ring-1 focus-visible:ring-[#FFD700]/40 rounded"
+                          className="mt-2 -m-2 p-2 text-xs font-medium text-[#9a7d2a] dark:text-[#FFD700]/70 hover:text-[#b8973b] dark:hover:text-[#FFD700] transition-colors duration-150 inline-flex items-center gap-1 outline-none focus-visible:ring-1 focus-visible:ring-[#FFD700]/40 rounded"
                         >
                           {isExpanded ? "Read less" : "Read more"}
                           <motion.span

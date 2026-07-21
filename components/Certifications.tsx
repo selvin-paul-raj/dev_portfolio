@@ -199,6 +199,8 @@ function CertCard({
           <img
             src={cert.imageUrl}
             alt={cert.title}
+            width={320}
+            height={200}
             loading="lazy"
             onError={() => setImgError(true)}
             className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
@@ -568,7 +570,7 @@ function FilterChip({
     <button
       onClick={onClick}
       aria-pressed={active}
-      className={`inline-flex items-center gap-1.5 px-[11px] py-[10px] rounded-full border text-[11px] transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] ${
+      className={`inline-flex items-center gap-1.5 px-[11px] py-[15px] sm:py-[10px] rounded-full border text-[11px] transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] ${
         active
           ? "bg-[#f5c518] text-[#1a1500] border-[#f5c518] font-semibold"
           : "bg-black/[0.02] dark:bg-white/[0.015] text-gray-500 dark:text-[#c9c9cf] border-black/[0.08] dark:border-white/[0.07] hover:border-black/[0.16] dark:hover:border-white/[0.14] hover:text-gray-900 dark:hover:text-white"
