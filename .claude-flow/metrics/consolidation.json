@@ -1,16 +1,19 @@
 {
-  "timestamp": "2026-07-20T11:53:06.680Z",
+  "timestamp": "2026-07-21T05:51:31.234Z",
   "distillationEnabled": true,
-  "patternsConsolidated": 0,
-  "memoryCleaned": 0,
+  "patternsConsolidated": 1,
+  "memoryCleaned": 1,
   "duplicatesRemoved": 0,
-  "episodes": 0,
-  "patternEmbeddings": 0,
+  "episodes": 1,
+  "patternEmbeddings": 1,
   "causalEdges": 0,
   "promoted": 0,
-  "byProvenance": {},
-  "namespaces": [],
+  "byProvenance": {
+    "proxy:structural": 1
+  },
+  "namespaces": [
+    "session"
+  ],
   "dryRun": false,
-  "corrupt": false,
-  "skipped": "no-db"
+  "corrupt": false
 }

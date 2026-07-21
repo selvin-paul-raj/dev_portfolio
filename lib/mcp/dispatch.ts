@@ -30,6 +30,91 @@ export interface ResourceData {
   recognition: unknown;
 }
 
+export interface ExperienceEntry {
+  title: string;
+  company: string;
+  dateStart: string;
+  dateEnd: string;
+  icon: "graduation" | "work" | "laptop" | string;
+  [key: string]: unknown;
+}
+
+const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+function monthsBetween(start: string, end: string): number {
+  const [startMonth, startYear] = start.split(" ");
+  const now = new Date();
+  const [endMonth, endYear] =
+    end === "Present" ? [MONTH_NAMES[now.getMonth()], String(now.getFullYear())] : end.split(" ");
+
+  const yearDiff = parseInt(endYear, 10) - parseInt(startYear, 10);
+  const monthDiff = MONTH_NAMES.indexOf(endMonth) - MONTH_NAMES.indexOf(startMonth);
+  return yearDiff * 12 + monthDiff;
+}
+
+function formatDuration(totalMonths: number): string {
+  const years = Math.floor(totalMonths / 12);
+  const months = totalMonths % 12;
+  const parts: string[] = [];
+  if (years > 0) parts.push(`${years} yr${years > 1 ? "s" : ""}`);
+  if (months > 0 || years === 0) parts.push(`${months} month${months !== 1 ? "s" : ""}`);
+  return parts.join(" ");
+}
+
+function isInternship(title: string): boolean {
+  return title.toLowerCase().includes("intern");
+}
+
+export function computeExperienceStats(allExperiences: ExperienceEntry[]) {
+  const roles = allExperiences.filter((e) => e.icon === "work");
+  const education = allExperiences.filter((e) => e.icon === "graduation");
+  const ventures = allExperiences.filter((e) => e.icon !== "work" && e.icon !== "graduation");
+
+  const roleBreakdown = roles.map((r) => {
+    const durationMonths = monthsBetween(r.dateStart, r.dateEnd);
+    return {
+      title: r.title,
+      company: r.company,
+      type: isInternship(r.title) ? "internship" : "full-time",
+      dateStart: r.dateStart,
+      dateEnd: r.dateEnd,
+      durationMonths,
+      durationLabel: formatDuration(durationMonths),
+    };
+  });
+
+  const internshipMonths = roleBreakdown
+    .filter((r) => r.type === "internship")
+    .reduce((sum, r) => sum + r.durationMonths, 0);
+  const fullTimeMonths = roleBreakdown
+    .filter((r) => r.type === "full-time")
+    .reduce((sum, r) => sum + r.durationMonths, 0);
+  const totalProfessionalMonths = internshipMonths + fullTimeMonths;
+
+  return {
+    totalProfessionalMonths,
+    totalProfessionalLabel: formatDuration(totalProfessionalMonths),
+    internshipMonths,
+    internshipLabel: formatDuration(internshipMonths),
+    fullTimeMonths,
+    fullTimeLabel: formatDuration(fullTimeMonths),
+    roles: roleBreakdown,
+    education: education.map((e) => ({
+      title: e.title,
+      company: e.company,
+      dateStart: e.dateStart,
+      dateEnd: e.dateEnd,
+    })),
+    concurrentVentures: ventures.map((v) => ({
+      title: v.title,
+      company: v.company,
+      dateStart: v.dateStart,
+      dateEnd: v.dateEnd,
+      note: "Runs alongside the roles above — not counted in totalProfessionalMonths to avoid double-counting.",
+    })),
+  };
+}
+
 export function searchProjects(
   allProjects: Project[],
   args: { query?: string; category?: string; tech?: string }
@@ -79,7 +164,11 @@ export function filterCertifications(
   return JSON.stringify({ count: certs.length, certifications: certs }, null, 2);
 }
 
-export function getProfileSummary(allProjects: Project[], allCertifications: Certification[]): string {
+export function getProfileSummary(
+  allProjects: Project[],
+  allCertifications: Certification[],
+  allExperiences: ExperienceEntry[]
+): string {
   const visibleProjects = allProjects.filter((p) => p.show);
   const visibleCerts = allCertifications.filter((c) => c.show);
   return JSON.stringify(
@@ -87,6 +176,7 @@ export function getProfileSummary(allProjects: Project[], allCertifications: Cer
       ...PROFILE,
       totalVisibleProjects: visibleProjects.length,
       totalCertifications: visibleCerts.length,
+      experience: computeExperienceStats(allExperiences),
       topTechnologies: [
         "LangGraph",
         "MCP",

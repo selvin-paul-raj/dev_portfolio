@@ -18,7 +18,7 @@ import {
   getProfileSummary,
   buildResourceText,
 } from "./lib/mcp/dispatch";
-import type { Project, Certification, ResourceData } from "./lib/mcp/dispatch";
+import type { Project, Certification, ResourceData, ExperienceEntry } from "./lib/mcp/dispatch";
 import { sendContactMessage } from "./lib/mcp/contact";
 import { listRepos, getRepo } from "./lib/mcp/github";
 import { createMcpHandler } from "./lib/mcp/router";
@@ -61,7 +61,7 @@ async function callTool(name: string, args: Record<string, unknown>): Promise<st
     case "filter_certifications":
       return filterCertifications(certifications, args as { category?: string; issuer?: string });
     case "get_profile_summary":
-      return getProfileSummary(projects, certifications);
+      return getProfileSummary(projects, certifications, experiences as ExperienceEntry[]);
     case "contact_selvin":
       return sendContactMessage(args);
     default:

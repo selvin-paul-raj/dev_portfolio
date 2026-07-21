@@ -80,7 +80,8 @@ export const TOOLS: McpTool[] = [
   },
   {
     name: "get_profile_summary",
-    description: "Get a comprehensive summary of Selvin's professional profile, expertise, and portfolio stats.",
+    description:
+      "Get Selvin's full professional profile: contact links, resume URL, exact total experience (in years/months, split by internship vs full-time), a per-role duration breakdown, education history, and portfolio stats. Always prefer the numeric fields here over summarizing in prose — return the exact numbers.",
     inputSchema: { type: "object", properties: {} },
   },
   {
@@ -143,9 +144,20 @@ export const PROFILE = {
   role: "AI Engineer",
   location: "Chennai, Tamil Nadu, India",
   email: "selvinpaulgomathi@gmail.com",
+  phone: "+91 91762 99049",
+  whatsapp: "https://wa.me/+919176299049",
   portfolio: "https://selvinpaulraj.vercel.app",
+  resumeUrl: "https://selvinpaulraj.vercel.app/Selvin_Resume.pdf",
   github: "https://github.com/selvin-paul-raj",
   linkedin: "https://linkedin.com/in/selvinpaulraj",
+  socialLinks: {
+    linkedin: "https://linkedin.com/in/selvinpaulraj",
+    github: "https://github.com/selvin-paul-raj",
+    hackerrank: "https://www.hackerrank.com/profile/selvinpaulraj",
+    leetcode: "https://leetcode.com/u/selvinpaulraj/",
+    kaggle: "https://www.kaggle.com/selvinpaulrajk",
+    deepml: "https://www.deep-ml.com/profile/fdmYEE5bBFgqLwHxlBFW1lgLUR22",
+  },
   summary:
     "AI Engineer specializing in intelligent AI Agents, MCP servers, RAG systems, LangGraph multi-agent pipelines, and agentic workflows. Full-stack MERN/Next.js expertise.",
   currentCompany: "Zinnov / Draup",

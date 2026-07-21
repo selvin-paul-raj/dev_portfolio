@@ -4,13 +4,15 @@ import { listRepos, getRepo } from "./github";
 import { sendContactMessage } from "./contact";
 import { TOOLS } from "./definitions";
 import { searchProjects, getProjectByTitle, filterCertifications, getProfileSummary } from "./dispatch";
-import type { Project, Certification } from "./dispatch";
+import type { Project, Certification, ExperienceEntry } from "./dispatch";
 import projectsData from "@/lib/data/projects.json";
 import certificationsData from "@/lib/data/certifications.json";
+import experiencesData from "@/lib/data/experiences.json";
 
 // JSON imports — typed loosely since lib/data/*.json has no strict schema
 const projects = projectsData as unknown as Project[];
 const certifications = certificationsData as unknown as Certification[];
+const experiences = experiencesData as unknown as ExperienceEntry[];
 
 export function listTools(): McpTool[] {
   return TOOLS;
@@ -50,7 +52,7 @@ async function dispatch(name: string, args: Record<string, unknown>): Promise<st
       return filterCertifications(certifications, args as { category?: string; issuer?: string });
 
     case "get_profile_summary":
-      return getProfileSummary(projects, certifications);
+      return getProfileSummary(projects, certifications, experiences);
 
     case "contact_selvin":
       return sendContactMessage(args);
