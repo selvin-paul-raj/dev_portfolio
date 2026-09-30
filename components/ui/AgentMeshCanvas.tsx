@@ -27,6 +27,9 @@ export default function AgentMeshCanvas() {
 
     function fit() {
       const r = container!.getBoundingClientRect();
+      // Not laid out yet (or hidden): a 0-size canvas makes getImageData throw.
+      // The ResizeObserver calls fit() again once the container has real dimensions.
+      if (r.width < 1 || r.height < 1) return;
       W = r.width; H = r.height;
       canvas!.width = W * DPR; canvas!.height = H * DPR;
       canvas!.style.width = W + "px"; canvas!.style.height = H + "px";

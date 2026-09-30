@@ -1,3 +1,7 @@
+// React's dev build uses eval() for debugging features (callstack reconstruction).
+// Allow it only in development; production keeps the stricter policy.
+const isDev = process.env.NODE_ENV !== "production";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
@@ -44,7 +48,7 @@ const nextConfig = {
               "default-src 'self'",
               // Microsoft Clarity: loader on www.clarity.ms pulls its runtime from
               // scripts.clarity.ms, beacons to *.clarity.ms and pixels via c.bing.com.
-              "script-src 'self' 'unsafe-inline' https://www.clarity.ms https://*.clarity.ms https://va.vercel-scripts.com",
+              `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.clarity.ms https://*.clarity.ms https://va.vercel-scripts.com`,
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https://images.unsplash.com https://cdn-uploads.huggingface.co https://huggingface.co https://*.clarity.ms https://c.bing.com",
               "font-src 'self' data:",
