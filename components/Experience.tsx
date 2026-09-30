@@ -27,7 +27,7 @@ function getTabEntries(tab: TabKey) {
 }
 
 export default function Experience() {
-  const { ref } = useSectionInView("Experience" as never, 0.15);
+  const { ref } = useSectionInView("Experience", 0.15);
   const [activeTab, setActiveTab] = useState<TabKey>("roles");
 
   const entries = getTabEntries(activeTab);
@@ -132,7 +132,12 @@ export default function Experience() {
                 >
                   {/* Date + Now badge row */}
                   <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
-                    <span className="inline-block font-mono text-[0.65rem] tracking-wider text-gray-500 dark:text-white/30 bg-black/[0.04] dark:bg-white/[0.06] border border-black/5 dark:border-white/8 rounded-full px-3 py-1">
+                    <span
+                      className="inline-block font-mono text-xs tracking-wider text-gray-600 dark:text-white/55 bg-black/[0.04] dark:bg-white/[0.06] border border-black/5 dark:border-white/8 rounded-full px-3 py-1"
+                      // "Present" durations are computed at request time and again in the browser;
+                      // they can differ by a month across a rollover, which is expected.
+                      suppressHydrationWarning
+                    >
                       {exp.date}
                     </span>
                     {exp.isCurrent && (
@@ -155,7 +160,7 @@ export default function Experience() {
                   </p>
 
                   {exp.location && (
-                    <p className="text-xs text-gray-500 dark:text-white/30 mt-0.5">
+                    <p className="text-xs text-gray-600 dark:text-white/50 mt-0.5">
                       {exp.location}
                     </p>
                   )}
@@ -175,6 +180,7 @@ export default function Experience() {
                       {isLong && (
                         <button
                           onClick={() => toggleExpand(entryKey)}
+                          aria-expanded={isExpanded}
                           className="mt-2 -m-2 p-2 text-xs font-medium text-[#9a7d2a] dark:text-[#FFD700]/70 hover:text-[#b8973b] dark:hover:text-[#FFD700] transition-colors duration-150 inline-flex items-center gap-1 outline-none focus-visible:ring-1 focus-visible:ring-[#FFD700]/40 rounded"
                         >
                           {isExpanded ? "Read less" : "Read more"}

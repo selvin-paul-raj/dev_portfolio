@@ -1,15 +1,18 @@
 // app/api/mcp/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { handleMcpRequest } from "@/lib/mcp/server";
-import type { McpRequest } from "@/lib/mcp/types";
+import { handleMcpRequest, parseErrorResponse } from "@/lib/mcp/server";
+import { getClientIp } from "@/lib/rateLimit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+// Public, unauthenticated, read-mostly server: any origin may call it, but only
+// the methods/headers the Streamable HTTP transport actually uses are allowed.
 const CORS: HeadersInit = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Headers": "Content-Type, Accept, Mcp-Session-Id, Mcp-Protocol-Version",
+  "Access-Control-Max-Age": "86400",
 };
 
 /** Discovery endpoint — returns server manifest */
@@ -47,17 +50,16 @@ export function GET() {
 
 /** MCP JSON-RPC handler */
 export async function POST(req: NextRequest) {
-  let body: McpRequest;
+  let body: unknown;
   try {
     body = await req.json();
   } catch {
-    return NextResponse.json(
-      { jsonrpc: "2.0", id: null, error: { code: -32700, message: "Parse error: invalid JSON" } },
-      { status: 400, headers: CORS }
-    );
+    return NextResponse.json(parseErrorResponse(), { status: 400, headers: CORS });
   }
 
-  const response = await handleMcpRequest(body);
+  const response = await handleMcpRequest(body, { ip: getClientIp((h) => req.headers.get(h)) });
+  // Notifications get 202 Accepted with no body (MCP Streamable HTTP).
+  if (response === null) return new Response(null, { status: 202, headers: CORS });
   return NextResponse.json(response, { headers: CORS });
 }
 

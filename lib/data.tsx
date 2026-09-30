@@ -11,6 +11,7 @@ import {
   LuMail,
   LuTrophy,
   LuAward,
+  LuBriefcase,
 } from "react-icons/lu";
 
 import rawProjects from "./data/projects.json";
@@ -18,15 +19,15 @@ import rawExperiences from "./data/experiences.json";
 import rawSkillsJson from "./data/skills.json";
 import rawRecognition from "./data/recognition.json";
 import rawCertifications from "./data/certifications.json";
-import calculateDuration from "@/utils/calculateDuration";
+import calculateDuration, { monthsBetween } from "@/utils/calculateDuration";
 
 interface Link {
-  name: string;
-  hash: string;
-  icon: React.ReactElement;
+  readonly name: string;
+  readonly hash: `#${string}`;
+  readonly icon: React.ReactElement;
 }
 
-export const links: Link[] = [
+export const links = [
   {
     name: "Home",
     hash: "#home",
@@ -48,6 +49,11 @@ export const links: Link[] = [
     icon: <LuLayoutGrid />,
   },
   {
+    name: "Experience",
+    hash: "#experience",
+    icon: <LuBriefcase />,
+  },
+  {
     name: "Recognition",
     hash: "#recognition",
     icon: <LuTrophy />,
@@ -62,7 +68,7 @@ export const links: Link[] = [
     hash: "#contact",
     icon: <LuMail />,
   },
-];
+] as const satisfies readonly Link[];
 
 const iconMap: Record<string, React.ReactElement> = {
   graduation: React.createElement(LuGraduationCap),
@@ -93,19 +99,15 @@ export const skillsData: Record<string, string[]> =
 
 export const skillsFlat: readonly string[] = Object.values(skillsData).flat();
 
-function _parseTotalMonths(durStr: string): number {
-  const yrMatch = durStr.match(/(\d+)\s*yr/);
-  const moMatch = durStr.match(/(\d+)\s*month/);
-  return (yrMatch ? parseInt(yrMatch[1]) * 12 : 0) + (moMatch ? parseInt(moMatch[1]) : 0);
-}
+const professionalRoles = rawExperiences.filter(
+  (e) => e.icon !== "graduation" && e.icon !== "laptop"
+);
+const isInternship = (title: string) => /\bintern\b/i.test(title);
+const sumMonths = (roles: typeof rawExperiences) =>
+  roles.reduce((total, e) => total + monthsBetween(e.dateStart, e.dateEnd), 0);
 
-const _internMonths = rawExperiences
-  .filter((e) => e.title.toLowerCase().includes("intern") && e.icon !== "graduation" && e.icon !== "laptop")
-  .reduce((total, e) => total + _parseTotalMonths(calculateDuration(e.dateStart, e.dateEnd)), 0);
-
-const _workRoleMonths = rawExperiences
-  .filter((e) => !e.title.toLowerCase().includes("intern") && e.icon !== "graduation" && e.icon !== "laptop")
-  .reduce((total, e) => total + _parseTotalMonths(calculateDuration(e.dateStart, e.dateEnd)), 0);
+const _internMonths = sumMonths(professionalRoles.filter((e) => isInternship(e.title)));
+const _workRoleMonths = sumMonths(professionalRoles.filter((e) => !isInternship(e.title)));
 
 export const experienceMetrics = {
   internMonths: _internMonths,

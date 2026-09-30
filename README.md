@@ -82,7 +82,7 @@ Add to your MCP config:
 Single-page portfolio. All sections render in `app/page.tsx` as a vertical stack:
 
 ```
-Intro → About → Projects → Skills → Experience → Contact
+Intro → About → Skills → Projects → Experience → Recognition → Certifications → Contact
 ```
 
 ### Data layer
@@ -91,11 +91,11 @@ All content lives in `lib/data/*.json` — never in component files.
 
 | File | Contents |
 |---|---|
-| `lib/data/projects.json` | 44 projects. Fields: `show`, `order`, `categories`, `live`, `imageUrl` |
+| `lib/data/projects.json` | Project archive. Fields: `show`, `featured`, `private`, `order`, `categories`, `code`, `live`, `imageUrl` |
 | `lib/data/experiences.json` | 8 entries. Fields: `dateStart`, `dateEnd`, `icon`, `order` |
-| `lib/data/skills.json` | Flat string array |
+| `lib/data/skills.json` | Skills grouped by category (`{ skills: { group: string[] } }`) |
 
-`lib/data.tsx` imports JSON, transforms it (icon string to JSX, computes duration via `utils/calculateDuration.js`), and re-exports typed arrays consumed by components.
+`lib/data.tsx` imports JSON, transforms it (icon string to JSX, computes duration via `utils/calculateDuration.ts`), and re-exports typed arrays consumed by components.
 
 ### Navigation
 
@@ -113,7 +113,7 @@ All content lives in `lib/data/*.json` — never in component files.
 
 ### Performance
 
-`Projects` and `Skills` are lazy-loaded via `next/dynamic` to reduce initial bundle.
+All sections below About are code-split via `next/dynamic` to reduce the initial bundle.
 
 ---
 
@@ -161,7 +161,7 @@ dev_portfolio/
 │   ├── resume.pdf
 │   └── *.png           # Profile images
 ├── utils/
-│   └── calculateDuration.js
+│   └── calculateDuration.ts
 ├── next.config.js
 ├── tailwind.config.ts
 ├── eslint.config.mjs   # ESLint 9 flat config

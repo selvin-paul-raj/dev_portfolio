@@ -31,22 +31,22 @@
         "Secure image delivery"
       ],
       "paperId": "894d96730a2ee611c151ac26525c774d",
-      "research_link": "https://www.ijprems.com/paperdetail.php?paperId=894d96730a2ee611c151ac26525c774d"
+      "research_link": null
     }
   ],
   "achievements": [
     {
-  "title": "SPOT Recognition",
-  "issuer": "Zinnov (Draup)",
-  "date": "2026-06",
-  "category": "Employee Recognition",
-  "associated_with": "Automation CoE",
-  "certificate_available": true,
-  "description": "Awarded the SPOT Recognition for designing AI agents and automation solutions that streamlined internal processes, improved operational efficiency, strengthened cross-team collaboration, and drove innovation within the Automation CoE team.",
-  "links": {
-    "linkedin": "https://www.linkedin.com/posts/selvinpaulraj_draup-zinnov-automation-activity-7395072524759330816-l3st"
-  }
-},
+      "title": "SPOT Recognition",
+      "issuer": "Zinnov (Draup)",
+      "date": "2026-06",
+      "category": "Employee Recognition",
+      "associated_with": "Automation CoE",
+      "certificate_available": true,
+      "description": "Awarded the SPOT Recognition for designing AI agents and automation solutions that streamlined internal processes, improved operational efficiency, strengthened cross-team collaboration, and drove innovation within the Automation CoE team.",
+      "links": {
+        "linkedin": "https://www.linkedin.com/posts/selvinpaulraj_draup-zinnov-automation-activity-7395072524759330816-l3st"
+      }
+    },
     {
       "title": "1st Place — Hackathon",
       "issuer": "Alpha College of Engineering",

@@ -9,56 +9,19 @@ import { useSectionInView } from "@/lib/hooks";
 const EASE_OUT: [number, number, number, number] = [0.23, 1, 0.32, 1];
 
 const TAB_GROUPS = [
-  {
-    label: "Agentic AI",
-    keys: ["agentic_ai", "agent_memory", "agent_harness_and_runtimes"],
-  },
-  {
-    label: "LLMs & APIs",
-    keys: ["llms", "llm_providers_and_apis"],
-  },
-  {
-    label: "RAG & Vector",
-    keys: ["rag", "vector_databases", "search_and_retrieval"],
-  },
-  {
-    label: "Frameworks",
-    keys: ["agent_frameworks", "sandbox_and_execution", "protocols_and_standards"],
-  },
-  {
-    label: "AI/ML & Eval",
-    keys: [
-      "ai_ml",
-      "evaluation_and_reliability",
-      "observability_and_monitoring",
-      "guardrails_and_safety",
-    ],
-  },
-  {
-    label: "Web & Backend",
-    keys: ["frontend", "backend", "databases"],
-  },
-  {
-    label: "DevOps & Tools",
-    keys: [
-      "deployment_and_devops",
-      "tools_and_platforms",
-      "data_engineering",
-      "testing",
-      "web_scraping_and_automation",
-    ],
-  },
-  {
-    label: "Engineering",
-    keys: ["software_engineering", "ethics_and_compliance", "soft_skills"],
-  },
+  { label: "Agentic AI", keys: ["agentic_ai"] },
+  { label: "LLMs", keys: ["llms"] },
+  { label: "RAG & Search", keys: ["retrieval"] },
+  { label: "Languages", keys: ["languages"] },
+  { label: "Backend & Data", keys: ["backend_and_data"] },
+  { label: "Frontend", keys: ["frontend"] },
+  { label: "Cloud & Tooling", keys: ["tooling"] },
 ] as const;
 
 export default function Skills() {
   const { ref } = useSectionInView("Skills", 0.2);
   const [activeTab, setActiveTab] = useState(0);
 
-  // Deduplicate — some skills appear in multiple categories (e.g. "Semantic Search")
   const pills = Array.from(
     new Set(TAB_GROUPS[activeTab].keys.flatMap((key) => skillsData[key] ?? []))
   );
@@ -87,7 +50,7 @@ export default function Skills() {
             className="relative shrink-0 px-4 py-2 text-sm font-medium rounded-full outline-none
               transition-colors duration-150
               focus-visible:ring-2 focus-visible:ring-[#FFD700]/60
-              text-gray-500 dark:text-white/40
+              text-gray-600 dark:text-white/60
               hover:text-gray-900 dark:hover:text-white/80
               aria-selected:text-gray-900 dark:aria-selected:text-white"
           >
@@ -107,6 +70,8 @@ export default function Skills() {
       <AnimatePresence mode="popLayout">
         <motion.ul
           key={activeTab}
+          role="tabpanel"
+          aria-label={TAB_GROUPS[activeTab].label}
           className="flex flex-wrap justify-center gap-2.5"
           initial="hidden"
           animate="visible"
@@ -141,10 +106,6 @@ export default function Skills() {
         </motion.ul>
       </AnimatePresence>
 
-      {/* Count */}
-      <p className="text-center text-xs text-gray-500 dark:text-white/25 mt-6 font-mono">
-        {pills.length} skills across {TAB_GROUPS[activeTab].keys.length} categories
-      </p>
     </section>
   );
 }

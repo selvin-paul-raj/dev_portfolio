@@ -15,13 +15,14 @@ export const TOOLS: McpTool[] = [
   {
     name: "search_projects",
     description:
-      "Search and filter Selvin's projects by keyword, technology, or category. Returns matching visible projects.",
+      "Search and filter Selvin's projects by keyword, technology, category, or featured flag. Returns matching visible projects; `code` is null for private (closed-source) projects.",
     inputSchema: {
       type: "object",
       properties: {
         query: { type: "string", description: "Keyword to match in title, description, or tags" },
         category: { type: "string", description: "Category filter: 'web', 'ai', 'tool', 'android'" },
         tech: { type: "string", description: "Technology tag to match (e.g. 'LangGraph', 'Python', 'Next.js')" },
+        featured: { type: "boolean", description: "If true, only return featured projects" },
       },
     },
   },

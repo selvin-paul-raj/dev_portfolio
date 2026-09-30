@@ -1,10 +1,9 @@
 // lib/mcp/server.ts
-import type { McpRequest, McpResponse } from "./types";
 import { listTools, handleToolCall } from "./tools";
 import { listResources, readResource } from "./resources";
 import { createMcpHandler } from "./router";
 
-const handleMcpRequest: (body: McpRequest) => Promise<McpResponse> = createMcpHandler({
+const handleMcpRequest = createMcpHandler({
   listTools,
   callTool: handleToolCall,
   listResources,
@@ -12,3 +11,4 @@ const handleMcpRequest: (body: McpRequest) => Promise<McpResponse> = createMcpHa
 });
 
 export { handleMcpRequest };
+export { parseErrorResponse } from "./router";

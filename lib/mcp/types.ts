@@ -1,9 +1,16 @@
 // lib/mcp/types.ts
 export interface McpRequest {
   jsonrpc: "2.0";
-  id: string | number | null;
+  /** Absent for JSON-RPC notifications. */
+  id?: string | number | null;
   method: string;
   params?: Record<string, unknown>;
+}
+
+/** Per-request transport context threaded through to tool handlers. */
+export interface McpRequestContext {
+  /** Best-effort client IP (from proxy headers), used for rate limiting. */
+  ip: string;
 }
 
 export type McpResponse =

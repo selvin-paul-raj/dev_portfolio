@@ -7,6 +7,9 @@ import Pagination from "./Pagination";
 import rawCertsAll from "@/lib/data/certifications.json";
 
 const rawCerts = rawCertsAll.filter((c) => c.show);
+const featuredCerts = rawCerts
+  .filter((c) => c.featured)
+  .sort((a, b) => b.date.localeCompare(a.date));
 
 type Cert = (typeof rawCertsAll)[number];
 type SortMode = "newest" | "oldest" | "az" | "issuer";
@@ -606,6 +609,7 @@ export default function Certifications() {
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCert, setSelectedCert] = useState<Cert | null>(null);
+  const [showAll, setShowAll] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
 
   const issuerSet = useMemo(
@@ -616,11 +620,6 @@ export default function Certifications() {
     () => [...new Set(rawCerts.map((c) => c.category))].sort(),
     []
   );
-  const yearSet = useMemo(
-    () => [...new Set(rawCerts.map((c) => yearOf(c.date)))].sort((a, b) => b - a),
-    []
-  );
-
   const issuerCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     rawCerts.forEach((c) => { counts[c.issuer] = (counts[c.issuer] ?? 0) + 1; });
@@ -629,11 +628,6 @@ export default function Certifications() {
   const catCounts = useMemo(() => {
     const counts: Record<string, number> = {};
     rawCerts.forEach((c) => { counts[c.category] = (counts[c.category] ?? 0) + 1; });
-    return counts;
-  }, []);
-  const yearCounts = useMemo(() => {
-    const counts: Record<number, number> = {};
-    rawCerts.forEach((c) => { const y = yearOf(c.date); counts[y] = (counts[y] ?? 0) + 1; });
     return counts;
   }, []);
 
@@ -690,7 +684,7 @@ export default function Certifications() {
   /* Cmd/Ctrl + K → focus search */
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k" && searchRef.current) {
         e.preventDefault();
         searchRef.current?.focus();
       }
@@ -698,9 +692,6 @@ export default function Certifications() {
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
   }, []);
-
-  /* Suppress unused-var warnings for yearSet/yearCounts — kept for future year-filter UI */
-  void yearSet; void yearCounts;
 
   return (
     <section
@@ -759,6 +750,17 @@ export default function Certifications() {
         ))}
       </div>
 
+      {!showAll && (
+        <h3
+          className="mb-4 text-[11px] uppercase tracking-[0.22em] text-gray-600 dark:text-[#a1a1aa]"
+          style={{ fontFamily: MONO }}
+        >
+          Featured
+        </h3>
+      )}
+
+      {showAll && (
+      <>
       {/* Toolbar */}
       <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3 mb-4">
         {/* Search */}
@@ -897,6 +899,9 @@ export default function Certifications() {
         )}
       </div>
 
+      </>
+      )}
+
       {/* Grid / list */}
       <AnimatePresence mode="wait">
         {filtered.length === 0 ? (
@@ -921,7 +926,7 @@ export default function Certifications() {
           </motion.div>
         ) : (
           <motion.div
-            key={`${viewMode}-${currentPage}`}
+            key={showAll ? `${viewMode}-${currentPage}` : "featured"}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
@@ -932,16 +937,16 @@ export default function Certifications() {
                 : "flex flex-col gap-[10px]"
             }
           >
-            {filtered.map((cert, i) => (
+            {(showAll ? filtered : featuredCerts).map((cert, i) => (
               <div
                 key={cert.id}
-                className={i >= pageStart && i < pageEnd ? undefined : "hidden"}
+                className={!showAll || (i >= pageStart && i < pageEnd) ? undefined : "hidden"}
               >
                 <CertCard
                   cert={cert}
                   onClick={() => setSelectedCert(cert)}
-                  listMode={viewMode === "list"}
-                  index={i - pageStart}
+                  listMode={showAll && viewMode === "list"}
+                  index={showAll ? i - pageStart : i}
                 />
               </div>
             ))}
@@ -949,16 +954,35 @@ export default function Certifications() {
         )}
       </AnimatePresence>
 
-      {/* Pagination */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onChange={(p) => {
-          setCurrentPage(p);
-          document.getElementById("certifications")?.scrollIntoView({ behavior: "smooth", block: "start" });
-        }}
-        variant="pill"
-      />
+      {showAll && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onChange={(p) => {
+            setCurrentPage(p);
+            document.getElementById("certifications")?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }}
+          variant="pill"
+        />
+      )}
+
+      <div className="mt-8 flex justify-center">
+        <button
+          type="button"
+          onClick={() => {
+            if (showAll) {
+              clearAll();
+              document.getElementById("certifications")?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+            setShowAll((v) => !v);
+          }}
+          aria-expanded={showAll}
+          className="px-5 py-2.5 border border-black/[0.12] dark:border-white/[0.16] rounded-full text-[12px] uppercase tracking-[0.18em] text-gray-800 dark:text-white hover:bg-black/[0.03] dark:hover:bg-white/[0.05] transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518]"
+          style={{ fontFamily: MONO }}
+        >
+          {showAll ? "Show featured only" : `View all ${stats.total} certifications`}
+        </button>
+      </div>
 
       {/* Modal */}
       <AnimatePresence>

@@ -9,6 +9,7 @@ const SubmitBtn = () => {
     <button
       type="submit"
       disabled={pending}
+      aria-busy={pending}
       className="group w-full flex items-center justify-between gap-3 pl-6 pr-2 py-2 rounded-full
         bg-gray-900 dark:bg-[#FFD700] text-white dark:text-black
         text-sm font-semibold tracking-wide

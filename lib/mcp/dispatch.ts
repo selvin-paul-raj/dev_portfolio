@@ -5,6 +5,8 @@
 // standalone Alpic server (JSON loaded via readFileSync). No "@/" aliases or
 // JSON imports here — required for the plain-tsc build (tsconfig.server.json).
 import { PROFILE } from "./definitions";
+import { McpError, MCP_RESOURCE_NOT_FOUND } from "./errors";
+import { monthsBetween, formatDuration } from "../../utils/calculateDuration";
 
 export interface Project {
   show: boolean;
@@ -12,6 +14,11 @@ export interface Project {
   description: string;
   tags: string[];
   categories: string[];
+  /** Source URL; null for private/closed-source projects. */
+  code?: string | null;
+  live?: string | null;
+  featured?: boolean;
+  private?: boolean;
   [key: string]: unknown;
 }
 
@@ -37,28 +44,6 @@ export interface ExperienceEntry {
   dateEnd: string;
   icon: "graduation" | "work" | "laptop" | string;
   [key: string]: unknown;
-}
-
-const MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-function monthsBetween(start: string, end: string): number {
-  const [startMonth, startYear] = start.split(" ");
-  const now = new Date();
-  const [endMonth, endYear] =
-    end === "Present" ? [MONTH_NAMES[now.getMonth()], String(now.getFullYear())] : end.split(" ");
-
-  const yearDiff = parseInt(endYear, 10) - parseInt(startYear, 10);
-  const monthDiff = MONTH_NAMES.indexOf(endMonth) - MONTH_NAMES.indexOf(startMonth);
-  return yearDiff * 12 + monthDiff;
-}
-
-function formatDuration(totalMonths: number): string {
-  const years = Math.floor(totalMonths / 12);
-  const months = totalMonths % 12;
-  const parts: string[] = [];
-  if (years > 0) parts.push(`${years} yr${years > 1 ? "s" : ""}`);
-  if (months > 0 || years === 0) parts.push(`${months} month${months !== 1 ? "s" : ""}`);
-  return parts.join(" ");
 }
 
 function isInternship(title: string): boolean {
@@ -117,11 +102,12 @@ export function computeExperienceStats(allExperiences: ExperienceEntry[]) {
 
 export function searchProjects(
   allProjects: Project[],
-  args: { query?: string; category?: string; tech?: string }
+  args: { query?: string; category?: string; tech?: string; featured?: unknown }
 ): string {
-  const query = args.query?.toLowerCase() ?? "";
-  const category = args.category;
-  const tech = args.tech?.toLowerCase();
+  const str = (v: unknown) => (typeof v === "string" ? v : undefined);
+  const query = str(args.query)?.toLowerCase() ?? "";
+  const category = str(args.category);
+  const tech = str(args.tech)?.toLowerCase();
 
   let results = allProjects.filter((p) => p.show);
   if (query) {
@@ -138,11 +124,15 @@ export function searchProjects(
   if (tech) {
     results = results.filter((p) => p.tags.some((t) => t.toLowerCase().includes(tech)));
   }
+  if (args.featured === true) {
+    results = results.filter((p) => p.featured === true);
+  }
   return JSON.stringify({ count: results.length, projects: results }, null, 2);
 }
 
-export function getProjectByTitle(allProjects: Project[], title: string | undefined): string {
-  const query = (title ?? "").toLowerCase();
+export function getProjectByTitle(allProjects: Project[], title: unknown): string {
+  if (typeof title !== "string" || !title.trim()) return JSON.stringify({ error: "title is required" });
+  const query = title.trim().toLowerCase();
   const project = allProjects.find((p) => p.show && p.title.toLowerCase().includes(query));
   if (!project) return JSON.stringify({ error: `No project found matching "${title}"` });
   return JSON.stringify(project, null, 2);
@@ -175,6 +165,7 @@ export function getProfileSummary(
     {
       ...PROFILE,
       totalVisibleProjects: visibleProjects.length,
+      featuredProjects: visibleProjects.filter((p) => p.featured === true).map((p) => p.title),
       totalCertifications: visibleCerts.length,
       experience: computeExperienceStats(allExperiences),
       topTechnologies: [
@@ -209,6 +200,6 @@ export function buildResourceText(uri: string, data: ResourceData): string {
     case "selvin://recognition":
       return JSON.stringify(data.recognition, null, 2);
     default:
-      throw new Error(`Resource not found: ${uri}`);
+      throw new McpError(MCP_RESOURCE_NOT_FOUND, `Resource not found: ${uri}`);
   }
 }

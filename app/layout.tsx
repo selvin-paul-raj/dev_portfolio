@@ -33,23 +33,22 @@ const instrumentSerif = Instrument_Serif({
   display: "swap",
 });
 
-const featuredProjectsItemList = projectsData.slice(0, 6).map((p, i) => ({
-  "@type": "ListItem",
-  position: i + 1,
-  item: {
-    "@type": "SoftwareApplication",
-    name: p.title,
-    description: p.description,
-    author: { "@type": "Person", name: "Selvin PaulRaj K" },
-    programmingLanguage: p.tags,
-    url: p.live ?? p.code,
-    applicationCategory: p.categories.includes("app")
-      ? "MobileApplication"
-      : p.categories.includes("tool")
-        ? "DeveloperApplication"
-        : "WebApplication",
-  },
-}));
+// Open-source featured projects only — private work projects have no public URL to point at.
+const featuredProjectsItemList = projectsData
+  .filter((p) => p.featured && p.code)
+  .map((p, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    item: {
+      "@type": "SoftwareSourceCode",
+      name: p.title,
+      description: p.description,
+      author: { "@id": "https://selvinpaulraj.vercel.app/#person" },
+      programmingLanguage: p.tags,
+      codeRepository: p.code,
+      ...(p.live ? { url: p.live } : {}),
+    },
+  }));
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://selvinpaulraj.vercel.app"),
@@ -58,59 +57,21 @@ export const metadata: Metadata = {
     template: "%s | Selvin PaulRaj K",
   },
   description:
-    "Selvin PaulRaj K is an AI Engineer from Chennai, India. SPOT Recognition awardee at Zinnov/Draup. Builds AI Agents, MCP servers, RAG systems, LangGraph multi-agent pipelines, and agentic workflows. Anthropic-certified MCP developer. Full-stack MERN/Next.js.",
+    "Selvin PaulRaj K is an AI Engineer in Chennai, India, building AI agents, MCP servers, RAG systems, and LangGraph multi-agent pipelines. SPOT Recognition awardee at Zinnov (Draup). Claude Certified Architect – Foundations.",
   keywords: [
-    "Selvin PaulRaj",
     "Selvin PaulRaj K",
     "AI Engineer",
-    "AI Agents",
     "Agentic AI",
-    "Agentic Systems",
-    "MCP",
+    "AI Agents",
     "Model Context Protocol",
+    "MCP Server",
     "LangGraph",
-    "LangChain",
     "RAG",
-    "Retrieval Augmented Generation",
-    "LLM Engineer",
-    "Prompt Engineering",
     "Multi-Agent Systems",
-    "AI Agent Developer",
-    "Autonomous Agents",
-    "Full-Stack Developer",
-    "Next.js",
-    "MERN Stack",
-    "React Developer",
-    "Node.js Developer",
-    "Python Developer",
-    "Chennai Developer",
-    "Tamil Nadu Developer",
-    "India AI Engineer",
-    "Portfolio",
-    "Web Developer",
+    "Hybrid Search",
     "FastAPI",
-    "Vector Database",
-    "FAISS",
-    "Zinnov",
-    "Draup",
-    "LLM Engineer",
-    "AI Automation",
-    "Intelligence Automation",
-    "Embedding Models",
-    "selvinpaulrajK",
-    "selvinpaulraj",
-    "Anthropic Claude",
-    "Claude Code",
-    "AMD AI Certification",
-    "BM25 Retrieval",
-    "Hybrid Retrieval",
-    "Trino SQL",
-    "Workforce Intelligence",
-    "Entity Resolution",
-    "SPOT Recognition",
-    "DRI Agent",
-    "Associate Data Analyst AI",
-    "Semantic Search Engineer",
+    "Next.js",
+    "Chennai",
   ],
   authors: [{ name: "Selvin PaulRaj K", url: "https://selvinpaulraj.vercel.app" }],
   creator: "Selvin PaulRaj K",
@@ -147,15 +108,7 @@ export const metadata: Metadata = {
     title: "Selvin PaulRaj K | AI Engineer — AI Agents & Agentic Systems",
     description:
       "AI Engineer from Chennai, India building intelligent AI Agents, MCP servers, RAG systems, and LLM-powered agentic workflows. Full-stack MERN/Next.js expertise.",
-    images: [
-      {
-        url: "/Selvin_PaulRaj.webp",
-        width: 1200,
-        height: 630,
-        alt: "Selvin PaulRaj K — AI Engineer & Agentic AI Developer",
-        type: "image/webp",
-      },
-    ],
+    // Image comes from app/opengraph-image.tsx (1200×630 PNG).
   },
   twitter: {
     card: "summary_large_image",
@@ -163,7 +116,7 @@ export const metadata: Metadata = {
     description:
       "Building AI Agents, MCP servers, RAG pipelines, and agentic workflows. Full-stack MERN/Next.js expertise. Based in Chennai, India.",
     creator: "@selvinpaulrajk",
-    images: ["/Selvin_PaulRaj.webp"],
+    // Image comes from app/twitter-image.tsx.
   },
   verification: {
     google: "y8_t3SKugG2qZzqDFrgclLRNRh5m62dhX-OTUWKlthc",
@@ -181,7 +134,7 @@ export default function RootLayout({
         {/* Dark-first: runs before paint, no FOUC */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var t=localStorage.getItem('theme');if(!t||t==='dark')document.documentElement.classList.add('dark');})();`,
+            __html: `(function(){var t=null;try{t=localStorage.getItem('theme');}catch(e){}if(t!=='light')document.documentElement.classList.add('dark');})();`,
           }}
         />
         {/* Geo meta tags — helps local/regional SEO */}
@@ -193,9 +146,6 @@ export default function RootLayout({
         {/* OpenSearch + Feed discovery */}
         <link rel="search" type="application/opensearchdescription+xml" title="Selvin PaulRaj K" href="/opensearch.xml" />
         <link rel="alternate" type="application/rss+xml" title="Selvin PaulRaj K — Projects Feed" href="/feed.xml" />
-        {/* SVG favicon — scales perfectly, modern browsers prefer it */}
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
         {/* DNS prefetch for external services */}
         <link rel="dns-prefetch" href="https://github.com" />
         <link rel="dns-prefetch" href="https://linkedin.com" />
@@ -228,9 +178,9 @@ export default function RootLayout({
                 "https://www.hackerrank.com/profile/selvinpaulraj",
                 "https://leetcode.com/u/selvinpaulraj/",
               ],
-              jobTitle: "AI Engineer | Associate Data Analyst",
+              jobTitle: "Associate Data Analyst — AI Automation",
               description:
-                "AI Engineer specializing in agentic AI systems, MCP servers, LangGraph multi-agent pipelines, RAG systems, and enterprise AI automation. SPOT Recognition awardee at Zinnov/Draup. Anthropic-certified MCP developer.",
+                "AI engineer specializing in agentic AI systems, MCP servers, LangGraph multi-agent pipelines, RAG systems, and enterprise AI automation. SPOT Recognition awardee at Zinnov (Draup). Claude Certified Architect – Foundations.",
               award:
                 "SPOT Recognition — Automation CoE, Zinnov/Draup (June 2026) — for designing AI agents and automation solutions that improved operational efficiency and drove cross-team innovation.",
               knowsAbout: [
@@ -371,67 +321,6 @@ export default function RootLayout({
           }}
         />
 
-        {/* FAQ structured data for AI-related search queries */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              mainEntity: [
-                {
-                  "@type": "Question",
-                  name: "What does Selvin PaulRaj K specialise in?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Selvin PaulRaj K specialises in AI Engineering — building intelligent AI Agents, Model Context Protocol (MCP) servers, Retrieval-Augmented Generation (RAG) systems, LangGraph multi-agent pipelines, and full-stack web applications with Next.js and Python.",
-                  },
-                },
-                {
-                  "@type": "Question",
-                  name: "What AI technologies does Selvin PaulRaj K work with?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Selvin works with LangChain, LangGraph, OpenAI APIs, Anthropic Claude, Google Gemini, FAISS, vector databases, FastAPI, and various MCP-compatible tooling for building agentic AI systems.",
-                  },
-                },
-                {
-                  "@type": "Question",
-                  name: "Where is Selvin PaulRaj K based?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Selvin PaulRaj K is based in Chennai, Tamil Nadu, India, and works at Zinnov/Draup as an AI Engineer while pursuing an M.E in Computer Science with AI specialisation.",
-                  },
-                },
-                {
-                  "@type": "Question",
-                  name: "What has Selvin PaulRaj K built at Zinnov/Draup?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "At Zinnov/Draup, Selvin built DRI-MAS — a LangGraph v3 multi-agent system that converts natural-language requests into validated Trino SQL and structured Excel reports, reducing analyst turnaround from hours to under 1 minute. He also built a Company Synonym Agent using FAISS+BM25 hybrid retrieval across 2.4M company records, the Deal Origination Framework for monitoring 537 enterprise accounts, and the RMS Agent for AI-powered role mapping.",
-                  },
-                },
-                {
-                  "@type": "Question",
-                  name: "What awards and recognition has Selvin PaulRaj K received?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Selvin received the SPOT Recognition award at Zinnov/Draup Automation CoE in June 2026 for designing AI agents and automation solutions that improved operational efficiency and drove cross-team innovation. He also won 1st place at the Alpha College Hackathon, 1st place in Website Development at Alpha College, and 3rd place at the SheInnovates Hackathon by Women Techmakers Chennai.",
-                  },
-                },
-                {
-                  "@type": "Question",
-                  name: "What certifications does Selvin PaulRaj K hold?",
-                  acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Selvin holds 20+ verified certifications including Anthropic certifications for Introduction to MCP, Claude Code in Action, Introduction to Agentic AI Skills, and Claude with the Anthropic API; Hugging Face certifications for AI Agents Fundamentals and MCP Course; DeepLearning.AI certifications for Agentic Knowledge Graph Construction and Agent Communication Protocol; and AMD AI engineering certifications.",
-                  },
-                },
-              ],
-            }),
-          }}
-        />
-
         {/* Top AI projects structured data */}
         <script
           type="application/ld+json"
@@ -465,14 +354,18 @@ export default function RootLayout({
 
         <ThemeContextProvider>
           <ActiveSectionContextProvider>
-            <main>
-              <Header />
-              {children}
-              <SpeedInsights />
-              <Toaster position="top-right" />
-              <Footer />
-              <ThemeSwitch />
-            </main>
+            <a
+              href="#content"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[1000] focus:rounded-md focus:bg-gray-900 focus:px-4 focus:py-2 focus:text-white dark:focus:bg-[#FFD700] dark:focus:text-black"
+            >
+              Skip to content
+            </a>
+            <Header />
+            {children}
+            <Footer />
+            <ThemeSwitch />
+            <Toaster position="top-right" />
+            <SpeedInsights />
           </ActiveSectionContextProvider>
         </ThemeContextProvider>
       </body>

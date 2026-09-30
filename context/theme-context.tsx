@@ -17,6 +17,14 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
+function persistTheme(theme: Theme) {
+  try {
+    window.localStorage.setItem("theme", theme);
+  } catch {
+    // Storage can be unavailable (private mode, blocked cookies); the theme still applies for this visit.
+  }
+}
+
 export default function ThemeContextProvider({
   children,
 }: ThemeContextProviderProps) {
@@ -30,10 +38,11 @@ export default function ThemeContextProvider({
   useEffect(() => {
     // Sync after hydration via startTransition so the update is non-urgent
     // and does not count as a direct synchronous setState inside an effect.
-    const stored = window.localStorage.getItem("theme") as Theme | null;
+    // The inline script is the source of truth for the initial theme.
+    const initial: Theme = document.documentElement.classList.contains("dark") ? "dark" : "light";
     startTransition(() => {
       setHydrated(true);
-      setTheme(stored ?? "dark");
+      setTheme(initial);
     });
   }, []);
 
@@ -49,7 +58,7 @@ export default function ThemeContextProvider({
   const toggleTheme = () => {
     if (theme === "light") {
       setTheme("dark");
-      window.localStorage.setItem("theme", "dark");
+      persistTheme("dark");
       toast("Eyes in the dark!", {
         icon: "🌚",
         style: {
@@ -61,7 +70,7 @@ export default function ThemeContextProvider({
       });
     } else {
       setTheme("light");
-      window.localStorage.setItem("theme", "light");
+      persistTheme("light");
       toast("Illuminate your screen!", {
         icon: "☀️",
         style: {

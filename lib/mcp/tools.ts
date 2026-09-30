@@ -1,5 +1,6 @@
 // lib/mcp/tools.ts
-import type { McpTool } from "./types";
+import type { McpTool, McpRequestContext } from "./types";
+import { McpError, JSONRPC_INVALID_PARAMS } from "./errors";
 import { listRepos, getRepo } from "./github";
 import { sendContactMessage } from "./contact";
 import { TOOLS } from "./definitions";
@@ -20,31 +21,28 @@ export function listTools(): McpTool[] {
 
 export async function handleToolCall(
   name: string,
-  args: Record<string, unknown>
+  args: Record<string, unknown>,
+  ctx: McpRequestContext
 ): Promise<{ content: Array<{ type: "text"; text: string }> }> {
-  const text = await dispatch(name, args);
+  const text = await dispatch(name, args, ctx);
   return { content: [{ type: "text", text }] };
 }
 
-async function dispatch(name: string, args: Record<string, unknown>): Promise<string> {
+async function dispatch(name: string, args: Record<string, unknown>, ctx: McpRequestContext): Promise<string> {
   switch (name) {
     case "search_projects":
-      return searchProjects(projects, args as { query?: string; category?: string; tech?: string });
+      return searchProjects(projects, args as { query?: string; category?: string; tech?: string; featured?: unknown });
 
     case "get_project_by_title":
-      return getProjectByTitle(projects, args.title as string | undefined);
+      return getProjectByTitle(projects, args.title);
 
     case "list_github_repos": {
-      const repos = await listRepos({
-        per_page: (args.per_page as number) ?? 20,
-        page: (args.page as number) ?? 1,
-        sort: (args.sort as "updated" | "created" | "pushed" | "full_name") ?? "updated",
-      });
+      const repos = await listRepos({ per_page: args.per_page, page: args.page, sort: args.sort });
       return JSON.stringify({ count: repos.length, repos }, null, 2);
     }
 
     case "get_github_repo": {
-      const repo = await getRepo(args.repo as string);
+      const repo = await getRepo(args.repo);
       return JSON.stringify(repo, null, 2);
     }
 
@@ -55,9 +53,9 @@ async function dispatch(name: string, args: Record<string, unknown>): Promise<st
       return getProfileSummary(projects, certifications, experiences);
 
     case "contact_selvin":
-      return sendContactMessage(args);
+      return sendContactMessage(args, ctx);
 
     default:
-      throw new Error(`Unknown tool: ${name}`);
+      throw new McpError(JSONRPC_INVALID_PARAMS, `Unknown tool: ${name}`);
   }
 }

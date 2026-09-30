@@ -3,7 +3,7 @@
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { useSectionInView } from "@/lib/hooks";
-import { projectsData, experienceMetrics } from "@/lib/data";
+import { projectsData, certificationsData, experienceMetrics } from "@/lib/data";
 import AgentMeshCanvas from "./ui/AgentMeshCanvas";
 
 const EASE_OUT: [number, number, number, number] = [0.23, 1, 0.32, 1];
@@ -45,12 +45,12 @@ export default function About() {
   const statsInView = useInView(statsRef, { once: true, margin: "0px 0px -40px 0px" });
 
   const animProjects = useCountUp(projectsData.length, 3500, statsInView);
-  const animTotalMonths = useCountUp(experienceMetrics.totalMonths, 4500, statsInView);
-  const animRole = useCountUp(experienceMetrics.workRoleMonths, 4000, statsInView);
+  const animFullTime = useCountUp(experienceMetrics.workRoleMonths, 4500, statsInView);
   const animIntern = useCountUp(experienceMetrics.internMonths, 4000, statsInView);
+  const animCerts = useCountUp(certificationsData.length, 4000, statsInView);
 
-  const animYr = Math.floor(animTotalMonths / 12);
-  const animMo = animTotalMonths % 12;
+  const animYr = Math.floor(animFullTime / 12);
+  const animMo = animFullTime % 12;
 
   return (
     <motion.section
@@ -104,11 +104,11 @@ export default function About() {
             <p className="text-base leading-[1.7] text-gray-600 dark:text-[#c9c9cf]">
               At{" "}
               <strong className="text-gray-900 dark:text-white font-semibold">Zinnov (Draup)</strong>
-              , I build AI automation pipelines — embedding&#8209;based classification models,
-              multi&#8209;step job&#8209;role intelligence agents, and web&#8209;scraping workflows
-              that power research for Fortune 500 clients. Outside work, I ship open&#8209;source AI
-              tooling: MCP servers, CLI agent systems, and full&#8209;stack apps that push the edge
-              of what&apos;s possible.
+, I build AI automation for workforce intelligence — a LangGraph multi&#8209;agent
+              system that turns plain&#8209;English requests into validated SQL reports, hybrid
+              FAISS&nbsp;+&nbsp;BM25 search over millions of company records, and LLM&#8209;driven
+              role&#8209;mapping pipelines. Outside work, I ship open&#8209;source AI tooling: MCP
+              servers, CLI agents, and full&#8209;stack apps.
             </p>
           </div>
 
@@ -184,12 +184,16 @@ export default function About() {
               </div>
             </div>
 
-            {/* Total YOE — animated */}
+            {/* Full-time experience — internships are counted separately */}
             <div className="p-[18px_20px] border-l border-white/[0.07] dark:border-white/[0.07] border-black/10">
               <div className="font-semibold text-[32px] tracking-[-0.02em] leading-none flex items-baseline gap-[4px] text-gray-900 dark:text-[#ededee] tabular-nums">
-                {animYr}
-                <span className="text-[14px] font-medium text-gray-500 dark:text-[#8a8a93]">yr</span>
-                {animMo > 0 && (
+                {animYr > 0 && (
+                  <>
+                    {animYr}
+                    <span className="text-[14px] font-medium text-gray-500 dark:text-[#8a8a93]">yr</span>
+                  </>
+                )}
+                {(animMo > 0 || animYr === 0) && (
                   <>
                     {animMo}
                     <span className="text-[14px] font-medium text-gray-500 dark:text-[#8a8a93]">mo</span>
@@ -200,24 +204,13 @@ export default function About() {
                 className="mt-2 text-[10px] tracking-[0.22em] text-gray-500 dark:text-[#8a8a93] uppercase"
                 style={{ fontFamily: MONO }}
               >
-                Total YOE
+                Full-time
               </div>
             </div>
 
-            {/* Split: Role / Intern — live from data */}
+            {/* Split: Internships / Certifications — live from data */}
             <div className="border-l border-white/[0.07] dark:border-white/[0.07] border-black/10 grid grid-rows-2">
               <div className="px-[14px] py-3 flex items-center justify-between gap-2 border-b border-white/[0.07] dark:border-white/[0.07] border-black/10">
-                <span
-                  className="text-[10px] tracking-[0.18em] text-gray-500 dark:text-[#8a8a93] uppercase"
-                  style={{ fontFamily: MONO }}
-                >
-                  Role
-                </span>
-                <span className="font-semibold text-[14px] text-gray-900 dark:text-[#ededee] tabular-nums">
-                  {_fmtDur(animRole)}
-                </span>
-              </div>
-              <div className="px-[14px] py-3 flex items-center justify-between gap-2">
                 <span
                   className="text-[10px] tracking-[0.18em] text-gray-500 dark:text-[#8a8a93] uppercase"
                   style={{ fontFamily: MONO }}
@@ -226,6 +219,17 @@ export default function About() {
                 </span>
                 <span className="font-semibold text-[14px] text-gray-900 dark:text-[#ededee] tabular-nums">
                   {_fmtDur(animIntern)}
+                </span>
+              </div>
+              <div className="px-[14px] py-3 flex items-center justify-between gap-2">
+                <span
+                  className="text-[10px] tracking-[0.18em] text-gray-500 dark:text-[#8a8a93] uppercase"
+                  style={{ fontFamily: MONO }}
+                >
+                  Certs
+                </span>
+                <span className="font-semibold text-[14px] text-gray-900 dark:text-[#ededee] tabular-nums">
+                  {animCerts}
                 </span>
               </div>
             </div>

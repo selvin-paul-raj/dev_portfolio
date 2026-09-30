@@ -18,7 +18,7 @@
 ## Core Expertise
 
 - **AI Agents & Agentic Systems** — building autonomous multi-step agents
-- **Model Context Protocol (MCP)** — Anthropic-certified MCP developer
+- **Model Context Protocol (MCP)** — builds and publishes MCP servers (Outlook CLI, Instagram, LinkedIn)
 - **LangGraph / LangChain** — multi-agent pipeline architecture
 - **Retrieval-Augmented Generation (RAG)** — FAISS, vector search, embedding pipelines
 - **LLM Engineering** — Claude, GPT-4, Gemini integration and prompt engineering
@@ -36,7 +36,7 @@ Connect any MCP-compatible AI assistant directly to Selvin's portfolio data.
 | URI | Description |
 |-----|-------------|
 | selvin://profile | Bio, contact, social links, expertise |
-| selvin://projects | 44+ projects with tags, links, categories |
+| selvin://projects | Project catalogue with tags, links, categories |
 | selvin://skills | Full technical skill set |
 | selvin://experience | Work history and education |
 | selvin://certifications | 20+ verified certifications |
@@ -57,7 +57,7 @@ Connect any MCP-compatible AI assistant directly to Selvin's portfolio data.
 ## Key Work at Zinnov/Draup
 
 - **DRI-MAS** — LangGraph v3 multi-agent system: NL → Trino SQL → structured Excel; reduced analyst turnaround from hours to <1 min
-- **Company Synonym Agent** — FAISS+BM25 hybrid retrieval across 2.4M company records; sub-second entity resolution
+- **Company Synonym Agent** — FAISS+BM25 hybrid retrieval across 2.6M company records; sub-second entity resolution
 - **Deal Origination Framework** — automated business-signal monitoring across 537 enterprise accounts
 - **RMS Agent** — AI-powered role mapping and workforce taxonomy alignment using Gemini + FAISS
 

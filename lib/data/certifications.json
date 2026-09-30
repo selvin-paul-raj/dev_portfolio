@@ -17,7 +17,8 @@
       "Claude"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": true
   },
   {
     "id": "cert-huggingface-llm-course-unit3",
@@ -36,7 +37,8 @@
       "Supervised Fine-Tuning"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-huggingface-reasoning-course",
@@ -55,7 +57,8 @@
       "Inference"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-huggingface-agents-course",
@@ -74,7 +77,8 @@
       "Hugging Face"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": true
   },
   {
     "id": "cert-amd-llm-architectures-ai-models",
@@ -92,7 +96,8 @@
       "Foundation Models"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-amd-rl-with-llms",
@@ -110,7 +115,8 @@
       "Model Alignment"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-amd-vllm-mi300x",
@@ -128,7 +134,8 @@
       "GPU Serving"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": true
   },
   {
     "id": "cert-amd-kubernetes-instinct-gpus",
@@ -146,7 +153,8 @@
       "Containerization"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-amd-triton-kernel-development",
@@ -164,7 +172,8 @@
       "AMD Instinct"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-amd-gpu-optimization-llm-inference",
@@ -182,7 +191,8 @@
       "AMD GPUs"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-amd-introduction-prompting",
@@ -200,7 +210,8 @@
       "Prompt Design"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-amd-finetuning-r1-unsloth",
@@ -218,27 +229,29 @@
       "Supervised Fine-Tuning"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
-  "id": "cert-amd-introduction-ai-amd-ai-pc",
-  "title": "Introduction to AI on AMD AI PC",
-  "issuer": "AMD",
-  "category": "AI Engineering",
-  "date": "2026-06-01",
-  "certId": "BB6DCCABE4634B06BBDA51A54116FB19166315",
-  "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166315.pdf",
-  "imageUrl": null,
-  "skills": [
-    "AI PCs",
-    "AMD Ryzen AI",
-    "Edge AI",
-    "On-Device AI",
-    "Generative AI"
-  ],
-  "duration": null,
-  "show": true
-},
+    "id": "cert-amd-introduction-ai-amd-ai-pc",
+    "title": "Introduction to AI on AMD AI PC",
+    "issuer": "AMD",
+    "category": "AI Engineering",
+    "date": "2026-06-01",
+    "certId": "BB6DCCABE4634B06BBDA51A54116FB19166315",
+    "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166315.pdf",
+    "imageUrl": null,
+    "skills": [
+      "AI PCs",
+      "AMD Ryzen AI",
+      "Edge AI",
+      "On-Device AI",
+      "Generative AI"
+    ],
+    "duration": null,
+    "show": true,
+    "featured": false
+  },
   {
     "id": "cert-amd-introduction-quantization",
     "title": "Introduction to Quantization",
@@ -254,7 +267,8 @@
       "LLM Inference"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-amd-huggingface-amd",
@@ -271,7 +285,8 @@
       "Inference"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-amd-diffusion-models",
@@ -289,7 +304,8 @@
       "Generative AI"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-amd-introduction-rag",
@@ -306,7 +322,8 @@
       "Embeddings"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-amd-ai-agents-201",
@@ -324,7 +341,8 @@
       "AI Agents"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": true
   },
   {
     "id": "cert-amd-ai-agents-101",
@@ -333,7 +351,7 @@
     "category": "Agentic AI",
     "date": "2026-06-01",
     "certId": "BB6DCCABE4634B06BBDA51A54116FB19166281",
-    "verifyUrl":"https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166281.pdf",
+    "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166281.pdf",
     "imageUrl": null,
     "skills": [
       "Model Context Protocol (MCP)",
@@ -342,14 +360,15 @@
       "AI Agents"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-amd-introduction-ai-agents",
     "title": "Introduction to AI Agents",
     "issuer": "AMD",
     "category": "Agentic AI",
-    "date": "2025-06-01",
+    "date": "2026-06-01",
     "certId": "BB6DCCABE4634B06BBDA51A54116FB19166324",
     "verifyUrl": "https://academy.amd.com/certs/31042/BB6DCCABE4634B06BBDA51A54116FB19166324.pdf",
     "imageUrl": null,
@@ -359,7 +378,8 @@
       "LLMs"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-anthropic-mcp-advanced",
@@ -370,9 +390,16 @@
     "certId": "f6qk5bev7int",
     "verifyUrl": "https://verify.skilljar.com/c/f6qk5bev7int",
     "imageUrl": null,
-    "skills": ["MCP", "Model Context Protocol", "AI Agents", "Claude", "Tool Integration"],
+    "skills": [
+      "MCP",
+      "Model Context Protocol",
+      "AI Agents",
+      "Claude",
+      "Tool Integration"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": true
   },
   {
     "id": "cert-deeplearningai-acp",
@@ -383,9 +410,14 @@
     "certId": "d53d97ca-80d5-4d54-b8fd-46b18f1bc9a4",
     "verifyUrl": "https://learn.deeplearning.ai/accomplishments/d53d97ca-80d5-4d54-b8fd-46b18f1bc9a4?usp=sharing",
     "imageUrl": null,
-    "skills": ["AI Agents", "Agent Communication Protocol", "Multi-Agent Systems"],
+    "skills": [
+      "AI Agents",
+      "Agent Communication Protocol",
+      "Multi-Agent Systems"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-deeplearningai-agentic-knowledge-graph",
@@ -396,9 +428,15 @@
     "certId": "921d7871-853e-417c-ae96-79de18685f0e",
     "verifyUrl": "https://learn.deeplearning.ai/accomplishments/921d7871-853e-417c-ae96-79de18685f0e?usp=sharing",
     "imageUrl": null,
-    "skills": ["Knowledge Graphs", "AI Agents", "RAG", "Graph Databases"],
+    "skills": [
+      "Knowledge Graphs",
+      "AI Agents",
+      "RAG",
+      "Graph Databases"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": true
   },
   {
     "id": "cert-huggingface-mcp-course",
@@ -409,9 +447,15 @@
     "certId": "selvinpaulraj",
     "verifyUrl": "https://huggingface.co/datasets/mcp-course/certificates/resolve/main/certificates/selvinpaulraj/2025-07-03.png",
     "imageUrl": "https://huggingface.co/datasets/mcp-course/certificates/resolve/main/certificates/selvinpaulraj/2025-07-03.png",
-    "skills": ["MCP", "Model Context Protocol", "AI Tools", "Hugging Face"],
+    "skills": [
+      "MCP",
+      "Model Context Protocol",
+      "AI Tools",
+      "Hugging Face"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": true
   },
   {
     "id": "cert-huggingface-ai-agents-fundamentals",
@@ -422,9 +466,16 @@
     "certId": "selvinpaulraj",
     "verifyUrl": "https://huggingface.co/datasets/agents-course/certificates/resolve/main/certificates/selvinpaulraj/2025-06-25.png",
     "imageUrl": "https://huggingface.co/datasets/agents-course/certificates/resolve/main/certificates/selvinpaulraj/2025-06-25.png",
-    "skills": ["AI Agents", "LLMs", "Tool Use", "Hugging Face", "Transformers"],
+    "skills": [
+      "AI Agents",
+      "LLMs",
+      "Tool Use",
+      "Hugging Face",
+      "Transformers"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-ibm-2025",
@@ -435,9 +486,14 @@
     "certId": "RXHDMD1NYBXM",
     "verifyUrl": "https://www.coursera.org/account/accomplishments/verify/RXHDMD1NYBXM",
     "imageUrl": null,
-    "skills": ["IBM", "AI", "Technology"],
+    "skills": [
+      "IBM",
+      "AI",
+      "Technology"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-cognitive-class-deep-learning-tensorflow",
@@ -448,9 +504,16 @@
     "certId": "617a0067ce964ec7b43a67dc77486d4a",
     "verifyUrl": "https://courses.cognitiveclass.ai/certificates/617a0067ce964ec7b43a67dc77486d4a",
     "imageUrl": null,
-    "skills": ["Deep Learning", "TensorFlow", "Neural Networks", "Python", "Machine Learning"],
+    "skills": [
+      "Deep Learning",
+      "TensorFlow",
+      "Neural Networks",
+      "Python",
+      "Machine Learning"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-hackerrank-sep-2025",
@@ -461,9 +524,14 @@
     "certId": "cc22e6335439",
     "verifyUrl": "https://www.hackerrank.com/certificates/cc22e6335439",
     "imageUrl": null,
-    "skills": ["Problem Solving", "Coding", "Algorithms"],
+    "skills": [
+      "Problem Solving",
+      "Coding",
+      "Algorithms"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-hackerrank-css-basic",
@@ -474,9 +542,14 @@
     "certId": "ADB84BF0E734",
     "verifyUrl": "https://www.hackerrank.com/certificates/adb84bf0e734",
     "imageUrl": null,
-    "skills": ["CSS", "Web Development", "Frontend"],
+    "skills": [
+      "CSS",
+      "Web Development",
+      "Frontend"
+    ],
     "duration": null,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "id": "cert-ibm-kali-linux",
@@ -487,9 +560,14 @@
     "certId": "PLAN-DC0D0568B3BB",
     "verifyUrl": "https://skills.yourlearning.ibm.com/certificate/share/ec5a1a8a0cewogICJvYmplY3RJZCIgOiAiUExBTi1EQzBEMDU2OEIzQkIiLAogICJvYmplY3RUeXBlIiA6ICJBQ1RJVklUWSIsCiAgImxlYXJuZXJDTlVNIiA6ICIyMzU2MzQ0UkVHIgp929c1542ff3-10",
     "imageUrl": null,
-    "skills": ["Kali Linux", "Cybersecurity", "Penetration Testing"],
+    "skills": [
+      "Kali Linux",
+      "Cybersecurity",
+      "Penetration Testing"
+    ],
     "duration": null,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "id": "cert-ibm-intro-cloud",
@@ -500,9 +578,14 @@
     "certId": "ea32bf85730644bfbf1914b691440740",
     "verifyUrl": "https://courses.myclass.skillup.online/certificates/ea32bf85730644bfbf1914b691440740",
     "imageUrl": null,
-    "skills": ["Cloud Computing", "IBM Cloud", "Cloud Architecture"],
+    "skills": [
+      "Cloud Computing",
+      "IBM Cloud",
+      "Cloud Architecture"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-nodejs-web-servers",
@@ -513,9 +596,15 @@
     "certId": "a3e37a403b15f0cb3bc95972098209e8ec26e160221cd157366b0cda87c3f789",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/a3e37a403b15f0cb3bc95972098209e8ec26e160221cd157366b0cda87c3f789/",
     "imageUrl": null,
-    "skills": ["Node.js", "Web Servers", "JavaScript", "Backend"],
+    "skills": [
+      "Node.js",
+      "Web Servers",
+      "JavaScript",
+      "Backend"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-typescript-essential",
@@ -526,9 +615,15 @@
     "certId": "985dfdb56491839d7b9da8ca2395c1e7235bbce1f97590c4ab441432ab3401ce",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/985dfdb56491839d7b9da8ca2395c1e7235bbce1f97590c4ab441432ab3401ce/",
     "imageUrl": null,
-    "skills": ["TypeScript", "JavaScript", "Static Typing", "Frontend"],
+    "skills": [
+      "TypeScript",
+      "JavaScript",
+      "Static Typing",
+      "Frontend"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-emerging-web-frameworks",
@@ -539,9 +634,14 @@
     "certId": "913aa10f610fffb647b56e3c703bc3d867afa896643f5c96c98c6cc44b79a57a",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/913aa10f610fffb647b56e3c703bc3d867afa896643f5c96c98c6cc44b79a57a/",
     "imageUrl": null,
-    "skills": ["Web Frameworks", "Frontend", "JavaScript"],
+    "skills": [
+      "Web Frameworks",
+      "Frontend",
+      "JavaScript"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-react-ssr",
@@ -552,9 +652,15 @@
     "certId": "95192c604a69b8db8e46e1631d55b1fc709c97a7f4c02dac9b3c67a3987f23fd",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/95192c604a69b8db8e46e1631d55b1fc709c97a7f4c02dac9b3c67a3987f23fd/",
     "imageUrl": null,
-    "skills": ["React", "SSR", "Next.js", "JavaScript"],
+    "skills": [
+      "React",
+      "SSR",
+      "Next.js",
+      "JavaScript"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-become-blockchain-developer",
@@ -565,9 +671,16 @@
     "certId": "9011a32eee6fd0efd9b49e99727a5a240288882acbff80747b4664e08da11eb5",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/9011a32eee6fd0efd9b49e99727a5a240288882acbff80747b4664e08da11eb5/",
     "imageUrl": null,
-    "skills": ["Blockchain", "Ethereum", "Solidity", "Smart Contracts", "Web3"],
+    "skills": [
+      "Blockchain",
+      "Ethereum",
+      "Solidity",
+      "Smart Contracts",
+      "Web3"
+    ],
     "duration": null,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "id": "cert-linkedin-blockchain-solidity",
@@ -578,9 +691,15 @@
     "certId": "1c683df1cdf32c334c4cacde85884637f796a5a3d0ef266c9ed48e05577d4c4f",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/1c683df1cdf32c334c4cacde85884637f796a5a3d0ef266c9ed48e05577d4c4f/",
     "imageUrl": null,
-    "skills": ["Solidity", "Blockchain", "Ethereum", "Smart Contracts"],
+    "skills": [
+      "Solidity",
+      "Blockchain",
+      "Ethereum",
+      "Smart Contracts"
+    ],
     "duration": null,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "id": "cert-linkedin-ethereum-app-testing",
@@ -591,9 +710,15 @@
     "certId": "e3fa71e71b3a36f52fe8254d729f1b247fdc3d852a0e615891f82590ffed0abd",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/e3fa71e71b3a36f52fe8254d729f1b247fdc3d852a0e615891f82590ffed0abd/",
     "imageUrl": null,
-    "skills": ["Ethereum", "Blockchain", "Testing", "Smart Contracts"],
+    "skills": [
+      "Ethereum",
+      "Blockchain",
+      "Testing",
+      "Smart Contracts"
+    ],
     "duration": null,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "id": "cert-linkedin-ethereum-smart-contracts",
@@ -604,9 +729,15 @@
     "certId": "3a280996d98d0cdfb2b98cd87b4ddd987aeb0b08a7fb60d993b17623f9f83dbe",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/3a280996d98d0cdfb2b98cd87b4ddd987aeb0b08a7fb60d993b17623f9f83dbe/",
     "imageUrl": null,
-    "skills": ["Ethereum", "Smart Contracts", "Solidity", "Blockchain"],
+    "skills": [
+      "Ethereum",
+      "Smart Contracts",
+      "Solidity",
+      "Blockchain"
+    ],
     "duration": null,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "id": "cert-linkedin-ethereum-first-app",
@@ -617,9 +748,14 @@
     "certId": "0a65537b36b5e313d236c3a9c7f919b62322da2aa51660c3519e78e2225903ad",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/0a65537b36b5e313d236c3a9c7f919b62322da2aa51660c3519e78e2225903ad/",
     "imageUrl": null,
-    "skills": ["Ethereum", "Blockchain", "DApp Development"],
+    "skills": [
+      "Ethereum",
+      "Blockchain",
+      "DApp Development"
+    ],
     "duration": null,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "id": "cert-linkedin-ethereum-dev-tools",
@@ -630,9 +766,16 @@
     "certId": "a4fe427aa58f5aa03c4ded61a85f3e6325574f0d145791c93c4859ab1eaa8134",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/a4fe427aa58f5aa03c4ded61a85f3e6325574f0d145791c93c4859ab1eaa8134/",
     "imageUrl": null,
-    "skills": ["Ethereum", "Blockchain", "Truffle", "Ganache", "Development Tools"],
+    "skills": [
+      "Ethereum",
+      "Blockchain",
+      "Truffle",
+      "Ganache",
+      "Development Tools"
+    ],
     "duration": null,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "id": "cert-linkedin-react-google-bard",
@@ -643,9 +786,16 @@
     "certId": "ab274212e8a7218a93a51425c2ad193363c48cd88953ea03902d87944b9b028d",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/ab274212e8a7218a93a51425c2ad193363c48cd88953ea03902d87944b9b028d/",
     "imageUrl": null,
-    "skills": ["React", "Generative AI", "PaLM2", "LLM Integration", "JavaScript"],
+    "skills": [
+      "React",
+      "Generative AI",
+      "PaLM2",
+      "LLM Integration",
+      "JavaScript"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-sql-essential",
@@ -656,9 +806,14 @@
     "certId": "c9f7bf38e1faf3ae89cd88ed5c9356ed1d53c81d96c1724f9dcb32fe129d5ae6",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/c9f7bf38e1faf3ae89cd88ed5c9356ed1d53c81d96c1724f9dcb32fe129d5ae6/",
     "imageUrl": null,
-    "skills": ["SQL", "Databases", "Data Querying"],
+    "skills": [
+      "SQL",
+      "Databases",
+      "Data Querying"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-nosql-essential",
@@ -669,9 +824,14 @@
     "certId": "fe9f584a96b72cbf864a94f84cf9411cd0f858d3dd0b758db30324e949827275",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/fe9f584a96b72cbf864a94f84cf9411cd0f858d3dd0b758db30324e949827275/",
     "imageUrl": null,
-    "skills": ["NoSQL", "MongoDB", "Databases"],
+    "skills": [
+      "NoSQL",
+      "MongoDB",
+      "Databases"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-javascript-essential",
@@ -682,9 +842,15 @@
     "certId": "be230fa0b1a593a103ab615ca70eb00dc6d4370dfb36ffe06f694243ca4e9645",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/be230fa0b1a593a103ab615ca70eb00dc6d4370dfb36ffe06f694243ca4e9645/",
     "imageUrl": null,
-    "skills": ["JavaScript", "ES6+", "Frontend", "Web Development"],
+    "skills": [
+      "JavaScript",
+      "ES6+",
+      "Frontend",
+      "Web Development"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-reactjs-essential",
@@ -695,9 +861,15 @@
     "certId": "79038223e9caa23dd85494f40b900e90aaea6d90f6e978a144f3ce46b1524325",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/79038223e9caa23dd85494f40b900e90aaea6d90f6e978a144f3ce46b1524325/",
     "imageUrl": null,
-    "skills": ["React", "JSX", "Hooks", "Component Architecture"],
+    "skills": [
+      "React",
+      "JSX",
+      "Hooks",
+      "Component Architecture"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-react-design-patterns",
@@ -708,9 +880,14 @@
     "certId": "09add1e4c29851311e5e6429937f2970606110e1da0653494eaba2c1e8f69d78",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/09add1e4c29851311e5e6429937f2970606110e1da0653494eaba2c1e8f69d78/",
     "imageUrl": null,
-    "skills": ["React", "Design Patterns", "Frontend Architecture"],
+    "skills": [
+      "React",
+      "Design Patterns",
+      "Frontend Architecture"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-react-apis",
@@ -721,9 +898,16 @@
     "certId": "22435fd22c00b5861914e49f16197c6c51747df6dfa24ea948229f309966b526",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/22435fd22c00b5861914e49f16197c6c51747df6dfa24ea948229f309966b526/",
     "imageUrl": null,
-    "skills": ["React", "REST APIs", "Fetch", "Axios", "Frontend"],
+    "skills": [
+      "React",
+      "REST APIs",
+      "Fetch",
+      "Axios",
+      "Frontend"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-react-challenges",
@@ -734,9 +918,14 @@
     "certId": "fc213ce42a684907c8386dda66e8e89872e041e9748b074e19026b7d0585b53d",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/fc213ce42a684907c8386dda66e8e89872e041e9748b074e19026b7d0585b53d/",
     "imageUrl": null,
-    "skills": ["React", "Problem Solving", "Frontend"],
+    "skills": [
+      "React",
+      "Problem Solving",
+      "Frontend"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-fullstack-developer",
@@ -747,9 +936,16 @@
     "certId": "5b909e4a4f6c8959ed7275f58b3879b9fc8db7b5fdb8d2a50a21553365e46256",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/5b909e4a4f6c8959ed7275f58b3879b9fc8db7b5fdb8d2a50a21553365e46256/",
     "imageUrl": null,
-    "skills": ["Full-Stack", "React", "Node.js", "Express", "MongoDB"],
+    "skills": [
+      "Full-Stack",
+      "React",
+      "Node.js",
+      "Express",
+      "MongoDB"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-rest-apis",
@@ -760,9 +956,15 @@
     "certId": "6246b426c1c37852134f059798e8137e91d6efd35f0039f414ceeb8627af16c2",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/6246b426c1c37852134f059798e8137e91d6efd35f0039f414ceeb8627af16c2/",
     "imageUrl": null,
-    "skills": ["REST APIs", "HTTP", "API Design", "Backend"],
+    "skills": [
+      "REST APIs",
+      "HTTP",
+      "API Design",
+      "Backend"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-devops-foundations",
@@ -773,9 +975,15 @@
     "certId": "76bc927939658f85a4be0c549b569076bf016ebf3814f269c295893cef89523e",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/76bc927939658f85a4be0c549b569076bf016ebf3814f269c295893cef89523e/",
     "imageUrl": null,
-    "skills": ["DevOps", "CI/CD", "Docker", "Infrastructure"],
+    "skills": [
+      "DevOps",
+      "CI/CD",
+      "Docker",
+      "Infrastructure"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-nodejs-testing",
@@ -786,9 +994,15 @@
     "certId": "ed7700626a7369d8a0ce22c2e11838dcf4fccce91d8ff7fb30110dc8a121faa4",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/ed7700626a7369d8a0ce22c2e11838dcf4fccce91d8ff7fb30110dc8a121faa4/",
     "imageUrl": null,
-    "skills": ["Node.js", "Testing", "Jest", "Code Quality"],
+    "skills": [
+      "Node.js",
+      "Testing",
+      "Jest",
+      "Code Quality"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-web-apps-nodejs",
@@ -799,9 +1013,15 @@
     "certId": "140c475b3ad8f5599df32e572b6b6e6b19c82ab5fa4f22a79aeb73547ca90b4d",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/140c475b3ad8f5599df32e572b6b6e6b19c82ab5fa4f22a79aeb73547ca90b4d/",
     "imageUrl": null,
-    "skills": ["Node.js", "Express", "Web Development", "Backend"],
+    "skills": [
+      "Node.js",
+      "Express",
+      "Web Development",
+      "Backend"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-expressjs",
@@ -812,9 +1032,15 @@
     "certId": "482f0ff1047cd21fd3b28fd7bcde51876fc8dcc4a4ae70c5ba2430a6930bccc3",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/482f0ff1047cd21fd3b28fd7bcde51876fc8dcc4a4ae70c5ba2430a6930bccc3/",
     "imageUrl": null,
-    "skills": ["Express.js", "Node.js", "REST API", "Backend"],
+    "skills": [
+      "Express.js",
+      "Node.js",
+      "REST API",
+      "Backend"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-react",
@@ -825,9 +1051,14 @@
     "certId": "d9690102f804a88f4fc56c39e6e819440cbcd98d0ae3a673f8139fac83f50526",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/d9690102f804a88f4fc56c39e6e819440cbcd98d0ae3a673f8139fac83f50526/",
     "imageUrl": null,
-    "skills": ["React", "Frontend", "JavaScript"],
+    "skills": [
+      "React",
+      "Frontend",
+      "JavaScript"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-css-essential",
@@ -838,9 +1069,15 @@
     "certId": "4f44a4b6bd81bd6ef20588e3fdd756d702ab96fe0aba337be8e8a5c9e2297b2b",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/4f44a4b6bd81bd6ef20588e3fdd756d702ab96fe0aba337be8e8a5c9e2297b2b/",
     "imageUrl": null,
-    "skills": ["CSS", "Flexbox", "Grid", "Responsive Design"],
+    "skills": [
+      "CSS",
+      "Flexbox",
+      "Grid",
+      "Responsive Design"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-ecmascript6",
@@ -851,9 +1088,15 @@
     "certId": "3315b005535d3c45af976d3bba4ccb38f589b05f229d2aecf8f4ac3136affa03",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/3315b005535d3c45af976d3bba4ccb38f589b05f229d2aecf8f4ac3136affa03/",
     "imageUrl": null,
-    "skills": ["JavaScript", "ES6+", "Modern JS", "Arrow Functions"],
+    "skills": [
+      "JavaScript",
+      "ES6+",
+      "Modern JS",
+      "Arrow Functions"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-linkedin-cloud-storage",
@@ -864,9 +1107,15 @@
     "certId": "4630b5c4355c02098a2b1b87b01442e8fef80b63558dd2b42bf6fd274ab51ca5",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/4630b5c4355c02098a2b1b87b01442e8fef80b63558dd2b42bf6fd274ab51ca5/",
     "imageUrl": null,
-    "skills": ["Cloud Storage", "AWS S3", "Security", "Cost Optimization"],
+    "skills": [
+      "Cloud Storage",
+      "AWS S3",
+      "Security",
+      "Cost Optimization"
+    ],
     "duration": null,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "id": "cert-linkedin-search-web-developers",
@@ -877,9 +1126,14 @@
     "certId": "070ba64ff682b2d6ad7a65fd2da7c777bae2c076e7a67b902522f3aa95428183",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/070ba64ff682b2d6ad7a65fd2da7c777bae2c076e7a67b902522f3aa95428183/",
     "imageUrl": null,
-    "skills": ["Web Development", "Search", "Developer Tools"],
+    "skills": [
+      "Web Development",
+      "Search",
+      "Developer Tools"
+    ],
     "duration": null,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "id": "cert-linkedin-excel-365",
@@ -890,9 +1144,14 @@
     "certId": "cfcdfc6bbe400a833b92326b82e3ce9f60783162ba10c1b8e906a1e848d22d39",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/cfcdfc6bbe400a833b92326b82e3ce9f60783162ba10c1b8e906a1e848d22d39/",
     "imageUrl": null,
-    "skills": ["Excel", "Microsoft 365", "Data Analysis"],
+    "skills": [
+      "Excel",
+      "Microsoft 365",
+      "Data Analysis"
+    ],
     "duration": null,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "id": "cert-pmi-developing-learning-mindset",
@@ -903,9 +1162,14 @@
     "certId": "a05077e040a5aa1a772e421d193f746edda57df9245024e6150fb6f78e70b3c0",
     "verifyUrl": "https://www.linkedin.com/learning/certificates/a05077e040a5aa1a772e421d193f746edda57df9245024e6150fb6f78e70b3c0/",
     "imageUrl": null,
-    "skills": ["Learning", "Growth Mindset", "Professional Development"],
+    "skills": [
+      "Learning",
+      "Growth Mindset",
+      "Professional Development"
+    ],
     "duration": null,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "id": "cert-aws-blockchain-intro",
@@ -916,9 +1180,14 @@
     "certId": "",
     "verifyUrl": "https://explore.skillbuilder.aws/learn/course/462/introduction-to-blockchain",
     "imageUrl": null,
-    "skills": ["Blockchain", "AWS", "Distributed Ledger"],
+    "skills": [
+      "Blockchain",
+      "AWS",
+      "Distributed Ledger"
+    ],
     "duration": null,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "id": "cert-cognitive-class-2023-oct",
@@ -929,9 +1198,14 @@
     "certId": "bbffc3bb671645168d7b653d2ed1db46",
     "verifyUrl": "https://courses.cognitiveclass.ai/certificates/bbffc3bb671645168d7b653d2ed1db46",
     "imageUrl": null,
-    "skills": ["IBM", "AI", "Data Science"],
+    "skills": [
+      "IBM",
+      "AI",
+      "Data Science"
+    ],
     "duration": null,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "id": "cert-hcl-guvi-1",
@@ -942,9 +1216,14 @@
     "certId": "0238VWy782015750Mg",
     "verifyUrl": "https://www.guvi.in/certificate.html?id=O238VWy782o15750Mg",
     "imageUrl": null,
-    "skills": ["Python", "Programming", "Technology"],
+    "skills": [
+      "Python",
+      "Programming",
+      "Technology"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-codered-ethical-hacking",
@@ -955,9 +1234,15 @@
     "certId": "220686",
     "verifyUrl": "https://codered.eccouncil.org/certificate/5cb2b7d2-e3f2-4429-b696-eb5d1e418017?logged=true",
     "imageUrl": null,
-    "skills": ["Ethical Hacking", "Cybersecurity", "Penetration Testing", "Network Security"],
+    "skills": [
+      "Ethical Hacking",
+      "Cybersecurity",
+      "Penetration Testing",
+      "Network Security"
+    ],
     "duration": null,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "id": "cert-codered-cisco-labs",
@@ -968,9 +1253,14 @@
     "certId": "219579",
     "verifyUrl": "https://codered.eccouncil.org/certificate/9562ca21-7315-4189-99ac-14e4386007b1?logged=true",
     "imageUrl": null,
-    "skills": ["Cisco", "Networking", "Labs"],
+    "skills": [
+      "Cisco",
+      "Networking",
+      "Labs"
+    ],
     "duration": null,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "id": "cert-simplilearn-java",
@@ -981,9 +1271,14 @@
     "certId": "3937452",
     "verifyUrl": "https://simpli.app.link/fcbvpXUh6Bb",
     "imageUrl": null,
-    "skills": ["Java", "OOP", "Programming"],
+    "skills": [
+      "Java",
+      "OOP",
+      "Programming"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-simplilearn-data-analytics",
@@ -994,9 +1289,15 @@
     "certId": "3706402",
     "verifyUrl": "https://simpli.app.link/4MfrPbLh6Bb",
     "imageUrl": null,
-    "skills": ["Data Analytics", "Python", "Statistics", "Data Visualization"],
+    "skills": [
+      "Data Analytics",
+      "Python",
+      "Statistics",
+      "Data Visualization"
+    ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-simplilearn-ethical-hacking",
@@ -1007,10 +1308,14 @@
     "certId": "3687173",
     "verifyUrl": "https://simpli.app.link/ZNZK22bh6Bb",
     "imageUrl": null,
-    "skills": ["Ethical Hacking", "Cybersecurity", "Network Security"],
+    "skills": [
+      "Ethical Hacking",
+      "Cybersecurity",
+      "Network Security"
+    ],
     "duration": null,
-    "show": false
-
+    "show": false,
+    "featured": false
   },
   {
     "id": "cert-futureskills-digital-101",
@@ -1021,9 +1326,13 @@
     "certId": "FSP/2023/4/7895275",
     "verifyUrl": "https://www.linkedin.com/in/selvinpaulraj/details/certifications/",
     "imageUrl": null,
-    "skills": ["Digital Literacy", "Technology Fundamentals"],
+    "skills": [
+      "Digital Literacy",
+      "Technology Fundamentals"
+    ],
     "duration": null,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "id": "cert-edunet-foundation",
@@ -1034,10 +1343,17 @@
     "certId": "TSPNM23_55126",
     "verifyUrl": "https://www.linkedin.com/in/selvinpaulraj/details/certifications/",
     "imageUrl": null,
-    "skills": ["Internship", "IBM", "AI", "Machine Learning"],
+    "skills": [
+      "Internship",
+      "IBM",
+      "AI",
+      "Machine Learning"
+    ],
     "duration": null,
-    "show": true
-  }, {
+    "show": true,
+    "featured": false
+  },
+  {
     "id": "cert-anthropic-intro-mcp-2026",
     "title": "Introduction to Model Context Protocol",
     "issuer": "Anthropic",
@@ -1054,7 +1370,8 @@
       "AI Agents"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-anthropic-intro-agent-skills-2026",
@@ -1073,7 +1390,8 @@
       "Tool Use"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-anthropic-claude-code-in-action-2026",
@@ -1092,7 +1410,8 @@
       "CLI"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": false
   },
   {
     "id": "cert-anthropic-claude-anthropic-api-2026",
@@ -1111,6 +1430,7 @@
       "AI Engineering"
     ],
     "duration": null,
-    "show": true
+    "show": true,
+    "featured": true
   }
 ]

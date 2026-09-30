@@ -42,11 +42,13 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' https://www.clarity.ms https://va.vercel-scripts.com",
+              // Microsoft Clarity: loader on www.clarity.ms pulls its runtime from
+              // scripts.clarity.ms, beacons to *.clarity.ms and pixels via c.bing.com.
+              "script-src 'self' 'unsafe-inline' https://www.clarity.ms https://*.clarity.ms https://va.vercel-scripts.com",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: https://images.unsplash.com https://cdn-uploads.huggingface.co https://huggingface.co",
+              "img-src 'self' data: https://images.unsplash.com https://cdn-uploads.huggingface.co https://huggingface.co https://*.clarity.ms https://c.bing.com",
               "font-src 'self' data:",
-              "connect-src 'self' https://www.clarity.ms https://*.clarity.ms https://vitals.vercel-insights.com https://va.vercel-scripts.com",
+              "connect-src 'self' https://www.clarity.ms https://*.clarity.ms https://c.bing.com https://vitals.vercel-insights.com https://va.vercel-scripts.com",
               "frame-ancestors 'self'",
               "base-uri 'self'",
               "form-action 'self'",
@@ -55,11 +57,11 @@ const nextConfig = {
         ],
       },
       {
-        source: "/view/SPR_Resume.pdf",
+        source: "/Selvin_Resume.pdf",
         headers: [
           {
             key: "Content-Disposition",
-            value: "inline; filename=\"SPR_Resume.pdf\"",
+            value: "inline; filename=\"Selvin_Resume.pdf\"",
           },
         ],
       },

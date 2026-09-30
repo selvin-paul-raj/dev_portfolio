@@ -9,30 +9,24 @@ const Sh = ({ className, style }: { className: string; style?: React.CSSProperti
 export function ProjectsSkeleton() {
   return (
     <div className="mb-28 w-full max-w-6xl mx-auto px-4 scroll-mt-28">
-      {/* Heading */}
+      {/* Heading + subtitle */}
       <div className="flex flex-col items-center gap-3 mb-10">
         <Sh className="h-8 w-40 rounded-lg" />
+        <Sh className="h-3 w-72 rounded-full" />
       </div>
 
-      {/* Category chips */}
-      <div className="flex flex-wrap justify-center gap-2 mb-10">
-        {[80, 88, 96, 84, 68].map((w, i) => (
-          <Sh key={i} className={`h-8 rounded-full`} style={{ width: w } as React.CSSProperties} />
-        ))}
-      </div>
-
-      {/* Count */}
-      <Sh className="h-3 w-36 mx-auto mb-7 rounded-full" />
-
-      {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+      {/* Featured grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
         {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
-            className="rounded-xl overflow-hidden border border-black/5 dark:border-white/10 flex flex-col"
+            className="rounded-2xl overflow-hidden border border-black/5 dark:border-white/10 flex flex-col"
           >
-            <Sh className="w-full h-44 rounded-none" />
-            <div className="p-5 flex flex-col gap-3">
+            <div className="p-6 flex flex-col gap-3">
+              <div className="flex justify-between">
+                <Sh className="h-3 w-6 rounded" />
+                <Sh className="h-4 w-24 rounded-full" />
+              </div>
               <Sh className="h-5 w-3/4 rounded" />
               <Sh className="h-3 w-full rounded" />
               <Sh className="h-3 w-5/6 rounded" />

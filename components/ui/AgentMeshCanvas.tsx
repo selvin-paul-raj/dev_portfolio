@@ -21,7 +21,8 @@ export default function AgentMeshCanvas() {
     let W = 0, H = 0;
     let dots: Dot[] = [];
     let particles: Particle[] = [];
-    let rafId: number;
+    let rafId = 0;
+    let inView = false;
     const t0 = performance.now();
 
     function fit() {
@@ -32,6 +33,8 @@ export default function AgentMeshCanvas() {
       ctx!.setTransform(DPR, 0, 0, DPR, 0, 0);
       buildText();
       buildParticles();
+      // Paint immediately so a paused or reduced-motion canvas is never blank.
+      draw(performance.now());
     }
 
     function buildText() {
@@ -78,7 +81,7 @@ export default function AgentMeshCanvas() {
       ctx!.strokeStyle = color; ctx!.lineWidth = lw; ctx!.stroke();
     }
 
-    function frame(now: number) {
+    function draw(now: number) {
       const t = (now - t0) / 1000;
       ctx!.clearRect(0, 0, W, H);
 
@@ -124,27 +127,45 @@ export default function AgentMeshCanvas() {
         ctx!.fillStyle = peak > 0.55 ? `rgba(245,197,24,${a})` : `rgba(232,232,238,${a})`;
         ctx!.fillRect(d.x, d.y, d.sz, d.sz);
       }
+    }
 
+    function frame(now: number) {
+      draw(now);
       rafId = requestAnimationFrame(frame);
     }
 
-    const observer = new ResizeObserver(() => fit());
-    observer.observe(container);
+    // Animate only while the canvas is on screen and the tab is visible — saves battery on mobile.
+    function syncLoop() {
+      const shouldRun = !prefersReduced && inView && !document.hidden;
+      if (shouldRun && !rafId) {
+        rafId = requestAnimationFrame(frame);
+      } else if (!shouldRun && rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+    }
+
+    const resizeObserver = new ResizeObserver(() => fit());
+    resizeObserver.observe(container);
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      syncLoop();
+    });
+    visibilityObserver.observe(container);
+    document.addEventListener("visibilitychange", syncLoop);
     fit();
-    // Skip animation loop entirely if user prefers reduced motion — single static frame already drawn by fit()
-    if (!prefersReduced) {
-      rafId = requestAnimationFrame(frame);
-    }
 
     return () => {
       cancelAnimationFrame(rafId);
-      observer.disconnect();
+      resizeObserver.disconnect();
+      visibilityObserver.disconnect();
+      document.removeEventListener("visibilitychange", syncLoop);
     };
   }, []);
 
   return (
     <div ref={containerRef} className="absolute inset-0 w-full h-full">
-      <canvas ref={canvasRef} className="absolute inset-0" />
+      <canvas ref={canvasRef} className="absolute inset-0" aria-hidden="true" />
     </div>
   );
 }

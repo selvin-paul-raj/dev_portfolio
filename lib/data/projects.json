@@ -1,9 +1,61 @@
 [
   {
-    "title": "Instagram Alpic MCP Server",
-    "description": "Production-ready Instagram MCP Server for ChatGPT & Claude with Composio integration, OAuth automation, Instagram Graph API tools, health monitoring, insights, messaging, and Alpic deployment support.",
+    "title": "DRI-MAS — Multi-Agent Reporting System",
+    "description": "Analysts spent hours turning business questions into SQL and Excel reports. I architected a LangGraph multi-agent system (intent and manager agents, schema router, SQL generator, memory and evaluation layers) that converts plain-English requests into validated Trino SQL and structured reports, with hybrid FAISS + BM25 retrieval over 2.6M company records and human-in-the-loop checks. Turnaround dropped from hours to under a minute",
     "tags": [
-      "Python"
+      "LangGraph",
+      "Claude API",
+      "FastAPI",
+      "Trino",
+      "FAISS",
+      "BM25",
+      "pytest"
+    ],
+    "date": "2025-09-01",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai"
+    ],
+    "code": null,
+    "live": null,
+    "order": 0,
+    "show": true,
+    "featured": true,
+    "private": true
+  },
+  {
+    "title": "Company Synonym Agent",
+    "description": "Matching company names across datasets broke on acronyms, subsidiaries, and spelling variants. I built an entity-resolution agent that combines FAISS semantic search, BM25, acronym validation, token-overlap scoring, and parent-company resolution across 2.6M company and subsidiary records, with sub-second lookups",
+    "tags": [
+      "Python",
+      "FAISS",
+      "BM25",
+      "LLMs",
+      "Entity Resolution"
+    ],
+    "date": "2025-10-01",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai"
+    ],
+    "code": null,
+    "live": null,
+    "order": 1,
+    "show": true,
+    "featured": true,
+    "private": true
+  },
+  {
+    "title": "Instagram MCP Server",
+    "description": "MCP server that exposes 34 curated Instagram actions (posts, carousels, comments, DMs, insights) to Claude and ChatGPT through Composio, with automatic OAuth, structured JSON logging, health and usage stats, and fail-safe error handling. Deployed on Alpic over streamable HTTP",
+    "tags": [
+      "Python",
+      "FastMCP",
+      "Composio",
+      "OAuth",
+      "Alpic"
     ],
     "date": "2026-07-21",
     "imageUrl": "",
@@ -14,8 +66,9 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Instagram-Alpic-mcp",
     "live": null,
-    "order": 0,
-    "show": true
+    "order": 3,
+    "show": true,
+    "featured": true
   },
   {
     "title": "Developer Portfolio",
@@ -37,13 +90,17 @@
     "code": "https://github.com/selvin-paul-raj/dev_portfolio",
     "live": "https://selvinpaulraj.vercel.app",
     "order": 1,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
-    "title": "LinkedIn Alpic MCP Server",
-    "description": "Production-ready LinkedIn MCP Server for ChatGPT & Claude with Composio integration, OAuth automation, LinkedIn API tools, health monitoring, analytics, and Alpic deployment support.",
+    "title": "LinkedIn MCP Server (Alpic)",
+    "description": "Sibling of the Instagram server: exposes LinkedIn actions to Claude and ChatGPT with dynamic tool discovery from Composio, automatic OAuth, structured logging, and health reporting",
     "tags": [
-      "Python"
+      "Python",
+      "FastMCP",
+      "Composio",
+      "Alpic"
     ],
     "date": "2026-07-20",
     "imageUrl": "",
@@ -54,12 +111,13 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Linkedin-Alpic-Mcp",
     "live": null,
-    "order": 2,
-    "show": true
+    "order": 10,
+    "show": true,
+    "featured": false
   },
   {
     "title": "LinkedIn MCP Server",
-    "description": "A lightweight MCP server for LinkedIn automation. Supports profile, job, company and post scraping. Enables post creation, reactions and media upload for agent workflows, and integrated with OpenAI's GPT-4 for intelligent code analysis",
+    "description": "MCP toolkit for LinkedIn automation: profile, job, company, and post scraping, plus post creation, reactions, and media uploads for agent workflows",
     "tags": [
       "Python",
       "MCP",
@@ -70,14 +128,14 @@
     "imageUrl": "",
     "categories": [
       "all",
-      "web",
       "ai",
       "tool"
     ],
     "code": "https://github.com/selvin-paul-raj/Linkedin-MCP-Server",
     "live": null,
-    "order": 3,
-    "show": true
+    "order": 11,
+    "show": true,
+    "featured": false
   },
   {
     "title": "LinkedIn MCP Server",
@@ -96,68 +154,81 @@
     "code": "https://github.com/selvin-paul-raj/Linkedin-MCP-Server",
     "live": null,
     "order": 4,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "title": "Company Logo Finder",
-    "description": "RealTime Company Logo Finder",
+    "description": "Company name to official logo: parallel Bing and Serper search, official-URL ranking, then a three-tier extractor (logo.dev API, headless browser for JS-rendered sites, HTML scraping) behind a Streamlit UI",
     "tags": [
-      "Python"
+      "Python",
+      "Streamlit",
+      "Web Scraping",
+      "Headless Browser"
     ],
     "date": "2026-05-28",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Company-logo-finder",
+    "live": null,
+    "order": 12,
+    "show": true,
+    "featured": false
+  },
+  {
+    "title": "Outlook CLI",
+    "description": "Published npm CLI and MCP server for Microsoft Outlook via Microsoft Graph: one-time OAuth, rich terminal output with a --json/--ai mode for agents, and 21 MCP tools covering email, calendar, folders, and rules",
+    "tags": [
+      "Node.js",
+      "MCP",
+      "Microsoft Graph",
+      "OAuth",
+      "npm"
+    ],
+    "date": "2026-04-02",
     "imageUrl": "",
     "categories": [
       "all",
       "ai",
       "tool"
     ],
-    "code": "https://github.com/selvin-paul-raj/Company-logo-finder",
-    "live": null,
-    "order": 5,
-    "show": true
-  },
-  {
-    "title": "Outlook CLI",
-    "description": "Production-ready CLI and MCP server for Microsoft Outlook through Microsoft Graph",
-    "tags": [
-      "JavaScript"
-    ],
-    "date": "2026-04-02",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "tool"
-    ],
     "code": "https://github.com/selvin-paul-raj/outlook-cli",
     "live": "https://www.npmjs.com/package/outlook-cli",
-    "order": 6,
-    "show": true
+    "order": 2,
+    "show": true,
+    "featured": true
   },
   {
-    "title": "Gift Buddy",
-    "description": "AI-powered gift recommendation application",
+    "title": "GiftBuddy",
+    "description": "Installable PWA for group birthday gifts: create events, auto-split costs, track payments with UPI, and sign in with magic links",
     "tags": [
       "React.js",
-      "AI",
+      "PWA",
+      "UPI",
       "JavaScript"
     ],
     "date": "2025-10-29",
     "imageUrl": "",
     "categories": [
       "all",
-      "web",
-      "ai"
+      "web"
     ],
     "code": "https://github.com/selvin-paul-raj/Gift-Buddy",
     "live": null,
-    "order": 7,
-    "show": true
+    "order": 22,
+    "show": true,
+    "featured": false
   },
   {
     "title": "ChatDex AI",
-    "description": "ChatDex AI is a Chrome extension that indexes and organizes your ChatGPT and Gemini conversations.  Search prompts, export chats as Markdown/JSON, and sync selected conversations directly to Notion.",
+    "description": "Chrome extension that indexes every ChatGPT and Gemini prompt and response in real time: search and jump to any turn, export as Markdown or JSON, or sync conversations to Notion as native blocks",
     "tags": [
-      "JavaScript"
+      "JavaScript",
+      "Chrome Extension",
+      "Notion API"
     ],
     "date": "2026-03-11",
     "imageUrl": "",
@@ -168,8 +239,9 @@
     ],
     "code": "https://github.com/selvin-paul-raj/ChatDex-AI",
     "live": null,
-    "order": 8,
-    "show": true
+    "order": 4,
+    "show": true,
+    "featured": true
   },
   {
     "title": "Casita Fashion",
@@ -188,7 +260,8 @@
     "code": "https://github.com/selvin-paul-raj/Casita-Fashion",
     "live": null,
     "order": 9,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Prompt Test Sandbox",
@@ -207,7 +280,8 @@
     "code": "https://github.com/selvin-paul-raj/prompt-test",
     "live": "https://prompt-test-three.vercel.app",
     "order": 10,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "title": "Manager App",
@@ -225,11 +299,12 @@
     "code": "https://github.com/selvin-paul-raj/manager",
     "live": "https://manager-kohl-chi.vercel.app",
     "order": 11,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
-    "title": "Phishing Detection Extension",
-    "description": "Browser extension for detecting phishing websites using machine learning",
+    "title": "PhishXcape — Phishing Detection Extension",
+    "description": "Chrome extension for real-time phishing detection that combines Google Safe Browsing, VirusTotal, an ML model, and URL heuristics into one verdict",
     "tags": [
       "JavaScript",
       "Chrome Extension",
@@ -245,8 +320,9 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Phishing-Detection-Extension",
     "live": null,
-    "order": 12,
-    "show": true
+    "order": 13,
+    "show": true,
+    "featured": false
   },
   {
     "title": "Phishing Detection ML FastAPI",
@@ -267,7 +343,8 @@
     "code": "https://github.com/selvin-paul-raj/Phishing_Detection_ML_FastAPI",
     "live": null,
     "order": 13,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Quote Generator",
@@ -286,7 +363,8 @@
     "code": "https://github.com/selvin-paul-raj/Quote-Generator-React-App",
     "live": "https://spr-quote-generator.vercel.app",
     "order": 14,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "OAuth Generated Repo",
@@ -301,15 +379,18 @@
     "code": "https://github.com/selvin-paul-raj/generated-1",
     "live": null,
     "order": 15,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
-    "title": "Dynamic AI Agent CLI System",
-    "description": "Command-line interface for dynamic AI agent management",
+    "title": "Dynamic AI Agent System",
+    "description": "Multi-flow AI agent system with intelligent request routing, generated flow diagrams, an interactive CLI, and Docker deployment",
     "tags": [
+      "Python",
+      "AI Agents",
       "CLI",
-      "AI",
-      "Node.js"
+      "Docker",
+      "uv"
     ],
     "date": "2025-08-06",
     "imageUrl": "",
@@ -320,8 +401,9 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Dynamic-AI-Agent-CLI-System",
     "live": null,
-    "order": 16,
-    "show": true
+    "order": 5,
+    "show": true,
+    "featured": true
   },
   {
     "title": "AI Agent MCP Server",
@@ -341,11 +423,12 @@
     "code": "https://github.com/selvin-paul-raj/AI-Agent-MCP-Server",
     "live": null,
     "order": 17,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Copy-ME",
-    "description": "Copy-ME is a minimalistic, real-time web application designed to facilitate instant text sharing across multiple devices. It functions as a live, shared clipboard where users can draft content privately and then explicitly 'Publish' it to synchronize with all connected participants",
+    "description": "Real-time shared clipboard across devices: draft privately, then publish to sync instantly with every connected participant over WebSockets",
     "tags": [
       "Real-time",
       "WebSockets",
@@ -362,8 +445,9 @@
     ],
     "code": "https://github.com/selvin-paul-raj/copy-me",
     "live": null,
-    "order": 18,
-    "show": true
+    "order": 17,
+    "show": true,
+    "featured": false
   },
   {
     "title": "Test Repo",
@@ -378,7 +462,8 @@
     "code": "https://github.com/selvin-paul-raj/test",
     "live": null,
     "order": 19,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "title": "IBISWorld Web Scraper",
@@ -397,7 +482,8 @@
     "code": "https://github.com/selvin-paul-raj/-IBISWorld_Web_Scraper",
     "live": null,
     "order": 20,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Screener Companies Web Scraping",
@@ -416,15 +502,15 @@
     "code": "https://github.com/selvin-paul-raj/screener_companies_Web_Scrapping",
     "live": null,
     "order": 21,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Deepfake Video Detection",
-    "description": "AI-powered deepfake video detection system",
+    "description": "Deep-learning classifier for detecting deepfake videos, trained on the DFDC (Deepfake Detection Challenge) face-crop dataset",
     "tags": [
       "Python",
-      "AI",
-      "Machine Learning",
+      "Deep Learning",
       "Computer Vision"
     ],
     "date": "2024-11-18",
@@ -436,8 +522,9 @@
     ],
     "code": "https://github.com/selvin-paul-raj/deepfake_Video",
     "live": null,
-    "order": 22,
-    "show": true
+    "order": 23,
+    "show": true,
+    "featured": false
   },
   {
     "title": "SPR Next Ink",
@@ -454,11 +541,12 @@
     "code": "https://github.com/selvin-paul-raj/spr-nxt-ink",
     "live": null,
     "order": 23,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "AI Content Generator",
-    "description": "A scalable AI content generator app using Next.js, React, Tailwind CSS, TypeScript, Gemini AI, and Clerk. Features include dynamic templates, searchable filters, adaptive forms, and rich text editing. Drizzle ORM and PostgreSQL enable secure data management",
+    "description": "AI content generator with dynamic templates, searchable filters, adaptive forms, and rich-text editing. Built on Next.js, Gemini, Clerk, Drizzle ORM, and PostgreSQL",
     "tags": [
       "Next.js 15",
       "TypeScript",
@@ -478,8 +566,9 @@
     ],
     "code": "https://github.com/selvin-paul-raj/AI-Content-Generator",
     "live": null,
-    "order": 24,
-    "show": true
+    "order": 16,
+    "show": true,
+    "featured": false
   },
   {
     "title": "Food Delivery Website",
@@ -498,11 +587,12 @@
     "code": "https://github.com/selvin-paul-raj/Food-Delivery-Website",
     "live": null,
     "order": 25,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "AI Calculator",
-    "description": "Developed a full-stack AI calculator with Next.js 15 and TypeScript with Clerk, enabling drawing with AI for instant responsive calculations via Google AI's Gemini model",
+    "description": "Draw a maths problem on a canvas and get an instant solution from Google's Gemini model. Built with Next.js 15, TypeScript, and Clerk auth",
     "tags": [
       "Next.js 15",
       "TypeScript",
@@ -521,12 +611,13 @@
     ],
     "code": "https://github.com/selvin-paul-raj/SPR-AI-Calculator",
     "live": "https://spr-ai-calculator.vercel.app",
-    "order": 26,
-    "show": true
+    "order": 14,
+    "show": true,
+    "featured": false
   },
   {
     "title": "Vitersim",
-    "description": "Vitersim is a CLI tool for optimizing Vite React projects, automating cleanup of unnecessary files, simplifying component structure, and preparing for Tailwind CSS setup. Perfect for developers needing a clean and efficient Vite React starter template",
+    "description": "npm CLI that strips a fresh Vite + React project down to a clean starter: removes boilerplate, simplifies the component structure, and prepares Tailwind CSS",
     "tags": [
       "CLI",
       "Vite",
@@ -542,8 +633,9 @@
     ],
     "code": "https://github.com/selvin-paul-raj/vitersim",
     "live": "https://www.npmjs.com/package/vitersim",
-    "order": 27,
-    "show": true
+    "order": 18,
+    "show": true,
+    "featured": false
   },
   {
     "title": "AI Calculator (Early Version)",
@@ -562,7 +654,8 @@
     "code": "https://github.com/selvin-paul-raj/AI-Calculator",
     "live": "https://spr-ai-calculator.vercel.app",
     "order": 28,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "title": "PicoFoilo",
@@ -579,11 +672,12 @@
     "code": "https://github.com/selvin-paul-raj/PicoFoilo",
     "live": "https://picofolio.vercel.app",
     "order": 29,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "TroothView",
-    "description": "Created a React project that allows users to input photos, uses a Gradio AI model to confirm their trustworthiness, and displays the results in a doughnut chart",
+    "description": "Upload photos and get a trust score from a Gradio-hosted AI model, visualised as a doughnut chart",
     "tags": [
       "React.js",
       "Framer Motion",
@@ -602,8 +696,9 @@
     ],
     "code": "https://github.com/selvin-paul-raj/TroothView",
     "live": "https://trooth-view.vercel.app",
-    "order": 30,
-    "show": true
+    "order": 15,
+    "show": true,
+    "featured": false
   },
   {
     "title": "Expense Tracker — Client",
@@ -621,7 +716,8 @@
     "code": "https://github.com/selvin-paul-raj/Client_Expense_Tracker",
     "live": "https://spr-expense-tracker.vercel.app",
     "order": 31,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Raspberry Pi 4 Projects",
@@ -640,7 +736,8 @@
     "code": "https://github.com/selvin-paul-raj/RPi4",
     "live": null,
     "order": 32,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "MERN Blog",
@@ -661,7 +758,8 @@
     "code": "https://github.com/selvin-paul-raj/MERN-Blog",
     "live": null,
     "order": 33,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Files Share App",
@@ -682,7 +780,8 @@
     "code": "https://github.com/selvin-paul-raj/Files-Share-App",
     "live": null,
     "order": 34,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Azure Experiments",
@@ -697,7 +796,8 @@
     "code": "https://github.com/selvin-paul-raj/azure",
     "live": null,
     "order": 35,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "title": "Drag and Drop Notes",
@@ -717,7 +817,8 @@
     "code": "https://github.com/selvin-paul-raj/Drag-and-Drop-Notes",
     "live": null,
     "order": 36,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Speed Typing",
@@ -740,7 +841,8 @@
     "code": "https://github.com/selvin-paul-raj/Speed-Typing",
     "live": "https://spr-speed-typing.vercel.app",
     "order": 37,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Naan Mudhalvan Cybersecurity",
@@ -757,7 +859,8 @@
     "code": "https://github.com/selvin-paul-raj/Naan-Mudhalvan-Cybersecurity-",
     "live": null,
     "order": 38,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Next.js AI Thief Detection",
@@ -775,7 +878,8 @@
     "code": "https://github.com/selvin-paul-raj/Nextjs-AI-Thief-Detection",
     "live": "https://thief-alarm.vercel.app",
     "order": 39,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Multi Language App",
@@ -794,7 +898,8 @@
     "code": "https://github.com/selvin-paul-raj/Multi-Lang-App-React",
     "live": null,
     "order": 40,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "HTML Map Layout",
@@ -811,7 +916,8 @@
     "code": "https://github.com/selvin-paul-raj/html_map",
     "live": null,
     "order": 41,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "title": "CodeAlpha Gemini AI Task",
@@ -829,7 +935,8 @@
     "code": "https://github.com/selvin-paul-raj/codealpha_gemini",
     "live": null,
     "order": 42,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "CodeAlpha Portfolio Task",
@@ -846,7 +953,8 @@
     "code": "https://github.com/selvin-paul-raj/codealpha_portfolio",
     "live": null,
     "order": 43,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Oasis Landing Page",
@@ -866,7 +974,8 @@
     "code": "https://github.com/selvin-paul-raj/Oasis_Landing_Page",
     "live": null,
     "order": 44,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Expense Tracker",
@@ -887,7 +996,8 @@
     "code": "https://github.com/selvin-paul-raj/codealpha_expense_tracker",
     "live": null,
     "order": 45,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Expense Tracker — Server",
@@ -905,7 +1015,8 @@
     "code": "https://github.com/selvin-paul-raj/Server_Expense_Tracker",
     "live": null,
     "order": 46,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "PRODIGY WD 02",
@@ -925,13 +1036,15 @@
     "code": "https://github.com/selvin-paul-raj/PRODIGY-WD-02",
     "live": null,
     "order": 47,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Flutter API Demo",
     "description": "Flutter API Demo",
     "tags": [
-      "C++"
+      "Flutter",
+      "Dart"
     ],
     "date": "2024-02-08",
     "imageUrl": "",
@@ -942,7 +1055,8 @@
     "code": "https://github.com/selvin-paul-raj/Flutter_API",
     "live": null,
     "order": 48,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "PRODIGY WD 01",
@@ -962,7 +1076,8 @@
     "code": "https://github.com/selvin-paul-raj/PRODIGY_WD_01",
     "live": null,
     "order": 49,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "QR Code Generator",
@@ -982,7 +1097,8 @@
     "code": "https://github.com/selvin-paul-raj/QR-Code-Generator-React",
     "live": null,
     "order": 50,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Tic-Tac-Toe Flutter",
@@ -1001,13 +1117,15 @@
     "code": "https://github.com/selvin-paul-raj/Tic-Tac-Toe-Game-in-Flutter",
     "live": null,
     "order": 51,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "First Flutter App",
     "description": "First Flutter App",
     "tags": [
-      "C++"
+      "Flutter",
+      "Dart"
     ],
     "date": "2024-02-01",
     "imageUrl": "",
@@ -1018,7 +1136,8 @@
     "code": "https://github.com/selvin-paul-raj/First_Flutter_App",
     "live": null,
     "order": 52,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Random Meme Generator",
@@ -1038,7 +1157,8 @@
     "code": "https://github.com/selvin-paul-raj/Random-Meme-React",
     "live": null,
     "order": 53,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "3D Cube Three.js",
@@ -1058,7 +1178,8 @@
     "code": "https://github.com/selvin-paul-raj/Cube-Threejs",
     "live": null,
     "order": 54,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "React Weather App",
@@ -1079,7 +1200,8 @@
     "code": "https://github.com/selvin-paul-raj/React-Weather-App",
     "live": null,
     "order": 55,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Simple Todo App",
@@ -1097,7 +1219,8 @@
     "code": "https://github.com/selvin-paul-raj/simple_Todo_app",
     "live": null,
     "order": 56,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "React Calculator",
@@ -1117,7 +1240,8 @@
     "code": "https://github.com/selvin-paul-raj/React_Calculator",
     "live": null,
     "order": 57,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Cursor Hearts",
@@ -1136,7 +1260,8 @@
     "code": "https://github.com/selvin-paul-raj/Cursor_Hearts",
     "live": null,
     "order": 58,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "HireMe Landing Page",
@@ -1153,7 +1278,8 @@
     "code": "https://github.com/selvin-paul-raj/Hireme",
     "live": null,
     "order": 59,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "New Year Countdown",
@@ -1172,7 +1298,8 @@
     "code": "https://github.com/selvin-paul-raj/New_Year_CountDown",
     "live": null,
     "order": 60,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Food Ordering UI",
@@ -1189,7 +1316,8 @@
     "code": "https://github.com/selvin-paul-raj/food",
     "live": null,
     "order": 61,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "PaLM AI Server",
@@ -1207,11 +1335,12 @@
     "code": "https://github.com/selvin-paul-raj/palm-Server",
     "live": null,
     "order": 62,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Own Amazon Scraper API",
-    "description": "An open-source web scraper for Amazon data. Retrieve product details, reviews, offers, and search results using this Node.js and Express-based API. Ideal for integrating Amazon data into your applications and analysis",
+    "description": "Node.js and Express API that scrapes Amazon product details, reviews, offers, and search results",
     "tags": [
       "Node.js",
       "Express.js",
@@ -1226,8 +1355,9 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Own_Amazon_Scraper_API",
     "live": null,
-    "order": 63,
-    "show": true
+    "order": 20,
+    "show": true,
+    "featured": false
   },
   {
     "title": "BMI Calculator React Native App",
@@ -1246,7 +1376,8 @@
     "code": "https://github.com/selvin-paul-raj/BMI-Calculator-React-Native-App",
     "live": null,
     "order": 64,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Random Dog Pic Generator",
@@ -1266,11 +1397,12 @@
     "code": "https://github.com/selvin-paul-raj/Random-Dog-Pic-Generate",
     "live": null,
     "order": 65,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
-    "title": "EzSumZ - Article Summarizer",
-    "description": "Summize: AI-Powered Article Summarization. Effortlessly summarize lengthy articles with Summize. Powered by OpenAI GPT-4, it delivers clear and concise summaries, saving you time and simplifying your reading",
+    "title": "EzSumZ — Article Summarizer",
+    "description": "React app that turns long articles into concise summaries using OpenAI's GPT-4",
     "tags": [
       "React.js",
       "OpenAI GPT-4",
@@ -1286,8 +1418,9 @@
     ],
     "code": "https://github.com/selvin-paul-raj/EzSumZ-Article_Summarizer-React-App",
     "live": null,
-    "order": 66,
-    "show": true
+    "order": 21,
+    "show": true,
+    "featured": false
   },
   {
     "title": "React Redux Todo App",
@@ -1308,7 +1441,8 @@
     "code": "https://github.com/selvin-paul-raj/React-Redux-Todo-App",
     "live": null,
     "order": 67,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Electron.js Calculator App",
@@ -1329,7 +1463,8 @@
     "code": "https://github.com/selvin-paul-raj/Electronjs-Calculator-App",
     "live": null,
     "order": 68,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Portfolio (Early Version)",
@@ -1346,7 +1481,8 @@
     "code": "https://github.com/selvin-paul-raj/Portfolio",
     "live": null,
     "order": 69,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "title": "SPR Censorify — Example",
@@ -1364,11 +1500,12 @@
     "code": "https://github.com/selvin-paul-raj/spr_censorify_Example",
     "live": null,
     "order": 70,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "SPR Censorify",
-    "description": "Enhance content integrity using CustomCensorify: a JavaScript module. Efficiently replace sensitive words for respectful communication",
+    "description": "npm package that masks sensitive or offensive words in text with configurable replacements",
     "tags": [
       "JavaScript",
       "npm",
@@ -1382,8 +1519,9 @@
     ],
     "code": "https://github.com/selvin-paul-raj/spr-censorify",
     "live": "https://www.npmjs.com/package/spr-censorify",
-    "order": 71,
-    "show": true
+    "order": 19,
+    "show": true,
+    "featured": false
   },
   {
     "title": "Form Validation UI",
@@ -1400,7 +1538,8 @@
     "code": "https://github.com/selvin-paul-raj/Form_Validation",
     "live": "https://sprhackz.github.io/Form_Validation/",
     "order": 72,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "title": "React Food Delivery",
@@ -1419,7 +1558,8 @@
     "code": "https://github.com/selvin-paul-raj/React_Food_Delivery",
     "live": null,
     "order": 73,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "FLAMES Web App",
@@ -1436,7 +1576,8 @@
     "code": "https://github.com/selvin-paul-raj/Flames_Web_App",
     "live": "https://sprhackz.github.io/Flames_Web_App/",
     "order": 74,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "Library Management System",
@@ -1453,7 +1594,8 @@
     "code": "https://github.com/selvin-paul-raj/Library-Management-System",
     "live": null,
     "order": 75,
-    "show": true
+    "show": false,
+    "featured": false
   },
   {
     "title": "React Personal Portfolio (v1)",
@@ -1470,7 +1612,8 @@
     "code": "https://github.com/selvin-paul-raj/React_Personal_Portfolio",
     "live": null,
     "order": 76,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "title": "Animated Login Page",
@@ -1487,7 +1630,8 @@
     "code": "https://github.com/selvin-paul-raj/Animation_Login_Page",
     "live": "https://sprhackz.github.io/Animation_Login_Page/",
     "order": 77,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "title": "Login Page UI",
@@ -1504,7 +1648,8 @@
     "code": "https://github.com/selvin-paul-raj/Login_Page_01",
     "live": "https://sprhackz.github.io/Login_Page_01/",
     "order": 78,
-    "show": false
+    "show": false,
+    "featured": false
   },
   {
     "title": "FLAMES Game (Python)",
@@ -1521,6 +1666,7 @@
     "code": "https://github.com/selvin-paul-raj/FLAMES.py",
     "live": null,
     "order": 79,
-    "show": true
+    "show": false,
+    "featured": false
   }
 ]

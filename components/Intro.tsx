@@ -43,8 +43,6 @@ const SOCIAL_LINKS = [
   { href: "https://www.deep-ml.com/profile/fdmYEE5bBFgqLwHxlBFW1lgLUR22", icon: <DeepMlIcon size={17} />, label: "deep-ml" },
 ];
 
-const PERSONALITY_TAGS = ["Technical", "Precise", "Open Source", "Problem Solver"];
-
 const TECH_BADGES = [
   "LangGraph", "MCP", "RAG", "LangChain", "Python",
   "CrewAI", "FastAPI", "Next.js", "FAISS", "OpenAI",
@@ -121,32 +119,17 @@ export default function Intro() {
             </span>
           </h1>
 
-          {/* Personality tags */}
-          <div className="anim-fade-up anim-d2 flex flex-wrap justify-center lg:justify-start gap-2 mb-4">
-            {PERSONALITY_TAGS.map((tag) => (
-              <span
-                key={tag}
-                className="font-mono text-[10px] px-3 py-1 rounded-full tracking-[0.12em] uppercase
-                  bg-[#FFD700]/[0.08] dark:bg-[#FFD700]/10
-                  border border-[#FFD700]/20 dark:border-[#FFD700]/25
-                  text-[#9a7d2a] dark:text-[#FFD700]/60"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-
           {/* Mobile inline stats */}
           <div className="anim-fade-up anim-d3 lg:hidden flex items-center justify-center gap-3 mt-1 mb-5 font-mono">
             <span className="text-lg font-bold text-gray-900 dark:text-white/90 tabular-nums">
               {_projectCount}+
             </span>
-            <span className="text-[0.58rem] uppercase tracking-[0.15em] text-gray-500 dark:text-white/30">Projects</span>
+            <span className="text-xs uppercase tracking-[0.15em] text-gray-600 dark:text-white/50">Projects</span>
             <span className="w-px h-3.5 bg-black/10 dark:bg-white/10" />
-            <span className="text-lg font-bold text-gray-900 dark:text-white/90 tabular-nums">
-              {_fmtDur(experienceMetrics.totalMonths)}
+            <span className="text-lg font-bold text-gray-900 dark:text-white/90 tabular-nums" suppressHydrationWarning>
+              {_fmtDur(experienceMetrics.workRoleMonths)}
             </span>
-            <span className="text-[0.58rem] uppercase tracking-[0.15em] text-gray-500 dark:text-white/30">YOE</span>
+            <span className="text-xs uppercase tracking-[0.15em] text-gray-600 dark:text-white/50">Full-time</span>
           </div>
 
           {/* Bio */}
@@ -156,16 +139,16 @@ export default function Intro() {
               AI Agents, MCP servers, and multi-agent LangGraph pipelines
             </span>{" "}
             that turn complex problems into shipped products — backed by full-stack
-            MERN/Next.js expertise and a Master&apos;s in Computer Science (AI).
+            MERN/Next.js experience, currently pursuing an M.E. in Computer Science (AI).
           </p>
 
           {/* Secondary bio — hidden on mobile so the CTAs land above the fold */}
           <p className="anim-fade-up anim-d4 hidden sm:block text-sm text-gray-500 dark:text-white/40 leading-relaxed max-w-xl mb-7">
             At{" "}
             <span className="text-gray-700 dark:text-white/60 font-medium">Zinnov (Draup)</span>
-            , I architect embedding-based classification models, multi-step job-role
-            intelligence agents, and RAG pipelines that power Fortune 500 research.
-            Open-source contributor: MCP servers, CLI agent systems, vector search tooling.
+            , I built DRI-MAS — a LangGraph multi-agent system that turns plain-English
+            requests into validated SQL reports, cutting analyst turnaround from hours to
+            under a minute. Outside work: open-source MCP servers and CLI agents.
           </p>
 
           {/* CTAs */}

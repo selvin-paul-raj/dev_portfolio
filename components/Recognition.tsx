@@ -223,7 +223,8 @@ export default function Recognition() {
                   </div>
                 </div>
 
-                {/* Footer */}
+                {/* Footer — only when there is a verifiable link to the paper */}
+                {pub.research_link && (
                 <div className="flex items-center justify-between flex-wrap gap-[14px] mt-[26px] pt-[22px] border-t border-dashed border-black/[0.10] dark:border-white/[0.14]">
                   <div className="text-[11px] text-gray-500 dark:text-[#8a8a93] tracking-[0.06em]" style={{ fontFamily: MONO }}>
                     Paper ID · <span className="text-gray-900 dark:text-white font-medium">{pub.paperId}</span>
@@ -238,6 +239,7 @@ export default function Recognition() {
                     <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1a1500] text-[#f5c518] text-[11px]">↗</span>
                   </a>
                 </div>
+                )}
               </article>
             ))}
           </motion.div>

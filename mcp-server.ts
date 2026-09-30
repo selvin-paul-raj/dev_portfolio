@@ -21,8 +21,10 @@ import {
 import type { Project, Certification, ResourceData, ExperienceEntry } from "./lib/mcp/dispatch";
 import { sendContactMessage } from "./lib/mcp/contact";
 import { listRepos, getRepo } from "./lib/mcp/github";
-import { createMcpHandler } from "./lib/mcp/router";
-import type { McpRequest, McpResponse } from "./lib/mcp/types";
+import { createMcpHandler, parseErrorResponse } from "./lib/mcp/router";
+import { McpError, JSONRPC_INVALID_PARAMS } from "./lib/mcp/errors";
+import { getClientIp } from "./lib/rateLimit";
+import type { McpRequestContext } from "./lib/mcp/types";
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 const DATA = join(__dirname, "data");
@@ -40,22 +42,18 @@ const recognition = load<unknown>("recognition");
 const RESOURCE_DATA: ResourceData = { projects, skills, experiences, certifications, recognition };
 
 // ── Tool dispatch ─────────────────────────────────────────────────────────────
-async function callTool(name: string, args: Record<string, unknown>): Promise<string> {
+async function callTool(name: string, args: Record<string, unknown>, ctx: McpRequestContext): Promise<string> {
   switch (name) {
     case "search_projects":
-      return searchProjects(projects, args as { query?: string; category?: string; tech?: string });
+      return searchProjects(projects, args as { query?: string; category?: string; tech?: string; featured?: unknown });
     case "get_project_by_title":
-      return getProjectByTitle(projects, args.title as string | undefined);
+      return getProjectByTitle(projects, args.title);
     case "list_github_repos": {
-      const repos = await listRepos({
-        per_page: (args.per_page as number) ?? 20,
-        page: (args.page as number) ?? 1,
-        sort: (args.sort as "updated" | "created" | "pushed" | "full_name") ?? "updated",
-      });
+      const repos = await listRepos({ per_page: args.per_page, page: args.page, sort: args.sort });
       return JSON.stringify({ count: repos.length, repos }, null, 2);
     }
     case "get_github_repo": {
-      const repo = await getRepo(args.repo as string);
+      const repo = await getRepo(args.repo);
       return JSON.stringify(repo, null, 2);
     }
     case "filter_certifications":
@@ -63,15 +61,15 @@ async function callTool(name: string, args: Record<string, unknown>): Promise<st
     case "get_profile_summary":
       return getProfileSummary(projects, certifications, experiences as ExperienceEntry[]);
     case "contact_selvin":
-      return sendContactMessage(args);
+      return sendContactMessage(args, ctx);
     default:
-      throw new Error(`Unknown tool: ${name}`);
+      throw new McpError(JSONRPC_INVALID_PARAMS, `Unknown tool: ${name}`);
   }
 }
 
-const handleMcpRequest: (body: McpRequest) => Promise<McpResponse> = createMcpHandler({
+const handleMcpRequest = createMcpHandler({
   listTools: () => TOOLS,
-  callTool: async (name, args) => ({ content: [{ type: "text", text: await callTool(name, args) }] }),
+  callTool: async (name, args, ctx) => ({ content: [{ type: "text", text: await callTool(name, args, ctx) }] }),
   listResources: () => RESOURCE_DEFS,
   readResource: (uri) => [
     { uri, mimeType: "application/json", type: "text", text: buildResourceText(uri, RESOURCE_DATA) },
@@ -84,8 +82,11 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  "Access-Control-Allow-Headers": "Content-Type, Accept, Mcp-Session-Id, Mcp-Protocol-Version",
+  "Access-Control-Max-Age": "86400",
 };
+
+const MAX_BODY_BYTES = 1_000_000;
 
 const httpServer = createServer((req, res) => {
   Object.entries(CORS_HEADERS).forEach(([k, v]) => res.setHeader(k, v));
@@ -108,16 +109,28 @@ const httpServer = createServer((req, res) => {
 
   if (req.method === "POST") {
     const chunks: Buffer[] = [];
-    req.on("data", (c: Buffer) => chunks.push(c));
+    let size = 0;
+    req.on("data", (c: Buffer) => {
+      size += c.length;
+      if (size > MAX_BODY_BYTES) { res.writeHead(413); res.end(); req.destroy(); return; }
+      chunks.push(c);
+    });
     req.on("end", async () => {
-      let body: McpRequest;
+      if (res.writableEnded) return;
+      let body: unknown;
       try { body = JSON.parse(Buffer.concat(chunks).toString()); }
       catch {
         res.setHeader("Content-Type", "application/json"); res.writeHead(400);
-        res.end(JSON.stringify({ jsonrpc: "2.0", id: null, error: { code: -32700, message: "Parse error" } }));
+        res.end(JSON.stringify(parseErrorResponse()));
         return;
       }
-      const response = await handleMcpRequest(body);
+      const ip = getClientIp((h) => {
+        const v = req.headers[h];
+        return Array.isArray(v) ? v[0] : v;
+      });
+      const response = await handleMcpRequest(body, { ip: ip === "unknown" ? req.socket.remoteAddress ?? ip : ip });
+      // Notifications get 202 Accepted with no body (MCP Streamable HTTP).
+      if (response === null) { res.writeHead(202); res.end(); return; }
       res.setHeader("Content-Type", "application/json"); res.writeHead(200);
       res.end(JSON.stringify(response));
     });
