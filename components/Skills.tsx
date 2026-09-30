@@ -9,9 +9,12 @@ import { useSectionInView } from "@/lib/hooks";
 const EASE_OUT: [number, number, number, number] = [0.23, 1, 0.32, 1];
 
 const TAB_GROUPS = [
+  { label: "All", keys: ["all"] },
   { label: "Agentic AI", keys: ["agentic_ai"] },
   { label: "LLMs", keys: ["llms"] },
   { label: "RAG & Search", keys: ["retrieval"] },
+  { label: "Evaluation", keys: ["evaluation_and_reliability"] },
+  { label: "AI Security", keys: ["ai_security"] },
   { label: "Languages", keys: ["languages"] },
   { label: "Backend & Data", keys: ["backend_and_data"] },
   { label: "Frontend", keys: ["frontend"] },

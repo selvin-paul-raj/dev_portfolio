@@ -97,7 +97,8 @@ export const projectsData = [...rawProjects]
 export const skillsData: Record<string, string[]> =
   rawSkillsJson.skills as Record<string, string[]>;
 
-export const skillsFlat: readonly string[] = Object.values(skillsData).flat();
+// Deduplicated — skills.json also carries an "all" list that repeats every group.
+export const skillsFlat: readonly string[] = Array.from(new Set(Object.values(skillsData).flat()));
 
 const professionalRoles = rawExperiences.filter(
   (e) => e.icon !== "graduation" && e.icon !== "laptop"

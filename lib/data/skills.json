@@ -6,31 +6,53 @@
       "CrewAI",
       "Multi-Agent Systems",
       "Model Context Protocol (MCP)",
+      "Agent-to-Agent (A2A)",
       "Tool / Function Calling",
-      "Human-in-the-Loop"
+      "Agent Memory",
+      "Human-in-the-Loop",
+      "Agent Planning & Task Decomposition"
     ],
+
     "llms": [
       "Claude API",
       "OpenAI API",
       "Gemini API",
       "Prompt Engineering",
+      "Context Engineering",
       "Structured Output (Pydantic)",
       "LLM Evaluation"
     ],
+
     "retrieval": [
       "RAG",
       "FAISS",
       "Hybrid Search (BM25 + Vector)",
       "Embeddings",
       "Semantic Search",
-      "Entity Resolution"
+      "Re-ranking",
+      "Entity Resolution",
+      "Agentic RAG"
     ],
+
+    "evaluation_and_reliability": [
+      "JEV / Typed Decision Models",
+      "Agent Evaluation",
+      "LLM-as-a-Judge",
+      "RAG Evaluation",
+      "Tool-Use Evaluation",
+      "Evaluation Harnesses",
+      "Ablation Testing",
+      "LLM Observability",
+      "Tracing & Telemetry"
+    ],
+
     "languages": [
       "Python",
       "TypeScript",
       "JavaScript",
       "SQL"
     ],
+
     "backend_and_data": [
       "FastAPI",
       "Node.js",
@@ -41,13 +63,94 @@
       "Pandas",
       "ETL Pipelines"
     ],
+
     "frontend": [
       "React",
       "Next.js",
       "Tailwind CSS",
       "Framer Motion"
     ],
+
+    "ai_security": [
+      "Prompt Injection Defense",
+      "AI Guardrails",
+      "LLM Red Teaming",
+      "PII Detection & Sanitization"
+    ],
+
     "tooling": [
+      "AWS (S3, Glue)",
+      "Docker",
+      "Git & GitHub",
+      "pytest",
+      "Playwright",
+      "Web Scraping",
+      "Vercel"
+    ],
+
+    "all": [
+      "LangGraph",
+      "LangChain",
+      "CrewAI",
+      "Multi-Agent Systems",
+      "Model Context Protocol (MCP)",
+      "Agent-to-Agent (A2A)",
+      "Tool / Function Calling",
+      "Agent Memory",
+      "Human-in-the-Loop",
+      "Agent Planning & Task Decomposition",
+
+      "Claude API",
+      "OpenAI API",
+      "Gemini API",
+      "Prompt Engineering",
+      "Context Engineering",
+      "Structured Output (Pydantic)",
+      "LLM Evaluation",
+
+      "RAG",
+      "FAISS",
+      "Hybrid Search (BM25 + Vector)",
+      "Embeddings",
+      "Semantic Search",
+      "Re-ranking",
+      "Entity Resolution",
+      "Agentic RAG",
+
+      "JEV / Typed Decision Models",
+      "Agent Evaluation",
+      "LLM-as-a-Judge",
+      "RAG Evaluation",
+      "Tool-Use Evaluation",
+      "Evaluation Harnesses",
+      "Ablation Testing",
+      "LLM Observability",
+      "Tracing & Telemetry",
+
+      "Python",
+      "TypeScript",
+      "JavaScript",
+      "SQL",
+
+      "FastAPI",
+      "Node.js",
+      "Express.js",
+      "PostgreSQL",
+      "MongoDB",
+      "Trino",
+      "Pandas",
+      "ETL Pipelines",
+
+      "React",
+      "Next.js",
+      "Tailwind CSS",
+      "Framer Motion",
+
+      "Prompt Injection Defense",
+      "AI Guardrails",
+      "LLM Red Teaming",
+      "PII Detection & Sanitization",
+
       "AWS (S3, Glue)",
       "Docker",
       "Git & GitHub",
