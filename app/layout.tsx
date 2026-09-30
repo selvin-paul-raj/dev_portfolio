@@ -31,6 +31,8 @@ const instrumentSerif = Instrument_Serif({
   style: ["normal", "italic"],
   variable: "--font-instrument-serif",
   display: "swap",
+  // Only used below the fold (About quote, paper abstract): don't compete with above-the-fold fonts.
+  preload: false,
 });
 
 // Open-source featured projects only — private work projects have no public URL to point at.
