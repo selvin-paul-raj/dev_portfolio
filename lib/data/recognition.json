@@ -48,7 +48,7 @@
       }
     },
     {
-      "title": "1st Place — Hackathon",
+      "title": "1st Place: Hackathon",
       "issuer": "Alpha College of Engineering",
       "date": "2024-03",
       "category": "Hackathon",
@@ -59,7 +59,7 @@
       "certificate_available": true
     },
     {
-      "title": "1st Place — Website Development",
+      "title": "1st Place: Website Development",
       "issuer": "Alpha College of Engineering",
       "date": "2024-03",
       "category": "Web Dev",
@@ -70,7 +70,7 @@
       "certificate_available": true
     },
     {
-      "title": "2nd Place — National Technical Symposium",
+      "title": "2nd Place: National Technical Symposium",
       "issuer": "Chennai Institute of Technology",
       "date": "2023-09",
       "category": "Coding",
@@ -81,7 +81,7 @@
       "certificate_available": true
     },
     {
-      "title": "3rd Place — SheInnovates Hackathon",
+      "title": "3rd Place: SheInnovates Hackathon",
       "issuer": "Women Techmakers Chennai",
       "date": "2024-03",
       "category": "Hackathon",

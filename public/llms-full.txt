@@ -5,7 +5,7 @@
 ### Personal Information
 - **Full Name:** Selvin PaulRaj K
 - **Professional Focus:** AI engineering — agentic systems, MCP servers, RAG
-- **Current Title:** Associate Data Analyst — AI Automation, Zinnov (Draup)
+- **Current Title:** Associate Data Analyst, AI Automation, Zinnov (Draup)
 - **Location:** Chennai, Tamil Nadu, India
 - **Work Preference:** On-site / Hybrid / Remote
 - **Languages:** English, Tamil
@@ -18,7 +18,7 @@ Selvin PaulRaj K builds agentic AI systems, MCP (Model Context Protocol) servers
 
 ## DETAILED WORK EXPERIENCE
 
-### 1. Associate Data Analyst — AI Automation — Zinnov (Draup)
+### 1. Associate Data Analyst, AI Automation — Zinnov (Draup)
 **Duration:** September 2025 – Present (full-time)
 **Location:** Arakkonam, Tamil Nadu, India (On-site)
 - Architected DRI-MAS, a LangGraph multi-agent system that converts natural-language business requests into validated Trino SQL and structured Excel reports — analyst turnaround dropped from hours to under a minute

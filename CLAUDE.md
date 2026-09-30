@@ -30,7 +30,7 @@ All content is driven from `lib/data/*.json` — do not edit `lib/data.tsx` for 
 
 - **`lib/data/projects.json`** — full project archive; only `show: true` entries render. Fields: `show`, `featured` (top card grid; everything else shown goes in the compact "More projects" list), `private` (optional — work case studies with no public repo), `order` (ascending = first), `categories`, `code` (nullable), `live` (nullable), `imageUrl` (path or `""`).
 - **`lib/data/experiences.json`** — 8 entries. Fields: `dateStart`, `dateEnd` ("Present" supported), `icon` ("graduation"/"work"/"laptop"), `order`.
-- **`lib/data/skills.json`** — `{ skills: { <group>: string[] } }`. Group keys map to tabs via `TAB_GROUPS` in `components/Skills.tsx`; keep it to skills evidenced in experience/projects.
+- **`lib/data/skills.json`** — `{ skills: { <group>: string[] } }`. Group keys map to spec-sheet rows via `GROUPS` in `components/Skills.tsx` (the `all` list is not rendered); keep it to skills evidenced in experience/projects.
 - **`lib/data/certifications.json`** — `show` controls visibility, `featured` picks the default 8; the rest sit behind "View all".
 - **`lib/data/recognition.json`** — publications and achievements.
 - **`lib/data.tsx`** — imports the JSON, transforms it (icon string → JSX, computes date strings and full-time/intern month totals via `utils/calculateDuration.ts`), and re-exports typed arrays consumed by components.
@@ -63,6 +63,7 @@ Metadata and JSON-LD live in `app/layout.tsx`. The social preview is generated b
 
 ## Key Patterns
 
+- Every section header uses `components/SectionHeading.tsx` (title + optional `kicker`); never hand-roll one.
 - Section components call `useSectionInView` and spread the returned `ref` onto the `<section>` element with `id` matching the nav hash.
 - `SectionName` is the union of `links[number]["name"]` (`links` is `as const`) — adding a section requires a `links` entry, and `useSectionInView` only accepts those names.
 - Public assets: profile images are in `public/` root; project screenshots go in `public/projects/`; skill icons go in `public/skills/`.

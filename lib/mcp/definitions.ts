@@ -162,7 +162,7 @@ export const PROFILE = {
   summary:
     "AI Engineer specializing in intelligent AI Agents, MCP servers, RAG systems, LangGraph multi-agent pipelines, and agentic workflows. Full-stack MERN/Next.js expertise.",
   currentCompany: "Zinnov / Draup",
-  currentRole: "Associate Data Analyst — AI Automation",
+  currentRole: "Associate Data Analyst, AI Automation",
   education: "M.E Computer Science with AI, Kings Engineering College",
   expertise: [
     "AI Agents & Agentic Systems",

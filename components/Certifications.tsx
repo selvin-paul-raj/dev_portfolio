@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useSectionInView } from "@/lib/hooks";
 import Pagination from "./Pagination";
+import SectionHeading from "./SectionHeading";
 import rawCertsAll from "@/lib/data/certifications.json";
 
 const rawCerts = rawCertsAll.filter((c) => c.show);
@@ -23,7 +24,7 @@ const EASE: [number, number, number, number] = [0.23, 1, 0.32, 1];
 const MONTHS_S = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const MONTHS_L = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
-/* Deterministic date helpers — no new Date() to avoid SSR/client hydration mismatch */
+/* Deterministic date helpers: no new Date() to avoid SSR/client hydration mismatch */
 function fmtDate(d: string): string {
   const [y, m] = d.split("-");
   return `${MONTHS_S[+m - 1]} ${y}`;
@@ -73,40 +74,34 @@ function initials(s: string) {
   return s.split(/\s+/).map((w) => w[0]).slice(0, 2).join("").toUpperCase();
 }
 
-/* ─── Placeholder thumb ─── */
-function PlaceholderThumb({ cert, listMode }: { cert: Cert; listMode: boolean }) {
+/* ─── Placeholder band ─── */
+/* Shown when a cert has no image: issuer + date only, so the title appears once (in the card body). */
+function PlaceholderBand({ cert, listMode, date }: { cert: Cert; listMode: boolean; date: string }) {
   const color = issuerColor(cert.issuer);
   return (
     <div
-      className={`relative overflow-hidden flex flex-col p-5 shrink-0 ${
-        listMode ? "w-[180px] self-stretch" : "w-full aspect-[16/10]"
+      className={`flex shrink-0 gap-2 px-3.5 py-2.5 border-black/[0.08] dark:border-white/[0.07] ${
+        listMode
+          ? "w-[160px] self-stretch flex-col justify-between border-r"
+          : "w-full items-center justify-between border-b"
       }`}
-      style={{
-        background: `radial-gradient(140% 140% at 0% 0%, ${color}55 0%, transparent 50%),
-                     linear-gradient(160deg, ${color}22 0%, #0a0a0d 100%)`,
-      }}
+      style={{ background: `color-mix(in oklab, ${color} 8%, transparent)` }}
     >
       <span
-        className="text-[10px] font-semibold uppercase tracking-[0.22em] opacity-90"
-        style={{ fontFamily: MONO, color }}
+        className="truncate text-xs font-semibold uppercase tracking-[0.16em] text-[color:var(--band-light)] dark:text-[color:var(--band-dark)]"
+        style={{
+          fontFamily: MONO,
+          ["--band-light" as string]: `color-mix(in oklab, ${color} 55%, #000)`,
+          ["--band-dark" as string]: `color-mix(in oklab, ${color} 75%, #fff)`,
+        }}
       >
         {cert.issuer}
       </span>
       <span
-        className="absolute right-[-14px] bottom-[-28px] select-none pointer-events-none opacity-[0.18]"
-        style={{
-          fontFamily: SERIF,
-          fontStyle: "italic",
-          fontSize: 80,
-          lineHeight: 0.85,
-          color,
-          letterSpacing: "-0.04em",
-        }}
+        className="shrink-0 text-xs uppercase tracking-[0.14em] text-gray-500 dark:text-[#a1a1aa]"
+        style={{ fontFamily: MONO }}
       >
-        {initials(cert.issuer)}
-      </span>
-      <span className="self-end mt-auto text-white font-semibold text-[14px] leading-[1.3] relative z-[1]">
-        {cert.title}
+        {date}
       </span>
     </div>
   );
@@ -116,12 +111,12 @@ function PlaceholderThumb({ cert, listMode }: { cert: Cert; listMode: boolean })
 function DatePill({ date }: { date: string }) {
   return (
     <span
-      className="absolute top-[10px] right-[10px] px-[9px] py-[3px] rounded-full text-[10px] text-white border border-white/[0.14] backdrop-blur-sm"
+      className="absolute top-[10px] right-[10px] px-[9px] py-[3px] rounded-full text-xs text-white border border-white/[0.14]"
       style={{
         fontFamily: MONO,
         letterSpacing: "0.16em",
         textTransform: "uppercase",
-        background: "rgba(0,0,0,0.55)",
+        background: "rgba(0,0,0,0.7)",
       }}
     >
       {date}
@@ -130,21 +125,29 @@ function DatePill({ date }: { date: string }) {
 }
 
 /* ─── Issuer pill ─── */
-function IssuerPill({ issuer }: { issuer: string }) {
+function IssuerPill({ issuer, onDark = false }: { issuer: string; onDark?: boolean }) {
   const color = issuerColor(issuer);
+  const darkText = `color-mix(in oklab, ${color} 75%, #fff)`;
   return (
     <span
-      className="inline-flex items-center gap-1.5 px-[9px] py-[3px] rounded-full text-[10px] font-semibold uppercase tracking-[0.14em] border"
+      className={`inline-flex items-center gap-1.5 px-[9px] py-[3px] rounded-full text-xs font-semibold uppercase tracking-[0.12em] border ${
+        onDark ? "" : "text-[color:var(--pill-light)] dark:text-[color:var(--pill-dark)]"
+      }`}
       style={{
         fontFamily: MONO,
         background: `color-mix(in oklab, ${color} 14%, transparent)`,
-        color: `color-mix(in oklab, ${color} 75%, #fff)`,
         borderColor: `color-mix(in oklab, ${color} 32%, transparent)`,
+        ...(onDark
+          ? { color: darkText }
+          : {
+              ["--pill-light" as string]: `color-mix(in oklab, ${color} 55%, #000)`,
+              ["--pill-dark" as string]: darkText,
+            }),
       }}
     >
       <span
         className="w-[5px] h-[5px] rounded-full shrink-0"
-        style={{ background: color, boxShadow: `0 0 5px ${color}` }}
+        style={{ background: color }}
       />
       {issuer}
     </span>
@@ -167,6 +170,7 @@ function CertCard({
   const extra = cert.skills.length - displaySkills.length;
   const date = fmtDate(cert.date);
   const [imgError, setImgError] = useState(false);
+  const hasImage = Boolean(cert.imageUrl) && !imgError;
 
   return (
     <motion.article
@@ -186,8 +190,8 @@ function CertCard({
         bg-white dark:bg-[#101015]
         border-black/[0.08] dark:border-white/[0.07]
         hover:border-black/[0.18] dark:hover:border-white/[0.14]
-        hover:-translate-y-[2px] hover:shadow-xl dark:hover:shadow-[0_20px_50px_rgba(0,0,0,0.4)]
-        transition-all duration-200
+        hover:-translate-y-[2px] active:scale-[0.97]
+        transition-[transform,border-color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]
         focus-visible:outline-2 focus-visible:outline focus-visible:outline-[#f5c518] focus-visible:outline-offset-2
         ${listMode ? "flex-row" : "flex-col"}`}
     >
@@ -211,24 +215,23 @@ function CertCard({
           <DatePill date={date} />
         </div>
       ) : (
-        <div className="relative">
-          <PlaceholderThumb cert={cert} listMode={listMode} />
-          <DatePill date={date} />
-        </div>
+        <PlaceholderBand cert={cert} listMode={listMode} date={date} />
       )}
 
       {/* Meta bar */}
       <div className="flex flex-col flex-1 p-3.5 gap-[10px] min-w-0">
-        {/* Row 1: issuer + category */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <IssuerPill issuer={cert.issuer} />
-          <span
-            className="text-[10px] uppercase tracking-[0.18em] ml-auto text-gray-500 dark:text-[#8a8a93]"
-            style={{ fontFamily: MONO }}
-          >
-            {cert.category}
-          </span>
-        </div>
+        {/* Row 1: issuer + category. Image-less cards already show issuer and date in the band. */}
+        {hasImage && (
+          <div className="flex items-center gap-2 flex-wrap">
+            <IssuerPill issuer={cert.issuer} />
+            <span
+              className="text-xs uppercase tracking-[0.18em] ml-auto text-gray-500 dark:text-[#a1a1aa]"
+              style={{ fontFamily: MONO }}
+            >
+              {cert.category}
+            </span>
+          </div>
+        )}
 
         {/* Title */}
         <h4
@@ -248,7 +251,7 @@ function CertCard({
           {displaySkills.map((s) => (
             <span
               key={s}
-              className="text-[10px] text-gray-500 dark:text-[#c9c9cf] px-[7px] py-[3px] rounded-full border border-black/[0.08] dark:border-white/[0.07] bg-black/[0.02] dark:bg-white/[0.02]"
+              className="text-xs text-gray-600 dark:text-[#c9c9cf] px-[7px] py-[3px] rounded-full border border-black/[0.08] dark:border-white/[0.07] bg-black/[0.02] dark:bg-white/[0.02]"
               style={{ fontFamily: MONO }}
             >
               {s}
@@ -256,7 +259,7 @@ function CertCard({
           ))}
           {extra > 0 && (
             <span
-              className="text-[10px] text-gray-500 dark:text-[#8a8a93] px-[7px] py-[3px]"
+              className="text-xs text-gray-500 dark:text-[#a1a1aa] px-[7px] py-[3px]"
               style={{ fontFamily: MONO }}
             >
               +{extra}
@@ -267,14 +270,14 @@ function CertCard({
         {/* Bottom row */}
         <div className="flex items-center justify-between mt-auto pt-2 border-t border-dashed border-black/[0.08] dark:border-white/[0.07]">
           <span
-            className="text-[10px] uppercase tracking-[0.14em] text-gray-500 dark:text-[#8a8a93]"
+            className="text-xs uppercase tracking-[0.14em] text-gray-500 dark:text-[#a1a1aa]"
             style={{ fontFamily: MONO }}
           >
             {cert.duration ? `${cert.duration} · ` : ""}
-            {date}
+            {hasImage ? date : cert.category}
           </span>
           <span
-            className="text-[10px] uppercase tracking-[0.14em] text-amber-700 dark:text-[#f5c518]"
+            className="text-xs uppercase tracking-[0.14em] text-amber-700 dark:text-[#f5c518]"
             style={{ fontFamily: MONO }}
           >
             View ↗
@@ -348,7 +351,7 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.18 }}
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-7"
-      style={{ background: "rgba(2,2,5,0.78)", backdropFilter: "blur(8px)" }}
+      style={{ background: "rgba(2,2,5,0.86)" }}
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -371,8 +374,9 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
         <button
           ref={closeButtonRef}
           onClick={onClose}
-          aria-label="Close"
-          className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full flex items-center justify-center border border-white/[0.14] text-white text-[15px] hover:bg-white/[0.08] transition-colors backdrop-blur-md"
+          type="button"
+          aria-label="Close certificate details"
+          className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full flex items-center justify-center border border-white/[0.14] text-white text-[15px] hover:bg-white/[0.08] active:scale-[0.97] transition-[background-color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518]"
           style={{ background: "rgba(20,20,26,0.85)" }}
         >
           ✕
@@ -400,7 +404,7 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
             }}
           >
             <span
-              className="text-[11px] font-semibold uppercase tracking-[0.32em] mb-4 sm:mb-6"
+              className="text-xs font-semibold uppercase tracking-[0.32em] mb-4 sm:mb-6"
               style={{ fontFamily: MONO, color: `color-mix(in oklab, ${color} 90%, #fff)` }}
             >
               {cert.issuer}
@@ -409,8 +413,8 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
               {cert.title}
             </span>
             <span
-              className="text-[10px] uppercase tracking-[0.22em] mt-3 opacity-60"
-              style={{ fontFamily: MONO, color: "#fff" }}
+              className="text-xs uppercase tracking-[0.2em] mt-3 text-[#c9c9cf]"
+              style={{ fontFamily: MONO }}
             >
               Verify via link below
             </span>
@@ -433,9 +437,9 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
         <div className="flex flex-col gap-4 p-6 sm:p-7 overflow-y-auto">
           {/* Issuer row */}
           <div className="flex items-center gap-2 flex-wrap">
-            <IssuerPill issuer={cert.issuer} />
+            <IssuerPill issuer={cert.issuer} onDark />
             <span
-              className="text-[10px] uppercase tracking-[0.18em] text-[#8a8a93]"
+              className="text-xs uppercase tracking-[0.18em] text-[#a1a1aa]"
               style={{ fontFamily: MONO }}
             >
               {cert.category}
@@ -452,14 +456,14 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
             className="grid gap-x-4 gap-y-2 text-[13px]"
             style={{ gridTemplateColumns: "max-content 1fr" }}
           >
-            <dt className="text-[10px] uppercase tracking-[0.18em] text-[#8a8a93] pt-[3px]" style={{ fontFamily: MONO }}>
+            <dt className="text-xs uppercase tracking-[0.18em] text-[#a1a1aa] pt-[3px]" style={{ fontFamily: MONO }}>
               Issued
             </dt>
             <dd className="m-0 text-[#e0e0e6]">{fmtDateLong(cert.date)}</dd>
 
             {cert.duration && (
               <>
-                <dt className="text-[10px] uppercase tracking-[0.18em] text-[#8a8a93] pt-[3px]" style={{ fontFamily: MONO }}>
+                <dt className="text-xs uppercase tracking-[0.18em] text-[#a1a1aa] pt-[3px]" style={{ fontFamily: MONO }}>
                   Duration
                 </dt>
                 <dd className="m-0 text-[#e0e0e6]">{cert.duration}</dd>
@@ -468,19 +472,21 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
 
             {cert.certId && (
               <>
-                <dt className="text-[10px] uppercase tracking-[0.18em] text-[#8a8a93] pt-[3px]" style={{ fontFamily: MONO }}>
+                <dt className="text-xs uppercase tracking-[0.18em] text-[#a1a1aa] pt-[3px]" style={{ fontFamily: MONO }}>
                   Cert ID
                 </dt>
                 <dd className="m-0 flex items-start gap-2 flex-wrap">
                   <span
-                    className="text-[11px] text-[#e0e0e6] break-all leading-snug"
+                    className="text-xs text-[#e0e0e6] break-all leading-snug"
                     style={{ fontFamily: MONO }}
                   >
                     {cert.certId.length > 36 ? `${cert.certId.slice(0, 16)}…` : cert.certId}
                   </span>
                   <button
+                    type="button"
                     onClick={copyId}
-                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[5px] border text-[10px] transition-all duration-150 ${
+                    aria-label="Copy certificate ID"
+                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[5px] border text-xs active:scale-[0.97] transition-[color,border-color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] ${
                       copied
                         ? "text-[#6fcf97] border-[#6fcf97]/40"
                         : "text-white border-white/[0.08] hover:border-white/[0.18]"
@@ -497,7 +503,7 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
           {/* Skills */}
           <div>
             <div
-              className="text-[10px] uppercase tracking-[0.24em] text-[#8a8a93] mb-2"
+              className="text-xs uppercase tracking-[0.24em] text-[#a1a1aa] mb-2"
               style={{ fontFamily: MONO }}
             >
               Skills covered
@@ -507,14 +513,14 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
                 cert.skills.map((s) => (
                   <span
                     key={s}
-                    className="text-[10px] text-[#c9c9cf] px-[7px] py-[3px] rounded-full border border-white/[0.07] bg-white/[0.02]"
+                    className="text-xs text-[#c9c9cf] px-[7px] py-[3px] rounded-full border border-white/[0.07] bg-white/[0.02]"
                     style={{ fontFamily: MONO }}
                   >
                     {s}
                   </span>
                 ))
               ) : (
-                <span className="text-[10px] text-[#8a8a93]" style={{ fontFamily: MONO }}>
+                <span className="text-xs text-[#a1a1aa]" style={{ fontFamily: MONO }}>
                   No skills listed
                 </span>
               )}
@@ -528,16 +534,16 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
                 href={cert.verifyUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-[10px] px-4 py-[10px] rounded-full bg-[#f5c518] text-[#1a1500] font-semibold text-[13px] hover:bg-[#ffd93a] hover:-translate-y-[1px] transition-all duration-150 focus-visible:ring-2 focus-visible:ring-[#f5c518] focus-visible:ring-offset-2 focus-visible:ring-offset-[#14141b]"
+                className="inline-flex items-center gap-[10px] px-4 py-[10px] rounded-full bg-[#f5c518] text-[#1a1500] font-semibold text-[13px] hover:bg-[#ffd93a] active:scale-[0.97] transition-[background-color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] focus-visible:ring-offset-2 focus-visible:ring-offset-[#14141b]"
               >
                 Verify Certificate
-                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1a1500] text-[#f5c518] text-[11px]">
+                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1a1500] text-[#f5c518] text-xs" aria-hidden="true">
                   ↗
                 </span>
               </a>
             )}
             {!cert.verifyUrl && (!cert.imageUrl || imgError) && (
-              <span className="text-[11px] text-[#8a8a93]" style={{ fontFamily: MONO }}>
+              <span className="text-xs text-[#a1a1aa]" style={{ fontFamily: MONO }}>
                 No verification link available
               </span>
             )}
@@ -545,7 +551,7 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
               <a
                 href={cert.imageUrl}
                 download
-                className="inline-flex items-center gap-2 px-4 py-[10px] rounded-full text-white border border-white/[0.14] text-[13px] font-semibold hover:bg-white/[0.04] transition-all duration-150"
+                className="inline-flex items-center gap-2 px-4 py-[10px] rounded-full text-white border border-white/[0.14] text-[13px] font-semibold hover:bg-white/[0.04] active:scale-[0.97] transition-[background-color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518]"
               >
                 Download ↓
               </a>
@@ -571,31 +577,24 @@ function FilterChip({
 }) {
   return (
     <button
+      type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`inline-flex items-center gap-1.5 px-[11px] py-[15px] sm:py-[10px] rounded-full border text-[11px] transition-all duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] ${
+      className={`inline-flex items-center gap-1.5 px-[11px] py-[15px] sm:py-[10px] rounded-full border text-xs active:scale-[0.97] transition-[background-color,color,border-color,transform] duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] ${
         active
           ? "bg-[#f5c518] text-[#1a1500] border-[#f5c518] font-semibold"
-          : "bg-black/[0.02] dark:bg-white/[0.015] text-gray-500 dark:text-[#c9c9cf] border-black/[0.08] dark:border-white/[0.07] hover:border-black/[0.16] dark:hover:border-white/[0.14] hover:text-gray-900 dark:hover:text-white"
+          : "bg-black/[0.02] dark:bg-white/[0.015] text-gray-600 dark:text-[#c9c9cf] border-black/[0.08] dark:border-white/[0.07] hover:border-black/[0.16] dark:hover:border-white/[0.14] hover:text-gray-900 dark:hover:text-white"
       }`}
       style={{ fontFamily: MONO, letterSpacing: "0.06em" }}
     >
       {label}
-      <span className={`text-[10px] ${active ? "opacity-70 text-[#1a1500]" : "opacity-60"}`}>
+      <span className={`text-xs ${active ? "text-[#1a1500]/80" : "text-gray-500 dark:text-[#a1a1aa]"}`}>
         {count}
       </span>
     </button>
   );
 }
 
-
-/* Stat strip border per cell: mobile 2-col / desktop 4-col */
-const STAT_BORDER = [
-  "",
-  "border-l border-black/[0.08] dark:border-white/[0.07]",
-  "border-t sm:border-t-0 sm:border-l border-black/[0.08] dark:border-white/[0.07]",
-  "border-t border-l border-black/[0.08] dark:border-white/[0.07]",
-];
 
 /* ─── Main section ─── */
 export default function Certifications() {
@@ -631,16 +630,7 @@ export default function Certifications() {
     return counts;
   }, []);
 
-  const stats = useMemo(() => {
-    const topEntry = Object.entries(issuerCounts).sort((a, b) => b[1] - a[1])[0];
-    const latest = [...rawCerts].sort((a, b) => b.date.localeCompare(a.date))[0];
-    return {
-      total: rawCerts.length,
-      topIssuer: topEntry?.[0] ?? "—",
-      latest: latest ? fmtDate(latest.date) : "—",
-      categories: catSet.length,
-    };
-  }, [issuerCounts, catSet]);
+  const total = rawCerts.length;
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
@@ -699,60 +689,23 @@ export default function Certifications() {
       id="certifications"
       className="mb-28 w-full max-w-[1240px] mx-auto px-4 sm:px-10 scroll-mt-28"
     >
-      {/* Section header */}
       <motion.div
-        className="flex flex-col items-center gap-[18px] mb-6"
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, ease: EASE }}
       >
-        <span className="w-px h-12 bg-gradient-to-b from-transparent via-black/10 dark:via-white/[0.14] to-transparent" />
-        <h2 className="text-[34px] font-semibold tracking-[0.18em] text-gray-900 dark:text-[#ededee] m-0">
-          CERTIFICATIONS
-        </h2>
-        <p
-          className="font-mono text-[11px] tracking-[0.32em] text-gray-500 dark:text-[#8a8a93] uppercase mb-2"
-          style={{ fontFamily: MONO }}
+        <SectionHeading
+          className="!mb-10"
+          kicker={`${total} certificates from ${issuerSet.length} issuers, focused on agentic AI and LLM engineering.`}
         >
-          <span className="text-amber-700 dark:text-[#f5c518] font-medium">{stats.total}</span> certificates
-          {" · "}
-          <span className="text-amber-700 dark:text-[#f5c518] font-medium">{issuerSet.length}</span> issuers
-          {" · "}
-          <span className="text-amber-700 dark:text-[#f5c518] font-medium">{stats.categories}</span> categories
-        </p>
+          Certifications
+        </SectionHeading>
       </motion.div>
-
-      {/* Stat strip */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 border border-black/[0.08] dark:border-white/[0.07] rounded-[14px] overflow-hidden mb-8 bg-white dark:bg-[#101015]">
-        {[
-          { k: "Total", v: stats.total, accent: true, big: true },
-          { k: "Top Issuer", v: stats.topIssuer, accent: false, big: false },
-          { k: "Latest", v: stats.latest, accent: false, big: false },
-          { k: "Categories", v: stats.categories, accent: false, big: true },
-        ].map(({ k, v, accent, big }, i) => (
-          <div key={k} className={`px-5 py-4 ${STAT_BORDER[i]}`}>
-            <div
-              className="text-[10px] uppercase tracking-[0.22em] text-gray-500 dark:text-[#8a8a93] mb-1"
-              style={{ fontFamily: MONO }}
-            >
-              {k}
-            </div>
-            <div
-              className={`font-semibold leading-none text-gray-900 dark:text-white flex items-baseline gap-1 ${
-                big ? "text-[26px]" : "text-[18px]"
-              }`}
-            >
-              {v}
-              {accent && <span className="text-amber-700 dark:text-[#f5c518] text-[18px]">+</span>}
-            </div>
-          </div>
-        ))}
-      </div>
 
       {!showAll && (
         <h3
-          className="mb-4 text-[11px] uppercase tracking-[0.22em] text-gray-600 dark:text-[#a1a1aa]"
+          className="mb-4 text-xs uppercase tracking-[0.22em] text-gray-600 dark:text-[#a1a1aa]"
           style={{ fontFamily: MONO }}
         >
           Featured
@@ -765,27 +718,29 @@ export default function Certifications() {
       <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3 mb-4">
         {/* Search */}
         <div className="relative flex items-center gap-2.5 px-4 border border-black/[0.08] dark:border-white/[0.07] rounded-xl bg-white dark:bg-[#101015] transition-colors focus-within:border-[#f5c518]/40">
-          <svg className="w-4 h-4 shrink-0 text-gray-500 dark:text-[#8a8a93]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <svg className="w-4 h-4 shrink-0 text-gray-500 dark:text-[#a1a1aa]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
             <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
           </svg>
           <input
             ref={searchRef}
             type="search"
             placeholder="Search by title, issuer, skill, or certificate ID…"
-            className="flex-1 bg-transparent border-0 outline-none py-3 text-[14px] text-gray-900 dark:text-white placeholder-gray-300 dark:placeholder-[#54545c]"
+            className="flex-1 bg-transparent border-0 outline-none py-3 text-[14px] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-[#8a8a93]"
             onChange={(e) => { setQuery(e.target.value); setCurrentPage(1); }}
             aria-label="Search certifications"
           />
           {query && (
             <button
+              type="button"
+              aria-label="Clear search"
               onClick={() => { setQuery(""); setCurrentPage(1); if (searchRef.current) searchRef.current.value = ""; }}
-              className="text-gray-500 dark:text-[#8a8a93] hover:text-gray-900 dark:hover:text-white text-[13px] px-1"
+              className="rounded text-gray-500 dark:text-[#a1a1aa] hover:text-gray-900 dark:hover:text-white text-[13px] px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518]"
             >
               ✕
             </button>
           )}
           <kbd
-            className="hidden sm:inline text-[10px] text-gray-300 dark:text-[#54545c] px-[7px] py-[3px] rounded-[5px] border border-black/[0.08] dark:border-white/[0.07]"
+            className="hidden sm:inline text-xs text-gray-500 dark:text-[#a1a1aa] px-[7px] py-[3px] rounded-[5px] border border-black/[0.08] dark:border-white/[0.07]"
             style={{ fontFamily: MONO }}
           >
             ⌘K
@@ -797,7 +752,7 @@ export default function Certifications() {
           <select
             value={sort}
             onChange={(e) => { setSort(e.target.value as SortMode); setCurrentPage(1); }}
-            className="flex-1 sm:flex-none appearance-none bg-white dark:bg-[#101015] dark:[color-scheme:dark] border border-black/[0.08] dark:border-white/[0.07] text-gray-700 dark:text-white px-3 py-2.5 rounded-xl text-[12px] outline-none focus:border-[#f5c518]/40 cursor-pointer pr-8"
+            className="flex-1 sm:flex-none appearance-none bg-white dark:bg-[#101015] dark:[color-scheme:dark] border border-black/[0.08] dark:border-white/[0.07] text-gray-700 dark:text-white px-3 py-2.5 rounded-xl text-xs outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] cursor-pointer pr-8"
             style={{ fontFamily: MONO, letterSpacing: "0.12em", textTransform: "uppercase" }}
             aria-label="Sort certifications"
           >
@@ -807,9 +762,10 @@ export default function Certifications() {
             <option value="issuer">By Issuer</option>
           </select>
           <button
+            type="button"
             onClick={() => setViewMode((v) => (v === "grid" ? "list" : "grid"))}
             aria-label={`Switch to ${viewMode === "grid" ? "list" : "grid"} view`}
-            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-black/[0.08] dark:border-white/[0.07] bg-white dark:bg-[#101015] text-gray-600 dark:text-white text-[11px] hover:border-black/[0.16] dark:hover:border-white/[0.14] transition-colors"
+            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-black/[0.08] dark:border-white/[0.07] bg-white dark:bg-[#101015] text-gray-600 dark:text-white text-xs hover:border-black/[0.16] dark:hover:border-white/[0.14] active:scale-[0.97] transition-[border-color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518]"
             style={{ fontFamily: MONO, letterSpacing: "0.14em", textTransform: "uppercase" }}
           >
             {viewMode === "grid" ? (
@@ -832,7 +788,7 @@ export default function Certifications() {
       <div className="flex flex-col sm:flex-row gap-4 items-start mb-4 pb-4 border-b border-dashed border-black/[0.08] dark:border-white/[0.07]">
         <div className="flex items-center flex-wrap gap-1.5">
           <span
-            className="text-[10px] uppercase tracking-[0.24em] text-gray-500 dark:text-[#8a8a93] mr-1 whitespace-nowrap"
+            className="text-xs uppercase tracking-[0.24em] text-gray-500 dark:text-[#a1a1aa] mr-1 whitespace-nowrap"
             style={{ fontFamily: MONO }}
           >
             Issuer
@@ -856,7 +812,7 @@ export default function Certifications() {
 
         <div className="flex items-center flex-wrap gap-1.5">
           <span
-            className="text-[10px] uppercase tracking-[0.24em] text-gray-500 dark:text-[#8a8a93] mr-1 whitespace-nowrap"
+            className="text-xs uppercase tracking-[0.24em] text-gray-500 dark:text-[#a1a1aa] mr-1 whitespace-nowrap"
             style={{ fontFamily: MONO }}
           >
             Category
@@ -881,7 +837,7 @@ export default function Certifications() {
 
       {/* Results meta */}
       <div className="flex items-center justify-between mb-4" style={{ fontFamily: MONO }}>
-        <span className="text-[11px] uppercase tracking-[0.14em] text-gray-500 dark:text-[#8a8a93]">
+        <span className="text-xs uppercase tracking-[0.14em] text-gray-500 dark:text-[#a1a1aa]">
           Showing{" "}
           <span className="text-gray-900 dark:text-white font-medium">
             {(currentPage - 1) * PAGE_SIZE + 1}–{Math.min(currentPage * PAGE_SIZE, filtered.length)}
@@ -891,8 +847,9 @@ export default function Certifications() {
         </span>
         {isFiltered && (
           <button
+            type="button"
             onClick={clearAll}
-            className="text-[11px] uppercase tracking-[0.14em] text-amber-700 dark:text-[#f5c518] hover:underline transition-opacity"
+            className="rounded text-xs uppercase tracking-[0.14em] text-amber-700 dark:text-[#f5c518] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518]"
           >
             Clear filters ✕
           </button>
@@ -913,12 +870,13 @@ export default function Certifications() {
             className="py-20 text-center border border-dashed border-black/[0.08] dark:border-white/[0.07] rounded-[14px]"
           >
             <p className="text-[22px] font-semibold text-gray-900 dark:text-white mb-2">No certifications match</p>
-            <p className="text-gray-500 dark:text-[#8a8a93] text-[14px] mb-4">
+            <p className="text-gray-500 dark:text-[#a1a1aa] text-[14px] mb-4">
               Try a different search term or clear your filters.
             </p>
             <button
+              type="button"
               onClick={clearAll}
-              className="px-4 py-2 border border-black/[0.10] dark:border-white/[0.14] rounded-full text-[11px] uppercase tracking-[0.18em] text-gray-700 dark:text-white hover:bg-black/[0.03] dark:hover:bg-white/[0.04] transition-colors"
+              className="px-4 py-2 border border-black/[0.10] dark:border-white/[0.14] rounded-full text-xs uppercase tracking-[0.18em] text-gray-700 dark:text-white hover:bg-black/[0.03] dark:hover:bg-white/[0.04] active:scale-[0.97] transition-[background-color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518]"
               style={{ fontFamily: MONO }}
             >
               Clear all filters
@@ -977,10 +935,10 @@ export default function Certifications() {
             setShowAll((v) => !v);
           }}
           aria-expanded={showAll}
-          className="px-5 py-2.5 border border-black/[0.12] dark:border-white/[0.16] rounded-full text-[12px] uppercase tracking-[0.18em] text-gray-800 dark:text-white hover:bg-black/[0.03] dark:hover:bg-white/[0.05] transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518]"
+          className="px-5 py-2.5 border border-black/[0.12] dark:border-white/[0.16] rounded-full text-xs uppercase tracking-[0.18em] text-gray-800 dark:text-white hover:bg-black/[0.03] dark:hover:bg-white/[0.05] active:scale-[0.97] transition-[background-color,transform] duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518]"
           style={{ fontFamily: MONO }}
         >
-          {showAll ? "Show featured only" : `View all ${stats.total} certifications`}
+          {showAll ? "Show featured only" : `View all ${total} certifications`}
         </button>
       </div>
 

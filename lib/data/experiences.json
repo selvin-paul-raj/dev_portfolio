@@ -71,18 +71,18 @@
     "order": 2,
     "company": "Zinnov (Draup)",
     "location": "Arakkonam, Tamil Nadu, India (On-site)",
-    "description": "- Built the RMS Agent, an LLM-powered role-mapping system that standardises job descriptions against Draup's workforce taxonomy using Gemini and FAISS semantic search.\n\n- Automated Existing / New / Intern role classification with parallel batch processing.\n\n- Built scraper modules (Requests, BeautifulSoup, Playwright, GNews API) with deduplication — the foundation of the later DOF Agent.\n\n- Designed the architecture for a 6-stage business-signal intelligence pipeline.\n\n- Stack: Python, FAISS, Gemini 2.0 Flash, Playwright, BeautifulSoup, Pandas.",
+    "description": "- Built the RMS Agent, an LLM-powered role-mapping system that standardises job descriptions against Draup's workforce taxonomy using Gemini and FAISS semantic search.\n\n- Automated Existing / New / Intern role classification with parallel batch processing.\n\n- Built scraper modules (Requests, BeautifulSoup, Playwright, GNews API) with deduplication, the foundation of the later DOF Agent.\n\n- Designed the architecture for a 6-stage business-signal intelligence pipeline.\n\n- Stack: Python, FAISS, Gemini 2.0 Flash, Playwright, BeautifulSoup, Pandas.",
     "dateStart": "Jun 2025",
     "dateEnd": "Sep 2025",
     "icon": "work"
   },
   {
     "id": "exp-8",
-    "title": "Associate Data Analyst — AI Automation",
+    "title": "Associate Data Analyst, AI Automation",
     "order": 1,
     "company": "Zinnov (Draup)",
     "location": "Arakkonam, Tamil Nadu, India (On-site)",
-    "description": "- Architected DRI-MAS, a LangGraph multi-agent system that turns natural-language business requests into validated Trino SQL and structured Excel reports — cutting analyst turnaround from hours to under a minute.\n\n- Built its 10 core components (intent and manager agents, normalisation engine, schema router, SQL generator, memory layer, evaluation framework) behind 4 FastAPI endpoints, covered by 30 automated test suites.\n\n- Implemented hybrid retrieval (FAISS + BM25) over 2.6M company records with human-in-the-loop validation.\n\n- Built a Company Synonym Agent for entity resolution across 2.6M company and subsidiary records — semantic matching, acronym validation, and parent-company resolution with sub-second lookups.\n\n- Automated business-signal monitoring for 537 enterprise accounts across 8 industries through the Deal Origination Framework (DOF) Agent: scraping, deduplication, LLM classification, scoring, and reporting.\n\n- Delivered LLM-powered role mapping for enterprise clients, including 746 role–task–skill mappings for taxonomy alignment.\n\n- Stack: Python, LangGraph, Claude API, FastAPI, Trino, PostgreSQL, FAISS, BM25, AWS S3/Glue, Playwright, Pydantic, pytest.",
+    "description": "- Architected DRI-MAS, a LangGraph multi-agent system that turns natural-language business requests into validated Trino SQL and structured Excel reports, cutting analyst turnaround from hours to under a minute.\n\n- Built its 10 core components (intent and manager agents, normalisation engine, schema router, SQL generator, memory layer, evaluation framework) behind 4 FastAPI endpoints, covered by 30 automated test suites.\n\n- Implemented hybrid retrieval (FAISS + BM25) over 2.6M company records with human-in-the-loop validation.\n\n- Built a Company Synonym Agent for entity resolution across 2.6M company and subsidiary records: semantic matching, acronym validation, and parent-company resolution with sub-second lookups.\n\n- Automated business-signal monitoring for 537 enterprise accounts across 8 industries through the Deal Origination Framework (DOF) Agent: scraping, deduplication, LLM classification, scoring, and reporting.\n\n- Delivered LLM-powered role mapping for enterprise clients, including 746 role–task–skill mappings for taxonomy alignment.\n\n- Stack: Python, LangGraph, Claude API, FastAPI, Trino, PostgreSQL, FAISS, BM25, AWS S3/Glue, Playwright, Pydantic, pytest.",
     "dateStart": "Sep 2025",
     "dateEnd": "Present",
     "icon": "work"

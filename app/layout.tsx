@@ -178,7 +178,7 @@ export default function RootLayout({
                 "https://www.hackerrank.com/profile/selvinpaulraj",
                 "https://leetcode.com/u/selvinpaulraj/",
               ],
-              jobTitle: "Associate Data Analyst — AI Automation",
+              jobTitle: "Associate Data Analyst, AI Automation",
               description:
                 "AI engineer specializing in agentic AI systems, MCP servers, LangGraph multi-agent pipelines, RAG systems, and enterprise AI automation. SPOT Recognition awardee at Zinnov (Draup). Claude Certified Architect – Foundations.",
               award:

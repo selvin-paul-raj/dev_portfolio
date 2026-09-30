@@ -1,6 +1,6 @@
 [
   {
-    "title": "DOF Automation — Deal Origination Framework",
+    "title": "DOF Automation: Deal Origination Framework",
     "description": "Built a production-oriented agentic automation pipeline for company news and press-release intelligence. It combines web scraping, newsroom discovery, secondary news extraction, content normalisation, multi-layer deduplication, entity resolution, and LLM classification and relevance scoring, followed by automated Excel and PowerPoint reporting",
     "tags": [
       "Python",
@@ -47,7 +47,7 @@
     "private": true
   },
   {
-    "title": "DRI-MAS — Multi-Agent Reporting System",
+    "title": "DRI-MAS: Multi-Agent Reporting System",
     "description": "Analysts spent hours turning business questions into SQL and Excel reports. I architected a LangGraph multi-agent system (intent and manager agents, schema router, SQL generator, memory and evaluation layers) that converts plain-English requests into validated Trino SQL and structured reports, with hybrid FAISS + BM25 retrieval over 2.6M company records and human-in-the-loop checks. Turnaround dropped from hours to under a minute",
     "tags": [
       "LangGraph",
@@ -350,7 +350,7 @@
     "featured": false
   },
   {
-    "title": "PhishXcape — Phishing Detection Extension",
+    "title": "PhishXcape: Phishing Detection Extension",
     "description": "Chrome extension for real-time phishing detection that combines Google Safe Browsing, VirusTotal, an ML model, and URL heuristics into one verdict",
     "tags": [
       "JavaScript",
@@ -748,8 +748,8 @@
     "featured": false
   },
   {
-    "title": "Expense Tracker — Client",
-    "description": "Expense Tracker — Client",
+    "title": "Expense Tracker: Client",
+    "description": "Expense Tracker, Client",
     "tags": [
       "JavaScript"
     ],
@@ -1047,8 +1047,8 @@
     "featured": false
   },
   {
-    "title": "Expense Tracker — Server",
-    "description": "Expense Tracker — Server",
+    "title": "Expense Tracker: Server",
+    "description": "Expense Tracker, Server",
     "tags": [
       "JavaScript"
     ],
@@ -1448,7 +1448,7 @@
     "featured": false
   },
   {
-    "title": "EzSumZ — Article Summarizer",
+    "title": "EzSumZ: Article Summarizer",
     "description": "React app that turns long articles into concise summaries using OpenAI's GPT-4",
     "tags": [
       "React.js",
@@ -1532,7 +1532,7 @@
     "featured": false
   },
   {
-    "title": "SPR Censorify — Example",
+    "title": "SPR Censorify: Example",
     "description": "Enhance content integrity using CustomCensorify: a JavaScript module. Efficiently replace sensitive words for respectful communication. Code and example included.",
     "tags": [
       "JavaScript"

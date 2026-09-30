@@ -1,114 +1,67 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import { skillsData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
 
 const EASE_OUT: [number, number, number, number] = [0.23, 1, 0.32, 1];
 
-const TAB_GROUPS = [
-  { label: "All", keys: ["all"] },
-  { label: "Agentic AI", keys: ["agentic_ai"] },
-  { label: "LLMs", keys: ["llms"] },
-  { label: "RAG & Search", keys: ["retrieval"] },
-  { label: "Evaluation", keys: ["evaluation_and_reliability"] },
-  { label: "AI Security", keys: ["ai_security"] },
-  { label: "Languages", keys: ["languages"] },
-  { label: "Backend & Data", keys: ["backend_and_data"] },
-  { label: "Frontend", keys: ["frontend"] },
-  { label: "Cloud & Tooling", keys: ["tooling"] },
-] as const;
+// Display order and labels. Keys must exist in lib/data/skills.json; unknown keys are skipped
+// and the aggregate "all" list is intentionally not rendered as its own row.
+const GROUPS: { key: string; label: string }[] = [
+  { key: "agentic_ai", label: "Agentic AI" },
+  { key: "llms", label: "LLMs" },
+  { key: "retrieval", label: "RAG & Search" },
+  { key: "evaluation_and_reliability", label: "Evaluation" },
+  { key: "ai_security", label: "AI Security" },
+  { key: "languages", label: "Languages" },
+  { key: "backend_and_data", label: "Backend & Data" },
+  { key: "frontend", label: "Frontend" },
+  { key: "tooling", label: "Cloud & Tooling" },
+];
+
+const rows = GROUPS.filter((g) => (skillsData[g.key]?.length ?? 0) > 0);
 
 export default function Skills() {
   const { ref } = useSectionInView("Skills", 0.2);
-  const [activeTab, setActiveTab] = useState(0);
-
-  const pills = Array.from(
-    new Set(TAB_GROUPS[activeTab].keys.flatMap((key) => skillsData[key] ?? []))
-  );
 
   return (
-    <section
-      ref={ref}
-      id="skills"
-      className="mb-28 scroll-mt-28 w-full max-w-5xl mx-auto px-4"
-    >
-      <SectionHeading>Skills</SectionHeading>
+    <section ref={ref} id="skills" className="mb-28 w-full max-w-5xl mx-auto scroll-mt-28 px-4">
+      <SectionHeading kicker="The stack behind the agents, retrieval systems, and tooling I ship.">
+        Skills
+      </SectionHeading>
 
-      {/* Tab strip */}
-      <div
-        role="tablist"
-        aria-label="Skill categories"
-        className="flex overflow-x-auto gap-1 pb-1 mb-8 scrollbar-hide"
-        style={{ scrollbarWidth: "none" }}
-      >
-        {TAB_GROUPS.map((group, i) => (
-          <button
-            key={group.label}
-            role="tab"
-            aria-selected={activeTab === i}
-            onClick={() => setActiveTab(i)}
-            className="relative shrink-0 px-4 py-2 text-sm font-medium rounded-full outline-none
-              transition-colors duration-150
-              focus-visible:ring-2 focus-visible:ring-[#FFD700]/60
-              text-gray-600 dark:text-white/60
-              hover:text-gray-900 dark:hover:text-white/80
-              aria-selected:text-gray-900 dark:aria-selected:text-white"
+      <dl className="border-t border-black/[0.08] dark:border-white/[0.08]">
+        {rows.map(({ key, label }, i) => (
+          <motion.div
+            key={key}
+            initial={{ opacity: 0, y: 8 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "0px 0px -40px 0px" }}
+            transition={{ duration: 0.3, delay: Math.min(i, 6) * 0.04, ease: EASE_OUT }}
+            className="grid grid-cols-1 gap-3 border-b border-black/[0.08] py-5 dark:border-white/[0.08] sm:grid-cols-[11rem_minmax(0,1fr)] sm:gap-8"
           >
-            {activeTab === i && (
-              <motion.span
-                layoutId="tab-indicator"
-                className="absolute inset-0 rounded-full bg-white dark:bg-white/10 border border-black/8 dark:border-white/10 shadow-sm"
-                transition={{ type: "spring", duration: 0.4, bounce: 0.15 }}
-              />
-            )}
-            <span className="relative z-10">{group.label}</span>
-          </button>
+            <dt className="flex items-baseline gap-3 font-mono text-xs uppercase tracking-[0.16em] text-gray-500 dark:text-[#a1a1aa]">
+              <span className="tabular-nums text-amber-700 dark:text-[#f5c518]">{String(i + 1).padStart(2, "0")}</span>
+              {label}
+            </dt>
+            <dd className="m-0">
+              <ul className="flex flex-wrap gap-2" aria-label={label}>
+                {skillsData[key].map((skill) => (
+                  <li
+                    key={skill}
+                    className="rounded-md border border-black/[0.08] bg-white px-2.5 py-1 text-sm text-gray-800 dark:border-white/[0.08] dark:bg-white/[0.03] dark:text-[#e4e4e7]"
+                  >
+                    {skill}
+                  </li>
+                ))}
+              </ul>
+            </dd>
+          </motion.div>
         ))}
-      </div>
-
-      {/* Pill grid */}
-      <AnimatePresence mode="popLayout">
-        <motion.ul
-          key={activeTab}
-          role="tabpanel"
-          aria-label={TAB_GROUPS[activeTab].label}
-          className="flex flex-wrap justify-center gap-2.5"
-          initial="hidden"
-          animate="visible"
-          exit="hidden"
-        >
-          {pills.map((skill, i) => (
-            <motion.li
-              key={skill}
-              variants={{
-                hidden: { opacity: 0, y: 8 },
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transition: {
-                    delay: i * 0.028,
-                    duration: 0.22,
-                    ease: EASE_OUT,
-                  },
-                },
-              }}
-              className="bg-white dark:bg-white/5 border border-black/8 dark:border-white/10
-                rounded-full px-4 py-1.5
-                text-sm font-medium text-gray-700 dark:text-white/75
-                font-mono
-                select-none cursor-default
-                active:scale-[0.97] transition-transform duration-100"
-              style={{ transitionTimingFunction: "cubic-bezier(0.23,1,0.32,1)" }}
-            >
-              {skill}
-            </motion.li>
-          ))}
-        </motion.ul>
-      </AnimatePresence>
-
+      </dl>
     </section>
   );
 }

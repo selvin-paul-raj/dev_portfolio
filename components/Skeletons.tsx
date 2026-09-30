@@ -50,11 +50,25 @@ export function ProjectsSkeleton() {
 /* ── Skills ── */
 export function SkillsSkeleton() {
   return (
-    <div className="mb-28 w-full max-w-6xl mx-auto px-4">
-      <Sh className="h-8 w-32 mx-auto mb-10 rounded-lg" />
-      <div className="flex flex-wrap justify-center gap-3">
-        {[72, 88, 64, 96, 80, 72, 104, 68, 88, 76, 92, 60, 84, 72, 96].map((w, i) => (
-          <Sh key={i} className="h-8 rounded-full" style={{ width: w } as React.CSSProperties} />
+    <div className="mb-28 w-full max-w-5xl mx-auto px-4">
+      <div className="flex flex-col items-center gap-3 mb-12">
+        <Sh className="h-8 w-32 rounded-lg" />
+        <Sh className="h-3 w-80 rounded-full" />
+      </div>
+      {/* Spec-sheet rows: label column + wrapped skill chips */}
+      <div className="border-t border-black/[0.06] dark:border-white/[0.06]">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div
+            key={i}
+            className="grid grid-cols-1 sm:grid-cols-[11rem_minmax(0,1fr)] gap-3 sm:gap-8 py-5 border-b border-black/[0.06] dark:border-white/[0.06]"
+          >
+            <Sh className="h-3 w-24 rounded" />
+            <div className="flex flex-wrap gap-2">
+              {[72, 96, 64, 88, 110, 76].slice(0, 4 + (i % 3)).map((w, j) => (
+                <Sh key={j} className="h-7 rounded-md" style={{ width: w } as React.CSSProperties} />
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </div>
