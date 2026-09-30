@@ -73,13 +73,13 @@ Selvin PaulRaj K builds agentic AI systems, MCP (Model Context Protocol) servers
 ## FEATURED PROJECTS
 
 1. **DRI-MAS** (private, Draup) — LangGraph multi-agent reporting system; plain-English requests to validated Trino SQL and Excel reports
-2. **Company Synonym Agent** (private, Draup) — hybrid FAISS + BM25 entity resolution over 2.6M company records
-3. **Outlook CLI** — npm CLI and MCP server for Microsoft Outlook via Microsoft Graph, 21 MCP tools | [npm](https://www.npmjs.com/package/outlook-cli) | [Code](https://github.com/selvin-paul-raj/outlook-cli)
-4. **Instagram MCP Server** — 34 curated Instagram actions for Claude and ChatGPT via Composio, deployed on Alpic | [Code](https://github.com/selvin-paul-raj/Instagram-Alpic-mcp)
-5. **ChatDex AI** — Chrome extension that indexes ChatGPT/Gemini chats with search, export, and Notion sync | [Code](https://github.com/selvin-paul-raj/ChatDex-AI)
-6. **Dynamic AI Agent System** — multi-flow agent system with routing, flow diagrams, CLI, Docker | [Code](https://github.com/selvin-paul-raj/Dynamic-AI-Agent-CLI-System)
+2. **DOF Automation — Deal Origination Framework** (private, Draup) — agentic news and press-release intelligence: scraping, newsroom discovery, dedup, entity resolution, LLM classification and scoring, automated Excel/PowerPoint reports
+3. **Company Synonym Agent** (private, Draup) — hybrid FAISS + BM25 entity resolution over 2.6M company records
+4. **Skill Proficiency Engine** (private, Draup) — LLM-powered, evidence-backed skill proficiency modelling across the JD → Tasks → Workloads → Skills hierarchy
+5. **Outlook CLI** — npm CLI and MCP server for Microsoft Outlook via Microsoft Graph, 21 MCP tools | [npm](https://www.npmjs.com/package/outlook-cli) | [Code](https://github.com/selvin-paul-raj/outlook-cli)
+6. **Instagram MCP Server** — 34 curated Instagram actions for Claude and ChatGPT via Composio, deployed on Alpic | [Code](https://github.com/selvin-paul-raj/Instagram-Alpic-mcp)
 
-More: LinkedIn MCP servers, Company Logo Finder, PhishXcape, AI Calculator, TroothView, Vitersim (npm), SPR Censorify (npm). Full list: https://github.com/selvin-paul-raj?tab=repositories
+More: ChatDex AI, Dynamic AI Agent System, LinkedIn MCP servers, Company Logo Finder, PhishXcape, AI Calculator, TroothView, Vitersim (npm), SPR Censorify (npm). Full list: https://github.com/selvin-paul-raj?tab=repositories
 
 ---
 

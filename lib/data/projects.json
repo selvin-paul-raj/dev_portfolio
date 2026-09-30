@@ -1,5 +1,52 @@
 [
   {
+    "title": "DOF Automation — Deal Origination Framework",
+    "description": "Built a production-oriented agentic automation pipeline for company news and press-release intelligence. It combines web scraping, newsroom discovery, secondary news extraction, content normalisation, multi-layer deduplication, entity resolution, and LLM classification and relevance scoring, followed by automated Excel and PowerPoint reporting",
+    "tags": [
+      "Python",
+      "Playwright",
+      "GNews API",
+      "LLMs",
+      "Entity Resolution"
+    ],
+    "date": "2025-09-01",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
+      "automation"
+    ],
+    "code": null,
+    "live": null,
+    "order": 1,
+    "show": true,
+    "featured": true,
+    "private": true
+  },
+  {
+    "title": "Skill Proficiency Engine",
+    "description": "Designed an LLM-powered proficiency modelling system that analyses job descriptions, tasks, workloads, and mapped skills to generate evidence-backed proficiency levels. It preserves the JD → Tasks → Workloads → Skills hierarchy, grades each skill against explicit JD evidence, and outputs structured proficiency, evidence, and reasoning with cross-role skill aggregation",
+    "tags": [
+      "Python",
+      "LLMs",
+      "Structured Output",
+      "Skills Taxonomy"
+    ],
+    "date": "2025-09-01",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
+      "evaluation"
+    ],
+    "code": null,
+    "live": null,
+    "order": 3,
+    "show": true,
+    "featured": true,
+    "private": true
+  },
+  {
     "title": "DRI-MAS — Multi-Agent Reporting System",
     "description": "Analysts spent hours turning business questions into SQL and Excel reports. I architected a LangGraph multi-agent system (intent and manager agents, schema router, SQL generator, memory and evaluation layers) that converts plain-English requests into validated Trino SQL and structured reports, with hybrid FAISS + BM25 retrieval over 2.6M company records and human-in-the-loop checks. Turnaround dropped from hours to under a minute",
     "tags": [
@@ -42,7 +89,7 @@
     ],
     "code": null,
     "live": null,
-    "order": 1,
+    "order": 2,
     "show": true,
     "featured": true,
     "private": true
@@ -66,7 +113,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Instagram-Alpic-mcp",
     "live": null,
-    "order": 3,
+    "order": 5,
     "show": true,
     "featured": true
   },
@@ -197,7 +244,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/outlook-cli",
     "live": "https://www.npmjs.com/package/outlook-cli",
-    "order": 2,
+    "order": 4,
     "show": true,
     "featured": true
   },
@@ -239,9 +286,9 @@
     ],
     "code": "https://github.com/selvin-paul-raj/ChatDex-AI",
     "live": null,
-    "order": 4,
+    "order": 6,
     "show": true,
-    "featured": true
+    "featured": false
   },
   {
     "title": "Casita Fashion",
@@ -401,9 +448,9 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Dynamic-AI-Agent-CLI-System",
     "live": null,
-    "order": 5,
+    "order": 7,
     "show": true,
-    "featured": true
+    "featured": false
   },
   {
     "title": "AI Agent MCP Server",
