@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { BsArrowRight, BsArrowUpRight } from "react-icons/bs";
 import CaseStudyScrolly from "@/components/work/CaseStudyScrolly";
 import { caseStudies, getCaseStudy } from "@/lib/work";
+import { SITE_URL } from "@/lib/site";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -20,6 +21,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return {
     title: `${study.title}: case study`,
     description: study.subtitle,
+    keywords: [...(study.keywords ?? []), ...study.stack],
+    openGraph: { title: `${study.title}: how it works`, description: study.subtitle, type: "article", url: `/work/${study.slug}` },
     alternates: { canonical: `/work/${study.slug}` },
   };
 }
@@ -35,6 +38,25 @@ export default async function CaseStudyPage({ params }: Params) {
 
   return (
     <main id="content" className="w-full max-w-6xl mx-auto px-4 pt-14 pb-28 md:pl-24 md:pr-8">
+      <script
+        type="application/ld+json"
+        // Static, server-built JSON from our own data file; no user input.
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "TechArticle",
+            headline: `${study.title}: how it works`,
+            description: study.subtitle,
+            url: `${SITE_URL}/work/${study.slug}`,
+            keywords: [...(study.keywords ?? []), ...study.stack].join(", "),
+            author: { "@id": `${SITE_URL}/#person` },
+            about: study.stack.map((name) => ({ "@type": "Thing", name })),
+            ...(study.links.find((l) => l.label === "Source") && {
+              isBasedOn: study.links.find((l) => l.label === "Source")!.href,
+            }),
+          }).replace(/</g, "\\u003c"),
+        }}
+      />
       <nav aria-label="Breadcrumb" className="mb-10">
         <Link href="/work" className={`${label} hover:text-gray-900 dark:hover:text-white/85 outline-none focus-visible:ring-2 focus-visible:ring-accent rounded`}>
           Work / {String(index + 1).padStart(2, "0")}
@@ -83,6 +105,30 @@ export default async function CaseStudyPage({ params }: Params) {
           ))}
         </dl>
       </section>
+
+      {study.deepDive && study.deepDive.length > 0 && (
+        <section aria-labelledby="deep-dive" className="grid md:grid-cols-[10rem_minmax(0,1fr)] gap-x-10 gap-y-4 mb-20">
+          <h2 id="deep-dive" className={label}>In depth</h2>
+          <div className="grid sm:grid-cols-2 gap-x-10 gap-y-10 max-w-4xl">
+            {study.deepDive.map((s) => (
+              <article key={s.heading}>
+                <h3 className="text-lg font-semibold tracking-tight text-gray-900 dark:text-white mb-2">{s.heading}</h3>
+                <p className="text-[0.95rem] leading-[1.7] text-gray-700 dark:text-white/70">{s.body}</p>
+                {s.points && (
+                  <ul className="mt-3 flex flex-col gap-1.5">
+                    {s.points.map((pt) => (
+                      <li key={pt} className="grid grid-cols-[1rem_minmax(0,1fr)] text-sm leading-relaxed text-gray-600 dark:text-white/60">
+                        <span aria-hidden="true" className="text-accent-ink dark:text-accent">·</span>
+                        {pt}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section aria-labelledby="decisions" className="grid md:grid-cols-[10rem_minmax(0,1fr)] gap-x-10 gap-y-4 mb-20">
         <h2 id="decisions" className={label}>Decisions</h2>

@@ -6,6 +6,7 @@ import experiencesData from "@/lib/data/experiences.json";
 import certificationsData from "@/lib/data/certifications.json";
 import recognitionData from "@/lib/data/recognition.json";
 import skillsData from "@/lib/data/skills.json";
+import caseStudiesData from "@/lib/data/caseStudies.json";
 import { PROFILE } from "@/lib/mcp/definitions";
 import { buildDocs, buildIndex } from "./retrieve";
 import type { AskData } from "./retrieve";
@@ -17,6 +18,7 @@ const data: AskData = {
   recognition: recognitionData,
   skills: skillsData,
   profile: PROFILE,
+  caseStudies: caseStudiesData,
 };
 
 export const portfolioIndex = buildIndex(buildDocs(data));

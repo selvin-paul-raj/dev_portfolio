@@ -31,6 +31,7 @@ const data: AskData & FitData = {
   certifications: load("lib/data/certifications.json"),
   recognition: load("lib/data/recognition.json"),
   skills: load("lib/data/skills.json"),
+  caseStudies: load("lib/data/caseStudies.json"),
   profile: PROFILE,
 };
 

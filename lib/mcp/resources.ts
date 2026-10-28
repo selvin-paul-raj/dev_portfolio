@@ -8,6 +8,7 @@ import skills from "@/lib/data/skills.json";
 import experiences from "@/lib/data/experiences.json";
 import certifications from "@/lib/data/certifications.json";
 import recognition from "@/lib/data/recognition.json";
+import caseStudies from "@/lib/data/caseStudies.json";
 
 const RESOURCE_DATA: ResourceData = {
   projects,
@@ -15,6 +16,7 @@ const RESOURCE_DATA: ResourceData = {
   experiences,
   certifications,
   recognition,
+  caseStudies,
 };
 
 export function listResources(): McpResource[] {

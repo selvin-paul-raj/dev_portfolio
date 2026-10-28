@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
-import PipelineDiagram from "./PipelineDiagram";
+import PipelineDiagram, { DiagramLegend } from "./PipelineDiagram";
 import type { CaseStudy } from "@/lib/work";
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -28,7 +28,7 @@ export default function CaseStudyScrolly({ study }: { study: CaseStudy }) {
     return () => observer.disconnect();
   }, []);
 
-  // Mobile pans the full-width diagram so the active stage stays centred:
+  // The diagram renders full width and pans so the active stage stays centred:
   // node y as a fraction of the SVG's rendered height (100cqw * H/W).
   const focusY = useMemo(() => {
     const ys = diagram.nodes.filter((n) => steps[active].nodes.includes(n.id)).map((n) => n.y);
@@ -59,10 +59,10 @@ export default function CaseStudyScrolly({ study }: { study: CaseStudy }) {
               Step {pad(active + 1)} / {pad(steps.length)}
             </span>
           </figcaption>
-          <div className="flex-1 min-h-0 overflow-hidden lg:overflow-visible [container-type:inline-size] lg:[container-type:normal]">
+          <div className="pipeline-viewport flex-1 min-h-0 overflow-hidden [container-type:inline-size]">
             <div
-              className="pipeline-pan lg:h-full"
-              style={{ "--pan": `calc(20vh - 26px - ${(focusY / diagram.width) * 100}cqw)` } as CSSProperties}
+              className="pipeline-pan"
+              style={{ "--focus": `${(focusY / diagram.width) * 100}cqw` } as CSSProperties}
             >
             <PipelineDiagram
               title={study.title}
@@ -72,11 +72,15 @@ export default function CaseStudyScrolly({ study }: { study: CaseStudy }) {
               edges={diagram.edges}
               activeNodes={steps[active].nodes}
               activeEdges={steps[active].edges}
+              clusters={diagram.clusters}
               visitedNodes={visited}
               activeStep={active}
               onSelectNode={jumpToNode}
             />
             </div>
+          </div>
+          <div className="pt-2 hidden sm:block">
+            <DiagramLegend nodes={diagram.nodes} edges={diagram.edges} />
           </div>
         </figure>
       </div>

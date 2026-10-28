@@ -4,16 +4,18 @@ import { McpError, JSONRPC_INVALID_PARAMS } from "./errors";
 import { listRepos, getRepo } from "./github";
 import { sendContactMessage } from "./contact";
 import { TOOLS } from "./definitions";
-import { searchProjects, getProjectByTitle, filterCertifications, getProfileSummary, matchJobTool } from "./dispatch";
-import type { Project, Certification, ExperienceEntry } from "./dispatch";
+import { searchProjects, getProjectByTitle, filterCertifications, getProfileSummary, matchJobTool, getCaseStudyTool } from "./dispatch";
+import type { Project, Certification, ExperienceEntry, CaseStudyData } from "./dispatch";
 import projectsData from "@/lib/data/projects.json";
 import certificationsData from "@/lib/data/certifications.json";
 import experiencesData from "@/lib/data/experiences.json";
+import caseStudiesData from "@/lib/data/caseStudies.json";
 
 // The dispatch interfaces mirror the JSON shapes, so the imports assign directly.
 const projects: Project[] = projectsData;
 const certifications: Certification[] = certificationsData;
 const experiences: ExperienceEntry[] = experiencesData;
+const caseStudies: CaseStudyData[] = caseStudiesData;
 
 export function listTools(): McpTool[] {
   return TOOLS;
@@ -51,6 +53,9 @@ async function dispatch(name: string, args: Record<string, unknown>, ctx: McpReq
 
     case "get_profile_summary":
       return getProfileSummary(projects, certifications, experiences);
+
+    case "get_case_study":
+      return getCaseStudyTool(caseStudies, args.slug);
 
     case "match_job":
       return matchJobTool(args.job_description, projects, certifications, experiences);

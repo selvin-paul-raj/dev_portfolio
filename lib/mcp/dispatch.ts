@@ -32,12 +32,65 @@ export interface Certification {
   [key: string]: unknown;
 }
 
+/** Subset of lib/data/caseStudies.json the MCP server exposes (diagram layout is omitted). */
+export interface CaseStudyData {
+  slug: string;
+  title: string;
+  subtitle: string;
+  role: string;
+  org: string;
+  period: string;
+  visibility: string;
+  stack: string[];
+  problem: string;
+  steps: Array<{ title: string; body: string }>;
+  results: Array<{ value: string; label: string }>;
+  deepDive?: Array<{ heading: string; body: string; points?: string[] }>;
+  decisions: string[];
+  links: Array<{ label: string; href: string }>;
+}
+
+function caseStudyView(c: CaseStudyData) {
+  return {
+    slug: c.slug,
+    title: c.title,
+    summary: c.subtitle,
+    role: c.role,
+    org: c.org,
+    period: c.period,
+    access: c.visibility,
+    stack: c.stack,
+    problem: c.problem,
+    flow: c.steps.map((s, i) => ({ step: i + 1, title: s.title, detail: s.body })),
+    results: c.results,
+    inDepth: c.deepDive ?? [],
+    decisions: c.decisions,
+    links: c.links,
+    url: `${PROFILE.portfolio}/work/${c.slug}`,
+  };
+}
+
+export function getCaseStudyTool(all: CaseStudyData[], slug: unknown): string {
+  if (typeof slug !== "string" || !slug.trim()) {
+    return JSON.stringify(
+      { count: all.length, caseStudies: all.map((c) => ({ slug: c.slug, title: c.title, summary: c.subtitle, url: `${PROFILE.portfolio}/work/${c.slug}` })) },
+      null,
+      2
+    );
+  }
+  const q = slug.trim().toLowerCase();
+  const study = all.find((c) => c.slug === q) ?? all.find((c) => c.title.toLowerCase().includes(q));
+  if (!study) return JSON.stringify({ error: `No case study "${slug}". Available: ${all.map((c) => c.slug).join(", ")}` });
+  return JSON.stringify(caseStudyView(study), null, 2);
+}
+
 export interface ResourceData {
   projects: Project[];
   skills: unknown;
   experiences: unknown;
   certifications: Certification[];
   recognition: unknown;
+  caseStudies: CaseStudyData[];
 }
 
 export interface ExperienceEntry {
@@ -221,6 +274,8 @@ export function buildResourceText(uri: string, data: ResourceData): string {
       return JSON.stringify(data.certifications.filter((c) => c.show), null, 2);
     case "selvin://recognition":
       return JSON.stringify(data.recognition, null, 2);
+    case "selvin://case-studies":
+      return JSON.stringify(data.caseStudies.map(caseStudyView), null, 2);
     default:
       throw new McpError(MCP_RESOURCE_NOT_FOUND, `Resource not found: ${uri}`);
   }
