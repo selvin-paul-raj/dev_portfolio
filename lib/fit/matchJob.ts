@@ -15,6 +15,7 @@ export interface FitProject {
   live?: string | null;
   featured?: boolean;
   private?: boolean;
+  personal?: boolean;
   [key: string]: unknown;
 }
 
@@ -171,7 +172,7 @@ function buildCorpus(data: FitData): Evidence[] {
   for (const p of projects) {
     corpus.push({
       kind: "project",
-      source: p.private ? `${p.title} (work, private)` : p.title,
+      source: p.private ? `${p.title} (${p.personal ? "personal" : "work"}, private)` : p.title,
       text: `${p.description} [${p.tags.join(", ")}]`,
       url: p.live || p.code || null,
     });

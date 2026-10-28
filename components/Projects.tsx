@@ -27,6 +27,9 @@ const FILTERS = [
 type FilterValue = (typeof FILTERS)[number]["value"];
 
 const isPrivate = (p: Project) => "private" in p && p.private === true;
+// Private repos are either work at Draup or personal projects kept private.
+const isPersonal = (p: Project) => "personal" in p && p.personal === true;
+const isWork = (p: Project) => isPrivate(p) && !isPersonal(p);
 const yearOf = (p: Project) => p.date.slice(0, 4);
 const isNpm = (url: string) => url.includes("npmjs.com");
 const primaryUrl = (p: Project) => p.code ?? p.live ?? undefined;
@@ -66,8 +69,21 @@ function FeaturedLinks({ project }: { project: Project }) {
     return (
       <div className="flex flex-wrap items-center gap-3">
         {slug && <CaseStudyLink slug={slug} title={title} />}
+        {live && (
+          <a
+            href={live}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${title}, live site`}
+            className={`inline-flex items-center gap-1 rounded-md border border-black/10 bg-white px-3 py-1.5 text-xs font-semibold text-gray-900 hover:bg-gray-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/10 ${pressable}`}
+            style={{ transition: "transform 160ms cubic-bezier(0.23,1,0.32,1), background-color 150ms ease" }}
+          >
+            Live <MdArrowOutward size={12} aria-hidden="true" />
+          </a>
+        )}
         <span className="inline-flex items-center gap-1.5 text-xs text-gray-600 dark:text-[#a1a1aa]">
-          <FaLock size={10} aria-hidden="true" /> Private work project{slug ? "" : " · details on request"}
+          <FaLock size={10} aria-hidden="true" />
+          {isPersonal(project) ? "Personal project · private repo" : `Private work project${slug ? "" : " · details on request"}`}
         </span>
       </div>
     );
@@ -106,7 +122,8 @@ function FeaturedLinks({ project }: { project: Project }) {
 
 function FeaturedCard({ project, index }: { project: Project; index: number }) {
   const { title, description, tags, imageUrl } = project;
-  const privateWork = isPrivate(project);
+  const privateWork = isWork(project);
+  const badge = privateWork ? "Work · Draup" : isPersonal(project) ? "Personal · private" : "Open source";
 
   return (
     <m.article
@@ -155,7 +172,7 @@ function FeaturedCard({ project, index }: { project: Project; index: number }) {
                 : "bg-black/[0.05] text-gray-600 dark:bg-white/[0.08] dark:text-[#d4d4d8]"
             }`}
           >
-            {privateWork ? "Work · Draup" : "Open source"}
+            {badge}
           </span>
         </div>
 
@@ -338,7 +355,7 @@ export default function Projects() {
 
   return (
     <section ref={ref} id="projects" className="mb-28 w-full max-w-6xl mx-auto scroll-mt-28 px-4">
-      <SectionHeading kicker="Production agent systems from my work at Draup, plus the open-source tools I build on the side.">
+      <SectionHeading kicker="Production agent systems from my work at Draup, plus personal projects, some open source and some kept private.">
         Projects
       </SectionHeading>
 

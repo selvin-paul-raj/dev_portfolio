@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/work" },
 };
 
+const workCount = caseStudies.filter((c) => c.org.includes("Draup")).length;
+const personalCount = caseStudies.filter((c) => !c.org.includes("Draup") && c.visibility.startsWith("Private")).length;
+
 export default function WorkIndex() {
   return (
     <main id="content" className="w-full max-w-5xl mx-auto px-4 pt-14 pb-28 md:pl-24 md:pr-8">
@@ -19,8 +22,9 @@ export default function WorkIndex() {
           How the systems work
         </h1>
         <p className="text-lg leading-relaxed text-gray-600 dark:text-white/65">
-          Five builds, each walked through stage by stage with the numbers that came out of it. Two are private work at
-          Zinnov (Draup), shown without code; three are public with source.
+          {caseStudies.length} builds, each walked through stage by stage with the numbers that came out of it. {workCount} are
+          private work at Zinnov (Draup) and {personalCount} are personal projects in private repos, both shown without code;
+          the other {caseStudies.length - workCount - personalCount} are public with source.
         </p>
       </header>
 

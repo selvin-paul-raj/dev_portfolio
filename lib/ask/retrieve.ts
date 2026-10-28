@@ -8,7 +8,7 @@ import { BM25 } from "bm25s";
 import { stemmer } from "stemmer";
 
 export interface AskData {
-  projects: Array<{ show: boolean; title: string; description: string; tags: string[]; code?: string | null; live?: string | null; private?: boolean }>;
+  projects: Array<{ show: boolean; title: string; description: string; tags: string[]; code?: string | null; live?: string | null; private?: boolean; personal?: boolean }>;
   experiences: Array<{ title: string; company: string; description: string; dateStart: string; dateEnd: string; icon: string }>;
   certifications: Array<{ show: boolean; title: string; issuer: string; date?: string | null; skills?: string[] | null; verifyUrl?: string | null }>;
   recognition: {
@@ -69,7 +69,7 @@ export function buildDocs(data: AskData): Doc[] {
       docs.push({
         id: `project-${i}`,
         kind: "project",
-        title: pr.private ? `${pr.title} (work project, private)` : pr.title,
+        title: pr.private ? `${pr.title} (${pr.personal ? "personal" : "work"} project, private)` : pr.title,
         text: `${pr.description} Tech: ${pr.tags.join(", ")}.`,
         url: pr.live || pr.code || "/#projects",
       });
