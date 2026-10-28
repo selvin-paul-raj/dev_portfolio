@@ -516,17 +516,107 @@
     "featured": false
   },
   {
-    "id": "cert-hackerrank-sep-2025",
-    "title": "HackerRank Certification (Sep 2025)",
+    "id": "cert-hackerrank-software-engineer",
+    "title": "Software Engineer",
     "issuer": "HackerRank",
     "category": "Technology",
-    "date": "2025-09-01",
-    "certId": "cc22e6335439",
-    "verifyUrl": "https://www.hackerrank.com/certificates/cc22e6335439",
+    "date": "2024-03-07",
+    "certId": "4174E0E1D0D6",
+    "verifyUrl": "https://www.hackerrank.com/certificates/4174e0e1d0d6",
     "imageUrl": null,
     "skills": [
       "Problem Solving",
-      "Coding",
+      "SQL",
+      "REST APIs",
+      "Software Engineering"
+    ],
+    "duration": null,
+    "show": true,
+    "featured": false
+  },
+  {
+    "id": "cert-hackerrank-sql-advanced",
+    "title": "SQL (Advanced)",
+    "issuer": "HackerRank",
+    "category": "Technology",
+    "date": "2025-09-01",
+    "certId": "CC22E6335439",
+    "verifyUrl": "https://www.hackerrank.com/certificates/cc22e6335439",
+    "imageUrl": null,
+    "skills": [
+      "SQL",
+      "Query Optimization",
+      "Data Modeling"
+    ],
+    "duration": null,
+    "show": true,
+    "featured": false
+  },
+  {
+    "id": "cert-hackerrank-software-engineer-intern",
+    "title": "Software Engineer Intern",
+    "issuer": "HackerRank",
+    "category": "Technology",
+    "date": "2024-03-07",
+    "certId": "05FF7D732636",
+    "verifyUrl": "https://www.hackerrank.com/certificates/05ff7d732636",
+    "imageUrl": null,
+    "skills": [
+      "Problem Solving",
+      "SQL",
+      "Software Engineering"
+    ],
+    "duration": null,
+    "show": true,
+    "featured": false
+  },
+  {
+    "id": "cert-hackerrank-sql-intermediate",
+    "title": "SQL (Intermediate)",
+    "issuer": "HackerRank",
+    "category": "Technology",
+    "date": "2024-05-26",
+    "certId": "3F280D242E5F",
+    "verifyUrl": "https://www.hackerrank.com/certificates/3f280d242e5f",
+    "imageUrl": null,
+    "skills": [
+      "SQL",
+      "Joins",
+      "Aggregation"
+    ],
+    "duration": null,
+    "show": true,
+    "featured": false
+  },
+  {
+    "id": "cert-hackerrank-sql-basic",
+    "title": "SQL (Basic)",
+    "issuer": "HackerRank",
+    "category": "Technology",
+    "date": "2024-05-26",
+    "certId": "6A0CBB493911",
+    "verifyUrl": "https://www.hackerrank.com/certificates/6a0cbb493911",
+    "imageUrl": null,
+    "skills": [
+      "SQL",
+      "Queries"
+    ],
+    "duration": null,
+    "show": true,
+    "featured": false
+  },
+  {
+    "id": "cert-hackerrank-problem-solving-intermediate",
+    "title": "Problem Solving (Intermediate)",
+    "issuer": "HackerRank",
+    "category": "Technology",
+    "date": "2024-03-07",
+    "certId": "EA07E2A5DE1A",
+    "verifyUrl": "https://www.hackerrank.com/certificates/ea07e2a5de1a",
+    "imageUrl": null,
+    "skills": [
+      "Problem Solving",
+      "Data Structures",
       "Algorithms"
     ],
     "duration": null,
@@ -534,11 +624,129 @@
     "featured": false
   },
   {
-    "id": "cert-hackerrank-css-basic",
-    "title": "CSS Basic",
+    "id": "cert-hackerrank-problem-solving-basic",
+    "title": "Problem Solving (Basic)",
+    "issuer": "HackerRank",
+    "category": "Technology",
+    "date": "2024-03-07",
+    "certId": "5602A2072400",
+    "verifyUrl": "https://www.hackerrank.com/certificates/5602a2072400",
+    "imageUrl": null,
+    "skills": [
+      "Problem Solving",
+      "Data Structures",
+      "Algorithms"
+    ],
+    "duration": null,
+    "show": true,
+    "featured": false
+  },
+  {
+    "id": "cert-hackerrank-python-basic",
+    "title": "Python (Basic)",
+    "issuer": "HackerRank",
+    "category": "Technology",
+    "date": "2023-03-11",
+    "certId": "BC3D2CC5FAF6",
+    "verifyUrl": "https://www.hackerrank.com/certificates/bc3d2cc5faf6",
+    "imageUrl": null,
+    "skills": [
+      "Python"
+    ],
+    "duration": null,
+    "show": true,
+    "featured": false
+  },
+  {
+    "id": "cert-hackerrank-javascript-intermediate",
+    "title": "JavaScript (Intermediate)",
     "issuer": "HackerRank",
     "category": "Web Development",
-    "date": "2024-04-01",
+    "date": "2024-03-07",
+    "certId": "EBDA8DA4AB95",
+    "verifyUrl": "https://www.hackerrank.com/certificates/ebda8da4ab95",
+    "imageUrl": null,
+    "skills": [
+      "JavaScript"
+    ],
+    "duration": null,
+    "show": true,
+    "featured": false
+  },
+  {
+    "id": "cert-hackerrank-javascript-basic",
+    "title": "JavaScript (Basic)",
+    "issuer": "HackerRank",
+    "category": "Web Development",
+    "date": "2024-02-17",
+    "certId": "16B16BED1E9D",
+    "verifyUrl": "https://www.hackerrank.com/certificates/16b16bed1e9d",
+    "imageUrl": null,
+    "skills": [
+      "JavaScript"
+    ],
+    "duration": null,
+    "show": true,
+    "featured": false
+  },
+  {
+    "id": "cert-hackerrank-frontend-developer-react",
+    "title": "Frontend Developer (React)",
+    "issuer": "HackerRank",
+    "category": "Web Development",
+    "date": "2024-03-07",
+    "certId": "8DBB55A2DD63",
+    "verifyUrl": "https://www.hackerrank.com/certificates/8dbb55a2dd63",
+    "imageUrl": null,
+    "skills": [
+      "React",
+      "JavaScript",
+      "Frontend"
+    ],
+    "duration": null,
+    "show": true,
+    "featured": false
+  },
+  {
+    "id": "cert-hackerrank-react-basic",
+    "title": "React (Basic)",
+    "issuer": "HackerRank",
+    "category": "Web Development",
+    "date": "2024-04-25",
+    "certId": "0A808326F0AA",
+    "verifyUrl": "https://www.hackerrank.com/certificates/0a808326f0aa",
+    "imageUrl": null,
+    "skills": [
+      "React",
+      "Frontend"
+    ],
+    "duration": null,
+    "show": true,
+    "featured": false
+  },
+  {
+    "id": "cert-hackerrank-java-basic",
+    "title": "Java (Basic)",
+    "issuer": "HackerRank",
+    "category": "Technology",
+    "date": "2024-04-25",
+    "certId": "F2245A85E742",
+    "verifyUrl": "https://www.hackerrank.com/certificates/f2245a85e742",
+    "imageUrl": null,
+    "skills": [
+      "Java",
+      "OOP"
+    ],
+    "duration": null,
+    "show": true,
+    "featured": false
+  },
+  {
+    "id": "cert-hackerrank-css-basic",
+    "title": "CSS (Basic)",
+    "issuer": "HackerRank",
+    "category": "Web Development",
+    "date": "2024-04-25",
     "certId": "ADB84BF0E734",
     "verifyUrl": "https://www.hackerrank.com/certificates/adb84bf0e734",
     "imageUrl": null,
@@ -548,7 +756,7 @@
       "Frontend"
     ],
     "duration": null,
-    "show": false,
+    "show": true,
     "featured": false
   },
   {

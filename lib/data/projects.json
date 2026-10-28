@@ -95,6 +95,96 @@
     "private": true
   },
   {
+    "title": "Invoice-to-PO Decision Workflow",
+    "description": "Auditable accounts-payable workflow that reads text and scanned PDFs (OCR), CSV, or JSON invoices, matches each one against the PO, goods receipt, and vendor master, checks duplicates, payment fraud, and GST errors, and ends in approve, hold with one question for a reviewer, or reject. Rules decide and models only advise, with every check citing its source record. Backed by 79 tests (incl. 20 guardrail tests), 31/31 labelled cases, 32/32 PDF fields, 0 false approvals across 600 adversarial variants, 0 of 489 prompt-injection attacks changing a decision, and an LLM-as-judge validated against a human-labelled gold set, all behind a regression gate in CI",
+    "tags": [
+      "Python",
+      "FastAPI",
+      "Next.js",
+      "OCR",
+      "Human-in-the-Loop",
+      "LLM Evaluation",
+      "LLM-as-Judge",
+      "Guardrails",
+      "Prompt Injection Testing",
+      "Docker",
+      "CI/CD",
+      "OpenTelemetry"
+    ],
+    "date": "2026-10-12",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
+      "automation",
+      "evaluation"
+    ],
+    "code": "https://github.com/selvin-paul-raj/zamp-ps1-invoice",
+    "live": "https://zamp-ps1-invoice.onrender.com",
+    "order": 4,
+    "show": true,
+    "featured": true
+  },
+  {
+    "title": "Finn Advisor",
+    "description": "Single-user AI financial advisor that answers portfolio and market questions from read-only Kite (Zerodha) account data and live web search. A Google ADK orchestrator routes to LangGraph workflows, Kite MCP tools load as LangChain tools via langchain-mcp-adapters (16 read-only tools verified live), and an LLM router falls back from NVIDIA NIM to Gemini Flash with every call logged to SQLite. A runtime safety policy blocks credential requests, prompt injection, and write tools, backed by an offline DeepEval-style evaluation harness and a RAMPART-style red-team suite. Ships with a Dockerfile and Streamlit UI",
+    "tags": [
+      "Python",
+      "Google ADK",
+      "LangGraph",
+      "MCP",
+      "LangChain",
+      "LLM Routing",
+      "Guardrails",
+      "Prompt Injection Testing",
+      "LLM Evaluation",
+      "Streamlit",
+      "SQLite",
+      "Docker"
+    ],
+    "date": "2026-08-26",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
+      "evaluation"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Finn-Advisor",
+    "live": null,
+    "order": 5,
+    "show": true,
+    "featured": true
+  },
+  {
+    "title": "ChunkLab: RAG Engineering Playground",
+    "description": "Streamlit app for benchmarking RAG techniques side by side on your own text: 10 chunking strategies, dense and sparse embeddings, 7 retrieval strategies (keyword, boolean, TF-IDF, BM25, dense, hybrid RRF, MMR), and 6 reranking strategies, scored with Precision@k, Recall@k, MRR, MAP, and NDCG@k plus before/after rerank impact. Each stage is a self-registering plugin registry covered by a 95-test pytest suite",
+    "tags": [
+      "Python",
+      "RAG",
+      "Re-ranking",
+      "Hybrid Search",
+      "BM25",
+      "Retrieval Evaluation",
+      "sentence-transformers",
+      "Chonkie",
+      "Streamlit",
+      "pytest"
+    ],
+    "date": "2026-07-23",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
+      "evaluation",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/chunklab",
+    "live": "https://chunklab-spr.streamlit.app",
+    "order": 6,
+    "show": true,
+    "featured": true
+  },
+  {
     "title": "Instagram MCP Server",
     "description": "MCP server that exposes 34 curated Instagram actions (posts, carousels, comments, DMs, insights) to Claude and ChatGPT through Composio, with automatic OAuth, structured JSON logging, health and usage stats, and fail-safe error handling. Deployed on Alpic over streamable HTTP",
     "tags": [
@@ -113,7 +203,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Instagram-Alpic-mcp",
     "live": null,
-    "order": 5,
+    "order": 7,
     "show": true,
     "featured": true
   },
@@ -158,7 +248,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Linkedin-Alpic-Mcp",
     "live": null,
-    "order": 10,
+    "order": 15,
     "show": true,
     "featured": false
   },
@@ -180,28 +270,8 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Linkedin-MCP-Server",
     "live": null,
-    "order": 11,
+    "order": 16,
     "show": true,
-    "featured": false
-  },
-  {
-    "title": "LinkedIn MCP Server",
-    "description": "Model Context Protocol server for LinkedIn integration",
-    "tags": [
-      "MCP",
-      "LinkedIn API",
-      "TypeScript"
-    ],
-    "date": "2025-11-14",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "tool"
-    ],
-    "code": "https://github.com/selvin-paul-raj/Linkedin-MCP-Server",
-    "live": null,
-    "order": 4,
-    "show": false,
     "featured": false
   },
   {
@@ -221,7 +291,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Company-logo-finder",
     "live": null,
-    "order": 12,
+    "order": 17,
     "show": true,
     "featured": false
   },
@@ -244,7 +314,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/outlook-cli",
     "live": "https://www.npmjs.com/package/outlook-cli",
-    "order": 4,
+    "order": 8,
     "show": true,
     "featured": true
   },
@@ -265,7 +335,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Gift-Buddy",
     "live": null,
-    "order": 22,
+    "order": 27,
     "show": true,
     "featured": false
   },
@@ -286,7 +356,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/ChatDex-AI",
     "live": null,
-    "order": 6,
+    "order": 11,
     "show": true,
     "featured": false
   },
@@ -306,7 +376,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Casita-Fashion",
     "live": null,
-    "order": 9,
+    "order": 14,
     "show": false,
     "featured": false
   },
@@ -326,7 +396,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/prompt-test",
     "live": "https://prompt-test-three.vercel.app",
-    "order": 10,
+    "order": 15,
     "show": false,
     "featured": false
   },
@@ -345,7 +415,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/manager",
     "live": "https://manager-kohl-chi.vercel.app",
-    "order": 11,
+    "order": 16,
     "show": false,
     "featured": false
   },
@@ -367,7 +437,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Phishing-Detection-Extension",
     "live": null,
-    "order": 13,
+    "order": 18,
     "show": true,
     "featured": false
   },
@@ -389,7 +459,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Phishing_Detection_ML_FastAPI",
     "live": null,
-    "order": 13,
+    "order": 18,
     "show": false,
     "featured": false
   },
@@ -408,8 +478,8 @@
       "web"
     ],
     "code": "https://github.com/selvin-paul-raj/Quote-Generator-React-App",
-    "live": "https://spr-quote-generator.vercel.app",
-    "order": 14,
+    "live": "https://quote-generator-react-app.vercel.app",
+    "order": 19,
     "show": false,
     "featured": false
   },
@@ -425,7 +495,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/generated-1",
     "live": null,
-    "order": 15,
+    "order": 20,
     "show": false,
     "featured": false
   },
@@ -448,7 +518,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Dynamic-AI-Agent-CLI-System",
     "live": null,
-    "order": 7,
+    "order": 12,
     "show": true,
     "featured": false
   },
@@ -467,9 +537,9 @@
       "ai",
       "tool"
     ],
-    "code": "https://github.com/selvin-paul-raj/AI-Agent-MCP-Server",
+    "code": null,
     "live": null,
-    "order": 17,
+    "order": 22,
     "show": false,
     "featured": false
   },
@@ -492,7 +562,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/copy-me",
     "live": null,
-    "order": 17,
+    "order": 22,
     "show": true,
     "featured": false
   },
@@ -508,7 +578,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/test",
     "live": null,
-    "order": 19,
+    "order": 24,
     "show": false,
     "featured": false
   },
@@ -528,7 +598,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/-IBISWorld_Web_Scraper",
     "live": null,
-    "order": 20,
+    "order": 25,
     "show": false,
     "featured": false
   },
@@ -548,7 +618,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/screener_companies_Web_Scrapping",
     "live": null,
-    "order": 21,
+    "order": 26,
     "show": false,
     "featured": false
   },
@@ -569,7 +639,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/deepfake_Video",
     "live": null,
-    "order": 23,
+    "order": 28,
     "show": true,
     "featured": false
   },
@@ -587,7 +657,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/spr-nxt-ink",
     "live": null,
-    "order": 23,
+    "order": 28,
     "show": false,
     "featured": false
   },
@@ -613,7 +683,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/AI-Content-Generator",
     "live": null,
-    "order": 16,
+    "order": 21,
     "show": true,
     "featured": false
   },
@@ -633,7 +703,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Food-Delivery-Website",
     "live": null,
-    "order": 25,
+    "order": 30,
     "show": false,
     "featured": false
   },
@@ -658,7 +728,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/SPR-AI-Calculator",
     "live": "https://spr-ai-calculator.vercel.app",
-    "order": 14,
+    "order": 19,
     "show": true,
     "featured": false
   },
@@ -680,7 +750,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/vitersim",
     "live": "https://www.npmjs.com/package/vitersim",
-    "order": 18,
+    "order": 23,
     "show": true,
     "featured": false
   },
@@ -700,7 +770,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/AI-Calculator",
     "live": "https://spr-ai-calculator.vercel.app",
-    "order": 28,
+    "order": 33,
     "show": false,
     "featured": false
   },
@@ -718,7 +788,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/PicoFoilo",
     "live": "https://picofolio.vercel.app",
-    "order": 29,
+    "order": 34,
     "show": false,
     "featured": false
   },
@@ -743,7 +813,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/TroothView",
     "live": "https://trooth-view.vercel.app",
-    "order": 15,
+    "order": 20,
     "show": true,
     "featured": false
   },
@@ -762,7 +832,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Client_Expense_Tracker",
     "live": "https://spr-expense-tracker.vercel.app",
-    "order": 31,
+    "order": 36,
     "show": false,
     "featured": false
   },
@@ -782,7 +852,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/RPi4",
     "live": null,
-    "order": 32,
+    "order": 37,
     "show": false,
     "featured": false
   },
@@ -804,7 +874,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/MERN-Blog",
     "live": null,
-    "order": 33,
+    "order": 38,
     "show": false,
     "featured": false
   },
@@ -826,7 +896,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Files-Share-App",
     "live": null,
-    "order": 34,
+    "order": 39,
     "show": false,
     "featured": false
   },
@@ -842,7 +912,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/azure",
     "live": null,
-    "order": 35,
+    "order": 40,
     "show": false,
     "featured": false
   },
@@ -863,7 +933,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Drag-and-Drop-Notes",
     "live": null,
-    "order": 36,
+    "order": 41,
     "show": false,
     "featured": false
   },
@@ -887,7 +957,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Speed-Typing",
     "live": "https://spr-speed-typing.vercel.app",
-    "order": 37,
+    "order": 42,
     "show": false,
     "featured": false
   },
@@ -905,7 +975,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Naan-Mudhalvan-Cybersecurity-",
     "live": null,
-    "order": 38,
+    "order": 43,
     "show": false,
     "featured": false
   },
@@ -924,7 +994,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Nextjs-AI-Thief-Detection",
     "live": "https://thief-alarm.vercel.app",
-    "order": 39,
+    "order": 44,
     "show": false,
     "featured": false
   },
@@ -944,7 +1014,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Multi-Lang-App-React",
     "live": null,
-    "order": 40,
+    "order": 45,
     "show": false,
     "featured": false
   },
@@ -962,7 +1032,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/html_map",
     "live": null,
-    "order": 41,
+    "order": 46,
     "show": false,
     "featured": false
   },
@@ -981,7 +1051,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/codealpha_gemini",
     "live": null,
-    "order": 42,
+    "order": 47,
     "show": false,
     "featured": false
   },
@@ -999,7 +1069,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/codealpha_portfolio",
     "live": null,
-    "order": 43,
+    "order": 48,
     "show": false,
     "featured": false
   },
@@ -1020,7 +1090,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Oasis_Landing_Page",
     "live": null,
-    "order": 44,
+    "order": 49,
     "show": false,
     "featured": false
   },
@@ -1042,7 +1112,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/codealpha_expense_tracker",
     "live": null,
-    "order": 45,
+    "order": 50,
     "show": false,
     "featured": false
   },
@@ -1061,7 +1131,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Server_Expense_Tracker",
     "live": null,
-    "order": 46,
+    "order": 51,
     "show": false,
     "featured": false
   },
@@ -1082,7 +1152,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/PRODIGY-WD-02",
     "live": null,
-    "order": 47,
+    "order": 52,
     "show": false,
     "featured": false
   },
@@ -1101,7 +1171,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Flutter_API",
     "live": null,
-    "order": 48,
+    "order": 53,
     "show": false,
     "featured": false
   },
@@ -1122,7 +1192,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/PRODIGY_WD_01",
     "live": null,
-    "order": 49,
+    "order": 54,
     "show": false,
     "featured": false
   },
@@ -1143,7 +1213,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/QR-Code-Generator-React",
     "live": null,
-    "order": 50,
+    "order": 55,
     "show": false,
     "featured": false
   },
@@ -1163,7 +1233,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Tic-Tac-Toe-Game-in-Flutter",
     "live": null,
-    "order": 51,
+    "order": 56,
     "show": false,
     "featured": false
   },
@@ -1182,7 +1252,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/First_Flutter_App",
     "live": null,
-    "order": 52,
+    "order": 57,
     "show": false,
     "featured": false
   },
@@ -1203,7 +1273,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Random-Meme-React",
     "live": null,
-    "order": 53,
+    "order": 58,
     "show": false,
     "featured": false
   },
@@ -1224,7 +1294,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Cube-Threejs",
     "live": null,
-    "order": 54,
+    "order": 59,
     "show": false,
     "featured": false
   },
@@ -1246,7 +1316,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/React-Weather-App",
     "live": null,
-    "order": 55,
+    "order": 60,
     "show": false,
     "featured": false
   },
@@ -1265,7 +1335,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/simple_Todo_app",
     "live": null,
-    "order": 56,
+    "order": 61,
     "show": false,
     "featured": false
   },
@@ -1286,7 +1356,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/React_Calculator",
     "live": null,
-    "order": 57,
+    "order": 62,
     "show": false,
     "featured": false
   },
@@ -1306,7 +1376,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Cursor_Hearts",
     "live": null,
-    "order": 58,
+    "order": 63,
     "show": false,
     "featured": false
   },
@@ -1324,7 +1394,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Hireme",
     "live": null,
-    "order": 59,
+    "order": 64,
     "show": false,
     "featured": false
   },
@@ -1344,7 +1414,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/New_Year_CountDown",
     "live": null,
-    "order": 60,
+    "order": 65,
     "show": false,
     "featured": false
   },
@@ -1362,7 +1432,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/food",
     "live": null,
-    "order": 61,
+    "order": 66,
     "show": false,
     "featured": false
   },
@@ -1381,7 +1451,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/palm-Server",
     "live": null,
-    "order": 62,
+    "order": 67,
     "show": false,
     "featured": false
   },
@@ -1402,7 +1472,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Own_Amazon_Scraper_API",
     "live": null,
-    "order": 20,
+    "order": 25,
     "show": true,
     "featured": false
   },
@@ -1422,7 +1492,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/BMI-Calculator-React-Native-App",
     "live": null,
-    "order": 64,
+    "order": 69,
     "show": false,
     "featured": false
   },
@@ -1443,7 +1513,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Random-Dog-Pic-Generate",
     "live": null,
-    "order": 65,
+    "order": 70,
     "show": false,
     "featured": false
   },
@@ -1465,7 +1535,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/EzSumZ-Article_Summarizer-React-App",
     "live": null,
-    "order": 21,
+    "order": 26,
     "show": true,
     "featured": false
   },
@@ -1487,7 +1557,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/React-Redux-Todo-App",
     "live": null,
-    "order": 67,
+    "order": 72,
     "show": false,
     "featured": false
   },
@@ -1509,7 +1579,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Electronjs-Calculator-App",
     "live": null,
-    "order": 68,
+    "order": 73,
     "show": false,
     "featured": false
   },
@@ -1527,7 +1597,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Portfolio",
     "live": null,
-    "order": 69,
+    "order": 74,
     "show": false,
     "featured": false
   },
@@ -1546,7 +1616,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/spr_censorify_Example",
     "live": null,
-    "order": 70,
+    "order": 75,
     "show": false,
     "featured": false
   },
@@ -1566,7 +1636,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/spr-censorify",
     "live": "https://www.npmjs.com/package/spr-censorify",
-    "order": 19,
+    "order": 24,
     "show": true,
     "featured": false
   },
@@ -1584,7 +1654,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Form_Validation",
     "live": "https://sprhackz.github.io/Form_Validation/",
-    "order": 72,
+    "order": 77,
     "show": false,
     "featured": false
   },
@@ -1604,7 +1674,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/React_Food_Delivery",
     "live": null,
-    "order": 73,
+    "order": 78,
     "show": false,
     "featured": false
   },
@@ -1622,7 +1692,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Flames_Web_App",
     "live": "https://sprhackz.github.io/Flames_Web_App/",
-    "order": 74,
+    "order": 79,
     "show": false,
     "featured": false
   },
@@ -1640,7 +1710,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Library-Management-System",
     "live": null,
-    "order": 75,
+    "order": 80,
     "show": false,
     "featured": false
   },
@@ -1658,7 +1728,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/React_Personal_Portfolio",
     "live": null,
-    "order": 76,
+    "order": 81,
     "show": false,
     "featured": false
   },
@@ -1676,7 +1746,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Animation_Login_Page",
     "live": "https://sprhackz.github.io/Animation_Login_Page/",
-    "order": 77,
+    "order": 82,
     "show": false,
     "featured": false
   },
@@ -1694,7 +1764,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Login_Page_01",
     "live": "https://sprhackz.github.io/Login_Page_01/",
-    "order": 78,
+    "order": 83,
     "show": false,
     "featured": false
   },
@@ -1712,7 +1782,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/FLAMES.py",
     "live": null,
-    "order": 79,
+    "order": 84,
     "show": false,
     "featured": false
   }
