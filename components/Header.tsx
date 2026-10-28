@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import clsx from "clsx";
 import Link from "next/link";
 
@@ -16,7 +16,7 @@ const Header = () => {
       <nav aria-label="Primary" className="bg-white/60 md:bg-transparent bg-opacity-80 shadow-lg shadow-black/[0.03] backdrop-blur-[0.5rem] text-gray-800 h-full w-full px-4 py-2 flex items-center justify-center dark:bg-black/50">
         <ul className="w-full flex justify-between md:justify-center flex-row md:flex-col gap-1 md:gap-4 font-bold text-gray-500 h-full">
           {links.map((link) => (
-            <motion.li
+            <m.li
               className="flex items-center justify-center relative md:h-10 w-full"
               key={link.hash}
               initial={{ opacity: 0 }}
@@ -25,13 +25,13 @@ const Header = () => {
             >
               <Link
                 className={clsx(
-                  "group flex w-full items-center justify-center p-1 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700]",
+                  "group flex w-full items-center justify-center p-1 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-accent",
                   {
                     "text-gray-950 dark:text-gray-50":
                       activeSection === link.name,
                   }
                 )}
-                href={link.hash}
+                href={`/${link.hash}`}
                 aria-label={link.name}
                 aria-current={activeSection === link.name ? "location" : undefined}
                 style={{
@@ -53,7 +53,7 @@ const Header = () => {
                   {link.name}
                 </span>
               </Link>
-            </motion.li>
+            </m.li>
           ))}
         </ul>
       </nav>

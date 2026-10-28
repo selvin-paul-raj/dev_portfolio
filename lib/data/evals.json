@@ -1,0 +1,351 @@
+{
+  "generatedAt": "2026-10-28T08:57:50.449Z",
+  "corpusDocs": 138,
+  "retrieval": {
+    "k": 3,
+    "hitAtK": 0.944,
+    "mrr": 0.922,
+    "cases": [
+      {
+        "q": "What is DRI-MAS?",
+        "expect": "DRI-MAS",
+        "rank": 1,
+        "pass": true,
+        "top": "DRI-MAS: Multi-Agent Reporting System (work project, private)"
+      },
+      {
+        "q": "How many company records does the synonym agent cover?",
+        "expect": "Synonym",
+        "rank": 1,
+        "pass": true,
+        "top": "Company Synonym Agent (work project, private)"
+      },
+      {
+        "q": "Which MCP servers has Selvin built?",
+        "expect": "MCP",
+        "rank": 1,
+        "pass": true,
+        "top": "LinkedIn MCP Server"
+      },
+      {
+        "q": "Does he have Anthropic certifications?",
+        "expect": "Anthropic",
+        "rank": 1,
+        "pass": true,
+        "top": "Claude with the Anthropic API — Anthropic"
+      },
+      {
+        "q": "What did he do as a Tech Intern?",
+        "expect": "Tech Intern",
+        "rank": 1,
+        "pass": true,
+        "top": "Tech Intern · Zinnov (Draup) (Jun 2025 – Sep 2025)"
+      },
+      {
+        "q": "Where did he study for his B.Tech?",
+        "expect": "DMI",
+        "rank": 1,
+        "pass": true,
+        "top": "B.Tech Information Technology · DMI College of Engineering (May 2021 – May 2025)"
+      },
+      {
+        "q": "What was his CGPA?",
+        "expect": "8.4",
+        "rank": 1,
+        "pass": true,
+        "top": "B.Tech Information Technology · DMI College of Engineering (May 2021 – May 2025)"
+      },
+      {
+        "q": "Has he received any awards at work?",
+        "expect": "SPOT",
+        "rank": 10,
+        "pass": false,
+        "top": "React Work With APIs — LinkedIn"
+      },
+      {
+        "q": "What is the Deal Origination Framework?",
+        "expect": "DOF",
+        "rank": 1,
+        "pass": true,
+        "top": "DOF Automation: Deal Origination Framework (work project, private)"
+      },
+      {
+        "q": "Has he published any research?",
+        "expect": "IRJMETS",
+        "rank": 1,
+        "pass": true,
+        "top": "Event Management System for College Symposium and Events with Facial Recognition Image Sharing System — IRJMETS"
+      },
+      {
+        "q": "Experience with FAISS and BM25 hybrid retrieval",
+        "expect": "BM25",
+        "rank": 1,
+        "pass": true,
+        "top": "Skills — retrieval"
+      },
+      {
+        "q": "Which vector databases does he know?",
+        "expect": "FAISS",
+        "rank": 2,
+        "pass": true,
+        "top": "Introduction to RAG — AMD"
+      },
+      {
+        "q": "Is he open to AI Engineer roles?",
+        "expect": "Open to",
+        "rank": 1,
+        "pass": true,
+        "top": "Selvin PaulRaj K — profile"
+      },
+      {
+        "q": "Tell me about the Outlook CLI",
+        "expect": "Outlook",
+        "rank": 1,
+        "pass": true,
+        "top": "Outlook CLI"
+      },
+      {
+        "q": "What did he do at GenXRverse?",
+        "expect": "GenXRverse",
+        "rank": 1,
+        "pass": true,
+        "top": "Co-founder · GenXRverse (Mar 2024 – Present)"
+      },
+      {
+        "q": "How much LangGraph experience does he have?",
+        "expect": "LangGraph",
+        "rank": 1,
+        "pass": true,
+        "top": "Selvin PaulRaj K — profile"
+      },
+      {
+        "q": "Has he done prompt injection or guardrail testing?",
+        "expect": "guardrail",
+        "rank": 1,
+        "pass": true,
+        "top": "Skills — ai security"
+      },
+      {
+        "q": "What is ChunkLab?",
+        "expect": "ChunkLab",
+        "rank": 1,
+        "pass": true,
+        "top": "ChunkLab: RAG Engineering Playground"
+      }
+    ]
+  },
+  "offTopic": {
+    "passRate": 1,
+    "cases": [
+      {
+        "q": "What's the weather in Paris today?",
+        "refused": true,
+        "topScore": 0,
+        "pass": true
+      },
+      {
+        "q": "Write me a poem about cats",
+        "refused": true,
+        "topScore": 2.34,
+        "pass": true
+      },
+      {
+        "q": "Who won the 2022 football world cup?",
+        "refused": true,
+        "topScore": 4.89,
+        "pass": true
+      },
+      {
+        "q": "Explain quantum entanglement simply",
+        "refused": true,
+        "topScore": 0,
+        "pass": true
+      }
+    ]
+  },
+  "fit": {
+    "passRate": 1,
+    "cases": [
+      {
+        "name": "AI engineer (agents + RAG)",
+        "score": 91,
+        "missingMatches": [],
+        "missingGaps": [],
+        "unbacked": [],
+        "pass": true
+      },
+      {
+        "name": "Java backend",
+        "score": 54,
+        "missingMatches": [],
+        "missingGaps": [],
+        "unbacked": [],
+        "pass": true
+      },
+      {
+        "name": "ML research (no overlap claims)",
+        "score": 47,
+        "missingMatches": [],
+        "missingGaps": [],
+        "unbacked": [],
+        "pass": true
+      }
+    ]
+  },
+  "llm": {
+    "model": "openai/gpt-oss-120b",
+    "passRate": 0.909,
+    "cases": [
+      {
+        "q": "What is DRI-MAS?",
+        "mode": "llm",
+        "cited": true,
+        "grounded": true,
+        "pass": true
+      },
+      {
+        "q": "How many company records does the synonym agent cover?",
+        "mode": "llm",
+        "cited": true,
+        "grounded": true,
+        "pass": true
+      },
+      {
+        "q": "Which MCP servers has Selvin built?",
+        "mode": "llm",
+        "cited": true,
+        "grounded": true,
+        "pass": true
+      },
+      {
+        "q": "Does he have Anthropic certifications?",
+        "mode": "llm",
+        "cited": true,
+        "grounded": true,
+        "pass": true
+      },
+      {
+        "q": "What did he do as a Tech Intern?",
+        "mode": "llm",
+        "cited": true,
+        "grounded": true,
+        "pass": true
+      },
+      {
+        "q": "Where did he study for his B.Tech?",
+        "mode": "llm",
+        "cited": true,
+        "grounded": true,
+        "pass": true
+      },
+      {
+        "q": "What was his CGPA?",
+        "mode": "llm",
+        "cited": true,
+        "grounded": true,
+        "pass": true
+      },
+      {
+        "q": "Has he received any awards at work?",
+        "mode": "llm",
+        "cited": false,
+        "grounded": false,
+        "pass": false
+      },
+      {
+        "q": "What is the Deal Origination Framework?",
+        "mode": "llm",
+        "cited": true,
+        "grounded": true,
+        "pass": true
+      },
+      {
+        "q": "Has he published any research?",
+        "mode": "llm",
+        "cited": true,
+        "grounded": true,
+        "pass": true
+      },
+      {
+        "q": "Experience with FAISS and BM25 hybrid retrieval",
+        "mode": "llm",
+        "cited": true,
+        "grounded": true,
+        "pass": true
+      },
+      {
+        "q": "Which vector databases does he know?",
+        "mode": "llm",
+        "cited": true,
+        "grounded": false,
+        "pass": false
+      },
+      {
+        "q": "Is he open to AI Engineer roles?",
+        "mode": "llm",
+        "cited": true,
+        "grounded": true,
+        "pass": true
+      },
+      {
+        "q": "Tell me about the Outlook CLI",
+        "mode": "llm",
+        "cited": true,
+        "grounded": true,
+        "pass": true
+      },
+      {
+        "q": "What did he do at GenXRverse?",
+        "mode": "llm",
+        "cited": true,
+        "grounded": true,
+        "pass": true
+      },
+      {
+        "q": "How much LangGraph experience does he have?",
+        "mode": "llm",
+        "cited": true,
+        "grounded": true,
+        "pass": true
+      },
+      {
+        "q": "Has he done prompt injection or guardrail testing?",
+        "mode": "llm",
+        "cited": true,
+        "grounded": true,
+        "pass": true
+      },
+      {
+        "q": "What is ChunkLab?",
+        "mode": "llm",
+        "cited": true,
+        "grounded": true,
+        "pass": true
+      },
+      {
+        "q": "What's the weather in Paris today?",
+        "mode": "llm",
+        "refused": true,
+        "pass": true
+      },
+      {
+        "q": "Write me a poem about cats",
+        "mode": "llm",
+        "refused": true,
+        "pass": true
+      },
+      {
+        "q": "Who won the 2022 football world cup?",
+        "mode": "llm",
+        "refused": true,
+        "pass": true
+      },
+      {
+        "q": "Explain quantum entanglement simply",
+        "mode": "llm",
+        "refused": true,
+        "pass": true
+      }
+    ]
+  }
+}

@@ -7,6 +7,8 @@
 import { PROFILE } from "./definitions";
 import { McpError, MCP_RESOURCE_NOT_FOUND } from "./errors";
 import { monthsBetween, formatDuration } from "../../utils/calculateDuration";
+import { matchJob } from "../fit/matchJob";
+import type { FitData } from "../fit/matchJob";
 
 export interface Project {
   show: boolean;
@@ -24,6 +26,7 @@ export interface Project {
 
 export interface Certification {
   show: boolean;
+  title: string;
   category: string;
   issuer: string;
   [key: string]: unknown;
@@ -40,6 +43,7 @@ export interface ResourceData {
 export interface ExperienceEntry {
   title: string;
   company: string;
+  description: string;
   dateStart: string;
   dateEnd: string;
   icon: "graduation" | "work" | "laptop" | string;
@@ -183,6 +187,24 @@ export function getProfileSummary(
     null,
     2
   );
+}
+
+export function matchJobTool(
+  jd: unknown,
+  allProjects: Project[],
+  allCertifications: Certification[],
+  allExperiences: ExperienceEntry[]
+): string {
+  if (typeof jd !== "string" || jd.trim().length < 40) {
+    return JSON.stringify({ error: "job_description is required (paste the full JD, at least 40 characters)" });
+  }
+  const data: FitData = {
+    projects: allProjects,
+    certifications: allCertifications,
+    experiences: allExperiences,
+  };
+  const report = matchJob(jd, data);
+  return JSON.stringify({ ...report, fullReport: PROFILE.fitCheckUrl, resume: PROFILE.resumeUrl }, null, 2);
 }
 
 export function buildResourceText(uri: string, data: ResourceData): string {

@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import NumberTicker from "./ui/NumberTicker";
 import { BsArrowRight } from "react-icons/bs";
-import { FaLinkedin, FaGithub } from "react-icons/fa";
-import { FaHackerrank } from "react-icons/fa";
+import { FaLinkedin, FaGithub, FaHackerrank } from "react-icons/fa";
 import { HiDownload } from "react-icons/hi";
 import { SiLeetcode, SiKaggle } from "react-icons/si";
 import HeroImg from "../public/Selvin_PaulRaj.webp";
@@ -41,6 +41,14 @@ const SOCIAL_LINKS = [
   { href: "https://leetcode.com/u/selvinpaulraj/", icon: <SiLeetcode size={17} />, label: "LeetCode" },
   { href: "https://www.kaggle.com/selvinpaulrajk", icon: <SiKaggle size={17} />, label: "Kaggle" },
   { href: "https://www.deep-ml.com/profile/fdmYEE5bBFgqLwHxlBFW1lgLUR22", icon: <DeepMlIcon size={17} />, label: "deep-ml" },
+];
+
+const RECRUITER_LINKS = [
+  { href: "/work", label: "How my systems work" },
+  { href: "/fit", label: "Check my fit for your role" },
+  { href: "/ask", label: "Ask me anything" },
+  { href: "/evals", label: "See my evals" },
+  { href: "/challenge", label: "Break my guardrails" },
 ];
 
 const TECH_BADGES = [
@@ -84,10 +92,10 @@ export default function Intro() {
       className="w-full max-w-5xl mx-auto px-4 mb-16 scroll-mt-[100rem] md:pt-8"
     >
       {/* Mobile-only status pill */}
-      <div className="anim-fade-up anim-d0 lg:hidden flex items-center justify-center gap-2 mb-5 font-mono text-xs text-gray-500 dark:text-white/30">
+      <div className="anim-fade-up anim-d0 lg:hidden flex items-center justify-center gap-2 mb-5 font-mono text-xs text-gray-600 dark:text-white/55">
         <span className="flex items-center gap-2 bg-black/[0.04] dark:bg-white/[0.05] border border-black/6 dark:border-white/8 rounded-full px-4 py-1.5">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+          <span className="relative flex h-2 w-2" aria-hidden="true">
+            <span className="animate-ping motion-reduce:animate-none absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
           </span>
           Chennai, India &nbsp;·&nbsp; {time}
@@ -101,12 +109,13 @@ export default function Intro() {
         <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
 
           {/* Desktop status pill */}
-          <div className="anim-fade-up anim-d0 hidden lg:flex items-center gap-2 mb-5 font-mono text-xs text-gray-500 dark:text-white/30 bg-black/[0.04] dark:bg-white/[0.05] border border-black/6 dark:border-white/8 rounded-full px-4 py-1.5">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+          <div className="anim-fade-up anim-d0 hidden lg:flex items-center gap-2 mb-5 font-mono text-xs text-gray-600 dark:text-white/55 bg-black/[0.04] dark:bg-white/[0.05] border border-black/6 dark:border-white/8 rounded-full px-4 py-1.5">
+            <span className="relative flex h-2 w-2" aria-hidden="true">
+              <span className="animate-ping motion-reduce:animate-none absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
             </span>
-            Chennai, India &nbsp;·&nbsp; {time}
+            Chennai, India &nbsp;·&nbsp; {time} &nbsp;·&nbsp;
+            <span className="text-green-700 dark:text-green-400/80">Open to AI Engineer roles</span>
           </div>
 
           {/* Name */}
@@ -114,7 +123,7 @@ export default function Intro() {
             Selvin{" "}
             <span className="text-gray-500 dark:text-white/35">PaulRaj K</span>
             {/* Role — kept inside the H1 so search engines see the role keyword, styled identically to the old sibling <p> */}
-            <span className="anim-fade-up anim-d2 block font-mono text-sm sm:text-[0.9rem] font-normal normal-case tracking-wide text-[#9a7d2a] dark:text-[#FFD700]/65 mt-3">
+            <span className="anim-fade-up anim-d2 block font-mono text-sm sm:text-[0.9rem] font-normal normal-case tracking-wide text-accent-ink dark:text-accent/65 mt-3">
               AI Engineer &nbsp;·&nbsp; MCP &nbsp;·&nbsp; Agentic Systems &nbsp;·&nbsp; RAG &nbsp;·&nbsp; LangGraph
             </span>
           </h1>
@@ -122,7 +131,7 @@ export default function Intro() {
           {/* Mobile inline stats */}
           <div className="anim-fade-up anim-d3 lg:hidden flex items-center justify-center gap-3 mt-1 mb-5 font-mono">
             <span className="text-lg font-bold text-gray-900 dark:text-white/90 tabular-nums">
-              {_projectCount}+
+              <NumberTicker value={_projectCount} />+
             </span>
             <span className="text-xs uppercase tracking-[0.15em] text-gray-600 dark:text-white/50">Projects</span>
             <span className="w-px h-3.5 bg-black/10 dark:bg-white/10" />
@@ -134,21 +143,21 @@ export default function Intro() {
 
           {/* Bio */}
           <p className="anim-fade-up anim-d3 text-base text-gray-600 dark:text-white/50 leading-relaxed max-w-xl mb-3">
-            I build intelligent{" "}
+            I build{" "}
             <span className="text-gray-900 dark:text-white/80 font-medium">
-              AI Agents, MCP servers, and multi-agent LangGraph pipelines
+              AI agents, MCP servers, and LangGraph multi-agent pipelines
             </span>{" "}
-            that turn complex problems into shipped products — backed by full-stack
-            MERN/Next.js experience, currently pursuing an M.E. in Computer Science (AI).
+            that run in production. Before agents I shipped full-stack MERN and Next.js apps,
+            and I&apos;m now doing an M.E. in Computer Science (AI).
           </p>
 
           {/* Secondary bio — hidden on mobile so the CTAs land above the fold */}
-          <p className="anim-fade-up anim-d4 hidden sm:block text-sm text-gray-500 dark:text-white/40 leading-relaxed max-w-xl mb-7">
+          <p className="anim-fade-up anim-d4 hidden sm:block text-sm text-gray-500 dark:text-white/55 leading-relaxed max-w-xl mb-7">
             At{" "}
             <span className="text-gray-700 dark:text-white/60 font-medium">Zinnov (Draup)</span>
-            , I built DRI-MAS — a LangGraph multi-agent system that turns plain-English
-            requests into validated SQL reports, cutting analyst turnaround from hours to
-            under a minute. Outside work: open-source MCP servers and CLI agents.
+             I built DRI-MAS, a LangGraph multi-agent system that turns plain-English
+            requests into validated SQL reports. Analyst turnaround went from hours to under a
+            minute. Outside work I publish MCP servers and CLI agents.
           </p>
 
           {/* CTAs */}
@@ -158,9 +167,9 @@ export default function Intro() {
               onClick={() => { setActiveSection("Contact"); setTimeOfLastClick(Date.now()); }}
               className="flex-1 sm:flex-none group flex items-center justify-between gap-3
                 pl-4 sm:pl-5 pr-1.5 py-1.5 rounded-full
-                bg-gray-900 dark:bg-[#FFD700] text-white dark:text-black
+                bg-gray-900 dark:bg-accent text-white dark:text-black
                 text-sm font-semibold tracking-wide active:scale-[0.97]
-                outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700] focus-visible:ring-offset-2"
+                outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
               style={{ transition: "opacity 150ms ease, transform 160ms cubic-bezier(0.23,1,0.32,1)" }}
             >
               <span className="whitespace-nowrap">Get in touch</span>
@@ -174,14 +183,14 @@ export default function Intro() {
               </span>
             </a>
             <a
-              href="/Selvin_Resume.pdf"
+              href="/view/Selvin_Resume.pdf"
               download
               className="flex-1 sm:flex-none group flex items-center justify-between gap-3
                 pl-4 sm:pl-5 pr-1.5 py-1.5 rounded-full
                 bg-white dark:bg-white/[0.06] border border-black/10 dark:border-white/10
                 text-sm font-semibold tracking-wide text-gray-800 dark:text-white/75
                 hover:bg-gray-50 dark:hover:bg-white/10 active:scale-[0.97]
-                outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700] focus-visible:ring-offset-2"
+                outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
               style={{ transition: "background-color 150ms ease, transform 160ms cubic-bezier(0.23,1,0.32,1)" }}
             >
               <span className="whitespace-nowrap">Download CV</span>
@@ -195,6 +204,36 @@ export default function Intro() {
               </span>
             </a>
           </div>
+
+          {/* Recruiter shortcuts: every claim on this page can be checked */}
+          <nav
+            aria-label="For recruiters"
+            className="anim-fade-up anim-d5 -mt-3 mb-7 flex flex-wrap items-center justify-center lg:justify-start gap-x-4 gap-y-1.5 text-sm"
+          >
+            <span className="lg:hidden w-full text-green-700 dark:text-green-400/80 font-medium">Open to AI Engineer roles</span>
+            {RECRUITER_LINKS.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className="group inline-flex items-center gap-1.5 text-gray-600 dark:text-white/55 hover:text-gray-900 dark:hover:text-white/85
+                  outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
+                style={{ transition: "color 150ms ease" }}
+              >
+                {label}
+                <BsArrowRight size={11} className="group-hover:translate-x-0.5 motion-reduce:transform-none" style={{ transition: "transform 150ms ease" }} />
+              </Link>
+            ))}
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new Event("open-command-palette"))}
+              className="hidden sm:inline-flex items-center gap-1.5 text-gray-600 dark:text-white/55 hover:text-gray-900 dark:hover:text-white/85
+                outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
+              style={{ transition: "color 150ms ease" }}
+            >
+              <kbd className="font-mono text-[0.7rem] px-1.5 py-0.5 rounded border border-black/15 dark:border-white/20">⌘K</kbd>
+              Everything else
+            </button>
+          </nav>
 
           {/* Socials */}
           <div className="anim-fade-up anim-d6 flex flex-wrap items-center gap-2">
@@ -210,7 +249,7 @@ export default function Intro() {
                   bg-black/[0.05] dark:bg-white/[0.05] border border-black/8 dark:border-white/10
                   text-gray-500 dark:text-white/40
                   hover:text-gray-900 dark:hover:text-white/85 hover:scale-110 active:scale-[0.93]
-                  outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700] focus-visible:ring-offset-1"
+                  outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1"
                 style={{ transition: "color 130ms ease, transform 150ms cubic-bezier(0.23,1,0.32,1)" }}
               >
                 {icon}
@@ -221,17 +260,15 @@ export default function Intro() {
 
         {/* Right: profile image with rotating ring */}
         <div className="anim-fade-in anim-d1 shrink-0">
-          <motion.div
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 4.5, ease: "easeInOut", repeat: Infinity }}
-          >
+          <div>
             <div className="relative w-52 h-52 sm:w-64 sm:h-64 lg:w-80 lg:h-80">
-              {/* Conic arc ring — 2px strip outside image edge; no mask needed, works in any bg */}
+              {/* Conic arc ring — 2px strip outside image edge; no mask needed, works in any bg.
+                  Slow 18s spin via .anim-ring-spin (globals.css), stopped under reduced motion. */}
               <div
-                className="absolute rounded-full"
+                aria-hidden="true"
+                className="anim-ring-spin motion-reduce:animate-none absolute rounded-full"
                 style={{
                   inset: "-2px",
-                  animation: "ring-spin 5s linear infinite",
                   background:
                     "conic-gradient(from 0deg, #FFD700 0deg, #FFA500 40deg, transparent 90deg, transparent 300deg, #FFD700 360deg)",
                 }}
@@ -250,15 +287,15 @@ export default function Intro() {
                 />
               </div>
               {/* Gold glow */}
-              <div className="absolute inset-0 rounded-full bg-[#FFD700]/10 blur-2xl scale-110 -z-10" />
+              <div className="absolute inset-0 rounded-full bg-accent/10 blur-2xl scale-110 -z-10" />
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
 
       {/* Tech stack badges */}
       <div className="anim-fade-up anim-d8 hidden lg:flex flex-wrap justify-start gap-2 mb-4">
-        <span className="font-mono text-[0.65rem] text-gray-500 dark:text-white/25 self-center mr-1 tracking-widest uppercase">
+        <span className="font-mono text-[0.65rem] text-gray-500 dark:text-white/50 self-center mr-1 tracking-widest uppercase">
           Core stack
         </span>
         {TECH_BADGES.map((tech) => (

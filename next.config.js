@@ -25,6 +25,38 @@ const nextConfig = {
     ],
   },
 
+  async redirects() {
+    // Old resume URLs that may already be shared; the single source is /view/Selvin_Resume.pdf.
+    return [
+      ...["/Selvin_Resume.pdf", "/view/SPR_Resume.pdf"].map((source) => ({
+        source,
+        destination: "/view/Selvin_Resume.pdf",
+        permanent: true,
+      })),
+      // A2A renamed agent.json → agent-card.json in v0.3; keep the legacy path working.
+      { source: "/.well-known/agent.json", destination: "/.well-known/agent-card.json", permanent: true },
+    ];
+  },
+
+  async rewrites() {
+    return {
+      // Same URL, different representation: terminals get an ANSI resume card,
+      // agents asking for markdown get llms-full.txt. Browsers are unaffected.
+      beforeFiles: [
+        {
+          source: "/",
+          has: [{ type: "header", key: "accept", value: ".*text/markdown.*" }],
+          destination: "/llms-full.txt",
+        },
+        {
+          source: "/",
+          has: [{ type: "header", key: "user-agent", value: "(curl|Wget|wget|HTTPie|httpie|xh)/.*" }],
+          destination: "/api/cli",
+        },
+      ],
+    };
+  },
+
   async headers() {
     return [
       {
@@ -62,7 +94,7 @@ const nextConfig = {
         ],
       },
       {
-        source: "/Selvin_Resume.pdf",
+        source: "/view/Selvin_Resume.pdf",
         headers: [
           {
             key: "Content-Disposition",
@@ -78,6 +110,20 @@ const nextConfig = {
             value: "public, max-age=31536000, immutable",
           },
         ],
+      },
+      {
+        source: "/",
+        has: [{ type: "header", key: "accept", value: ".*text/markdown.*" }],
+        headers: [{ key: "Content-Type", value: "text/markdown; charset=utf-8" }],
+      },
+      {
+        // "/" varies by representation (see rewrites); keep caches from mixing them.
+        source: "/",
+        headers: [{ key: "Vary", value: "Accept, User-Agent" }],
+      },
+      {
+        source: "/llms-full.txt",
+        headers: [{ key: "Content-Type", value: "text/markdown; charset=utf-8" }],
       },
       {
         source: "/(robots\\.txt|sitemap\\.xml|manifest\\.json|feed\\.xml|llms\\.txt|llms-full\\.txt|ai\\.txt|humans\\.txt)",

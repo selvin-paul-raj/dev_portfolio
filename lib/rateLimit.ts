@@ -62,3 +62,15 @@ export function checkContactRateLimit(ip: string): string | null {
   }
   return null;
 }
+
+// "Ask Selvin" + prompt-injection challenge: per-IP damping plus a global
+// daily cap so a free-tier LLM key can't be drained by one visitor.
+export const askIpLimiter = createRateLimiter({ limit: 12, windowMs: 10 * 60_000 });
+export const llmGlobalLimiter = createRateLimiter({ limit: 500, windowMs: 24 * 60 * 60_000 });
+
+/** Applies both LLM limiters; returns an error message if blocked. */
+export function checkLlmRateLimit(ip: string, scope: string): string | null {
+  if (!askIpLimiter.check(`${scope}:${ip}`).allowed) return "Too many requests. Please wait a few minutes.";
+  if (!llmGlobalLimiter.check("global").allowed) return "Daily limit reached. Please try again tomorrow.";
+  return null;
+}

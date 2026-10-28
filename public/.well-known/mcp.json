@@ -28,6 +28,7 @@
     { "name": "get_github_repo", "description": "Detailed stats for one repo" },
     { "name": "filter_certifications", "description": "Filter certifications" },
     { "name": "get_profile_summary", "description": "Full professional summary" },
+    { "name": "match_job", "description": "Score fit against a job description with cited evidence and gaps" },
     { "name": "contact_selvin", "description": "Send a contact message" }
   ],
   "owner": {
