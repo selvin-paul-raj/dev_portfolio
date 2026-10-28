@@ -15,7 +15,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[50vh] gap-5 text-center px-4">
+    <main id="content" className="flex flex-col items-center justify-center min-h-[50vh] gap-5 text-center px-4">
       <span className="font-mono text-5xl font-bold text-gray-200 dark:text-white/10">!</span>
       <div>
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white/90 mb-1">
@@ -41,6 +41,6 @@ export default function Error({
           <BsArrowCounterclockwise size={13} />
         </span>
       </button>
-    </div>
+    </main>
   );
 }
