@@ -39,9 +39,11 @@ const TECH_STACK = [
   "Vercel",
 ];
 
-const Footer = () => {
-  const currentYear = new Date().getFullYear();
+// Server component: computed once per server instance rather than during render
+// (keeps render pure); the page is revalidated daily, so the year stays current.
+const CURRENT_YEAR = new Date().getFullYear();
 
+const Footer = () => {
   return (
     <footer className="border-t border-black/[0.08] dark:border-white/[0.07]">
       <div className="max-w-5xl mx-auto px-4 py-12">
@@ -54,7 +56,7 @@ const Footer = () => {
             <p className="text-sm font-semibold text-gray-900 dark:text-white">
               Selvin PaulRaj K
             </p>
-            <p className="font-mono text-xs text-amber-700 dark:text-[#f5c518] mt-0.5 tracking-wide">
+            <p className="font-mono text-xs text-amber-700 dark:text-accent mt-0.5 tracking-wide">
               AI Engineer · MCP · Agentic Systems
             </p>
           </div>
@@ -65,7 +67,7 @@ const Footer = () => {
               <a
                 key={name}
                 href={hash}
-                className="rounded-sm text-sm text-gray-600 dark:text-[#c9c9cf] hover:text-gray-900 dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518]"
+                className="rounded-sm text-sm text-gray-600 dark:text-[#c9c9cf] hover:text-gray-900 dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 style={{ transition: "color 150ms ease" }}
               >
                 {name}
@@ -86,7 +88,7 @@ const Footer = () => {
                   bg-black/[0.04] dark:bg-white/[0.05] border border-black/[0.08] dark:border-white/[0.07]
                   text-gray-600 dark:text-[#c9c9cf]
                   hover:text-gray-900 dark:hover:text-white active:scale-[0.97]
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518]"
+                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 style={{
                   transition: "color 130ms ease, transform 150ms cubic-bezier(0.23,1,0.32,1)",
                 }}
@@ -117,7 +119,7 @@ const Footer = () => {
         {/* Bottom: copyright */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
           <p className="font-mono text-xs text-gray-500 dark:text-[#a1a1aa]">
-            &copy; {currentYear} Selvin PaulRaj K. All rights reserved.
+            &copy; {CURRENT_YEAR} Selvin PaulRaj K. All rights reserved.
           </p>
           <p className="font-mono text-xs text-gray-500 dark:text-[#a1a1aa]">
             Crafted with care in{" "}

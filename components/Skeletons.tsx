@@ -2,7 +2,7 @@
 import React from "react";
 
 const Sh = ({ className, style }: { className: string; style?: React.CSSProperties }) => (
-  <div className={`animate-pulse rounded-md bg-gray-100 dark:bg-white/[0.06] ${className}`} style={style} />
+  <div className={`animate-pulse motion-reduce:animate-none rounded-md bg-gray-100 dark:bg-white/[0.06] ${className}`} style={style} />
 );
 
 /* ── Projects ── */

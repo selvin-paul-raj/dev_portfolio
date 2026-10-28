@@ -55,3 +55,6 @@ graft/
 # Local agent/tool caches — regenerable, not committed.
 .claude-flow/
 .tokensave/
+
+# aislop local scan state
+/.aislop/

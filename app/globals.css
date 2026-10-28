@@ -9,8 +9,11 @@ body,
   width: 100%;
 }
 
-body {
+html {
   scroll-behavior: smooth;
+}
+
+body {
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -23,7 +26,7 @@ pre {
 }
 
 ::selection {
-  background-color: #ffd700;
+  background-color: theme("colors.accent.DEFAULT");
   color: #000000;
 }
 
@@ -40,7 +43,7 @@ pre {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #ffd700;
+  background-color: theme("colors.accent.DEFAULT");
   border-radius: 4px;
 }
 
@@ -65,6 +68,9 @@ pre {
   to { transform: rotate(360deg); }
 }
 
+/* Hero ring: slow, ambient — a full turn every 18s */
+.anim-ring-spin { animation: ring-spin 18s linear infinite; }
+
 .anim-fade-up  { animation: fadeUp  0.45s cubic-bezier(0.23,1,0.32,1) both; }
 .anim-fade-in  { animation: fadeIn  0.45s cubic-bezier(0.23,1,0.32,1) both; }
 
@@ -80,10 +86,60 @@ pre {
 .anim-d9 { animation-delay: 0.80s; }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Stop every looping/decorative CSS animation (ring spin, ping, pulse, spinners). */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+
+  .anim-ring-spin {
+    animation: none;
+  }
+
   .anim-fade-up,
   .anim-fade-in {
     animation: none;
     opacity: 1;
     transform: none;
+  }
+}
+
+/* /work pipeline diagram: the active edge draws in, then a packet travels it. */
+.pipeline-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: pipeline-draw 700ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+@keyframes pipeline-draw {
+  to { stroke-dashoffset: 0; }
+}
+.pipeline-packet {
+  offset-distance: 0%;
+  opacity: 0;
+  animation: pipeline-packet 1800ms cubic-bezier(0.22, 1, 0.36, 1) 500ms 3;
+}
+@keyframes pipeline-packet {
+  0% { offset-distance: 0%; opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pipeline-draw { animation: none; stroke-dashoffset: 0; }
+  .pipeline-packet { display: none; }
+}
+
+/* Small screens: the diagram renders full width and pans to the active stage. */
+@media (max-width: 1023px) {
+  .pipeline-pan {
+    transform: translateY(var(--pan, 0));
+    transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 }

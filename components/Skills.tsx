@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import { skillsData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
@@ -35,7 +34,7 @@ export default function Skills() {
 
       <dl className="border-t border-black/[0.08] dark:border-white/[0.08]">
         {rows.map(({ key, label }, i) => (
-          <motion.div
+          <m.div
             key={key}
             initial={{ opacity: 0, y: 8 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -44,7 +43,7 @@ export default function Skills() {
             className="grid grid-cols-1 gap-3 border-b border-black/[0.08] py-5 dark:border-white/[0.08] sm:grid-cols-[11rem_minmax(0,1fr)] sm:gap-8"
           >
             <dt className="flex items-baseline gap-3 font-mono text-xs uppercase tracking-[0.16em] text-gray-500 dark:text-[#a1a1aa]">
-              <span className="tabular-nums text-amber-700 dark:text-[#f5c518]">{String(i + 1).padStart(2, "0")}</span>
+              <span className="tabular-nums text-amber-700 dark:text-accent">{String(i + 1).padStart(2, "0")}</span>
               {label}
             </dt>
             <dd className="m-0">
@@ -59,7 +58,7 @@ export default function Skills() {
                 ))}
               </ul>
             </dd>
-          </motion.div>
+          </m.div>
         ))}
       </dl>
     </section>

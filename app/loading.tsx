@@ -1,6 +1,6 @@
 export default function Loading() {
   return (
-    <div className="flex flex-col items-center px-4 w-full max-w-5xl mx-auto pt-8 animate-pulse">
+    <div className="flex flex-col items-center px-4 w-full max-w-5xl mx-auto pt-8 animate-pulse motion-reduce:animate-none">
       {/* Hero row */}
       <div className="w-full flex flex-col lg:flex-row items-center lg:items-start gap-10 lg:gap-16 mb-14">
         <div className="flex-1 flex flex-col items-center lg:items-start gap-4 w-full">

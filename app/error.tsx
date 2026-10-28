@@ -28,7 +28,7 @@ export default function Error({
       <button
         onClick={reset}
         className="group flex items-center justify-between gap-3 pl-5 pr-1.5 py-1.5 rounded-full
-          bg-gray-900 dark:bg-[#FFD700] text-white dark:text-black text-sm font-semibold
+          bg-gray-900 dark:bg-accent text-white dark:text-black text-sm font-semibold
           active:scale-[0.97]"
         style={{ transition: "transform 160ms cubic-bezier(0.23,1,0.32,1)" }}
       >

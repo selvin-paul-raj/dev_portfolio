@@ -11,7 +11,7 @@ import {
   JSONRPC_METHOD_NOT_FOUND,
   JSONRPC_PARSE_ERROR,
 } from "./errors";
-import type { McpRequest, McpRequestContext, McpResponse, McpTool, McpResource, McpContent } from "./types";
+import type { McpRequestContext, McpResponse, McpTool, McpResource, McpContent } from "./types";
 
 export interface McpHandlers {
   listTools(): McpTool[];
@@ -57,7 +57,8 @@ export function createMcpHandler(handlers: McpHandlers) {
     const isNotification = !("id" in body);
     const id: RequestId = isValidId(body.id) ? body.id : null;
 
-    if (body.jsonrpc !== "2.0" || typeof body.method !== "string" || (!isNotification && !isValidId(body.id))) {
+    const method = body.method;
+    if (body.jsonrpc !== "2.0" || typeof method !== "string" || (!isNotification && !isValidId(body.id))) {
       return errorResponse(id, JSONRPC_INVALID_REQUEST, "Invalid Request");
     }
     if (body.params !== undefined && !isPlainObject(body.params)) {
@@ -67,7 +68,7 @@ export function createMcpHandler(handlers: McpHandlers) {
     // Notifications (e.g. notifications/initialized) never get a response body.
     if (isNotification) return null;
 
-    const { method, params } = body as unknown as McpRequest;
+    const params = isPlainObject(body.params) ? body.params : undefined;
 
     try {
       switch (method) {
