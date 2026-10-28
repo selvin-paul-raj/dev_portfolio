@@ -18,17 +18,22 @@ Personal portfolio for **Selvin PaulRaj K** — AI Engineer at Zinnov (Draup), s
 
 ## Case studies
 
-Nine scrollytelling case studies at [`/work`](https://selvinpaulraj.vercel.app/work). Each pins an architecture diagram (clusters, LLM calls, routing gates, human-in-the-loop interrupts, fan-out, retries) that animates step by step as you read, followed by measured results, in-depth notes, and design decisions. Content lives in `lib/data/caseStudies.json`; private work is described at architecture level only, and every number traces to the repo or portfolio data.
+14 scrollytelling case studies at [`/work`](https://selvinpaulraj.vercel.app/work). Each pins an architecture diagram (clusters, LLM calls, routing gates, human-in-the-loop interrupts, fan-out, retries) that animates step by step as you read, then shows measured results, a **How it's verified** block (harness, evals, guardrails, testing; missing items are omitted, never padded), in-depth notes, and design decisions. Content lives in `lib/data/caseStudies.json`. Private repos stay private: their case studies describe architecture only and link no code. Every number traces to the repo or portfolio data.
 
 | Case study | Access | Headline |
 |---|---|---|
 | [DRI-MAS](https://selvinpaulraj.vercel.app/work/dri-mas) | Work · private repo | < 1 min turnaround, down from hours |
+| [Akavizhi](https://selvinpaulraj.vercel.app/work/akavizhi) | Private repo | 9 specialist agents with scoped tools |
+| [Jobs with Joe](https://selvinpaulraj.vercel.app/work/jobs-with-joe) | Private repo · live product | 12 job source adapters |
 | [Company Synonym Agent](https://selvinpaulraj.vercel.app/work/company-synonym-agent) | Work · private repo | 2.67M company and subsidiary records indexed |
-| [Deal Origination Framework](https://selvinpaulraj.vercel.app/work/dof) | Work · private repo | 537 enterprise accounts monitored weekly |
+| [Deal Origination Framework (DOF)](https://selvinpaulraj.vercel.app/work/dof) | Work · private repo | 537 enterprise accounts monitored weekly |
 | [Skill Proficiency Engine](https://selvinpaulraj.vercel.app/work/skill-proficiency) | Work · private repo | 5 canonical proficiency levels |
 | [Invoice-to-PO Decision Workflow](https://selvinpaulraj.vercel.app/work/invoice-to-po) | Public repo · live demo | 0 / 600 false approvals on adversarial variants |
+| [AEON](https://selvinpaulraj.vercel.app/work/aeon) | Private repo | 5 ai agents coordinated, plus the owner |
 | [Finn Advisor](https://selvinpaulraj.vercel.app/work/finn-advisor) | Public repo | 16 read-only brokerage tools, verified live |
+| [FleetVoice](https://selvinpaulraj.vercel.app/work/fleetvoice) | Private repo | 4 model paths plus a rules fallback |
 | [ChunkLab](https://selvinpaulraj.vercel.app/work/chunklab) | Public repo · live demo | 11 chunking strategies |
+| [SPR Studio](https://selvinpaulraj.vercel.app/work/spr-studio) | Private repo | 8 renders per script (4 formats × 2 styles) |
 | [Instagram MCP Server](https://selvinpaulraj.vercel.app/work/instagram-mcp) | Public repo | 36 allow-listed instagram actions |
 | [Outlook CLI](https://selvinpaulraj.vercel.app/work/outlook-cli) | Public repo · npm | 21 mcp tools |
 

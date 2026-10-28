@@ -26,15 +26,20 @@
 
 ## Case Studies
 
-In-depth, stage-by-stage walkthroughs with measured results (also via MCP: `get_case_study`, resource `selvin://case-studies`):
+In-depth, stage-by-stage walkthroughs with measured results and how each system is verified (also via MCP: `get_case_study`, resource `selvin://case-studies`):
 
 - [DRI-MAS](https://selvinpaulraj.vercel.app/work/dri-mas): A LangGraph multi-agent system that turns plain-English data requests into validated Trino SQL, with four human-in-the-loop interrupts and resumable state.
+- [Akavizhi](https://selvinpaulraj.vercel.app/work/akavizhi): A single-user personal AI: a two-stage router hands each request to one of nine specialist agents, and every consequential action has to match what the owner actually said.
+- [Jobs with Joe](https://selvinpaulraj.vercel.app/work/jobs-with-joe): A job board for Indian freshers: twelve source adapters, explainable rule-based classification, and AI resume tools behind a fact guard that rejects anything the candidate did not write.
 - [Company Synonym Agent](https://selvinpaulraj.vercel.app/work/company-synonym-agent): Entity resolution for company names across 2.67M company and subsidiary records: semantic recall, lexical rescoring, rule boosts, and an LLM plus a person only for the hard cases.
-- [Deal Origination Framework](https://selvinpaulraj.vercel.app/work/dof): A weekly business-signal pipeline for 537 enterprise accounts: collect from newsrooms and news, deduplicate syndicated copies, classify each event once, and rank the top two per vertical.
+- [Deal Origination Framework (DOF)](https://selvinpaulraj.vercel.app/work/dof): A weekly business-signal pipeline for 537 enterprise accounts: collect from newsrooms and news, deduplicate syndicated copies, classify each event once, and rank the top two per vertical.
 - [Skill Proficiency Engine](https://selvinpaulraj.vercel.app/work/skill-proficiency): Tags every skill in a job description with one of five proficiency levels, backed by a quote from the JD, and answers 'not stated' instead of guessing.
 - [Invoice-to-PO Decision Workflow](https://selvinpaulraj.vercel.app/work/invoice-to-po): An accounts-payable workflow where AI reads, code decides, and people own the exceptions: every invoice ends as approve, hold with one question, or reject, and every check cites its source record.
+- [AEON](https://selvinpaulraj.vercel.app/work/aeon): A governance layer for a team of AI agents: a git repository as shared memory, event-sourced state that changes only on independent verification, and a five-gate security CLI.
 - [Finn Advisor](https://selvinpaulraj.vercel.app/work/finn-advisor): A single-user financial assistant over read-only brokerage data, where every number comes from code and the LLM only explains it.
+- [FleetVoice](https://selvinpaulraj.vercel.app/work/fleetvoice): A WhatsApp agent for truck drivers that turns Tamil, Hindi, or English voice notes into trip updates, where the model proposes facts and plain code decides what happens.
 - [ChunkLab](https://selvinpaulraj.vercel.app/work/chunklab): A Streamlit lab for comparing chunking, retrieval, and reranking strategies side by side, scored with standard IR metrics on a built-in labelled set.
+- [SPR Studio](https://selvinpaulraj.vercel.app/work/spr-studio): A script-to-video pipeline that turns a beat script into lip-synced comic videos in my own cloned voice, with AI disclosure rendered into every frame.
 - [Instagram MCP Server](https://selvinpaulraj.vercel.app/work/instagram-mcp): An MCP server that gives Claude and ChatGPT 36 allow-listed Instagram actions through Composio, built to keep working when OAuth is unfinished or the upstream is down.
 - [Outlook CLI](https://selvinpaulraj.vercel.app/work/outlook-cli): An npm CLI and stdio MCP server for Outlook mail and calendar over Microsoft Graph: one OAuth login, one tool registry shared by humans and agents.
 

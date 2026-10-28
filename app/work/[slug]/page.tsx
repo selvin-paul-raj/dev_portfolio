@@ -27,6 +27,13 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   };
 }
 
+const ASSURANCE_ROWS = [
+  ["harness", "Harness"],
+  ["evals", "Evals"],
+  ["guardrails", "Guardrails"],
+  ["testing", "Testing"],
+] as const;
+
 const label = "font-mono text-[0.7rem] uppercase tracking-[0.14em] text-gray-500 dark:text-white/50";
 
 export default async function CaseStudyPage({ params }: Params) {
@@ -105,6 +112,20 @@ export default async function CaseStudyPage({ params }: Params) {
           ))}
         </dl>
       </section>
+
+      {study.assurance && (
+        <section aria-labelledby="verified" className="grid md:grid-cols-[10rem_minmax(0,1fr)] gap-x-10 gap-y-4 mb-20">
+          <h2 id="verified" className={label}>How it&apos;s verified</h2>
+          <dl className="max-w-4xl divide-y divide-black/10 dark:divide-white/10 border-y border-black/10 dark:border-white/10">
+            {ASSURANCE_ROWS.filter(([key]) => study.assurance?.[key]).map(([key, name]) => (
+              <div key={key} className="grid sm:grid-cols-[8rem_minmax(0,1fr)] gap-x-6 gap-y-1 py-4">
+                <dt className="font-mono text-xs uppercase tracking-[0.12em] text-accent-ink dark:text-accent pt-0.5">{name}</dt>
+                <dd className="text-[0.95rem] leading-[1.7] text-gray-700 dark:text-white/75">{study.assurance?.[key]}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      )}
 
       {study.deepDive && study.deepDive.length > 0 && (
         <section aria-labelledby="deep-dive" className="grid md:grid-cols-[10rem_minmax(0,1fr)] gap-x-10 gap-y-4 mb-20">
