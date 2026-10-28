@@ -49,7 +49,7 @@ const SocialLinks = () => {
             hover:text-gray-900 dark:hover:text-white/85
             hover:border-black/20 dark:hover:border-white/20
             active:scale-[0.97]
-            outline-none focus-visible:ring-2 focus-visible:ring-[#FFD700] focus-visible:ring-offset-1"
+            outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1"
           style={{
             transition:
               "color 130ms ease, transform 150ms cubic-bezier(0.23,1,0.32,1), border-color 130ms ease, background-color 130ms ease",

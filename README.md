@@ -16,6 +16,20 @@ Personal portfolio for **Selvin PaulRaj K** — AI Engineer at Zinnov (Draup), s
 
 ---
 
+## For recruiters and agents
+
+| Endpoint | What it does |
+|----------|--------------|
+| [`/fit`](https://selvinpaulraj.vercel.app/fit) | Paste a job description → 0–100 fit score; every matched requirement cites the work bullet, project, or certification behind it, and unbacked requirements are listed as gaps. Runs in the browser, no LLM. |
+| `/api/a2a` + [`/.well-known/agent-card.json`](https://selvinpaulraj.vercel.app/.well-known/agent-card.json) | A2A v0.3 JSON-RPC agent (`message/send`); skills `job_fit` and `profile`. |
+| [`/ask`](https://selvinpaulraj.vercel.app/ask) | Grounded Q&A: BM25 over `lib/data` (`lib/ask/retrieve.ts`), answers may only use retrieved snippets, `[n]` citations validated, off-topic gate. Works without an LLM key (extractive mode). |
+| [`/evals`](https://selvinpaulraj.vercel.app/evals) | Renders `lib/data/evals.json`, produced by `npm run evals` from `evals/golden.json` (retrieval hit@3/MRR, off-topic refusal, fit-check cases; `-- --llm` grades live answers). |
+| [`/challenge`](https://selvinpaulraj.vercel.app/challenge) | Prompt-injection game, 5 levels of stacked defenses (`lib/ask/challenge.ts`). Needs `LLM_*` and `CHALLENGE_SALT`. |
+| [`/resume.json`](https://selvinpaulraj.vercel.app/resume.json) | Resume in the [JSON Resume](https://jsonresume.org) schema, generated from `lib/data`. |
+| [`/view/Selvin_Resume.pdf`](https://selvinpaulraj.vercel.app/view/Selvin_Resume.pdf) | The PDF resume. |
+
+All three share `lib/fit/matchJob.ts` / `lib/data`, so the site, MCP server, and A2A agent never disagree.
+
 ## MCP Server
 
 This portfolio is MCP-enabled. AI assistants (Claude, Cursor, Zed) can connect directly to portfolio data.
@@ -45,6 +59,7 @@ The server ships as two entry points that share one implementation: `app/api/mcp
 | `get_github_repo(repo)` | Single repo details |
 | `filter_certifications(category, issuer)` | Filter certifications |
 | `get_profile_summary()` | Full profile JSON |
+| `match_job(job_description)` | Evidence-cited fit report for a JD (score, matches, gaps) |
 | `contact_selvin(name, email, message)` | Send email via Resend |
 
 ### Connect
@@ -152,13 +167,14 @@ dev_portfolio/
 │   │   ├── projects.json
 │   │   ├── experiences.json
 │   │   └── skills.json
+│   ├── fit/matchJob.ts # Deterministic JD fit check (/fit, MCP match_job, A2A)
 │   ├── data.tsx        # Transform + re-export
 │   ├── hooks.ts        # useSectionInView
 │   └── types.ts
 ├── public/
 │   ├── favicon.svg     # SVG favicon (gold S on dark, scales perfectly)
 │   ├── projects/       # Project screenshots
-│   ├── resume.pdf
+│   ├── view/Selvin_Resume.pdf  # The only resume file (old paths redirect here)
 │   └── *.png           # Profile images
 ├── utils/
 │   └── calculateDuration.ts

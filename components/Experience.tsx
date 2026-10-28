@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { m } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import { experiencesData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
@@ -47,7 +47,7 @@ function BulletList({ items, current }: { items: string[]; current: boolean }) {
           key={i}
           className={`relative max-w-[70ch] pl-4 text-[0.95rem] leading-[1.6] text-gray-600 dark:text-[#c9c9cf]
             before:absolute before:left-0 before:top-[0.68em] before:h-1 before:w-1 before:rounded-full before:content-['']
-            ${current ? "before:bg-amber-600 dark:before:bg-[#f5c518]" : "before:bg-gray-400 dark:before:bg-[#71717a]"}`}
+            ${current ? "before:bg-amber-600 dark:before:bg-accent" : "before:bg-gray-400 dark:before:bg-[#71717a]"}`}
         >
           {item}
         </li>
@@ -65,7 +65,7 @@ function WorkItem({ exp, index }: { exp: Entry; index: number }) {
   const panelId = `exp-more-${exp.id ?? index}`;
 
   return (
-    <motion.li
+    <m.li
       initial={{ opacity: 0, y: 8 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
@@ -75,12 +75,12 @@ function WorkItem({ exp, index }: { exp: Entry; index: number }) {
       {/* Timeline node */}
       <span aria-hidden="true" className="absolute left-0 top-[0.35rem] flex h-[11px] w-[11px]">
         {exp.isCurrent && (
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#f5c518] opacity-40 motion-reduce:animate-none" />
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-40 motion-reduce:animate-none" />
         )}
         <span
           className={`relative inline-flex h-[11px] w-[11px] rounded-full border-2 ${
             exp.isCurrent
-              ? "border-[#f5c518] bg-[#f5c518]"
+              ? "border-accent bg-accent"
               : "border-gray-300 bg-white dark:border-[#3f3f46] dark:bg-[#101015]"
           }`}
         />
@@ -102,7 +102,7 @@ function WorkItem({ exp, index }: { exp: Entry; index: number }) {
       </div>
 
       <p className="m-0 mt-1 text-sm">
-        <span className="font-medium text-amber-700 dark:text-[#f5c518]">{exp.company}</span>
+        <span className="font-medium text-amber-700 dark:text-accent">{exp.company}</span>
         {exp.location && (
           <span className="text-gray-500 dark:text-[#a1a1aa]">
             <span aria-hidden="true" className="mx-2">·</span>
@@ -135,7 +135,7 @@ function WorkItem({ exp, index }: { exp: Entry; index: number }) {
                 onClick={() => setExpanded((v) => !v)}
                 aria-expanded={expanded}
                 aria-controls={panelId}
-                className="-ml-2 mt-2 inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium text-amber-700 outline-none transition-transform duration-150 ease-out active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[#f5c518] dark:text-[#f5c518] [@media(hover:hover)]:hover:bg-[#FFD700]/10"
+                className="-ml-2 mt-2 inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium text-amber-700 outline-none transition-transform duration-150 ease-out active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-accent dark:text-accent [@media(hover:hover)]:hover:bg-accent/10"
               >
                 {expanded ? "Show fewer" : `Show all ${bullets.length}`}
                 <svg
@@ -168,7 +168,7 @@ function WorkItem({ exp, index }: { exp: Entry; index: number }) {
           ))}
         </ul>
       )}
-    </motion.li>
+    </m.li>
   );
 }
 
@@ -210,7 +210,7 @@ export default function Experience() {
                   <h4 className="m-0 mt-1.5 text-base font-semibold leading-snug text-gray-900 dark:text-white">
                     {edu.title}
                   </h4>
-                  <p className="m-0 mt-0.5 text-sm font-medium text-amber-700 dark:text-[#f5c518]">{edu.company}</p>
+                  <p className="m-0 mt-0.5 text-sm font-medium text-amber-700 dark:text-accent">{edu.company}</p>
                   {edu.description && (
                     <p className="m-0 mt-2 line-clamp-2 max-w-[70ch] text-sm leading-[1.6] text-gray-600 dark:text-[#c9c9cf]">
                       {edu.description}

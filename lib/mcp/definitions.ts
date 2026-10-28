@@ -3,6 +3,7 @@
 // Shared by both MCP entry points (Next.js route + standalone Alpic server) —
 // keep this file free of "@/" aliases and JSON imports so plain `tsc` (see
 // tsconfig.server.json) can compile it without a bundler.
+import { SITE_URL } from "../site";
 import type { McpTool, McpResource } from "./types";
 
 export const PROTOCOL_VERSION = "2024-11-05";
@@ -86,6 +87,18 @@ export const TOOLS: McpTool[] = [
     inputSchema: { type: "object", properties: {} },
   },
   {
+    name: "match_job",
+    description:
+      "Check how well Selvin fits a job description. Paste the full JD; returns a 0-100 fit score, each recognised requirement with cited evidence (production work bullets, projects with links, verifiable certifications), and the requirements with no evidence (gaps). Deterministic — no LLM, nothing is inferred. Quote the evidence and gaps as returned.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        job_description: { type: "string", description: "Full job description text (max 20,000 chars)" },
+      },
+      required: ["job_description"],
+    },
+  },
+  {
     name: "contact_selvin",
     description:
       "Send a contact message to Selvin via email (one email per call — no bulk sending). Use when the user wants to hire, collaborate, or ask a question.",
@@ -147,8 +160,8 @@ export const PROFILE = {
   email: "selvinpaulgomathi@gmail.com",
   phone: "+91 91762 99049",
   whatsapp: "https://wa.me/+919176299049",
-  portfolio: "https://selvinpaulraj.vercel.app",
-  resumeUrl: "https://selvinpaulraj.vercel.app/Selvin_Resume.pdf",
+  portfolio: SITE_URL,
+  resumeUrl: `${SITE_URL}/view/Selvin_Resume.pdf`,
   github: "https://github.com/selvin-paul-raj",
   linkedin: "https://linkedin.com/in/selvinpaulraj",
   socialLinks: {
@@ -163,6 +176,11 @@ export const PROFILE = {
     "AI Engineer specializing in intelligent AI Agents, MCP servers, RAG systems, LangGraph multi-agent pipelines, and agentic workflows. Full-stack MERN/Next.js expertise.",
   currentCompany: "Zinnov / Draup",
   currentRole: "Associate Data Analyst, AI Automation",
+  roleNote:
+    "Official title is Associate Data Analyst; the day-to-day work is AI engineering — LangGraph multi-agent systems, hybrid retrieval over 2.6M records, MCP integrations, and LLM evaluation (see the Zinnov/Draup experience entries).",
+  openTo: ["AI Engineer", "GenAI / LLM Engineer", "Agentic AI Engineer", "Applied AI Engineer"],
+  fitCheckUrl: `${SITE_URL}/fit`,
+  a2aAgentCard: `${SITE_URL}/.well-known/agent-card.json`,
   education: "M.E Computer Science with AI, Kings Engineering College",
   expertise: [
     "AI Agents & Agentic Systems",
@@ -175,5 +193,5 @@ export const PROFILE = {
     "Python / FastAPI",
     "Node.js",
   ],
-  mcpEndpoint: "https://selvinpaulraj.vercel.app/api/mcp",
+  mcpEndpoint: `${SITE_URL}/api/mcp`,
 } as const;

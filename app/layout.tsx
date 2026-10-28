@@ -6,12 +6,15 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ThemeSwitch from "@/components/ThemeSwitch";
+import CommandPalette from "@/components/CommandPalette";
+import { caseStudies } from "@/lib/work";
 import { Toaster } from "react-hot-toast";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import ThemeContextProvider from "@/context/theme-context";
 import { projectsData } from "@/lib/data";
+import { SITE_URL } from "@/lib/site";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -45,7 +48,7 @@ const featuredProjectsItemList = projectsData
       "@type": "SoftwareSourceCode",
       name: p.title,
       description: p.description,
-      author: { "@id": "https://selvinpaulraj.vercel.app/#person" },
+      author: { "@id": `${SITE_URL}/#person` },
       programmingLanguage: p.tags,
       codeRepository: p.code,
       ...(p.live ? { url: p.live } : {}),
@@ -53,7 +56,7 @@ const featuredProjectsItemList = projectsData
   }));
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://selvinpaulraj.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Selvin PaulRaj K | AI Engineer — AI Agents, MCP & Agentic Systems",
     template: "%s | Selvin PaulRaj K",
@@ -75,7 +78,7 @@ export const metadata: Metadata = {
     "Next.js",
     "Chennai",
   ],
-  authors: [{ name: "Selvin PaulRaj K", url: "https://selvinpaulraj.vercel.app" }],
+  authors: [{ name: "Selvin PaulRaj K", url: SITE_URL }],
   creator: "Selvin PaulRaj K",
   publisher: "Selvin PaulRaj K",
   applicationName: "Selvin PaulRaj K Portfolio",
@@ -89,7 +92,7 @@ export const metadata: Metadata = {
     apple: "/favicon.svg",
   },
   alternates: {
-    canonical: "https://selvinpaulraj.vercel.app",
+    canonical: SITE_URL,
   },
   robots: {
     index: true,
@@ -105,7 +108,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://selvinpaulraj.vercel.app",
+    url: SITE_URL,
     siteName: "Selvin PaulRaj K",
     title: "Selvin PaulRaj K | AI Engineer — AI Agents & Agentic Systems",
     description:
@@ -136,7 +139,7 @@ export default function RootLayout({
         {/* Dark-first: runs before paint, no FOUC */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){var t=null;try{t=localStorage.getItem('theme');}catch(e){}if(t!=='light')document.documentElement.classList.add('dark');})();`,
+            __html: `(function(){var t=null;try{t=localStorage.getItem('theme');}catch(e){/* storage blocked (privacy mode): must not throw before paint, so fall back to the dark default */t=null;}if(t!=='light')document.documentElement.classList.add('dark');})();`,
           }}
         />
         {/* Geo meta tags — helps local/regional SEO */}
@@ -170,10 +173,10 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Person",
-              "@id": "https://selvinpaulraj.vercel.app/#person",
+              "@id": `${SITE_URL}/#person`,
               name: "Selvin PaulRaj K",
-              url: "https://selvinpaulraj.vercel.app",
-              image: "https://selvinpaulraj.vercel.app/Selvin_PaulRaj.webp",
+              url: SITE_URL,
+              image: `${SITE_URL}/Selvin_PaulRaj.webp`,
               sameAs: [
                 "https://github.com/selvin-paul-raj",
                 "https://linkedin.com/in/selvinpaulraj",
@@ -181,6 +184,12 @@ export default function RootLayout({
                 "https://leetcode.com/u/selvinpaulraj/",
               ],
               jobTitle: "Associate Data Analyst, AI Automation",
+              hasOccupation: {
+                "@type": "Occupation",
+                name: "AI Engineer",
+                description:
+                  "Builds LangGraph multi-agent systems, hybrid retrieval (FAISS + BM25), MCP servers, and LLM evaluation pipelines. Open to AI Engineer roles.",
+              },
               description:
                 "AI engineer specializing in agentic AI systems, MCP servers, LangGraph multi-agent pipelines, RAG systems, and enterprise AI automation. SPOT Recognition awardee at Zinnov (Draup). Claude Certified Architect – Foundations.",
               award:
@@ -281,24 +290,24 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "ProfilePage",
-              "@id": "https://selvinpaulraj.vercel.app/#profile",
+              "@id": `${SITE_URL}/#profile`,
               name: "Selvin PaulRaj K — AI Engineer Portfolio",
-              url: "https://selvinpaulraj.vercel.app",
+              url: SITE_URL,
               description:
                 "Portfolio of Selvin PaulRaj K, AI Engineer and Associate Data Analyst at Zinnov/Draup. Specializes in agentic AI, MCP servers, LangGraph pipelines, hybrid retrieval, and enterprise AI automation. SPOT Recognition awardee.",
               dateCreated: "2024",
               dateModified: "2026",
               author: {
                 "@type": "Person",
-                "@id": "https://selvinpaulraj.vercel.app/#person",
+                "@id": `${SITE_URL}/#person`,
                 name: "Selvin PaulRaj K",
               },
               mainEntity: {
                 "@type": "Person",
-                "@id": "https://selvinpaulraj.vercel.app/#person",
+                "@id": `${SITE_URL}/#person`,
                 name: "Selvin PaulRaj K",
-                image: "https://selvinpaulraj.vercel.app/Selvin_PaulRaj.webp",
-                url: "https://selvinpaulraj.vercel.app",
+                image: `${SITE_URL}/Selvin_PaulRaj.webp`,
+                url: SITE_URL,
               },
             }),
           }}
@@ -312,7 +321,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "WebSite",
               name: "Selvin PaulRaj K — AI Engineer Portfolio",
-              url: "https://selvinpaulraj.vercel.app",
+              url: SITE_URL,
               author: {
                 "@type": "Person",
                 name: "Selvin PaulRaj K",
@@ -350,15 +359,11 @@ export default function RootLayout({
           }}
         />
 
-        {/* Background Effects */}
-        <div className="bg-[#e8d89e] absolute top-[-6rem] -z-10 right-[11rem] h-[31.25rem] w-[31.25rem] rounded-full blur-[10rem] sm:w-[68.75rem] dark:bg-[#000]" />
-        <div className="bg-[#CDECFF] absolute top-[-1rem] -z-10 left-[-35rem] h-[31.25rem] w-[50rem] rounded-full blur-[10rem] sm:w-[68.75rem] md:left-[-33rem] lg:left-[-28rem] xl:left-[-15rem] 2xl:left-[-5rem] dark:bg-[#000]" />
-
         <ThemeContextProvider>
           <ActiveSectionContextProvider>
             <a
               href="#content"
-              className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[1000] focus:rounded-md focus:bg-gray-900 focus:px-4 focus:py-2 focus:text-white dark:focus:bg-[#FFD700] dark:focus:text-black"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[1000] focus:rounded-md focus:bg-gray-900 focus:px-4 focus:py-2 focus:text-white dark:focus:bg-accent dark:focus:text-black"
             >
               Skip to content
             </a>
@@ -366,6 +371,7 @@ export default function RootLayout({
             {children}
             <Footer />
             <ThemeSwitch />
+            <CommandPalette studies={caseStudies.map((c) => ({ slug: c.slug, title: c.title, headline: c.results[0].value }))} />
             <Toaster position="top-right" />
             <SpeedInsights />
           </ActiveSectionContextProvider>

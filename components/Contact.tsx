@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useRef } from "react";
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { m } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 import { useSectionInView } from "@/lib/hooks";
 import { sendEmail } from "@/actions/sendEmails";
@@ -59,13 +59,14 @@ const Contact = () => {
     try {
       await navigator.clipboard.writeText("selvinpaulgomathi@gmail.com");
       toast.success("Email copied!");
-    } catch {
+    } catch (err) {
+      console.error("Clipboard write failed:", err);
       toast.error("Couldn't copy. The address is selvinpaulgomathi@gmail.com");
     }
   };
 
   return (
-    <motion.section
+    <m.section
       id="contact"
       ref={ref}
       className="mb-28 scroll-mt-28 w-full max-w-5xl mx-auto px-4"
@@ -81,7 +82,7 @@ const Contact = () => {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
 
         {/* Left column: info + contact methods */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, x: -16 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1, duration: 0.4, ease: EASE_OUT }}
@@ -112,7 +113,7 @@ const Contact = () => {
 
           {/* Response time */}
           <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-[#c9c9cf] font-mono">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#f5c518] shrink-0" />
+            <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />
             Typically responds within 24h
           </div>
 
@@ -122,7 +123,7 @@ const Contact = () => {
               const rowClass =
                 "group flex w-full items-center gap-3 px-4 py-3 text-left " +
                 "hover:bg-black/[0.03] dark:hover:bg-white/[0.03] active:scale-[0.97] " +
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#f5c518]";
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent";
               const rowStyle = {
                 transition:
                   "background-color 150ms cubic-bezier(0.23,1,0.32,1), transform 150ms cubic-bezier(0.23,1,0.32,1)",
@@ -167,10 +168,10 @@ const Contact = () => {
               );
             })}
           </ul>
-        </motion.div>
+        </m.div>
 
         {/* Right column: form */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, x: 16 }}
           whileInView={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.15, duration: 0.4, ease: EASE_OUT }}
@@ -207,7 +208,7 @@ const Contact = () => {
                   className="h-11 px-4 rounded-xl
                     bg-gray-50 dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/[0.07]
                     text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-[#8a8a93]
-                    outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] focus-visible:ring-offset-2
+                    outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2
                     transition-colors duration-150"
                 />
               </div>
@@ -226,7 +227,7 @@ const Contact = () => {
                   className="h-11 px-4 rounded-xl
                     bg-gray-50 dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/[0.07]
                     text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-[#8a8a93]
-                    outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] focus-visible:ring-offset-2
+                    outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2
                     transition-colors duration-150"
                 />
               </div>
@@ -247,7 +248,7 @@ const Contact = () => {
                 className="px-4 py-3 rounded-xl resize-none
                   bg-gray-50 dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/[0.07]
                   text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-[#8a8a93]
-                  outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] focus-visible:ring-offset-2
+                  outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2
                   leading-relaxed transition-colors duration-150"
               />
             </div>
@@ -267,9 +268,9 @@ const Contact = () => {
 
             <SubmitBtn />
           </form>
-        </motion.div>
+        </m.div>
       </div>
-    </motion.section>
+    </m.section>
   );
 };
 export default Contact;

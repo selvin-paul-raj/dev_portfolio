@@ -1,0 +1,1047 @@
+[
+  {
+    "slug": "dri-mas",
+    "projectTitle": "DRI-MAS: Multi-Agent Reporting System",
+    "title": "DRI-MAS",
+    "subtitle": "A LangGraph multi-agent system that turns plain-English data requests into validated Trino SQL and Excel reports.",
+    "role": "Architect and lead engineer",
+    "org": "Zinnov (Draup)",
+    "period": "Sep 2025 to present",
+    "visibility": "Work · private repo",
+    "stack": [
+      "LangGraph",
+      "Claude API",
+      "FastAPI",
+      "Trino",
+      "FAISS",
+      "BM25",
+      "PostgreSQL",
+      "pytest"
+    ],
+    "problem": "Analysts spent hours turning business questions into SQL and Excel reports. Each request meant finding the right tables, resolving company names across millions of records, writing the query, and checking the output by hand.",
+    "diagram": {
+      "width": 400,
+      "height": 580,
+      "nodes": [
+        {
+          "id": "request",
+          "label": "Plain-English request",
+          "x": 150,
+          "y": 40
+        },
+        {
+          "id": "intent",
+          "label": "Intent agent",
+          "x": 150,
+          "y": 110
+        },
+        {
+          "id": "manager",
+          "label": "Manager agent",
+          "x": 150,
+          "y": 180
+        },
+        {
+          "id": "memory",
+          "label": "Memory",
+          "x": 325,
+          "y": 180,
+          "side": true
+        },
+        {
+          "id": "normalize",
+          "label": "Normalization",
+          "x": 150,
+          "y": 250
+        },
+        {
+          "id": "retrieval",
+          "label": "FAISS + BM25",
+          "sub": "2.6M records",
+          "x": 325,
+          "y": 250,
+          "side": true
+        },
+        {
+          "id": "router",
+          "label": "Schema router",
+          "x": 150,
+          "y": 320
+        },
+        {
+          "id": "sql",
+          "label": "SQL generator",
+          "x": 150,
+          "y": 390
+        },
+        {
+          "id": "validate",
+          "label": "Validation + HITL",
+          "x": 150,
+          "y": 460
+        },
+        {
+          "id": "eval",
+          "label": "Evaluation",
+          "x": 325,
+          "y": 460,
+          "side": true
+        },
+        {
+          "id": "report",
+          "label": "Excel report",
+          "x": 150,
+          "y": 530
+        }
+      ],
+      "edges": [
+        [
+          "request",
+          "intent"
+        ],
+        [
+          "intent",
+          "manager"
+        ],
+        [
+          "manager",
+          "memory"
+        ],
+        [
+          "manager",
+          "normalize"
+        ],
+        [
+          "normalize",
+          "retrieval"
+        ],
+        [
+          "normalize",
+          "router"
+        ],
+        [
+          "router",
+          "sql"
+        ],
+        [
+          "sql",
+          "validate"
+        ],
+        [
+          "validate",
+          "eval"
+        ],
+        [
+          "validate",
+          "report"
+        ]
+      ]
+    },
+    "steps": [
+      {
+        "title": "A question in plain English",
+        "body": "An analyst writes the request the way they would say it. The intent agent classifies what is being asked before any query is written.",
+        "nodes": [
+          "request",
+          "intent"
+        ],
+        "edges": [
+          [
+            "request",
+            "intent"
+          ]
+        ]
+      },
+      {
+        "title": "A manager agent coordinates",
+        "body": "The manager agent hands the request to the specialised components and keeps conversation state in a memory layer, so follow-up questions build on earlier ones.",
+        "nodes": [
+          "manager",
+          "memory"
+        ],
+        "edges": [
+          [
+            "intent",
+            "manager"
+          ],
+          [
+            "manager",
+            "memory"
+          ]
+        ]
+      },
+      {
+        "title": "Names resolved against 2.6M records",
+        "body": "Company names in a request rarely match the database. The normalization engine resolves them with hybrid retrieval, FAISS for meaning and BM25 for exact terms, over 2.6M company records.",
+        "nodes": [
+          "normalize",
+          "retrieval"
+        ],
+        "edges": [
+          [
+            "manager",
+            "normalize"
+          ],
+          [
+            "normalize",
+            "retrieval"
+          ]
+        ]
+      },
+      {
+        "title": "The right schema, then the query",
+        "body": "A schema router narrows the warehouse to the tables that matter, and the SQL generator writes Trino SQL against only those.",
+        "nodes": [
+          "router",
+          "sql"
+        ],
+        "edges": [
+          [
+            "normalize",
+            "router"
+          ],
+          [
+            "router",
+            "sql"
+          ]
+        ]
+      },
+      {
+        "title": "Validated before anyone sees it",
+        "body": "Generated SQL is validated, and human-in-the-loop checks sit at the points where a wrong answer would be expensive. An evaluation framework scores the pipeline, backed by 30 automated test suites.",
+        "nodes": [
+          "validate",
+          "eval"
+        ],
+        "edges": [
+          [
+            "sql",
+            "validate"
+          ],
+          [
+            "validate",
+            "eval"
+          ]
+        ]
+      },
+      {
+        "title": "A structured report, in under a minute",
+        "body": "The result ships as a structured Excel report. Ten core components sit behind 4 FastAPI endpoints. Turnaround went from hours to under a minute.",
+        "nodes": [
+          "report"
+        ],
+        "edges": [
+          [
+            "validate",
+            "report"
+          ]
+        ]
+      }
+    ],
+    "results": [
+      {
+        "value": "< 1 min",
+        "label": "Turnaround, down from hours"
+      },
+      {
+        "value": "2.6M",
+        "label": "Company records in hybrid retrieval"
+      },
+      {
+        "value": "10",
+        "label": "Core components"
+      },
+      {
+        "value": "30",
+        "label": "Automated test suites"
+      },
+      {
+        "value": "4",
+        "label": "FastAPI endpoints"
+      }
+    ],
+    "decisions": [
+      "Specialised agents under a manager agent, not one prompt that does everything, so each stage can be tested and evaluated on its own.",
+      "Hybrid FAISS + BM25 retrieval for entity names: semantic search handles paraphrase, BM25 keeps exact names and acronyms from drifting.",
+      "Human-in-the-loop validation instead of full autonomy for queries whose output feeds client reports."
+    ],
+    "links": []
+  },
+  {
+    "slug": "company-synonym-agent",
+    "projectTitle": "Company Synonym Agent",
+    "title": "Company Synonym Agent",
+    "subtitle": "Entity resolution for company names across 2.6M company and subsidiary records, with sub-second lookups.",
+    "role": "Built",
+    "org": "Zinnov (Draup)",
+    "period": "Oct 2025",
+    "visibility": "Work · private repo",
+    "stack": [
+      "Python",
+      "FAISS",
+      "BM25",
+      "LLMs",
+      "Entity Resolution"
+    ],
+    "problem": "Matching company names across datasets broke on acronyms, subsidiaries, and spelling variants. A plain string match missed real matches; a loose one merged different companies.",
+    "diagram": {
+      "width": 400,
+      "height": 440,
+      "nodes": [
+        {
+          "id": "input",
+          "label": "Company name",
+          "x": 150,
+          "y": 40
+        },
+        {
+          "id": "faiss",
+          "label": "FAISS semantic",
+          "x": 80,
+          "y": 120
+        },
+        {
+          "id": "bm25",
+          "label": "BM25 lexical",
+          "x": 250,
+          "y": 120
+        },
+        {
+          "id": "acronym",
+          "label": "Acronym validation",
+          "x": 150,
+          "y": 210
+        },
+        {
+          "id": "overlap",
+          "label": "Token-overlap scoring",
+          "x": 150,
+          "y": 280
+        },
+        {
+          "id": "parent",
+          "label": "Parent-company resolution",
+          "x": 150,
+          "y": 350
+        },
+        {
+          "id": "resolved",
+          "label": "Resolved entity",
+          "sub": "sub-second",
+          "x": 150,
+          "y": 410
+        }
+      ],
+      "edges": [
+        [
+          "input",
+          "faiss"
+        ],
+        [
+          "input",
+          "bm25"
+        ],
+        [
+          "faiss",
+          "acronym"
+        ],
+        [
+          "bm25",
+          "acronym"
+        ],
+        [
+          "acronym",
+          "overlap"
+        ],
+        [
+          "overlap",
+          "parent"
+        ],
+        [
+          "parent",
+          "resolved"
+        ]
+      ]
+    },
+    "steps": [
+      {
+        "title": "Two kinds of candidates",
+        "body": "A name goes to FAISS semantic search and to BM25 at the same time. Semantic search catches paraphrased and reworded names; BM25 catches exact tokens that embeddings blur.",
+        "nodes": [
+          "input",
+          "faiss",
+          "bm25"
+        ],
+        "edges": [
+          [
+            "input",
+            "faiss"
+          ],
+          [
+            "input",
+            "bm25"
+          ]
+        ]
+      },
+      {
+        "title": "Acronyms checked, not guessed",
+        "body": "Acronym validation confirms that a short form really expands to the candidate, so an abbreviation does not match an unrelated company that happens to embed nearby.",
+        "nodes": [
+          "acronym"
+        ],
+        "edges": [
+          [
+            "faiss",
+            "acronym"
+          ],
+          [
+            "bm25",
+            "acronym"
+          ]
+        ]
+      },
+      {
+        "title": "Scored on shared tokens",
+        "body": "Token-overlap scoring ranks the surviving candidates on the words they actually share with the query.",
+        "nodes": [
+          "overlap"
+        ],
+        "edges": [
+          [
+            "acronym",
+            "overlap"
+          ]
+        ]
+      },
+      {
+        "title": "Subsidiaries roll up",
+        "body": "Parent-company resolution maps subsidiaries to their parent, across 2.6M company and subsidiary records, and returns the resolved entity in under a second.",
+        "nodes": [
+          "parent",
+          "resolved"
+        ],
+        "edges": [
+          [
+            "overlap",
+            "parent"
+          ],
+          [
+            "parent",
+            "resolved"
+          ]
+        ]
+      }
+    ],
+    "results": [
+      {
+        "value": "2.6M",
+        "label": "Company and subsidiary records"
+      },
+      {
+        "value": "< 1 s",
+        "label": "Lookup latency"
+      },
+      {
+        "value": "3",
+        "label": "Failure modes handled: acronyms, subsidiaries, spelling variants"
+      }
+    ],
+    "decisions": [
+      "Semantic and lexical retrieval in parallel, because company names fail in both directions: paraphrase and exact abbreviations.",
+      "Deterministic validation and scoring after retrieval, so a nearby embedding is never enough on its own to merge two companies."
+    ],
+    "links": []
+  },
+  {
+    "slug": "invoice-to-po",
+    "projectTitle": "Invoice-to-PO Decision Workflow",
+    "title": "Invoice-to-PO Decision Workflow",
+    "subtitle": "An auditable accounts-payable workflow where rules decide, models only advise, and every check cites its source record.",
+    "role": "Designed and built",
+    "org": "Independent project",
+    "period": "Oct 2026",
+    "visibility": "Public repo · live demo",
+    "stack": [
+      "Python",
+      "FastAPI",
+      "Next.js",
+      "OCR",
+      "LLM-as-Judge",
+      "Docker",
+      "CI/CD",
+      "OpenTelemetry"
+    ],
+    "problem": "Paying an invoice means matching it against the purchase order, the goods receipt, and the vendor master, then catching duplicates, payment fraud, and tax errors. An LLM that approves payments on its own is a liability; one that can be talked into approving by text inside the invoice is worse.",
+    "diagram": {
+      "width": 400,
+      "height": 500,
+      "nodes": [
+        {
+          "id": "invoice",
+          "label": "Invoice",
+          "sub": "PDF · scan · CSV · JSON",
+          "x": 150,
+          "y": 40
+        },
+        {
+          "id": "extract",
+          "label": "Extraction + OCR",
+          "x": 150,
+          "y": 120
+        },
+        {
+          "id": "match",
+          "label": "Three-way match",
+          "sub": "PO · receipt · vendor",
+          "x": 150,
+          "y": 200
+        },
+        {
+          "id": "checks",
+          "label": "Risk checks",
+          "sub": "duplicates · fraud · GST",
+          "x": 150,
+          "y": 280
+        },
+        {
+          "id": "advisor",
+          "label": "Model advises",
+          "x": 325,
+          "y": 280,
+          "side": true
+        },
+        {
+          "id": "rules",
+          "label": "Rules decide",
+          "x": 150,
+          "y": 360
+        },
+        {
+          "id": "outcome",
+          "label": "Approve · hold · reject",
+          "x": 150,
+          "y": 450
+        }
+      ],
+      "edges": [
+        [
+          "invoice",
+          "extract"
+        ],
+        [
+          "extract",
+          "match"
+        ],
+        [
+          "match",
+          "checks"
+        ],
+        [
+          "checks",
+          "advisor"
+        ],
+        [
+          "checks",
+          "rules"
+        ],
+        [
+          "rules",
+          "outcome"
+        ]
+      ]
+    },
+    "steps": [
+      {
+        "title": "Any invoice format",
+        "body": "Text PDFs, scanned PDFs through OCR, CSV, or JSON. Extraction is measured: 32 of 32 PDF fields on the test set.",
+        "nodes": [
+          "invoice",
+          "extract"
+        ],
+        "edges": [
+          [
+            "invoice",
+            "extract"
+          ]
+        ]
+      },
+      {
+        "title": "Matched against three records",
+        "body": "Each invoice is checked against its purchase order, the goods receipt, and the vendor master.",
+        "nodes": [
+          "match"
+        ],
+        "edges": [
+          [
+            "extract",
+            "match"
+          ]
+        ]
+      },
+      {
+        "title": "Checks for what goes wrong",
+        "body": "Duplicate invoices, payment-fraud signals, and GST errors each get their own check, and every check cites the source record it used.",
+        "nodes": [
+          "checks"
+        ],
+        "edges": [
+          [
+            "match",
+            "checks"
+          ]
+        ]
+      },
+      {
+        "title": "Rules decide, the model advises",
+        "body": "A language model can explain and flag, but the decision belongs to deterministic rules. Across 600 adversarial variants there were 0 false approvals, and 0 of 489 prompt-injection attacks changed a decision.",
+        "nodes": [
+          "advisor",
+          "rules"
+        ],
+        "edges": [
+          [
+            "checks",
+            "advisor"
+          ],
+          [
+            "checks",
+            "rules"
+          ]
+        ]
+      },
+      {
+        "title": "Three outcomes, one question",
+        "body": "Approve, reject, or hold with exactly one question for a human reviewer. 31 of 31 labelled cases land on the right outcome, and a regression gate in CI keeps it that way.",
+        "nodes": [
+          "outcome"
+        ],
+        "edges": [
+          [
+            "rules",
+            "outcome"
+          ]
+        ]
+      }
+    ],
+    "results": [
+      {
+        "value": "0 / 600",
+        "label": "False approvals on adversarial variants"
+      },
+      {
+        "value": "0 / 489",
+        "label": "Prompt-injection attacks that changed a decision"
+      },
+      {
+        "value": "31 / 31",
+        "label": "Labelled cases correct"
+      },
+      {
+        "value": "32 / 32",
+        "label": "PDF fields extracted"
+      },
+      {
+        "value": "79",
+        "label": "Tests, 20 of them guardrail tests"
+      }
+    ],
+    "decisions": [
+      "Rules own the decision and the model only advises, so no prompt can approve a payment.",
+      "Every check cites its source record, which makes each outcome auditable after the fact.",
+      "An LLM-as-judge is validated against a human-labelled gold set before its scores are trusted."
+    ],
+    "links": [
+      {
+        "label": "Source",
+        "href": "https://github.com/selvin-paul-raj/zamp-ps1-invoice"
+      },
+      {
+        "label": "Live demo",
+        "href": "https://zamp-ps1-invoice.onrender.com"
+      }
+    ]
+  },
+  {
+    "slug": "finn-advisor",
+    "projectTitle": "Finn Advisor",
+    "title": "Finn Advisor",
+    "subtitle": "A single-user financial advisor over read-only brokerage data, with a runtime safety policy and provider fallback.",
+    "role": "Designed and built",
+    "org": "Independent project",
+    "period": "Aug 2026",
+    "visibility": "Public repo",
+    "stack": [
+      "Google ADK",
+      "LangGraph",
+      "MCP",
+      "LangChain",
+      "NVIDIA NIM",
+      "Gemini",
+      "SQLite",
+      "Docker"
+    ],
+    "problem": "An assistant with access to a brokerage account has to be useful about a real portfolio without ever being able to trade, leak credentials, or follow instructions hidden in web content.",
+    "diagram": {
+      "width": 400,
+      "height": 500,
+      "nodes": [
+        {
+          "id": "question",
+          "label": "Question",
+          "x": 150,
+          "y": 40
+        },
+        {
+          "id": "safety",
+          "label": "Safety policy",
+          "x": 150,
+          "y": 120
+        },
+        {
+          "id": "adk",
+          "label": "ADK orchestrator",
+          "x": 150,
+          "y": 200
+        },
+        {
+          "id": "graph",
+          "label": "LangGraph workflows",
+          "x": 150,
+          "y": 280
+        },
+        {
+          "id": "kite",
+          "label": "Kite MCP",
+          "sub": "16 read-only tools",
+          "x": 325,
+          "y": 250,
+          "side": true
+        },
+        {
+          "id": "web",
+          "label": "Web search",
+          "x": 325,
+          "y": 320,
+          "side": true
+        },
+        {
+          "id": "router",
+          "label": "LLM router",
+          "sub": "NIM → Gemini Flash",
+          "x": 150,
+          "y": 370
+        },
+        {
+          "id": "log",
+          "label": "SQLite call log",
+          "x": 150,
+          "y": 450
+        }
+      ],
+      "edges": [
+        [
+          "question",
+          "safety"
+        ],
+        [
+          "safety",
+          "adk"
+        ],
+        [
+          "adk",
+          "graph"
+        ],
+        [
+          "graph",
+          "kite"
+        ],
+        [
+          "graph",
+          "web"
+        ],
+        [
+          "graph",
+          "router"
+        ],
+        [
+          "router",
+          "log"
+        ]
+      ]
+    },
+    "steps": [
+      {
+        "title": "A safety policy at runtime",
+        "body": "Requests for credentials, prompt-injection attempts, and any write tool are blocked by a runtime policy, not by a line in the system prompt.",
+        "nodes": [
+          "question",
+          "safety"
+        ],
+        "edges": [
+          [
+            "question",
+            "safety"
+          ]
+        ]
+      },
+      {
+        "title": "ADK routes, LangGraph executes",
+        "body": "A Google ADK orchestrator routes each question to a LangGraph workflow built for that kind of task.",
+        "nodes": [
+          "adk",
+          "graph"
+        ],
+        "edges": [
+          [
+            "safety",
+            "adk"
+          ],
+          [
+            "adk",
+            "graph"
+          ]
+        ]
+      },
+      {
+        "title": "Read-only tools over MCP",
+        "body": "Kite (Zerodha) MCP tools load as LangChain tools through langchain-mcp-adapters. 16 read-only tools are verified live; live web search covers market questions.",
+        "nodes": [
+          "kite",
+          "web"
+        ],
+        "edges": [
+          [
+            "graph",
+            "kite"
+          ],
+          [
+            "graph",
+            "web"
+          ]
+        ]
+      },
+      {
+        "title": "A router with a fallback",
+        "body": "NVIDIA NIM is the primary model and Gemini Flash takes over when it fails. Every LLM call is logged to SQLite.",
+        "nodes": [
+          "router",
+          "log"
+        ],
+        "edges": [
+          [
+            "graph",
+            "router"
+          ],
+          [
+            "router",
+            "log"
+          ]
+        ]
+      }
+    ],
+    "results": [
+      {
+        "value": "16",
+        "label": "Read-only MCP tools verified live"
+      },
+      {
+        "value": "2",
+        "label": "LLM providers with automatic fallback"
+      },
+      {
+        "value": "Read-only",
+        "label": "Brokerage access; write tools blocked by the runtime policy"
+      }
+    ],
+    "decisions": [
+      "Safety enforced as code at runtime, with an offline DeepEval-style evaluation harness and a RAMPART-style red-team suite to test it.",
+      "MCP tools adapted into LangChain instead of re-implementing the brokerage API, so the tool surface stays read-only by construction."
+    ],
+    "links": [
+      {
+        "label": "Source",
+        "href": "https://github.com/selvin-paul-raj/Finn-Advisor"
+      }
+    ]
+  },
+  {
+    "slug": "chunklab",
+    "projectTitle": "ChunkLab: RAG Engineering Playground",
+    "title": "ChunkLab",
+    "subtitle": "A RAG benchmarking lab: compare chunking, retrieval, and reranking strategies side by side on your own text.",
+    "role": "Designed and built",
+    "org": "Independent project",
+    "period": "Jul 2026",
+    "visibility": "Public repo · live demo",
+    "stack": [
+      "Python",
+      "BM25",
+      "sentence-transformers",
+      "Chonkie",
+      "Streamlit",
+      "pytest"
+    ],
+    "problem": "RAG quality depends on choices made before the model sees anything: how text is chunked, how it is retrieved, how results are reranked. Those choices are usually made by habit, not by measurement.",
+    "diagram": {
+      "width": 400,
+      "height": 470,
+      "nodes": [
+        {
+          "id": "text",
+          "label": "Your text",
+          "x": 150,
+          "y": 40
+        },
+        {
+          "id": "chunk",
+          "label": "Chunking",
+          "sub": "10 strategies",
+          "x": 150,
+          "y": 120
+        },
+        {
+          "id": "embed",
+          "label": "Embeddings",
+          "sub": "dense + sparse",
+          "x": 150,
+          "y": 200
+        },
+        {
+          "id": "retrieve",
+          "label": "Retrieval",
+          "sub": "7 strategies",
+          "x": 150,
+          "y": 280
+        },
+        {
+          "id": "rerank",
+          "label": "Reranking",
+          "sub": "6 strategies",
+          "x": 150,
+          "y": 360
+        },
+        {
+          "id": "metrics",
+          "label": "IR metrics",
+          "sub": "P@k · R@k · MRR · MAP · NDCG",
+          "x": 150,
+          "y": 430
+        }
+      ],
+      "edges": [
+        [
+          "text",
+          "chunk"
+        ],
+        [
+          "chunk",
+          "embed"
+        ],
+        [
+          "embed",
+          "retrieve"
+        ],
+        [
+          "retrieve",
+          "rerank"
+        ],
+        [
+          "rerank",
+          "metrics"
+        ]
+      ]
+    },
+    "steps": [
+      {
+        "title": "Ten ways to cut a document",
+        "body": "The same text goes through 10 chunking strategies, so their effect on retrieval can be compared directly.",
+        "nodes": [
+          "text",
+          "chunk"
+        ],
+        "edges": [
+          [
+            "text",
+            "chunk"
+          ]
+        ]
+      },
+      {
+        "title": "Dense and sparse",
+        "body": "Chunks are embedded both ways, dense vectors for meaning and sparse representations for exact terms.",
+        "nodes": [
+          "embed"
+        ],
+        "edges": [
+          [
+            "chunk",
+            "embed"
+          ]
+        ]
+      },
+      {
+        "title": "Seven retrievers",
+        "body": "Keyword, boolean, TF-IDF, BM25, dense, hybrid with reciprocal rank fusion, and MMR, all over the same chunks.",
+        "nodes": [
+          "retrieve"
+        ],
+        "edges": [
+          [
+            "embed",
+            "retrieve"
+          ]
+        ]
+      },
+      {
+        "title": "Reranked, then measured",
+        "body": "Six reranking strategies run on top, and every combination is scored with Precision@k, Recall@k, MRR, MAP, and NDCG@k, including the before and after impact of reranking.",
+        "nodes": [
+          "rerank",
+          "metrics"
+        ],
+        "edges": [
+          [
+            "retrieve",
+            "rerank"
+          ],
+          [
+            "rerank",
+            "metrics"
+          ]
+        ]
+      }
+    ],
+    "results": [
+      {
+        "value": "10",
+        "label": "Chunking strategies"
+      },
+      {
+        "value": "7",
+        "label": "Retrieval strategies"
+      },
+      {
+        "value": "6",
+        "label": "Reranking strategies"
+      },
+      {
+        "value": "95",
+        "label": "pytest tests"
+      }
+    ],
+    "decisions": [
+      "Every stage is a self-registering plugin registry, so adding a strategy is one file and it shows up in every comparison.",
+      "Standard IR metrics instead of eyeballing answers, so a change in chunking shows up as a number."
+    ],
+    "links": [
+      {
+        "label": "Source",
+        "href": "https://github.com/selvin-paul-raj/chunklab"
+      },
+      {
+        "label": "Live demo",
+        "href": "https://chunklab-spr.streamlit.app"
+      }
+    ]
+  }
+]

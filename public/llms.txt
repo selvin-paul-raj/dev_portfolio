@@ -24,6 +24,19 @@
 - **LLM Engineering** — Claude, GPT-4, Gemini integration and prompt engineering
 - **Full-Stack** — Next.js 16, React 19, Node.js, Python, FastAPI
 
+## Hiring? Check Fit Against a Job Description
+
+- **Fit check (web)**: https://selvinpaulraj.vercel.app/fit — paste a JD; every matched requirement cites the work bullet, project, or certification behind it, and unmatched requirements are listed as gaps. Deterministic, no LLM.
+- **Fit check (MCP)**: tool `match_job(job_description)` on the MCP server below.
+- **A2A agent**: https://selvinpaulraj.vercel.app/.well-known/agent-card.json (JSON-RPC `message/send`, skills `job_fit` and `profile`).
+- **Case studies**: https://selvinpaulraj.vercel.app/work — DRI-MAS, Company Synonym Agent, Invoice-to-PO workflow, Finn Advisor, ChunkLab; each walked through stage by stage with measured results.
+- **Terminal / agents**: `curl selvinpaulraj.vercel.app` returns a plain-text resume card; requests with `Accept: text/markdown` get this documentation as markdown.
+- **Ask Selvin**: https://selvinpaulraj.vercel.app/ask — grounded Q&A over this portfolio (BM25 retrieval, validated citations, refuses off-topic questions).
+- **Evals**: https://selvinpaulraj.vercel.app/evals — published retrieval hit@k/MRR, off-topic refusal, and fit-check accuracy for the features above.
+- **Prompt-injection challenge**: https://selvinpaulraj.vercel.app/challenge — five stacked LLM defenses (instructions, input filter, output filter, guard model).
+- **Machine-readable resume**: https://selvinpaulraj.vercel.app/resume.json (JSON Resume schema).
+- **Open to**: AI Engineer, GenAI / LLM Engineer, Agentic AI Engineer, Applied AI Engineer roles. Official title is Associate Data Analyst; the work is AI engineering.
+
 ## This Site Is MCP-Enabled
 
 Connect any MCP-compatible AI assistant directly to Selvin's portfolio data.

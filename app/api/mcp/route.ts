@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { handleMcpRequest, parseErrorResponse } from "@/lib/mcp/server";
 import { getClientIp } from "@/lib/rateLimit";
+import { SITE_URL } from "@/lib/site";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -25,7 +26,7 @@ export function GET() {
       transport: "http (JSON-RPC 2.0)",
       description:
         "MCP server exposing Selvin's portfolio: projects, skills, experience, certifications, and live GitHub repos.",
-      endpoint: "https://selvinpaulraj.vercel.app/api/mcp",
+      endpoint: `${SITE_URL}/api/mcp`,
       resources: [
         "selvin://profile",
         "selvin://projects",
@@ -41,6 +42,7 @@ export function GET() {
         "get_github_repo",
         "filter_certifications",
         "get_profile_summary",
+        "match_job",
         "contact_selvin",
       ],
     },

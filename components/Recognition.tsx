@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { useSectionInView } from "@/lib/hooks";
 import { recognitionData } from "@/lib/data";
 import SectionHeading from "./SectionHeading";
@@ -55,7 +55,7 @@ export default function Recognition() {
   const rankedAchs = achs.filter((a) => a.rank !== undefined);
 
   return (
-    <motion.section
+    <m.section
       ref={ref}
       id="recognition"
       className="mb-28 w-full max-w-[1240px] mx-auto px-4 sm:px-10 scroll-mt-28"
@@ -86,9 +86,9 @@ export default function Recognition() {
                 flex items-center gap-2 px-[18px] py-[9px] rounded-full active:scale-[0.97]
                 transition-[background-color,color,transform] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]
                 font-mono text-xs tracking-[0.2em] uppercase outline-none
-                focus-visible:ring-2 focus-visible:ring-[#f5c518]
+                focus-visible:ring-2 focus-visible:ring-accent
                 ${tab === t
-                  ? "bg-[#f5c518] text-[#1a1500] font-medium"
+                  ? "bg-accent text-[#1a1500] font-medium"
                   : "text-gray-500 dark:text-[#a1a1aa] hover:text-gray-900 dark:hover:text-white"
                 }
               `}
@@ -110,7 +110,7 @@ export default function Recognition() {
       {/* Panels */}
       <AnimatePresence mode="wait">
         {tab === "pubs" && (
-          <motion.div
+          <m.div
             key="pubs"
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -147,7 +147,7 @@ export default function Recognition() {
 
                 {/* Publisher */}
                 <div className="flex items-center flex-wrap gap-[10px] text-[14px] text-gray-600 dark:text-[#c9c9cf] mb-[18px]">
-                  <span className="text-amber-700 dark:text-[#f5c518] font-medium">{pub.publisher}</span>
+                  <span className="text-amber-700 dark:text-accent font-medium">{pub.publisher}</span>
                   <span className="w-1 h-1 rounded-full bg-gray-400 dark:bg-[#71717a]" />
                   <span>{pub.publisherFull}</span>
                 </div>
@@ -163,7 +163,7 @@ export default function Recognition() {
                   style={{ fontFamily: SERIF, fontStyle: "italic" }}
                 >
                   <span
-                    className="block not-italic text-xs tracking-[0.24em] text-amber-700 dark:text-[#f5c518] uppercase mb-[6px]"
+                    className="block not-italic text-xs tracking-[0.24em] text-amber-700 dark:text-accent uppercase mb-[6px]"
                     style={{ fontFamily: MONO, fontStyle: "normal" }}
                   >
                     Abstract
@@ -181,13 +181,13 @@ export default function Recognition() {
                       className="flex items-center gap-2 text-xs tracking-[0.24em] text-gray-500 dark:text-[#a1a1aa] uppercase mb-3"
                       style={{ fontFamily: MONO }}
                     >
-                      <span className="text-amber-700 dark:text-[#f5c518]">01</span> · Key Features
+                      <span className="text-amber-700 dark:text-accent">01</span> · Key Features
                     </div>
                     <ul className="list-none p-0 m-0 grid gap-2">
                       {pub.features.map((f) => (
                         <li key={f} className="flex items-start gap-[10px] text-[13.5px] text-gray-600 dark:text-[#d5d5db] leading-[1.5]">
                           <span
-                            className="flex-none w-[18px] h-[18px] mt-[1px] flex items-center justify-center rounded-[4px] bg-amber-50 dark:bg-[#f5c518]/[0.08] border border-amber-300 dark:border-[#f5c518]/30 text-amber-700 dark:text-[#f5c518]"
+                            className="flex-none w-[18px] h-[18px] mt-[1px] flex items-center justify-center rounded-[4px] bg-amber-50 dark:bg-accent/[0.08] border border-amber-300 dark:border-accent/30 text-amber-700 dark:text-accent"
                             style={{ fontFamily: MONO, fontSize: "0.75rem", lineHeight: 1 }}
                           >
                             ✓
@@ -204,7 +204,7 @@ export default function Recognition() {
                       className="flex items-center gap-2 text-xs tracking-[0.24em] text-gray-500 dark:text-[#a1a1aa] uppercase mb-3"
                       style={{ fontFamily: MONO }}
                     >
-                      <span className="text-amber-700 dark:text-[#f5c518]">02</span> · Stack
+                      <span className="text-amber-700 dark:text-accent">02</span> · Stack
                     </div>
                     <div className="flex flex-wrap gap-[6px]">
                       {pub.technologies.map((t) => (
@@ -230,20 +230,20 @@ export default function Recognition() {
                     href={pub.research_link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-[10px] px-4 py-[10px] rounded-full bg-[#f5c518] text-[#1a1500] font-semibold text-[13px] hover:bg-[#ffd93a] active:scale-[0.97] transition-[background-color,transform] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] focus-visible:ring-offset-2"
+                    className="inline-flex items-center gap-[10px] px-4 py-[10px] rounded-full bg-accent text-[#1a1500] font-semibold text-[13px] hover:bg-[#ffd93a] active:scale-[0.97] transition-[background-color,transform] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                   >
                     Read Paper
-                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1a1500] text-[#f5c518] text-xs" aria-hidden="true">↗</span>
+                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1a1500] text-accent text-xs" aria-hidden="true">↗</span>
                   </a>
                 </div>
                 )}
               </article>
             ))}
-          </motion.div>
+          </m.div>
         )}
 
         {tab === "ach" && (
-          <motion.div
+          <m.div
             key="ach"
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -253,7 +253,7 @@ export default function Recognition() {
           >
             {/* Featured awards (no rank): full-width cards */}
             {featuredAchs.map((ach, i) => (
-              <motion.article
+              <m.article
                 key={ach.title}
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -265,9 +265,9 @@ export default function Recognition() {
                   className="flex items-center flex-wrap gap-[10px] text-xs tracking-[0.22em] uppercase text-gray-500 dark:text-[#a1a1aa] mb-[16px]"
                   style={{ fontFamily: MONO }}
                 >
-                  <span className="inline-flex items-center gap-[7px] px-[10px] py-1 rounded-full bg-amber-50 dark:bg-[#f5c518]/[0.1] text-amber-700 dark:text-[#f5c518] border border-amber-200 dark:border-[#f5c518]/25">
+                  <span className="inline-flex items-center gap-[7px] px-[10px] py-1 rounded-full bg-amber-50 dark:bg-accent/[0.1] text-amber-700 dark:text-accent border border-amber-200 dark:border-accent/25">
                     <span
-                      className="w-[6px] h-[6px] rounded-full bg-amber-500 dark:bg-[#f5c518] shrink-0"
+                      className="w-[6px] h-[6px] rounded-full bg-amber-500 dark:bg-accent shrink-0"
                       style={{ boxShadow: "0 0 7px #f5c51880" }}
                     />
                     {ach.category}
@@ -315,14 +315,14 @@ export default function Recognition() {
                       href={ach.links.linkedin}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-[10px] px-4 py-[10px] rounded-full bg-[#f5c518] text-[#1a1500] font-semibold text-[13px] hover:bg-[#ffd93a] active:scale-[0.97] transition-[background-color,transform] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] focus-visible:ring-offset-2"
+                      className="inline-flex items-center gap-[10px] px-4 py-[10px] rounded-full bg-accent text-[#1a1500] font-semibold text-[13px] hover:bg-[#ffd93a] active:scale-[0.97] transition-[background-color,transform] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                     >
                       View on LinkedIn
-                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1a1500] text-[#f5c518] text-xs" aria-hidden="true">↗</span>
+                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1a1500] text-accent text-xs" aria-hidden="true">↗</span>
                     </a>
                   )}
                 </div>
-              </motion.article>
+              </m.article>
             ))}
 
             {/* Competition wins: 4-col grid */}
@@ -332,7 +332,7 @@ export default function Recognition() {
                   const rankColor = RANK_COLORS[ach.rank!] ?? "#a1a1aa";
                   const rankTextLight = RANK_TEXT_LIGHT[ach.rank!] ?? "#52525b";
                   return (
-                    <motion.article
+                    <m.article
                       key={ach.title}
                       initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -412,14 +412,14 @@ export default function Recognition() {
                           </div>
                         )}
                       </div>
-                    </motion.article>
+                    </m.article>
                   );
                 })}
               </div>
             )}
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
-    </motion.section>
+    </m.section>
   );
 }

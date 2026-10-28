@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { useSectionInView } from "@/lib/hooks";
 import Pagination from "./Pagination";
 import SectionHeading from "./SectionHeading";
@@ -173,7 +173,7 @@ function CertCard({
   const hasImage = Boolean(cert.imageUrl) && !imgError;
 
   return (
-    <motion.article
+    <m.article
       layout
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
@@ -192,7 +192,7 @@ function CertCard({
         hover:border-black/[0.18] dark:hover:border-white/[0.14]
         hover:-translate-y-[2px] active:scale-[0.97]
         transition-[transform,border-color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]
-        focus-visible:outline-2 focus-visible:outline focus-visible:outline-[#f5c518] focus-visible:outline-offset-2
+        focus-visible:outline-2 focus-visible:outline focus-visible:outline-accent focus-visible:outline-offset-2
         ${listMode ? "flex-row" : "flex-col"}`}
     >
       {/* Thumb */}
@@ -277,14 +277,14 @@ function CertCard({
             {hasImage ? date : cert.category}
           </span>
           <span
-            className="text-xs uppercase tracking-[0.14em] text-amber-700 dark:text-[#f5c518]"
+            className="text-xs uppercase tracking-[0.14em] text-amber-700 dark:text-accent"
             style={{ fontFamily: MONO }}
           >
             View ↗
           </span>
         </div>
       </div>
-    </motion.article>
+    </m.article>
   );
 }
 
@@ -345,7 +345,7 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
   };
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -357,7 +357,7 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
       aria-modal="true"
       aria-labelledby="cert-modal-title"
     >
-      <motion.div
+      <m.div
         ref={modalRef}
         initial={{ scale: 0.96, opacity: 0, y: 8 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -376,7 +376,7 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
           onClick={onClose}
           type="button"
           aria-label="Close certificate details"
-          className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full flex items-center justify-center border border-white/[0.14] text-white text-[15px] hover:bg-white/[0.08] active:scale-[0.97] transition-[background-color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518]"
+          className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full flex items-center justify-center border border-white/[0.14] text-white text-[15px] hover:bg-white/[0.08] active:scale-[0.97] transition-[background-color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           style={{ background: "rgba(20,20,26,0.85)" }}
         >
           ✕
@@ -486,7 +486,7 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
                     type="button"
                     onClick={copyId}
                     aria-label="Copy certificate ID"
-                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[5px] border text-xs active:scale-[0.97] transition-[color,border-color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] ${
+                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-[5px] border text-xs active:scale-[0.97] transition-[color,border-color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
                       copied
                         ? "text-[#6fcf97] border-[#6fcf97]/40"
                         : "text-white border-white/[0.08] hover:border-white/[0.18]"
@@ -534,10 +534,10 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
                 href={cert.verifyUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-[10px] px-4 py-[10px] rounded-full bg-[#f5c518] text-[#1a1500] font-semibold text-[13px] hover:bg-[#ffd93a] active:scale-[0.97] transition-[background-color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] focus-visible:ring-offset-2 focus-visible:ring-offset-[#14141b]"
+                className="inline-flex items-center gap-[10px] px-4 py-[10px] rounded-full bg-accent text-[#1a1500] font-semibold text-[13px] hover:bg-[#ffd93a] active:scale-[0.97] transition-[background-color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[#14141b]"
               >
                 Verify Certificate
-                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1a1500] text-[#f5c518] text-xs" aria-hidden="true">
+                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1a1500] text-accent text-xs" aria-hidden="true">
                   ↗
                 </span>
               </a>
@@ -551,15 +551,15 @@ function CertModal({ cert, onClose }: { cert: Cert; onClose: () => void }) {
               <a
                 href={cert.imageUrl}
                 download
-                className="inline-flex items-center gap-2 px-4 py-[10px] rounded-full text-white border border-white/[0.14] text-[13px] font-semibold hover:bg-white/[0.04] active:scale-[0.97] transition-[background-color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518]"
+                className="inline-flex items-center gap-2 px-4 py-[10px] rounded-full text-white border border-white/[0.14] text-[13px] font-semibold hover:bg-white/[0.04] active:scale-[0.97] transition-[background-color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               >
                 Download ↓
               </a>
             )}
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   );
 }
 
@@ -580,9 +580,9 @@ function FilterChip({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`inline-flex items-center gap-1.5 px-[11px] py-[15px] sm:py-[10px] rounded-full border text-xs active:scale-[0.97] transition-[background-color,color,border-color,transform] duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] ${
+      className={`inline-flex items-center gap-1.5 px-[11px] py-[15px] sm:py-[10px] rounded-full border text-xs active:scale-[0.97] transition-[background-color,color,border-color,transform] duration-150 outline-none focus-visible:ring-2 focus-visible:ring-accent ${
         active
-          ? "bg-[#f5c518] text-[#1a1500] border-[#f5c518] font-semibold"
+          ? "bg-accent text-[#1a1500] border-accent font-semibold"
           : "bg-black/[0.02] dark:bg-white/[0.015] text-gray-600 dark:text-[#c9c9cf] border-black/[0.08] dark:border-white/[0.07] hover:border-black/[0.16] dark:hover:border-white/[0.14] hover:text-gray-900 dark:hover:text-white"
       }`}
       style={{ fontFamily: MONO, letterSpacing: "0.06em" }}
@@ -689,7 +689,7 @@ export default function Certifications() {
       id="certifications"
       className="mb-28 w-full max-w-[1240px] mx-auto px-4 sm:px-10 scroll-mt-28"
     >
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -701,7 +701,7 @@ export default function Certifications() {
         >
           Certifications
         </SectionHeading>
-      </motion.div>
+      </m.div>
 
       {!showAll && (
         <h3
@@ -717,7 +717,7 @@ export default function Certifications() {
       {/* Toolbar */}
       <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3 mb-4">
         {/* Search */}
-        <div className="relative flex items-center gap-2.5 px-4 border border-black/[0.08] dark:border-white/[0.07] rounded-xl bg-white dark:bg-[#101015] transition-colors focus-within:border-[#f5c518]/40">
+        <div className="relative flex items-center gap-2.5 px-4 border border-black/[0.08] dark:border-white/[0.07] rounded-xl bg-white dark:bg-[#101015] transition-colors focus-within:border-accent/40">
           <svg className="w-4 h-4 shrink-0 text-gray-500 dark:text-[#a1a1aa]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
             <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
           </svg>
@@ -734,7 +734,7 @@ export default function Certifications() {
               type="button"
               aria-label="Clear search"
               onClick={() => { setQuery(""); setCurrentPage(1); if (searchRef.current) searchRef.current.value = ""; }}
-              className="rounded text-gray-500 dark:text-[#a1a1aa] hover:text-gray-900 dark:hover:text-white text-[13px] px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518]"
+              className="rounded text-gray-500 dark:text-[#a1a1aa] hover:text-gray-900 dark:hover:text-white text-[13px] px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               ✕
             </button>
@@ -752,7 +752,7 @@ export default function Certifications() {
           <select
             value={sort}
             onChange={(e) => { setSort(e.target.value as SortMode); setCurrentPage(1); }}
-            className="flex-1 sm:flex-none appearance-none bg-white dark:bg-[#101015] dark:[color-scheme:dark] border border-black/[0.08] dark:border-white/[0.07] text-gray-700 dark:text-white px-3 py-2.5 rounded-xl text-xs outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] cursor-pointer pr-8"
+            className="flex-1 sm:flex-none appearance-none bg-white dark:bg-[#101015] dark:[color-scheme:dark] border border-black/[0.08] dark:border-white/[0.07] text-gray-700 dark:text-white px-3 py-2.5 rounded-xl text-xs outline-none focus-visible:ring-2 focus-visible:ring-accent cursor-pointer pr-8"
             style={{ fontFamily: MONO, letterSpacing: "0.12em", textTransform: "uppercase" }}
             aria-label="Sort certifications"
           >
@@ -765,7 +765,7 @@ export default function Certifications() {
             type="button"
             onClick={() => setViewMode((v) => (v === "grid" ? "list" : "grid"))}
             aria-label={`Switch to ${viewMode === "grid" ? "list" : "grid"} view`}
-            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-black/[0.08] dark:border-white/[0.07] bg-white dark:bg-[#101015] text-gray-600 dark:text-white text-xs hover:border-black/[0.16] dark:hover:border-white/[0.14] active:scale-[0.97] transition-[border-color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518]"
+            className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl border border-black/[0.08] dark:border-white/[0.07] bg-white dark:bg-[#101015] text-gray-600 dark:text-white text-xs hover:border-black/[0.16] dark:hover:border-white/[0.14] active:scale-[0.97] transition-[border-color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             style={{ fontFamily: MONO, letterSpacing: "0.14em", textTransform: "uppercase" }}
           >
             {viewMode === "grid" ? (
@@ -849,7 +849,7 @@ export default function Certifications() {
           <button
             type="button"
             onClick={clearAll}
-            className="rounded text-xs uppercase tracking-[0.14em] text-amber-700 dark:text-[#f5c518] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518]"
+            className="rounded text-xs uppercase tracking-[0.14em] text-amber-700 dark:text-accent hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             Clear filters ✕
           </button>
@@ -862,7 +862,7 @@ export default function Certifications() {
       {/* Grid / list */}
       <AnimatePresence mode="wait">
         {filtered.length === 0 ? (
-          <motion.div
+          <m.div
             key="empty"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -876,14 +876,14 @@ export default function Certifications() {
             <button
               type="button"
               onClick={clearAll}
-              className="px-4 py-2 border border-black/[0.10] dark:border-white/[0.14] rounded-full text-xs uppercase tracking-[0.18em] text-gray-700 dark:text-white hover:bg-black/[0.03] dark:hover:bg-white/[0.04] active:scale-[0.97] transition-[background-color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518]"
+              className="px-4 py-2 border border-black/[0.10] dark:border-white/[0.14] rounded-full text-xs uppercase tracking-[0.18em] text-gray-700 dark:text-white hover:bg-black/[0.03] dark:hover:bg-white/[0.04] active:scale-[0.97] transition-[background-color,transform] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               style={{ fontFamily: MONO }}
             >
               Clear all filters
             </button>
-          </motion.div>
+          </m.div>
         ) : (
-          <motion.div
+          <m.div
             key={showAll ? `${viewMode}-${currentPage}` : "featured"}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -908,7 +908,7 @@ export default function Certifications() {
                 />
               </div>
             ))}
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
@@ -935,7 +935,7 @@ export default function Certifications() {
             setShowAll((v) => !v);
           }}
           aria-expanded={showAll}
-          className="px-5 py-2.5 border border-black/[0.12] dark:border-white/[0.16] rounded-full text-xs uppercase tracking-[0.18em] text-gray-800 dark:text-white hover:bg-black/[0.03] dark:hover:bg-white/[0.05] active:scale-[0.97] transition-[background-color,transform] duration-150 outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518]"
+          className="px-5 py-2.5 border border-black/[0.12] dark:border-white/[0.16] rounded-full text-xs uppercase tracking-[0.18em] text-gray-800 dark:text-white hover:bg-black/[0.03] dark:hover:bg-white/[0.05] active:scale-[0.97] transition-[background-color,transform] duration-150 outline-none focus-visible:ring-2 focus-visible:ring-accent"
           style={{ fontFamily: MONO }}
         >
           {showAll ? "Show featured only" : `View all ${total} certifications`}

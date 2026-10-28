@@ -39,8 +39,8 @@ export default function Pagination({
   const isPill = variant === "pill";
   const r = isPill ? "rounded-full" : "rounded-lg";
   const activeBtn = isPill
-    ? "bg-[#f5c518] text-[#1a1500] border-[#f5c518] font-semibold"
-    : "bg-gray-900 dark:bg-[#FFD700] text-white dark:text-black shadow-sm";
+    ? "bg-accent text-[#1a1500] border-accent font-semibold"
+    : "bg-gray-900 dark:bg-accent text-white dark:text-black shadow-sm";
   const inactiveBtn = isPill
     ? "border border-black/[0.08] dark:border-white/[0.07] text-gray-600 dark:text-[#c9c9cf] hover:border-black/[0.18] dark:hover:border-white/[0.14] hover:text-gray-900 dark:hover:text-white"
     : "bg-white dark:bg-white/5 border border-black/[0.08] dark:border-white/10 text-gray-600 dark:text-white/50 hover:bg-gray-50 dark:hover:bg-white/10";

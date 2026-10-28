@@ -78,7 +78,8 @@ export default function AgentMeshCanvas() {
       ctx!.beginPath();
       for (let i = 0; i < 6; i++) {
         const a = rot + i * Math.PI / 3;
-        i ? ctx!.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r) : ctx!.moveTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
+        const x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
+        if (i) ctx!.lineTo(x, y); else ctx!.moveTo(x, y);
       }
       ctx!.closePath();
       ctx!.strokeStyle = color; ctx!.lineWidth = lw; ctx!.stroke();

@@ -110,7 +110,7 @@ More: ChatDex AI, Dynamic AI Agent System, LinkedIn MCP servers, Company Logo Fi
 - **Portfolio:** https://selvinpaulraj.vercel.app
 - **GitHub:** https://github.com/selvin-paul-raj
 - **LinkedIn:** https://linkedin.com/in/selvinpaulraj
-- **Resume:** https://selvinpaulraj.vercel.app/Selvin_Resume.pdf
+- **Resume:** https://selvinpaulraj.vercel.app/view/Selvin_Resume.pdf
 - **MCP endpoint:** https://selvinpaulraj.vercel.app/api/mcp
 
 ---

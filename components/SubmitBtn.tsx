@@ -11,9 +11,9 @@ const SubmitBtn = () => {
       disabled={pending}
       aria-busy={pending}
       className="group w-full flex items-center justify-between gap-3 pl-6 pr-2 py-2 rounded-full
-        bg-gray-900 dark:bg-[#FFD700] text-white dark:text-black
+        bg-gray-900 dark:bg-accent text-white dark:text-black
         text-sm font-semibold tracking-wide
-        focus-visible:ring-2 focus-visible:ring-[#FFD700] focus-visible:ring-offset-2 outline-none
+        focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 outline-none
         active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none"
       style={{
         transition: "opacity 150ms ease, transform 160ms cubic-bezier(0.23,1,0.32,1)",

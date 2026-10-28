@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useEffect, useState, createContext, useContext, startTransition } from "react";
-import { MotionConfig } from "framer-motion";
+import { LazyMotion, MotionConfig } from "framer-motion";
+
+// Components render `m.*`; the animation features load in a separate chunk.
+const loadMotionFeatures = () => import("@/lib/motion-features").then((mod) => mod.default);
 import toast from "react-hot-toast";
 
 type Theme = "light" | "dark";
@@ -84,11 +87,13 @@ export default function ThemeContextProvider({
   };
 
   return (
-    <MotionConfig reducedMotion="user">
-      <ThemeContext.Provider value={{ theme, toggleTheme }}>
-        {children}
-      </ThemeContext.Provider>
-    </MotionConfig>
+    <LazyMotion features={loadMotionFeatures}>
+      <MotionConfig reducedMotion="user">
+        <ThemeContext.Provider value={{ theme, toggleTheme }}>
+          {children}
+        </ThemeContext.Provider>
+      </MotionConfig>
+    </LazyMotion>
   );
 }
 

@@ -2,12 +2,14 @@
 
 import React, { useMemo, useState } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { m, AnimatePresence } from "framer-motion";
 import { FaGithub, FaLock } from "react-icons/fa";
 import { MdArrowOutward } from "react-icons/md";
 import SectionHeading from "./SectionHeading";
 import { projectsData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
+import { caseStudySlugByProject } from "@/lib/work";
 
 type Project = (typeof projectsData)[number];
 
@@ -30,30 +32,57 @@ const isNpm = (url: string) => url.includes("npmjs.com");
 const primaryUrl = (p: Project) => p.code ?? p.live ?? undefined;
 
 const pressable =
-  "outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#09090b] active:scale-[0.97]";
+  "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#09090b] active:scale-[0.97]";
 
 /* ─── Featured ─────────────────────────────────────────────────────────── */
 
+// Writes the pointer position to CSS variables on the card; no React state, no re-render.
+function trackSpotlight(e: React.PointerEvent<HTMLElement>) {
+  if (e.pointerType !== "mouse") return;
+  const el = e.currentTarget;
+  const rect = el.getBoundingClientRect();
+  el.style.setProperty("--x", `${e.clientX - rect.left}px`);
+  el.style.setProperty("--y", `${e.clientY - rect.top}px`);
+}
+
+function CaseStudyLink({ slug, title }: { slug: string; title: string }) {
+  return (
+    <Link
+      href={`/work/${slug}`}
+      aria-label={`${title} case study`}
+      className={`inline-flex items-center gap-1 rounded-md border border-accent/50 px-3 py-1.5 text-xs font-semibold text-accent-ink dark:text-accent hover:bg-accent/10 ${pressable}`}
+      style={{ transition: "transform 160ms cubic-bezier(0.23,1,0.32,1), background-color 150ms ease" }}
+    >
+      How it works <MdArrowOutward size={12} aria-hidden="true" />
+    </Link>
+  );
+}
+
 function FeaturedLinks({ project }: { project: Project }) {
   const { title, code, live } = project;
+  const slug = caseStudySlugByProject[title];
 
   if (isPrivate(project)) {
     return (
-      <span className="inline-flex items-center gap-1.5 text-xs text-gray-600 dark:text-[#a1a1aa]">
-        <FaLock size={10} aria-hidden="true" /> Private work project · details on request
-      </span>
+      <div className="flex flex-wrap items-center gap-3">
+        {slug && <CaseStudyLink slug={slug} title={title} />}
+        <span className="inline-flex items-center gap-1.5 text-xs text-gray-600 dark:text-[#a1a1aa]">
+          <FaLock size={10} aria-hidden="true" /> Private work project{slug ? "" : " · details on request"}
+        </span>
+      </div>
     );
   }
 
   return (
     <div className="flex items-center gap-2">
+      {slug && <CaseStudyLink slug={slug} title={title} />}
       {code && (
         <a
           href={code}
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`${title} source code on GitHub`}
-          className={`inline-flex items-center gap-1.5 rounded-md bg-gray-900 px-3 py-1.5 text-xs font-semibold text-white dark:bg-[#FFD700] dark:text-[#1a1500] ${pressable}`}
+          className={`inline-flex items-center gap-1.5 rounded-md bg-gray-900 px-3 py-1.5 text-xs font-semibold text-white dark:bg-accent dark:text-[#1a1500] ${pressable}`}
           style={{ transition: "transform 160ms cubic-bezier(0.23,1,0.32,1), opacity 150ms ease" }}
         >
           <FaGithub size={12} aria-hidden="true" /> GitHub
@@ -80,18 +109,29 @@ function FeaturedCard({ project, index }: { project: Project; index: number }) {
   const privateWork = isPrivate(project);
 
   return (
-    <motion.article
+    <m.article
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "0px 0px -60px 0px" }}
       transition={{ duration: 0.35, delay: (index % 3) * 0.06, ease: EASE_OUT }}
-      className={`group flex flex-col overflow-hidden rounded-2xl border [@media(hover:hover)]:hover:-translate-y-0.5
+      onPointerMove={trackSpotlight}
+      className={`group relative flex flex-col overflow-hidden rounded-2xl border [@media(hover:hover)]:hover:-translate-y-0.5
         ${privateWork
-          ? "border-[#FFD700]/25 bg-[#FFD700]/[0.05] dark:border-[#FFD700]/[0.14] dark:bg-[#FFD700]/[0.03]"
+          ? "border-accent/25 bg-accent/[0.05] dark:border-accent/[0.14] dark:bg-accent/[0.03]"
           : "border-black/[0.08] bg-white dark:border-white/[0.07] dark:bg-[#101015]"
         }`}
       style={{ transition: "transform 220ms cubic-bezier(0.23,1,0.32,1), border-color 200ms ease" }}
     >
+      {/* Pointer-following gold spotlight; position comes from --x/--y set in trackSpotlight */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-10 hidden opacity-0 [@media(hover:hover)]:block [@media(hover:hover)]:group-hover:opacity-100"
+        style={{
+          background:
+            "radial-gradient(360px circle at var(--x, 50%) var(--y, 50%), rgb(245 197 24 / 0.08), transparent 70%)",
+          transition: "opacity 200ms ease",
+        }}
+      />
       {imageUrl && (
         <div className="relative h-44 w-full shrink-0 overflow-hidden">
           <Image
@@ -111,7 +151,7 @@ function FeaturedCard({ project, index }: { project: Project; index: number }) {
           <span
             className={`rounded-full px-2.5 py-0.5 ${
               privateWork
-                ? "bg-[#FFD700]/15 text-[#6b561d] dark:text-[#f5c518]"
+                ? "bg-accent/15 text-[#6b561d] dark:text-accent"
                 : "bg-black/[0.05] text-gray-600 dark:bg-white/[0.08] dark:text-[#d4d4d8]"
             }`}
           >
@@ -138,7 +178,7 @@ function FeaturedCard({ project, index }: { project: Project; index: number }) {
           <FeaturedLinks project={project} />
         </div>
       </div>
-    </motion.article>
+    </m.article>
   );
 }
 
@@ -149,7 +189,7 @@ function IndexRow({ project }: { project: Project }) {
   const href = primaryUrl(project);
 
   return (
-    <motion.li
+    <m.li
       layout="position"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -170,7 +210,7 @@ function IndexRow({ project }: { project: Project }) {
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-sm outline-none after:absolute after:inset-0 after:content-[''] focus-visible:ring-2 focus-visible:ring-[#f5c518]"
+              className="rounded-sm outline-none after:absolute after:inset-0 after:content-[''] focus-visible:ring-2 focus-visible:ring-accent"
             >
               {title}
             </a>
@@ -192,7 +232,7 @@ function IndexRow({ project }: { project: Project }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${title}, ${isNpm(live) ? "npm package" : "live demo"}`}
-            className="relative z-10 rounded-sm text-xs font-medium text-amber-700 underline-offset-4 hover:underline outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] dark:text-[#f5c518]"
+            className="relative z-10 rounded-sm text-xs font-medium text-amber-700 underline-offset-4 hover:underline outline-none focus-visible:ring-2 focus-visible:ring-accent dark:text-accent"
           >
             {isNpm(live) ? "npm" : "Live"}
           </a>
@@ -205,7 +245,7 @@ function IndexRow({ project }: { project: Project }) {
           />
         )}
       </div>
-    </motion.li>
+    </m.li>
   );
 }
 
@@ -242,7 +282,7 @@ function ProjectIndex() {
                 disabled={counts[value] === 0}
                 className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-sm font-medium disabled:opacity-40 ${pressable}
                   ${active
-                    ? "border-gray-900 bg-gray-900 text-white dark:border-[#FFD700] dark:bg-[#FFD700] dark:text-[#1a1500]"
+                    ? "border-gray-900 bg-gray-900 text-white dark:border-accent dark:bg-accent dark:text-[#1a1500]"
                     : "border-black/[0.1] text-gray-700 hover:border-black/25 dark:border-white/[0.1] dark:text-[#d4d4d8] dark:hover:border-white/25"
                   }`}
                 style={{ transition: "transform 160ms cubic-bezier(0.23,1,0.32,1), background-color 150ms ease, border-color 150ms ease, color 150ms ease" }}
@@ -281,7 +321,7 @@ function ProjectIndex() {
           href="https://github.com/selvin-paul-raj?tab=repositories"
           target="_blank"
           rel="noopener noreferrer"
-          className="rounded-sm font-medium text-gray-900 underline decoration-[#FFD700] underline-offset-4 outline-none hover:decoration-2 focus-visible:ring-2 focus-visible:ring-[#f5c518] dark:text-white"
+          className="rounded-sm font-medium text-gray-900 underline decoration-accent underline-offset-4 outline-none hover:decoration-2 focus-visible:ring-2 focus-visible:ring-accent dark:text-white"
         >
           GitHub
         </a>

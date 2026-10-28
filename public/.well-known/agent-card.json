@@ -1,0 +1,43 @@
+{
+  "protocolVersion": "0.3.0",
+  "name": "Selvin PaulRaj K — Portfolio Agent",
+  "description": "Agent for AI Engineer Selvin PaulRaj K (Chennai, India; open to AI Engineer roles). Send a job description for an evidence-cited fit report, or ask anything for his profile. Deterministic, no LLM: every claim cites portfolio data.",
+  "url": "https://selvinpaulraj.vercel.app/api/a2a",
+  "preferredTransport": "JSONRPC",
+  "version": "1.0.0",
+  "provider": {
+    "organization": "Selvin PaulRaj K",
+    "url": "https://selvinpaulraj.vercel.app"
+  },
+  "documentationUrl": "https://selvinpaulraj.vercel.app/llms.txt",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": false
+  },
+  "defaultInputModes": ["text/plain"],
+  "defaultOutputModes": ["text/plain", "application/json"],
+  "skills": [
+    {
+      "id": "job_fit",
+      "name": "Job fit check",
+      "description": "Matches a job description against Selvin's production work, projects, and certifications. Returns a 0-100 score, each requirement with cited evidence, and the gaps.",
+      "tags": ["hiring", "job-description", "fit", "evidence"],
+      "examples": ["We are hiring an AI Engineer with LangGraph, RAG, FastAPI and AWS experience..."],
+      "inputModes": ["text/plain"],
+      "outputModes": ["text/plain", "application/json"]
+    },
+    {
+      "id": "profile",
+      "name": "Profile summary",
+      "description": "Selvin's role, experience totals, featured projects, certifications, contact links, and the roles he is open to.",
+      "tags": ["profile", "resume", "contact"],
+      "examples": ["Who is Selvin and what does he work on?"],
+      "inputModes": ["text/plain"],
+      "outputModes": ["text/plain", "application/json"]
+    }
+  ],
+  "additionalInterfaces": [
+    { "url": "https://selvinpaulraj.vercel.app/api/a2a", "transport": "JSONRPC" }
+  ]
+}

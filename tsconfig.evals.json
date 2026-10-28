@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.server.json",
+  "compilerOptions": { "outDir": "dist/evals", "rootDir": "." },
+  "include": ["evals/run.ts"]
+}
