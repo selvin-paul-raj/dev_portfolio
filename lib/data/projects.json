@@ -51,7 +51,8 @@
     "order": 1,
     "show": true,
     "featured": true,
-    "private": true
+    "private": true,
+    "personal": true
   },
   {
     "title": "Jobs with Joe",
@@ -79,7 +80,8 @@
     "order": 2,
     "show": true,
     "featured": true,
-    "private": true
+    "private": true,
+    "personal": true
   },
   {
     "title": "DOF Automation: Deal Origination Framework",
@@ -337,7 +339,8 @@
     "order": 12,
     "show": true,
     "featured": false,
-    "private": true
+    "private": true,
+    "personal": true
   },
   {
     "title": "FleetVoice: WhatsApp Agent for Truck Drivers",
@@ -362,7 +365,8 @@
     "order": 13,
     "show": true,
     "featured": false,
-    "private": true
+    "private": true,
+    "personal": true
   },
   {
     "title": "SPR Studio: AI Video Pipeline",
@@ -386,7 +390,8 @@
     "order": 14,
     "show": true,
     "featured": false,
-    "private": true
+    "private": true,
+    "personal": true
   },
   {
     "title": "ChatDex AI",
