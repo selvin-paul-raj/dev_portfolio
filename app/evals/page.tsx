@@ -34,6 +34,7 @@ export default function EvalsPage() {
   const { retrieval, offTopic, fit } = evals;
   // null until `npm run evals -- --llm` has been run with an LLM key.
   const llm = evals.llm as { model: string | null; passRate: number } | null;
+  const scope = (evals as { scope?: { source: string; passRate: number; cases: unknown[] } }).scope ?? null;
   // null when the evals ran without TYPESAFE_API_KEY.
   const gate = evals.gate as {
     model: string;
@@ -57,12 +58,13 @@ export default function EvalsPage() {
       </SectionHeading>
 
       <div className="w-full max-w-3xl flex flex-col gap-10">
-        <dl className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        <dl className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <Metric label={`Hit@${retrieval.k}`} value={pct(retrieval.hitAtK)} note={`${retrieval.cases.length} golden questions`} />
           <Metric label="MRR" value={retrieval.mrr.toFixed(2)} note="Mean reciprocal rank" />
           <Metric label="Off-topic refusal" value={pct(offTopic.passRate)} note={`${offTopic.cases.length} unrelated questions`} />
           <Metric label="Fit check" value={pct(fit.passRate)} note={`${fit.cases.length} labelled JDs`} />
           {gate && <Metric label="Safety gate" value={pct(gate.passRate)} note={`${gate.cases.length} cases, TypeSafe ${gate.model}`} />}
+          {scope && <Metric label="Free-chat block" value={pct(scope.passRate)} note={`${scope.cases.length} challenge cases, ${scope.source}`} />}
         </dl>
 
         {llm && (

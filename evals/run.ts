@@ -8,6 +8,7 @@ import { buildDocs, buildIndex, search } from "../lib/ask/retrieve";
 import type { AskData } from "../lib/ask/retrieve";
 import { answerQuestion, gateQuestion, MIN_COVERAGE, MIN_SCORE } from "../lib/ask/answer";
 import { decideConfigured, decisionModel } from "../lib/ask/decide";
+import { isFreeChatRequest } from "../lib/ask/scope";
 import { matchJob } from "../lib/fit/matchJob";
 import type { FitData } from "../lib/fit/matchJob";
 import { PROFILE } from "../lib/mcp/definitions";
@@ -20,6 +21,7 @@ const golden = load("evals/golden.json") as {
   retrieval: Array<{ q: string; expect: string }>;
   offTopic: string[];
   injection: string[];
+  challengeScope: { freeChat: string[]; gameMoves: string[] };
   fit: Array<{ name: string; jd: string; mustMatch: string[]; mustGap: string[] }>;
 };
 
@@ -79,6 +81,18 @@ async function gateCases() {
   return { model: decisionModel(), passRate: round(cases.filter((c) => c.pass).length / cases.length), cases };
 }
 
+// ── Challenge scope: free-chat abuse blocked, real password attempts allowed ──
+async function scopeCases() {
+  const cases = [];
+  for (const q of golden.challengeScope.freeChat) cases.push({ q, kind: "free-chat", pass: (await isFreeChatRequest(q)) === true });
+  for (const q of golden.challengeScope.gameMoves) cases.push({ q, kind: "game-move", pass: (await isFreeChatRequest(q)) === false });
+  return {
+    source: decideConfigured() ? `typesafe ${decisionModel()}` : "keyword fallback",
+    passRate: round(cases.filter((c) => c.pass).length / cases.length),
+    cases,
+  };
+}
+
 async function llmCases() {
   if (!process.argv.includes("--llm")) return null;
   const cases = [];
@@ -97,6 +111,7 @@ async function llmCases() {
 
 (async () => {
   const gate = await gateCases();
+  const scope = await scopeCases();
   const llm = await llmCases();
   const report = {
     generatedAt: new Date().toISOString(),
@@ -105,16 +120,19 @@ async function llmCases() {
     offTopic: { passRate: round(offTopicCases.filter((c) => c.pass).length / offTopicCases.length), cases: offTopicCases },
     fit: { passRate: round(fitCases.filter((c) => c.pass).length / fitCases.length), cases: fitCases },
     gate,
+    scope,
     llm,
   };
   writeFileSync(join(ROOT, "lib/data/evals.json"), JSON.stringify(report, null, 2) + "\n");
   console.log(
     `retrieval hit@${K}=${report.retrieval.hitAtK} mrr=${report.retrieval.mrr} | off-topic=${report.offTopic.passRate} | fit=${report.fit.passRate}` +
       (gate ? ` | gate=${gate.passRate}` : "") +
+      ` | scope=${scope.passRate}` +
       (llm ? ` | llm=${llm.passRate}` : "")
   );
   for (const c of retrievalCases.filter((c) => !c.pass)) console.log(`  FAIL retrieval: "${c.q}" (rank ${c.rank}, top: ${c.top})`);
   for (const c of offTopicCases.filter((c) => !c.pass)) console.log(`  FAIL off-topic: "${c.q}" (score ${c.topScore})`);
   for (const c of fitCases.filter((c) => !c.pass)) console.log(`  FAIL fit: ${c.name}`, c);
+  for (const c of scope.cases.filter((c) => !c.pass)) console.log(`  FAIL scope (${c.kind}): "${c.q}"`);
   for (const c of gate?.cases.filter((c) => !c.pass) ?? []) console.log(`  FAIL gate (${c.kind}): "${c.q}" on-topic=${c.onTopic} injection=${c.injection}`);
 })();
