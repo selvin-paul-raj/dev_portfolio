@@ -34,6 +34,12 @@ export default function EvalsPage() {
   const { retrieval, offTopic, fit } = evals;
   // null until `npm run evals -- --llm` has been run with an LLM key.
   const llm = evals.llm as { model: string | null; passRate: number } | null;
+  // null when the evals ran without TYPESAFE_API_KEY.
+  const gate = evals.gate as {
+    model: string;
+    passRate: number;
+    cases: Array<{ q: string; kind: string; onTopic: number | null; injection: number | null; pass: boolean }>;
+  } | null;
   const generated = new Date(evals.generatedAt).toISOString().slice(0, 10);
 
   return (
@@ -51,11 +57,12 @@ export default function EvalsPage() {
       </SectionHeading>
 
       <div className="w-full max-w-3xl flex flex-col gap-10">
-        <dl className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <dl className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           <Metric label={`Hit@${retrieval.k}`} value={pct(retrieval.hitAtK)} note={`${retrieval.cases.length} golden questions`} />
           <Metric label="MRR" value={retrieval.mrr.toFixed(2)} note="Mean reciprocal rank" />
           <Metric label="Off-topic refusal" value={pct(offTopic.passRate)} note={`${offTopic.cases.length} unrelated questions`} />
           <Metric label="Fit check" value={pct(fit.passRate)} note={`${fit.cases.length} labelled JDs`} />
+          {gate && <Metric label="Safety gate" value={pct(gate.passRate)} note={`${gate.cases.length} cases, TypeSafe ${gate.model}`} />}
         </dl>
 
         {llm && (
@@ -89,6 +96,32 @@ export default function EvalsPage() {
             </table>
           </div>
         </section>
+
+        {gate && (
+          <section>
+            <h2 className="mb-3 font-mono text-xs uppercase tracking-[0.15em] text-gray-500 dark:text-white/45">
+              Safety gate · off-topic and injection attempts
+            </h2>
+            <ul className="flex flex-col gap-1.5 text-sm text-gray-800 dark:text-white/75">
+              {gate.cases
+                .filter((c) => c.kind !== "on-topic")
+                .map((c) => (
+                  <li key={c.q} className="grid grid-cols-[minmax(0,1fr)_auto_auto] gap-4 items-baseline">
+                    <span>{c.q}</span>
+                    <span className="font-mono text-xs tabular-nums text-gray-500 dark:text-white/45">
+                      {c.kind === "injection" ? `inj ${c.injection?.toFixed(2)}` : `on-topic ${c.onTopic?.toFixed(2)}`}
+                    </span>
+                    <Status pass={c.pass} />
+                  </li>
+                ))}
+            </ul>
+            <p className="mt-3 text-xs text-gray-600 dark:text-white/50">
+              A TypeSafe decision model returns calibrated probabilities for &ldquo;is this about Selvin&rdquo; and
+              &ldquo;is this an injection attempt&rdquo; before any LLM call; all{" "}
+              {gate.cases.filter((c) => c.kind === "on-topic").length} golden on-topic questions must still pass.
+            </p>
+          </section>
+        )}
 
         <section>
           <h2 className="mb-3 font-mono text-xs uppercase tracking-[0.15em] text-gray-500 dark:text-white/45">Off-topic gate</h2>

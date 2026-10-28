@@ -46,7 +46,7 @@ All content is driven from `lib/data/*.json` — do not edit `lib/data.tsx` for 
 ### Recruiter & agent features
 
 - `/fit` + MCP `match_job` + A2A `job_fit` share `lib/fit/matchJob.ts` (deterministic, no LLM).
-- `/ask` (`lib/ask/*`): BM25 over lib/data, validated citations, off-topic gate; LLM optional via `LLM_*` env (OpenAI-compatible, optional `LLM_FALLBACK_*`), extractive without a key. `/challenge` needs `LLM_*` + `CHALLENGE_SALT`.
+- `/ask` (`lib/ask/*`): BM25 over lib/data, validated citations, and a pre-LLM gate (`gateQuestion`): TypeSafe decision model via `lib/ask/decide.ts` when `TYPESAFE_API_KEY` is set (on-topic + injection probabilities; also the `/challenge` level-5 guard), BM25 coverage otherwise; LLM optional via `LLM_*` env (OpenAI-compatible, optional `LLM_FALLBACK_*`), extractive without a key. `/challenge` needs `LLM_*` + `CHALLENGE_SALT`.
 - `next.config.js` rewrites `/` to `/api/cli` for curl/wget/HTTPie and to `/llms-full.txt` for `Accept: text/markdown` (markdown rule first).
 - `components/CommandPalette.tsx` (⌘K / Ctrl+K, or the `open-command-palette` window event) is mounted in the layout.
 

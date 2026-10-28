@@ -6,7 +6,8 @@ import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import { buildDocs, buildIndex, search } from "../lib/ask/retrieve";
 import type { AskData } from "../lib/ask/retrieve";
-import { answerQuestion, MIN_COVERAGE, MIN_SCORE } from "../lib/ask/answer";
+import { answerQuestion, gateQuestion, MIN_COVERAGE, MIN_SCORE } from "../lib/ask/answer";
+import { decideConfigured, decisionModel } from "../lib/ask/decide";
 import { matchJob } from "../lib/fit/matchJob";
 import type { FitData } from "../lib/fit/matchJob";
 import { PROFILE } from "../lib/mcp/definitions";
@@ -18,6 +19,7 @@ const load = (p: string) => JSON.parse(readFileSync(join(ROOT, p), "utf8"));
 const golden = load("evals/golden.json") as {
   retrieval: Array<{ q: string; expect: string }>;
   offTopic: string[];
+  injection: string[];
   fit: Array<{ name: string; jd: string; mustMatch: string[]; mustGap: string[] }>;
 };
 
@@ -63,6 +65,20 @@ const fitCases = golden.fit.map((c) => {
   return { name: c.name, score: r.score, missingMatches, missingGaps, unbacked, pass: !missingMatches.length && !missingGaps.length && !unbacked.length };
 });
 
+// ── TypeSafe gate: on-topic questions pass, off-topic and injection refused ──
+async function gateCases() {
+  if (!decideConfigured()) return null;
+  const run = async (q: string, expectPass: boolean, kind: string) => {
+    const g = await gateQuestion(q, search(index, q, 6));
+    return { q, kind, onTopic: g.onTopic ?? null, injection: g.injection ?? null, pass: g.source === "typesafe" && g.pass === expectPass };
+  };
+  const cases = [];
+  for (const { q } of golden.retrieval) cases.push(await run(q, true, "on-topic"));
+  for (const q of golden.offTopic) cases.push(await run(q, false, "off-topic"));
+  for (const q of golden.injection) cases.push(await run(q, false, "injection"));
+  return { model: decisionModel(), passRate: round(cases.filter((c) => c.pass).length / cases.length), cases };
+}
+
 async function llmCases() {
   if (!process.argv.includes("--llm")) return null;
   const cases = [];
@@ -80,6 +96,7 @@ async function llmCases() {
 }
 
 (async () => {
+  const gate = await gateCases();
   const llm = await llmCases();
   const report = {
     generatedAt: new Date().toISOString(),
@@ -87,14 +104,17 @@ async function llmCases() {
     retrieval: { k: K, hitAtK: round(hitAtK), mrr: round(mrr), cases: retrievalCases },
     offTopic: { passRate: round(offTopicCases.filter((c) => c.pass).length / offTopicCases.length), cases: offTopicCases },
     fit: { passRate: round(fitCases.filter((c) => c.pass).length / fitCases.length), cases: fitCases },
+    gate,
     llm,
   };
   writeFileSync(join(ROOT, "lib/data/evals.json"), JSON.stringify(report, null, 2) + "\n");
   console.log(
     `retrieval hit@${K}=${report.retrieval.hitAtK} mrr=${report.retrieval.mrr} | off-topic=${report.offTopic.passRate} | fit=${report.fit.passRate}` +
+      (gate ? ` | gate=${gate.passRate}` : "") +
       (llm ? ` | llm=${llm.passRate}` : "")
   );
   for (const c of retrievalCases.filter((c) => !c.pass)) console.log(`  FAIL retrieval: "${c.q}" (rank ${c.rank}, top: ${c.top})`);
   for (const c of offTopicCases.filter((c) => !c.pass)) console.log(`  FAIL off-topic: "${c.q}" (score ${c.topScore})`);
   for (const c of fitCases.filter((c) => !c.pass)) console.log(`  FAIL fit: ${c.name}`, c);
+  for (const c of gate?.cases.filter((c) => !c.pass) ?? []) console.log(`  FAIL gate (${c.kind}): "${c.q}" on-topic=${c.onTopic} injection=${c.injection}`);
 })();
