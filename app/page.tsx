@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import { Analytics } from "@vercel/analytics/react";
 import About from "@/components/About";
 import ConsoleGreeting from "@/components/ConsoleGreeting";
+import HashScroll from "@/components/HashScroll";
 import Intro from "@/components/Intro";
 import SectionDivider from "@/components/SectionDivider";
 import SocialLinks from "@/components/SocialLinks";
@@ -40,6 +41,7 @@ export default function Home() {
   return (
     <main id="content" className="flex flex-col items-center px-4">
       <Analytics />
+      <HashScroll />
       <ConsoleGreeting />
       <Intro />
       <SocialLinks />

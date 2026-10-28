@@ -1,6 +1,15 @@
 import { FaLinkedin, FaGithub, FaInstagram, FaHackerrank } from "react-icons/fa";
 import { SiLeetcode } from "react-icons/si";
+import Link from "next/link";
 import { links } from "@/lib/data";
+
+const PAGES = [
+  { href: "/work", name: "Case studies" },
+  { href: "/fit", name: "Fit check" },
+  { href: "/ask", name: "Ask" },
+  { href: "/evals", name: "Evals" },
+  { href: "/challenge", name: "Challenge" },
+];
 
 const SOCIAL_LINKS = [
   {
@@ -62,18 +71,32 @@ const Footer = () => {
           </div>
 
           {/* Nav links */}
-          <nav className="flex flex-wrap gap-x-5 gap-y-2">
-            {links.map(({ name, hash }) => (
-              <a
-                key={name}
-                href={hash}
-                className="rounded-sm text-sm text-gray-600 dark:text-[#c9c9cf] hover:text-gray-900 dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                style={{ transition: "color 150ms ease" }}
-              >
-                {name}
-              </a>
-            ))}
-          </nav>
+          <div className="flex flex-col gap-3">
+            <nav aria-label="Sections" className="flex flex-wrap gap-x-5 gap-y-2">
+              {links.map(({ name, hash }) => (
+                <Link
+                  key={name}
+                  href={`/${hash}`}
+                  className="rounded-sm text-sm text-gray-600 dark:text-[#c9c9cf] hover:text-gray-900 dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                  style={{ transition: "color 150ms ease" }}
+                >
+                  {name}
+                </Link>
+              ))}
+            </nav>
+            <nav aria-label="Pages" className="flex flex-wrap gap-x-5 gap-y-2">
+              {PAGES.map(({ href, name }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="rounded-sm font-mono text-xs text-gray-500 dark:text-white/55 hover:text-gray-900 dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                  style={{ transition: "color 150ms ease" }}
+                >
+                  {name}
+                </Link>
+              ))}
+            </nav>
+          </div>
 
           {/* Social icons */}
           <div className="flex items-center gap-2 shrink-0">

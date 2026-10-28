@@ -3,7 +3,7 @@ import { BsArrowRight } from "react-icons/bs";
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[50vh] gap-5 text-center px-4">
+    <main id="content" className="flex flex-col items-center justify-center min-h-[50vh] gap-5 text-center px-4">
       <span className="font-mono text-[5rem] font-bold leading-none text-gray-200 dark:text-white/10">
         404
       </span>
@@ -31,6 +31,6 @@ export default function NotFound() {
           <BsArrowRight size={13} />
         </span>
       </Link>
-    </div>
+    </main>
   );
 }

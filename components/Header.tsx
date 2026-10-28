@@ -3,6 +3,7 @@
 import { m } from "framer-motion";
 import clsx from "clsx";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { links } from "@/lib/data";
 import { useActiveSectionContext } from "@/context/active-section-context";
@@ -10,6 +11,8 @@ import { useActiveSectionContext } from "@/context/active-section-context";
 const Header = () => {
   const { activeSection, setActiveSection, setTimeOfLastClick } =
     useActiveSectionContext();
+  // Section highlighting only means something on the one-page home route.
+  const onHome = usePathname() === "/";
 
   return (
     <header className="z-[999] md:border-r border-black/20 fixed bottom-0 border-t left-0 right-0 w-full h-16 md:w-16 md:h-screen dark:border-white/20">
@@ -28,12 +31,12 @@ const Header = () => {
                   "group flex w-full items-center justify-center p-1 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-accent",
                   {
                     "text-gray-950 dark:text-gray-50":
-                      activeSection === link.name,
+                      onHome && activeSection === link.name,
                   }
                 )}
                 href={`/${link.hash}`}
                 aria-label={link.name}
-                aria-current={activeSection === link.name ? "location" : undefined}
+                aria-current={onHome && activeSection === link.name ? "location" : undefined}
                 style={{
                   transition: "color 150ms ease, opacity 150ms ease",
                 }}
