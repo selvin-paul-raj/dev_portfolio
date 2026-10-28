@@ -1,8 +1,11 @@
 // lib/ask/retrieve.ts
 // Builds a citable document set from the portfolio data and ranks it with
-// BM25. Powers "Ask Selvin" (/ask, /api/ask) and its offline evals
-// (scripts/evals.ts). Pure and data-injected like lib/mcp/dispatch.ts — no
+// BM25 via bm25s (Lucene variant) with Porter stemming. Powers "Ask Selvin"
+// (/ask, /api/ask) and its evals (evals/run.ts). Data-injected like lib/mcp/dispatch.ts: no
 // "@/" aliases or JSON imports, so plain tsc can compile it.
+
+import { BM25 } from "bm25s";
+import { stemmer } from "stemmer";
 
 export interface AskData {
   projects: Array<{ show: boolean; title: string; description: string; tags: string[]; code?: string | null; live?: string | null; private?: boolean }>;
@@ -102,6 +105,7 @@ const STOPWORDS = new Set(
   "a an and are as at be by does did do for from has have he him his how i in is it its me my of on or selvin selvin's paulraj s tell that the their them to was what when where which who why with you your about any can".split(" ")
 );
 
+/** Lowercase, split, drop stopwords, Porter-stem (as bm25s does with PyStemmer). */
 export function tokenize(text: string): string[] {
   return text
     .toLowerCase()
@@ -109,46 +113,50 @@ export function tokenize(text: string): string[] {
     .split(/[\s/-]+/)
     .map((t) => t.replace(/^\.+|\.+$/g, ""))
     .filter((t) => t.length > 1 && !STOPWORDS.has(t))
-    .map((t) => (t.length > 4 && t.endsWith("s") && !t.endsWith("ss") ? t.slice(0, -1) : t));
+    .map((t) => (/^[a-z]+$/.test(t) ? stemmer(t) : t));
 }
 
 export interface Index {
   docs: Doc[];
-  tf: Map<string, number>[];
-  len: number[];
-  avgLen: number;
-  df: Map<string, number>;
+  bm25: BM25;
+  vocab: Map<string, number>;
+  /** Distinct tokens per doc, for query-term coverage. */
+  termSets: Set<string>[];
 }
+
+// bm25s defaults (Lucene variant, k1 = 1.5, b = 0.75), matching upstream bm25s.
+const BM25_OPTIONS = { method: "lucene", k1: 1.5, b: 0.75 } as const;
 
 export function buildIndex(docs: Doc[]): Index {
-  const tf = docs.map((d) => {
-    const m = new Map<string, number>();
-    // Titles carry the entity name (project, company); weight them double.
-    for (const t of [...tokenize(d.title), ...tokenize(d.title), ...tokenize(d.text)]) m.set(t, (m.get(t) ?? 0) + 1);
-    return m;
-  });
-  const len = tf.map((m) => [...m.values()].reduce((a, b) => a + b, 0));
-  const df = new Map<string, number>();
-  for (const m of tf) for (const t of m.keys()) df.set(t, (df.get(t) ?? 0) + 1);
-  return { docs, tf, len, avgLen: len.reduce((a, b) => a + b, 0) / Math.max(docs.length, 1), df };
+  const vocab = new Map<string, number>();
+  const idOf = (t: string) => {
+    let id = vocab.get(t);
+    if (id === undefined) {
+      id = vocab.size;
+      vocab.set(t, id);
+    }
+    return id;
+  };
+  // Titles carry the entity name (project, company); repeat them to weight them double.
+  const tokens = docs.map((d) => [...tokenize(d.title), ...tokenize(d.title), ...tokenize(d.text)]);
+  const bm25 = new BM25(BM25_OPTIONS);
+  bm25.index(tokens.map((ts) => ts.map(idOf)));
+  return { docs, bm25, vocab, termSets: tokens.map((ts) => new Set(ts)) };
 }
 
-/** Okapi BM25 (k1 = 1.2, b = 0.75). Returns hits with score > 0, best first. */
+/** BM25 (via bm25s) over the portfolio docs. Returns hits with score > 0, best first. */
 export function search(index: Index, query: string, k = 5): Hit[] {
   const terms = [...new Set(tokenize(query))];
-  const N = index.docs.length;
-  const scored = index.docs.map((doc, i) => {
-    let score = 0;
-    let matched = 0;
-    for (const t of terms) {
-      const f = index.tf[i].get(t);
-      if (!f) continue;
-      matched++;
-      const n = index.df.get(t) ?? 0;
-      const idf = Math.log(1 + (N - n + 0.5) / (n + 0.5));
-      score += idf * ((f * 2.2) / (f + 1.2 * (1 - 0.75 + (0.75 * index.len[i]) / index.avgLen)));
-    }
-    return { ...doc, score: Math.round(score * 100) / 100, coverage: terms.length ? matched / terms.length : 0 };
+  const ids = terms.map((t) => index.vocab.get(t)).filter((id): id is number => id !== undefined);
+  if (ids.length === 0) return [];
+
+  const { documents, scores } = index.bm25.retrieve([ids], { k: Math.min(k, index.docs.length) });
+  const hits: Hit[] = [];
+  documents[0].forEach((docIndex, rank) => {
+    const score = scores[0][rank];
+    if (!(score > 0)) return;
+    const matched = terms.filter((t) => index.termSets[docIndex].has(t)).length;
+    hits.push({ ...index.docs[docIndex], score: Math.round(score * 100) / 100, coverage: matched / terms.length });
   });
-  return scored.filter((h) => h.score > 0).sort((a, b) => b.score - a.score).slice(0, k);
+  return hits;
 }
