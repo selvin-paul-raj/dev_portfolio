@@ -16,6 +16,22 @@ Personal portfolio for **Selvin PaulRaj K** — AI Engineer at Zinnov (Draup), s
 
 ---
 
+## Case studies
+
+Nine scrollytelling case studies at [`/work`](https://selvinpaulraj.vercel.app/work). Each pins an architecture diagram (clusters, LLM calls, routing gates, human-in-the-loop interrupts, fan-out, retries) that animates step by step as you read, followed by measured results, in-depth notes, and design decisions. Content lives in `lib/data/caseStudies.json`; private work is described at architecture level only, and every number traces to the repo or portfolio data.
+
+| Case study | Access | Headline |
+|---|---|---|
+| [DRI-MAS](https://selvinpaulraj.vercel.app/work/dri-mas) | Work · private repo | < 1 min turnaround, down from hours |
+| [Company Synonym Agent](https://selvinpaulraj.vercel.app/work/company-synonym-agent) | Work · private repo | 2.67M company and subsidiary records indexed |
+| [Deal Origination Framework](https://selvinpaulraj.vercel.app/work/dof) | Work · private repo | 537 enterprise accounts monitored weekly |
+| [Skill Proficiency Engine](https://selvinpaulraj.vercel.app/work/skill-proficiency) | Work · private repo | 5 canonical proficiency levels |
+| [Invoice-to-PO Decision Workflow](https://selvinpaulraj.vercel.app/work/invoice-to-po) | Public repo · live demo | 0 / 600 false approvals on adversarial variants |
+| [Finn Advisor](https://selvinpaulraj.vercel.app/work/finn-advisor) | Public repo | 16 read-only brokerage tools, verified live |
+| [ChunkLab](https://selvinpaulraj.vercel.app/work/chunklab) | Public repo · live demo | 11 chunking strategies |
+| [Instagram MCP Server](https://selvinpaulraj.vercel.app/work/instagram-mcp) | Public repo | 36 allow-listed instagram actions |
+| [Outlook CLI](https://selvinpaulraj.vercel.app/work/outlook-cli) | Public repo · npm | 21 mcp tools |
+
 ## For recruiters and agents
 
 | Endpoint | What it does |
@@ -48,6 +64,7 @@ The server ships as two entry points that share one implementation: `app/api/mcp
 | `selvin://experience` | Work history and education |
 | `selvin://certifications` | 20+ verified certifications |
 | `selvin://recognition` | Awards and achievements |
+| `selvin://case-studies` | In-depth case studies: flow, results, decisions |
 
 ### Tools
 
@@ -59,6 +76,7 @@ The server ships as two entry points that share one implementation: `app/api/mcp
 | `get_github_repo(repo)` | Single repo details |
 | `filter_certifications(category, issuer)` | Filter certifications |
 | `get_profile_summary()` | Full profile JSON |
+| `get_case_study(slug?)` | One case study in depth, or the list when no slug is given |
 | `match_job(job_description)` | Evidence-cited fit report for a JD (score, matches, gaps) |
 | `contact_selvin(name, email, message)` | Send email via Resend |
 

@@ -24,7 +24,7 @@ Selvin PaulRaj K builds agentic AI systems, MCP (Model Context Protocol) servers
 - Architected DRI-MAS, a LangGraph multi-agent system that converts natural-language business requests into validated Trino SQL and structured Excel reports — analyst turnaround dropped from hours to under a minute
 - Built its 10 core components (intent and manager agents, normalisation engine, schema router, SQL generator, memory layer, evaluation framework) behind 4 FastAPI endpoints, covered by 30 automated test suites
 - Implemented hybrid retrieval (FAISS + BM25) over 2.6M company records with human-in-the-loop validation
-- Built a Company Synonym Agent for entity resolution across 2.6M company and subsidiary records with sub-second lookups
+- Built a Company Synonym Agent for entity resolution across 2.6M company and subsidiary records
 - Automated business-signal monitoring for 537 enterprise accounts across 8 industries (Deal Origination Framework Agent)
 - Delivered LLM-powered role mapping for enterprise clients, including 746 role–task–skill mappings
 - Recognised with a SPOT award (Automation CoE, June 2026)
@@ -125,3 +125,280 @@ More: ChatDex AI, Dynamic AI Agent System, LinkedIn MCP servers, Company Logo Fi
 
 ---
 *Extended llms.txt for comprehensive AI/LLM context. See /llms.txt for the concise version.*
+
+## Case Studies (in depth)
+
+### DRI-MAS
+
+https://selvinpaulraj.vercel.app/work/dri-mas · Architect and lead engineer · Zinnov (Draup) · Sep 2025 to present · Work · private repo
+
+A LangGraph multi-agent system that turns plain-English data requests into validated Trino SQL, with four human-in-the-loop interrupts and resumable state.
+
+**Problem.** Analysts spent hours turning business questions into SQL and Excel reports. Each request meant finding the right tables in a large warehouse, resolving company, location, and vertical names across millions of records, writing the query, and checking it by hand. A single LLM prompt could not do this reliably: it guessed table names, merged different companies, and gave no way for a person to step in when it was unsure.
+
+**How it works**
+1. **A request in plain English.** Requests arrive from a CLI, a FastAPI service, or a batch CSV. Attachments (CSV, Excel, PDF) are parsed and personal data is masked before any model sees the text.
+2. **Intent, with a confidence gate.** The intent agent extracts the entities and metrics being asked for. When its confidence is below the threshold, the graph interrupts and asks a person to clarify; the checkpointer saves state so the run resumes exactly where it stopped.
+3. **A manager agent plans the work.** The manager agent reads a corpus of agent and tool specs and writes a typed task plan: which subgraphs to run and in what order. Plans are cached by request type, so repeat requests skip the planning call.
+4. **Entities fan out by type.** The normalize subgraph splits the request into companies, locations, and verticals and routes each to its own normalizer. Companies are batched and fanned out per chunk, each resolved with hybrid FAISS + BM25 retrieval over 2.6M company records.
+5. **Ambiguity goes to a person.** Results are merged and checked for ambiguous matches. A name that could be two different companies interrupts the graph for a human choice instead of silently picking one.
+6. **The schema comes from a knowledge graph.** A schema knowledge graph of tables, fields, join paths, and semantic tags is loaded once per process. An LLM selects the relevant schema, the table selector resolves tables and join paths, and a DDL snippet is built for the SQL step. No match means a human interrupt, not a guess.
+7. **SQL is generated, then distrusted.** The SQL generator writes Trino SQL with the canonical names injected, using a query cache keyed by SQL hash. A validator allows SELECT only and rejects blocked keywords, and a dry run confirms every table exists before anything executes.
+8. **Invalid SQL is reviewed or retried.** If validation fails, the graph interrupts for review and can loop back to the generator with the error, instead of returning a broken query.
+9. **A typed result, in under a minute.** The assemble step returns a typed result with status (success, partial, or failed), the deliverable queries, and which steps completed, failed, or were skipped. Analyst turnaround went from hours to under a minute.
+
+**Measured**
+- < 1 min: Turnaround, down from hours
+- 2.6M: Company records in hybrid retrieval
+- 4: Human-in-the-loop interrupt points
+- 3: Subgraphs under one manager graph
+- 281: Tests across 31 test files
+- 4: FastAPI endpoints
+
+**Decisions**
+- A manager agent over three subgraphs instead of one prompt, so normalization, schema selection, and SQL generation are each tested and evaluated on their own.
+- Hybrid FAISS + BM25 for entity names: semantic search handles paraphrase, BM25 keeps exact names and acronyms from drifting.
+- Interrupts plus a checkpointer instead of full autonomy: a person resolves the four expensive failure modes and the run resumes without starting over.
+- Batch mode trades interactivity for throughput: no interrupts, failures recorded per row.
+
+**Stack:** LangGraph, Claude API, FastAPI, Trino, FAISS, BM25, Pydantic v2, SQLite checkpointer, pytest
+
+### Company Synonym Agent
+
+https://selvinpaulraj.vercel.app/work/company-synonym-agent · Built · Zinnov (Draup) · Oct 2025 · Work · private repo
+
+Entity resolution for company names across 2.67M company and subsidiary records: semantic recall, lexical rescoring, rule boosts, and an LLM plus a person only for the hard cases.
+
+**Problem.** The same company shows up as an acronym, a spelling variant, a legal-suffix variant, or one of its subsidiaries, depending on the dataset. That breaks joins and every SQL query built on them. Exact matching misses real matches; loose fuzzy matching merges companies that are different.
+
+**How it works**
+1. **Clean the name, keep the acronym.** Names are normalized and legal suffixes stripped. Multi-word names also get an acronym token, so a short form can match the full name.
+2. **Semantic recall over 2.67M records.** All queries in a batch are embedded at once and searched against a FAISS index of about 2.67M company and subsidiary records. Candidates are over-fetched at ten times top-k, at least 50, so the lexical step has room to work.
+3. **Lexical rescoring, only where it matters.** BM25 runs over the semantic candidates rather than the whole corpus, which keeps lexical scoring cheap at this scale. Ineligible records drop out, and the score is 0.6 semantic plus 0.4 normalized BM25.
+4. **Rules for what embeddings miss.** Fixed boosts cover the cases embeddings get wrong: an exact clean match (+0.3), a prefix match (+0.15), the query equal to the candidate's acronym (+0.5), and the parent name contained in the candidate (+0.2).
+5. **Hierarchy-aware selection.** A master record within 0.20 of the top score is promoted to first place, and a winning subsidiary is rolled up to its parent company.
+6. **Escalate only the hard cases.** A score of 0.85 or more is accepted without any model call. Below that, an LLM decision agent chooses among the candidates, and when the top two stay within 0.05 of each other the pipeline pauses for a person.
+
+**Measured**
+- 2.67M: Company and subsidiary records indexed
+- 0.85: Score accepted without an LLM call
+- 0.6 / 0.4: Semantic / BM25 score fusion
+- 10×: Candidate over-fetch before rescoring
+- 40+: Tests in the extracted service
+
+**Decisions**
+- Semantic recall over the full corpus, BM25 only on the candidates: cheap lexical precision at 2.67M scale.
+- Explicit acronym and parent boosts instead of hoping embeddings learn them.
+- The LLM sees only below-threshold cases and only chooses among retrieved candidates, so it cannot invent a company.
+
+**Stack:** Python, sentence-transformers (MiniLM), FAISS, BM25, RapidFuzz, LangGraph, Pydantic, Milvus, FastAPI
+
+### Deal Origination Framework
+
+https://selvinpaulraj.vercel.app/work/dof · Built · Zinnov (Draup) · 2025 to 2026 · Work · private repo
+
+A weekly business-signal pipeline for 537 enterprise accounts: collect from newsrooms and news, deduplicate syndicated copies, classify each event once, and rank the top two per vertical.
+
+**Problem.** Every week a deal-origination team has to spot business signals (leadership changes, partnerships, acquisitions, investments) across hundreds of enterprise accounts, then pick the strongest two per industry vertical for a dashboard and a deck. By hand that means visiting every newsroom, searching the news, throwing away syndicated copies of the same story, and judging relevance one article at a time.
+
+**How it works**
+1. **A fixed weekly window.** Each run loads the account list and the signal taxonomy and computes the previous Monday to Sunday in one timezone. Discovery looks back 14 days so late-listed releases are still caught; a late item is tagged, never dropped.
+2. **Fan out per account.** Every account gets a newsroom-discovery task and a news-search task in a persistent SQLite queue that workers claim atomically. Newsroom discovery diffs links against a cumulative URL inventory, so only new URLs move on; news-search links are decoded to the real publisher URL.
+3. **Fetch once, date carefully.** All fetches share a pool of at most four long-lived browsers, and HTML or PDF becomes Markdown. The publication date comes from a nine-step ladder, from structured data down to an LLM as the last resort, and every date records its source and confidence.
+4. **Validate without deleting.** Each document gets a window status (in window, outside, unknown date, late arrival) and a company-match check. Rejections are kept as statuses rather than deleted, and a barrier waits for every collect task before moving on.
+5. **Syndicated copies become one event.** Four dedup layers run per account: canonical URL, content hash, title similarity, and near-duplicate content. Union-find then merges syndicated copies into a single event, with the official release as the canonical document.
+6. **One LLM call per event.** The model is called once per event, not per article: ten copies of a story cost one call. A single response carries relevance, vertical, signal strength, a summary, verbatim evidence, and confidence, validated against the taxonomy with one repair turn and one fresh retry.
+7. **Uncertain events go to an analyst.** Low confidence, a vertical mismatch, or a failed validation sends the event to review. Analysts work in an exported spreadsheet with taxonomy dropdowns, and importing their decisions rebuilds the ranking.
+8. **Rank, report, and prove it.** A deterministic sort picks the top two per vertical (strength, confidence, source count, official source, recency), at most one per account. Reports are written atomically, and a run is only marked complete when report row counts match the database.
+
+**Measured**
+- 537: Enterprise accounts monitored weekly
+- 8: Industry verticals ranked
+- 760: Companies processed across 11 production runs
+- 97: Tests in the pipeline
+- 1: LLM call per event, however many copies
+
+**Decisions**
+- Classify events, not articles: syndicated copies collapse first, so the model sees each story once.
+- The taxonomy is enforced by a validator, never trusted from the model output.
+- Analyst review happens in a spreadsheet the team already uses, with dropdowns generated from the taxonomy.
+
+**Stack:** Python, Botasaurus (Chrome pool), trafilatura, PyMuPDF, gnews, RapidFuzz, Pydantic, SQLite (WAL), openpyxl, Gemini, pytest
+
+### Skill Proficiency Engine
+
+https://selvinpaulraj.vercel.app/work/skill-proficiency · Built · Zinnov (Draup) · 2026 · Work · private repo
+
+Tags every skill in a job description with one of five proficiency levels, backed by a quote from the JD, and answers 'not stated' instead of guessing.
+
+**Problem.** Job descriptions list skills but rarely say how good someone needs to be at each one. An LLM asked to fill that gap will produce a confident level for every skill, including the ones the JD never mentions. The engine has to tag each mapped skill with one of five levels, Beginner to Master, and every level has to be backed by text in the JD.
+
+**How it works**
+1. **Assemble, then check the cache.** Inputs are rebuilt from confirmed fields only. A cache keyed on the JD, the skill, the model, and the prompt and rubric version skips anything already resolved.
+2. **Explicit evidence before any model.** The engine finds the sentence that mentions the skill, then tries a years-of-experience pattern and a level-keyed phrase and verb lexicon. Evidence found this way skips the LLM entirely and is never overridden later.
+3. **Batched proposals, with a quote.** Only unresolved skills reach the model, ten at a time. Every proposed level must come with a quote from the JD or it is rejected, and a failing batch is retried and then split in half down to single skills.
+4. **One place to standardize.** Every raw signal, whether years, a phrase, a verb, or a model label, maps to one of five canonical levels in a single function.
+5. **Verify the quote twice.** Every entry gets a mechanical check that its quote really appears in the JD. Entries that came from the model also get a narrow second call that asks only whether the quote supports the level.
+6. **Exactly one entry per skill.** Every input skill ends with one entry recording how it was resolved: years, phrase, verb, or LLM-verified. A failed check becomes NOT_STATED rather than a guessed level.
+
+**Measured**
+- 5: Canonical proficiency levels
+- 2: Anti-hallucination layers: quote check + verifier
+- 10: Skills per LLM batch, bisected on failure
+- 37: Tests
+
+**Decisions**
+- Deterministic evidence first, and the model can never override it.
+- Bisect-on-failure batching, so one bad skill does not sink the other nine.
+- A single function maps every signal to the five levels, so the rubric lives in one place.
+
+**Stack:** Python, Gemini, Pydantic v2 structured output, pandas, pytest
+
+### Invoice-to-PO Decision Workflow
+
+https://selvinpaulraj.vercel.app/work/invoice-to-po · Designed and built · Independent project · Oct 2026 · Public repo · live demo
+
+An accounts-payable workflow where AI reads, code decides, and people own the exceptions: every invoice ends as approve, hold with one question, or reject, and every check cites its source record.
+
+**Problem.** Accounts payable has to match each invoice against its purchase order, goods receipt, and vendor master, and catch duplicates, bank-change fraud, and GST errors. A model that approves payments is a liability, and one that can be talked into approving by text inside the invoice is worse.
+
+**How it works**
+1. **Any format in, processed once.** Text PDFs go through pdftotext and scans through OCR. Row totals, subtotal, and grand total are cross-checked, so OCR digit errors are caught without a model, and an idempotency key means a resent invoice is processed once.
+2. **A queue that fails closed.** A database-backed queue claims each job, retries with backoff up to three times, and turns a system error into HOLD. Nothing approves by accident.
+3. **Checks against the systems of record.** Intake scans for injected instructions, then each check writes evidence of expected versus actual: arithmetic, vendor and bank details, and the PO. It catches a PO edited after the invoice date, a recently changed bank account, and a cancelled GSTIN.
+4. **Three-way match and GST.** Price is checked against the PO and the rate contract, quantity against cumulative goods receipts (which catches split-PO overruns), and the GST head against supplier and buyer state. Credit notes skip the match.
+5. **The model advises, rules decide.** A TypeSafe Jev decision model judges likely duplicates and suggests a PO, but an action allow-list drops anything it says except an added HOLD. The most severe finding wins, and approval needs confidence of at least 0.85.
+6. **One question for one person.** Every HOLD carries a named owner, a next step, and a draft email to the vendor (except suspected bank fraud, which gets no draft). Every check is cited in the evidence trail.
+7. **Evaluation as a gate.** One offline command runs every eval suite, and CI runs it on every change with recorded model answers, so no secrets are needed. A regression below the gate fails the build.
+
+**Measured**
+- 0 / 600: False approvals on adversarial variants
+- 0 / 489: Prompt-injection attacks that changed a decision
+- 31 / 31: Labelled cases correct, 0 false rejects
+- 48 / 48: Duplicate recall with Jev (from 0.75)
+- 32 / 32: PDF fields extracted
+- 79: Tests, 20 of them guardrail tests
+- 14 ms: Pipeline p95 latency
+- $0.0052: Cost of 180 Jev calls
+
+**Decisions**
+- AI reads, code decides, people own the exceptions.
+- Fail closed plus idempotency instead of best-effort processing.
+- Gate the judge only on what its own meta-evaluation supports.
+
+**Stack:** Python, FastAPI, SQLite, poppler + tesseract OCR, TypeSafe Jev, OpenTelemetry, Next.js, Docker, GitHub Actions, Render
+
+### Finn Advisor
+
+https://selvinpaulraj.vercel.app/work/finn-advisor · Designed and built · Independent project · Aug 2026 · Public repo
+
+A single-user financial assistant over read-only brokerage data, where every number comes from code and the LLM only explains it.
+
+**Problem.** An assistant connected to a brokerage account should answer 'how is my portfolio doing, why did this fall, am I over-concentrated' from real holdings and live news. It must never trade, leak tokens, invent numbers, or follow instructions buried in web content.
+
+**How it works**
+1. **A safety gate with no model in it.** Regular-expression rules refuse prompt injection, credential requests, and questions about other people's data before any LLM or tool runs.
+2. **Deterministic routing.** Intent is matched in code and sent to a LangGraph workflow: portfolio or research. Only questions the router cannot place go to a Google ADK agent with four sub-agents.
+3. **Memory, then a degradable login.** Long-term memory loads with privacy levels and writes only after the user confirms. If the brokerage login has expired, the workflow takes a degraded branch instead of failing.
+4. **Read-only by policy.** The brokerage is reached over MCP, with its tools loaded as LangChain tools. An allow-list admits 16 read-only tools; trading tools and anything unknown are blocked inside the client.
+5. **Numbers come from code.** Allocation, concentration, and risk are computed without a model, and every section of the snapshot is tagged with where it came from: brokerage data, web search, or a deterministic calculation.
+6. **Web results are data, not instructions.** Research questions search the web with a fallback provider, and results are fenced as untrusted external data before they reach the model.
+7. **Explain, log, and check the output.** The LLM router falls back from NVIDIA NIM to Gemini Flash and logs every call with the reason for any fallback. The model only explains numbers it was given, and a final check withholds anything that looks like a leaked secret.
+
+**Measured**
+- 16: Read-only brokerage tools, verified live
+- 343: Tests (341 unit, 2 integration)
+- 0: LLM calls in the input safety gate
+- 2: LLM providers with logged fallback
+
+**Decisions**
+- Route in code; use the ADK agent only as a fallback for unmatched questions.
+- Enforce read-only access in the tool policy, not the prompt.
+- Treat a failed brokerage login as a degraded answer, not an error.
+
+**Stack:** Python, LangGraph, Google ADK, MCP (Kite), langchain-mcp-adapters, NVIDIA NIM, Gemini Flash, SQLite, Streamlit, Docker
+
+### ChunkLab
+
+https://selvinpaulraj.vercel.app/work/chunklab · Designed and built · Independent project · Jul 2026 · Public repo · live demo
+
+A Streamlit lab for comparing chunking, retrieval, and reranking strategies side by side, scored with standard IR metrics on a built-in labelled set.
+
+**Problem.** RAG quality is decided before the model sees anything: by how text is chunked, embedded, retrieved, and reranked. Those choices are usually made by habit, and the effect of changing one is rarely measured.
+
+**How it works**
+1. **A registry per stage.** Every strategy registers itself with a decorator, and a duplicate name raises an error. Adding a technique is one new file, and it shows up in every comparison for its stage.
+2. **Messy files to clean text.** Uploads are converted to Markdown with LiteParse, or cleaned with Chonkie's text, Markdown, and table preprocessors.
+3. **Eleven ways to cut a document.** Character, recursive, token, semantic, embedding-semantic, Markdown, table, and tree-sitter code splitting, plus three Chonkie chunkers, each with its boundaries drawn on the text.
+4. **Seven retrievers on the same documents.** Keyword, boolean, TF-IDF, BM25, dense, hybrid, and MMR rank the same pasted documents. Hybrid fuses BM25 and dense results with reciprocal rank fusion.
+5. **Rerank, then prove it helped.** Six rerankers run on the candidates, and MRR and NDCG are compared before and after reranking on the built-in labelled set.
+6. **One yardstick per stage.** Embeddings get intrinsic evals (Spearman correlation, analogies, clustering ARI); retrieval gets P@k, R@k, MRR, MAP, and NDCG. The Metrics Explorer names the best strategy per metric, and every run is logged with its latency.
+
+**Measured**
+- 11: Chunking strategies
+- 7: Retrieval strategies
+- 6: Reranking strategies
+- 5: Evaluators across stages
+- 95: pytest tests
+
+**Decisions**
+- Self-registering plugins with a duplicate-name check, so the registry stays the single list of strategies.
+- Deterministic, model-free approximations for speed and reproducibility, disclosed rather than hidden.
+
+**Stack:** Python, Streamlit, Chonkie, LiteParse, sentence-transformers, BM25, tree-sitter, pytest
+
+### Instagram MCP Server
+
+https://selvinpaulraj.vercel.app/work/instagram-mcp · Designed and built · Independent project · 2026 · Public repo
+
+An MCP server that gives Claude and ChatGPT 36 allow-listed Instagram actions through Composio, built to keep working when OAuth is unfinished or the upstream is down.
+
+**Problem.** Claude and ChatGPT cannot act on an Instagram Business account (posts, carousels, comments, DMs, insights) without Graph API OAuth and glue code for every endpoint. The server has to expose those actions safely, on a serverless runtime with a read-only filesystem, and stay usable when the OAuth connection is not finished.
+
+**How it works**
+1. **One HTTP endpoint.** FastMCP serves the MCP protocol over streamable HTTP on the port the serverless runtime provides.
+2. **OAuth that does not block startup.** If the Instagram account is not connected yet, the server starts the OAuth flow, logs the redirect URL, and waits up to five minutes. On timeout it boots anyway, so the utility tools still work.
+3. **Tool schemas discovered at runtime.** A low-level list_tools handler maps Composio's JSON schemas straight into MCP tools, limited to an allow-list of 36 actions. If discovery fails, the last known list is served from cache.
+4. **Writes are never retried.** Any tool name that is not a utility passes through as a Composio action. Discovery retries with backoff, but writes do not: retrying after an unclear error could publish the same post twice.
+5. **Errors as results, not crashes.** Every exception comes back as an MCP error result instead of breaking the session, and each call is counted in per-tool stats exposed by the health tool.
+
+**Measured**
+- 36: Allow-listed Instagram actions
+- 40: MCP tools including 4 utilities
+- 27: Tests
+- 5 min: OAuth wait before booting anyway
+
+**Decisions**
+- Retry reads, never writes.
+- Boot with partial capability rather than fail when OAuth is incomplete.
+- One allow-list shared by session and discovery.
+
+**Stack:** Python, MCP (FastMCP), Composio, OAuth 2.0, Pydantic, structlog, Docker, Alpic
+
+### Outlook CLI
+
+https://selvinpaulraj.vercel.app/work/outlook-cli · Extended and published · Independent project · Apr 2026 · Public repo · npm
+
+An npm CLI and stdio MCP server for Outlook mail and calendar over Microsoft Graph: one OAuth login, one tool registry shared by humans and agents.
+
+**Problem.** Managing Outlook from a terminal or an agent usually means an OAuth dance on every run and output written only for humans. The tool needed one login, reusable tokens, and output an agent can parse, with the same behaviour whether a person or an assistant is calling it.
+
+**How it works**
+1. **Two front doors, one behaviour.** The terminal CLI and the stdio MCP server both call the same frozen tool registry, so a command and the matching agent tool cannot drift apart.
+2. **Log in once.** The first call opens a delegated-permission OAuth flow in the browser and saves the tokens locally. Every later call reuses them and refreshes them when they expire.
+3. **21 tools across four domains.** Mail (including attachments), calendar, folders, and inbox rules, each a handler behind the shared registry.
+4. **Graph, or a mock.** Every request goes through one Graph client, and a test-mode switch swaps in mock data so the suite runs without an account.
+5. **Output for people and for agents.** The CLI renders themed tables for people and switches to machine-readable output with --json or --ai.
+
+**Measured**
+- 21: MCP tools
+- 65: jest tests
+- 2: Front ends sharing one registry
+- 3: Runtime dependencies
+
+**Decisions**
+- One registry for both interfaces, so humans and agents get identical behaviour.
+- Machine-readable output as a first-class mode, not an afterthought.
+- A deliberately small dependency surface: the MCP SDK, chalk, and dotenv.
+
+**Stack:** Node.js, MCP SDK, Microsoft Graph, OAuth 2.0, jest, npm

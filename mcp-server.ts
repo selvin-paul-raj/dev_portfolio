@@ -18,8 +18,9 @@ import {
   getProfileSummary,
   buildResourceText,
   matchJobTool,
+  getCaseStudyTool,
 } from "./lib/mcp/dispatch";
-import type { Project, Certification, ResourceData, ExperienceEntry } from "./lib/mcp/dispatch";
+import type { Project, Certification, ResourceData, ExperienceEntry, CaseStudyData } from "./lib/mcp/dispatch";
 import { sendContactMessage } from "./lib/mcp/contact";
 import { listRepos, getRepo } from "./lib/mcp/github";
 import { createMcpHandler, parseErrorResponse } from "./lib/mcp/router";
@@ -39,8 +40,9 @@ const skills = load<unknown>("skills");
 const experiences = load<unknown>("experiences");
 const certifications = load<Certification[]>("certifications");
 const recognition = load<unknown>("recognition");
+const caseStudies = load<CaseStudyData[]>("caseStudies");
 
-const RESOURCE_DATA: ResourceData = { projects, skills, experiences, certifications, recognition };
+const RESOURCE_DATA: ResourceData = { projects, skills, experiences, certifications, recognition, caseStudies };
 
 // ── Tool dispatch ─────────────────────────────────────────────────────────────
 async function callTool(name: string, args: Record<string, unknown>, ctx: McpRequestContext): Promise<string> {
@@ -61,6 +63,8 @@ async function callTool(name: string, args: Record<string, unknown>, ctx: McpReq
       return filterCertifications(certifications, args as { category?: string; issuer?: string });
     case "get_profile_summary":
       return getProfileSummary(projects, certifications, experiences as ExperienceEntry[]);
+    case "get_case_study":
+      return getCaseStudyTool(caseStudies, args.slug);
     case "match_job":
       return matchJobTool(args.job_description, projects, certifications, experiences as ExperienceEntry[]);
     case "contact_selvin":

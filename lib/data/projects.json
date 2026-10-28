@@ -1,13 +1,15 @@
 [
   {
     "title": "DOF Automation: Deal Origination Framework",
-    "description": "Built a production-oriented agentic automation pipeline for company news and press-release intelligence. It combines web scraping, newsroom discovery, secondary news extraction, content normalisation, multi-layer deduplication, entity resolution, and LLM classification and relevance scoring, followed by automated Excel and PowerPoint reporting",
+    "description": "Weekly business-signal pipeline for 537 enterprise accounts across 8 industry verticals: newsroom discovery and news search, pooled-browser fetching, a confidence-scored date ladder, four-layer deduplication and union-find event clustering, one LLM classification per event validated against the signal taxonomy, analyst review for uncertain events, and deterministic top-2-per-vertical ranking with reconciled CSV/XLSX reports",
     "tags": [
       "Python",
-      "Playwright",
-      "GNews API",
-      "LLMs",
-      "Entity Resolution"
+      "Botasaurus",
+      "Web Scraping",
+      "Deduplication",
+      "LLM Classification",
+      "Human-in-the-Loop",
+      "SQLite"
     ],
     "date": "2025-09-01",
     "imageUrl": "",
@@ -25,11 +27,12 @@
   },
   {
     "title": "Skill Proficiency Engine",
-    "description": "Designed an LLM-powered proficiency modelling system that analyses job descriptions, tasks, workloads, and mapped skills to generate evidence-backed proficiency levels. It preserves the JD → Tasks → Workloads → Skills hierarchy, grades each skill against explicit JD evidence, and outputs structured proficiency, evidence, and reasoning with cross-role skill aggregation",
+    "description": "Tags every mapped skill in a job description with one of five proficiency levels, backed by a quote from the JD. Deterministic evidence (years of experience, level phrases and verbs) is used first; remaining skills go to the LLM in batches with a mandatory quote, a substring check, and a second verifier call, and anything unsupported is recorded as not stated instead of guessed",
     "tags": [
       "Python",
       "LLMs",
       "Structured Output",
+      "Evidence Grounding",
       "Skills Taxonomy"
     ],
     "date": "2025-09-01",
@@ -73,13 +76,14 @@
   },
   {
     "title": "Company Synonym Agent",
-    "description": "Matching company names across datasets broke on acronyms, subsidiaries, and spelling variants. I built an entity-resolution agent that combines FAISS semantic search, BM25, acronym validation, token-overlap scoring, and parent-company resolution across 2.6M company and subsidiary records, with sub-second lookups",
+    "description": "Matching company names across datasets broke on acronyms, subsidiaries, and spelling variants. I built an entity-resolution engine over 2.67M company and subsidiary records: FAISS semantic recall, BM25 rescoring on the candidates, acronym and parent-name boosts, and parent-company roll-up, with an LLM decision agent below a 0.85 confidence threshold and a human for genuine ties",
     "tags": [
       "Python",
       "FAISS",
       "BM25",
       "LLMs",
-      "Entity Resolution"
+      "Entity Resolution",
+      "Human-in-the-Loop"
     ],
     "date": "2025-10-01",
     "imageUrl": "",
@@ -127,7 +131,7 @@
   },
   {
     "title": "Finn Advisor",
-    "description": "Single-user AI financial advisor that answers portfolio and market questions from read-only Kite (Zerodha) account data and live web search. A Google ADK orchestrator routes to LangGraph workflows, Kite MCP tools load as LangChain tools via langchain-mcp-adapters (16 read-only tools verified live), and an LLM router falls back from NVIDIA NIM to Gemini Flash with every call logged to SQLite. A runtime safety policy blocks credential requests, prompt injection, and write tools, backed by an offline DeepEval-style evaluation harness and a RAMPART-style red-team suite. Ships with a Dockerfile and Streamlit UI",
+    "description": "Single-user AI financial advisor over read-only Kite (Zerodha) data and live web search. A regex safety gate runs before any model, a deterministic router sends questions to LangGraph workflows (with a Google ADK agent only for unmatched questions), Kite MCP tools load via langchain-mcp-adapters behind an allow-list of 16 read-only tools, all numbers are computed in code with provenance tags, and an LLM router falls back from NVIDIA NIM to Gemini Flash with every call logged",
     "tags": [
       "Python",
       "Google ADK",
@@ -157,7 +161,7 @@
   },
   {
     "title": "ChunkLab: RAG Engineering Playground",
-    "description": "Streamlit app for benchmarking RAG techniques side by side on your own text: 10 chunking strategies, dense and sparse embeddings, 7 retrieval strategies (keyword, boolean, TF-IDF, BM25, dense, hybrid RRF, MMR), and 6 reranking strategies, scored with Precision@k, Recall@k, MRR, MAP, and NDCG@k plus before/after rerank impact. Each stage is a self-registering plugin registry covered by a 95-test pytest suite",
+    "description": "Streamlit lab for comparing RAG techniques side by side: 11 chunking strategies, dense and sparse embeddings, 7 retrieval strategies (keyword, boolean, TF-IDF, BM25, dense, hybrid RRF, MMR), and 6 reranking strategies, scored with Precision@k, Recall@k, MRR, MAP, and NDCG@k plus before/after rerank impact on a built-in labelled set. Each stage is a self-registering plugin registry covered by a 95-test pytest suite",
     "tags": [
       "Python",
       "RAG",
@@ -186,7 +190,7 @@
   },
   {
     "title": "Instagram MCP Server",
-    "description": "MCP server that exposes 34 curated Instagram actions (posts, carousels, comments, DMs, insights) to Claude and ChatGPT through Composio, with automatic OAuth, structured JSON logging, health and usage stats, and fail-safe error handling. Deployed on Alpic over streamable HTTP",
+    "description": "MCP server that exposes 36 allow-listed Instagram actions (posts, carousels, comments, DMs, insights) to Claude and ChatGPT through Composio, with automatic OAuth, structured JSON logging, health and usage stats, and fail-safe error handling. Deployed on Alpic over streamable HTTP",
     "tags": [
       "Python",
       "FastMCP",

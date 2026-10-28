@@ -87,6 +87,17 @@ export const TOOLS: McpTool[] = [
     inputSchema: { type: "object", properties: {} },
   },
   {
+    name: "get_case_study",
+    description:
+      "Get an in-depth case study of one of Selvin's systems: the problem, each pipeline stage in order, measured results with exact numbers, deeper notes (state, failure handling, evaluation), and design decisions. Call without a slug to list available case studies. Quote numbers exactly as returned.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        slug: { type: "string", description: "Case study slug, e.g. 'dri-mas'. Omit to list all." },
+      },
+    },
+  },
+  {
     name: "match_job",
     description:
       "Check how well Selvin fits a job description. Paste the full JD; returns a 0-100 fit score, each recognised requirement with cited evidence (production work bullets, projects with links, verifiable certifications), and the requirements with no evidence (gaps). Deterministic — no LLM, nothing is inferred. Quote the evidence and gaps as returned.",
@@ -149,6 +160,12 @@ export const RESOURCE_DEFS: McpResource[] = [
     uri: "selvin://recognition",
     name: "Recognition & Awards",
     description: "Awards, recognition, and achievements",
+    mimeType: "application/json",
+  },
+  {
+    uri: "selvin://case-studies",
+    name: "Case Studies",
+    description: "In-depth architecture walkthroughs of Selvin's main systems: problem, stage-by-stage flow, measured results, design decisions",
     mimeType: "application/json",
   },
 ];

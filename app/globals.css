@@ -136,10 +136,14 @@ pre {
   .pipeline-packet { display: none; }
 }
 
-/* Small screens: the diagram renders full width and pans to the active stage. */
-@media (max-width: 1023px) {
-  .pipeline-pan {
-    transform: translateY(var(--pan, 0));
-    transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
-  }
+/* /work diagrams render full width and pan so the active stage sits mid-panel. */
+:root { --diagram-bg: #FAFAF9; }
+.dark { --diagram-bg: #09090b; }
+.pipeline-viewport { --pan-center: calc(20vh - 26px); }
+@media (min-width: 1024px) {
+  .pipeline-viewport { --pan-center: calc((100vh - 10rem) / 2); }
+}
+.pipeline-pan {
+  transform: translateY(min(0px, calc(var(--pan-center) - var(--focus, 0px))));
+  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }

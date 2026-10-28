@@ -34,6 +34,7 @@ export function GET() {
         "selvin://experience",
         "selvin://certifications",
         "selvin://recognition",
+        "selvin://case-studies",
       ],
       tools: [
         "search_projects",
@@ -42,6 +43,7 @@ export function GET() {
         "get_github_repo",
         "filter_certifications",
         "get_profile_summary",
+        "get_case_study",
         "match_job",
         "contact_selvin",
       ],

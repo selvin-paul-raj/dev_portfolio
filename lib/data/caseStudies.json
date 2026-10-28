@@ -3,7 +3,7 @@
     "slug": "dri-mas",
     "projectTitle": "DRI-MAS: Multi-Agent Reporting System",
     "title": "DRI-MAS",
-    "subtitle": "A LangGraph multi-agent system that turns plain-English data requests into validated Trino SQL and Excel reports.",
+    "subtitle": "A LangGraph multi-agent system that turns plain-English data requests into validated Trino SQL, with four human-in-the-loop interrupts and resumable state.",
     "role": "Architect and lead engineer",
     "org": "Zinnov (Draup)",
     "period": "Sep 2025 to present",
@@ -15,225 +15,683 @@
       "Trino",
       "FAISS",
       "BM25",
-      "PostgreSQL",
+      "Pydantic v2",
+      "SQLite checkpointer",
       "pytest"
     ],
-    "problem": "Analysts spent hours turning business questions into SQL and Excel reports. Each request meant finding the right tables, resolving company names across millions of records, writing the query, and checking the output by hand.",
+    "keywords": [
+      "LangGraph multi-agent system",
+      "text-to-SQL",
+      "human-in-the-loop",
+      "hybrid retrieval FAISS BM25",
+      "entity normalization",
+      "LangGraph subgraphs",
+      "LangGraph checkpointer"
+    ],
+    "problem": "Analysts spent hours turning business questions into SQL and Excel reports. Each request meant finding the right tables in a large warehouse, resolving company, location, and vertical names across millions of records, writing the query, and checking it by hand. A single LLM prompt could not do this reliably: it guessed table names, merged different companies, and gave no way for a person to step in when it was unsure.",
     "diagram": {
-      "width": 400,
-      "height": 580,
+      "width": 500,
+      "height": 1580,
+      "clusters": [
+        {
+          "id": "manager",
+          "label": "Manager graph",
+          "sub": "StateGraph",
+          "x": 14,
+          "y": 14,
+          "w": 472,
+          "h": 366
+        },
+        {
+          "id": "normalize",
+          "label": "Normalize subgraph",
+          "sub": "entity resolution",
+          "x": 14,
+          "y": 398,
+          "w": 472,
+          "h": 356
+        },
+        {
+          "id": "schema",
+          "label": "Schema subgraph",
+          "sub": "knowledge graph",
+          "x": 14,
+          "y": 772,
+          "w": 472,
+          "h": 340
+        },
+        {
+          "id": "sql",
+          "label": "SQL subgraph",
+          "sub": "generate · validate",
+          "x": 14,
+          "y": 1130,
+          "w": 472,
+          "h": 272
+        }
+      ],
       "nodes": [
         {
           "id": "request",
           "label": "Plain-English request",
-          "x": 150,
-          "y": 40
+          "x": 210,
+          "y": 62,
+          "kind": "io",
+          "sub": "CLI · API · batch CSV",
+          "w": 170
+        },
+        {
+          "id": "preprocess",
+          "label": "Preprocess",
+          "x": 210,
+          "y": 128,
+          "kind": "process",
+          "sub": "PII mask · attachments"
+        },
+        {
+          "id": "checkpoint",
+          "label": "Checkpointer",
+          "x": 405,
+          "y": 128,
+          "kind": "store",
+          "sub": "state for HITL resume",
+          "w": 130
         },
         {
           "id": "intent",
           "label": "Intent agent",
-          "x": 150,
-          "y": 110
+          "x": 210,
+          "y": 194,
+          "kind": "llm",
+          "sub": "entities · metrics"
         },
         {
-          "id": "manager",
+          "id": "route_intent",
+          "label": "Confidence",
+          "x": 210,
+          "y": 262,
+          "kind": "gate"
+        },
+        {
+          "id": "hitl_intent",
+          "label": "Clarify intent",
+          "x": 405,
+          "y": 262,
+          "kind": "hitl",
+          "sub": "low confidence",
+          "w": 130
+        },
+        {
+          "id": "plan",
           "label": "Manager agent",
-          "x": 150,
-          "y": 180
+          "x": 210,
+          "y": 336,
+          "kind": "llm",
+          "sub": "task plan from corpus"
         },
         {
-          "id": "memory",
-          "label": "Memory",
-          "x": 325,
-          "y": 180,
-          "side": true
+          "id": "plan_memory",
+          "label": "Plan memory",
+          "x": 405,
+          "y": 336,
+          "kind": "store",
+          "sub": "cache by request type",
+          "w": 130
         },
         {
-          "id": "normalize",
-          "label": "Normalization",
-          "x": 150,
-          "y": 250
+          "id": "splitter",
+          "label": "Entity splitter",
+          "x": 210,
+          "y": 446,
+          "kind": "process"
         },
         {
-          "id": "retrieval",
-          "label": "FAISS + BM25",
-          "sub": "2.6M records",
-          "x": 325,
-          "y": 250,
-          "side": true
+          "id": "route_entities",
+          "label": "Route entities",
+          "x": 210,
+          "y": 514,
+          "kind": "gate"
         },
         {
-          "id": "router",
-          "label": "Schema router",
-          "x": 150,
-          "y": 320
+          "id": "company",
+          "label": "Company norm",
+          "x": 95,
+          "y": 590,
+          "kind": "fanout",
+          "sub": "FAISS + BM25 · 2.6M",
+          "w": 140
         },
         {
-          "id": "sql",
+          "id": "location",
+          "label": "Location norm",
+          "x": 262,
+          "y": 590,
+          "kind": "process",
+          "w": 112
+        },
+        {
+          "id": "vertical",
+          "label": "Vertical norm",
+          "x": 392,
+          "y": 590,
+          "kind": "process",
+          "w": 112
+        },
+        {
+          "id": "merge",
+          "label": "Merge results",
+          "x": 210,
+          "y": 660,
+          "kind": "process",
+          "sub": "detect ambiguity"
+        },
+        {
+          "id": "norm_gate",
+          "label": "Ambiguous?",
+          "x": 210,
+          "y": 722,
+          "kind": "gate"
+        },
+        {
+          "id": "hitl_ambiguous",
+          "label": "Pick the entity",
+          "x": 405,
+          "y": 722,
+          "kind": "hitl",
+          "sub": "ambiguous match",
+          "w": 130
+        },
+        {
+          "id": "kg",
+          "label": "Schema knowledge graph",
+          "x": 210,
+          "y": 820,
+          "kind": "store",
+          "sub": "tables · joins · tags",
+          "w": 178
+        },
+        {
+          "id": "selector",
+          "label": "Schema selector",
+          "x": 210,
+          "y": 888,
+          "kind": "llm",
+          "sub": "choose schema"
+        },
+        {
+          "id": "tables",
+          "label": "Table selector",
+          "x": 210,
+          "y": 952,
+          "kind": "process",
+          "sub": "tables · join paths"
+        },
+        {
+          "id": "ddl",
+          "label": "DDL builder",
+          "x": 210,
+          "y": 1016,
+          "kind": "process",
+          "sub": "schema snippet"
+        },
+        {
+          "id": "schema_gate",
+          "label": "Schema found?",
+          "x": 210,
+          "y": 1080,
+          "kind": "gate"
+        },
+        {
+          "id": "hitl_schema",
+          "label": "No schema match",
+          "x": 405,
+          "y": 1080,
+          "kind": "hitl",
+          "sub": "ask for scope",
+          "w": 130
+        },
+        {
+          "id": "sql_gen",
           "label": "SQL generator",
-          "x": 150,
-          "y": 390
+          "x": 210,
+          "y": 1178,
+          "kind": "llm",
+          "sub": "canonical names · cache"
         },
         {
-          "id": "validate",
-          "label": "Validation + HITL",
-          "x": 150,
-          "y": 460
+          "id": "validator",
+          "label": "SQL validator",
+          "x": 210,
+          "y": 1242,
+          "kind": "process",
+          "sub": "SELECT-only · blocklist"
         },
         {
-          "id": "eval",
-          "label": "Evaluation",
-          "x": 325,
-          "y": 460,
-          "side": true
+          "id": "dry_run",
+          "label": "Dry run",
+          "x": 210,
+          "y": 1306,
+          "kind": "process",
+          "sub": "tables exist"
         },
         {
-          "id": "report",
-          "label": "Excel report",
-          "x": 150,
-          "y": 530
+          "id": "sql_gate",
+          "label": "Valid SQL?",
+          "x": 210,
+          "y": 1370,
+          "kind": "gate"
+        },
+        {
+          "id": "hitl_sql",
+          "label": "Invalid SQL",
+          "x": 405,
+          "y": 1370,
+          "kind": "hitl",
+          "sub": "review or retry",
+          "w": 130
+        },
+        {
+          "id": "assemble",
+          "label": "Assemble result",
+          "x": 210,
+          "y": 1456,
+          "kind": "process",
+          "sub": "status · errors · steps"
+        },
+        {
+          "id": "output",
+          "label": "SQL deliverable",
+          "x": 210,
+          "y": 1530,
+          "kind": "io",
+          "sub": "dry-run queries",
+          "w": 160
         }
       ],
       "edges": [
         [
           "request",
+          "preprocess"
+        ],
+        [
+          "preprocess",
           "intent"
         ],
         [
           "intent",
-          "manager"
+          "route_intent"
         ],
         [
-          "manager",
-          "memory"
+          "route_intent",
+          "hitl_intent",
+          "hitl",
+          "low conf"
         ],
         [
-          "manager",
-          "normalize"
+          "hitl_intent",
+          "checkpoint",
+          "conditional",
+          "persist"
         ],
         [
-          "normalize",
-          "retrieval"
+          "route_intent",
+          "plan",
+          "conditional",
+          "high conf"
         ],
         [
-          "normalize",
-          "router"
+          "hitl_intent",
+          "plan",
+          "hitl",
+          "resume"
         ],
         [
-          "router",
-          "sql"
+          "plan",
+          "plan_memory"
         ],
         [
-          "sql",
-          "validate"
+          "plan",
+          "splitter"
         ],
         [
-          "validate",
-          "eval"
+          "splitter",
+          "route_entities"
         ],
         [
-          "validate",
-          "report"
+          "route_entities",
+          "company",
+          "fanout",
+          "per chunk"
+        ],
+        [
+          "route_entities",
+          "location",
+          "conditional"
+        ],
+        [
+          "route_entities",
+          "vertical",
+          "conditional"
+        ],
+        [
+          "company",
+          "merge"
+        ],
+        [
+          "location",
+          "merge"
+        ],
+        [
+          "vertical",
+          "merge"
+        ],
+        [
+          "merge",
+          "norm_gate"
+        ],
+        [
+          "norm_gate",
+          "hitl_ambiguous",
+          "hitl",
+          "ambiguous"
+        ],
+        [
+          "norm_gate",
+          "kg",
+          "conditional",
+          "clean"
+        ],
+        [
+          "kg",
+          "selector"
+        ],
+        [
+          "selector",
+          "tables"
+        ],
+        [
+          "tables",
+          "ddl"
+        ],
+        [
+          "ddl",
+          "schema_gate"
+        ],
+        [
+          "schema_gate",
+          "hitl_schema",
+          "hitl",
+          "no match"
+        ],
+        [
+          "schema_gate",
+          "sql_gen",
+          "conditional",
+          "ok"
+        ],
+        [
+          "sql_gen",
+          "validator"
+        ],
+        [
+          "validator",
+          "dry_run"
+        ],
+        [
+          "dry_run",
+          "sql_gate"
+        ],
+        [
+          "sql_gate",
+          "hitl_sql",
+          "hitl",
+          "invalid"
+        ],
+        [
+          "hitl_sql",
+          "sql_gen",
+          "retry",
+          "retry"
+        ],
+        [
+          "sql_gate",
+          "assemble",
+          "conditional",
+          "valid"
+        ],
+        [
+          "assemble",
+          "output"
         ]
       ]
     },
     "steps": [
       {
-        "title": "A question in plain English",
-        "body": "An analyst writes the request the way they would say it. The intent agent classifies what is being asked before any query is written.",
+        "title": "A request in plain English",
+        "body": "Requests arrive from a CLI, a FastAPI service, or a batch CSV. Attachments (CSV, Excel, PDF) are parsed and personal data is masked before any model sees the text.",
         "nodes": [
           "request",
-          "intent"
+          "preprocess"
         ],
         "edges": [
           [
             "request",
-            "intent"
+            "preprocess"
           ]
         ]
       },
       {
-        "title": "A manager agent coordinates",
-        "body": "The manager agent hands the request to the specialised components and keeps conversation state in a memory layer, so follow-up questions build on earlier ones.",
+        "title": "Intent, with a confidence gate",
+        "body": "The intent agent extracts the entities and metrics being asked for. When its confidence is below the threshold, the graph interrupts and asks a person to clarify; the checkpointer saves state so the run resumes exactly where it stopped.",
         "nodes": [
-          "manager",
-          "memory"
+          "intent",
+          "route_intent",
+          "hitl_intent",
+          "checkpoint"
         ],
         "edges": [
+          [
+            "preprocess",
+            "intent"
+          ],
           [
             "intent",
-            "manager"
+            "route_intent"
           ],
           [
-            "manager",
-            "memory"
+            "route_intent",
+            "hitl_intent"
+          ],
+          [
+            "hitl_intent",
+            "checkpoint"
           ]
         ]
       },
       {
-        "title": "Names resolved against 2.6M records",
-        "body": "Company names in a request rarely match the database. The normalization engine resolves them with hybrid retrieval, FAISS for meaning and BM25 for exact terms, over 2.6M company records.",
+        "title": "A manager agent plans the work",
+        "body": "The manager agent reads a corpus of agent and tool specs and writes a typed task plan: which subgraphs to run and in what order. Plans are cached by request type, so repeat requests skip the planning call.",
         "nodes": [
-          "normalize",
-          "retrieval"
+          "plan",
+          "plan_memory"
         ],
         "edges": [
           [
-            "manager",
-            "normalize"
+            "route_intent",
+            "plan"
           ],
           [
-            "normalize",
-            "retrieval"
+            "hitl_intent",
+            "plan"
+          ],
+          [
+            "plan",
+            "plan_memory"
           ]
         ]
       },
       {
-        "title": "The right schema, then the query",
-        "body": "A schema router narrows the warehouse to the tables that matter, and the SQL generator writes Trino SQL against only those.",
+        "title": "Entities fan out by type",
+        "body": "The normalize subgraph splits the request into companies, locations, and verticals and routes each to its own normalizer. Companies are batched and fanned out per chunk, each resolved with hybrid FAISS + BM25 retrieval over 2.6M company records.",
         "nodes": [
-          "router",
-          "sql"
+          "splitter",
+          "route_entities",
+          "company",
+          "location",
+          "vertical"
         ],
         "edges": [
           [
-            "normalize",
-            "router"
+            "plan",
+            "splitter"
           ],
           [
-            "router",
-            "sql"
+            "splitter",
+            "route_entities"
+          ],
+          [
+            "route_entities",
+            "company"
+          ],
+          [
+            "route_entities",
+            "location"
+          ],
+          [
+            "route_entities",
+            "vertical"
           ]
         ]
       },
       {
-        "title": "Validated before anyone sees it",
-        "body": "Generated SQL is validated, and human-in-the-loop checks sit at the points where a wrong answer would be expensive. An evaluation framework scores the pipeline, backed by 30 automated test suites.",
+        "title": "Ambiguity goes to a person",
+        "body": "Results are merged and checked for ambiguous matches. A name that could be two different companies interrupts the graph for a human choice instead of silently picking one.",
         "nodes": [
-          "validate",
-          "eval"
+          "merge",
+          "norm_gate",
+          "hitl_ambiguous"
         ],
         "edges": [
           [
-            "sql",
-            "validate"
+            "company",
+            "merge"
           ],
           [
-            "validate",
-            "eval"
+            "location",
+            "merge"
+          ],
+          [
+            "vertical",
+            "merge"
+          ],
+          [
+            "merge",
+            "norm_gate"
+          ],
+          [
+            "norm_gate",
+            "hitl_ambiguous"
           ]
         ]
       },
       {
-        "title": "A structured report, in under a minute",
-        "body": "The result ships as a structured Excel report. Ten core components sit behind 4 FastAPI endpoints. Turnaround went from hours to under a minute.",
+        "title": "The schema comes from a knowledge graph",
+        "body": "A schema knowledge graph of tables, fields, join paths, and semantic tags is loaded once per process. An LLM selects the relevant schema, the table selector resolves tables and join paths, and a DDL snippet is built for the SQL step. No match means a human interrupt, not a guess.",
         "nodes": [
-          "report"
+          "kg",
+          "selector",
+          "tables",
+          "ddl",
+          "schema_gate",
+          "hitl_schema"
         ],
         "edges": [
           [
-            "validate",
-            "report"
+            "norm_gate",
+            "kg"
+          ],
+          [
+            "kg",
+            "selector"
+          ],
+          [
+            "selector",
+            "tables"
+          ],
+          [
+            "tables",
+            "ddl"
+          ],
+          [
+            "ddl",
+            "schema_gate"
+          ],
+          [
+            "schema_gate",
+            "hitl_schema"
+          ]
+        ]
+      },
+      {
+        "title": "SQL is generated, then distrusted",
+        "body": "The SQL generator writes Trino SQL with the canonical names injected, using a query cache keyed by SQL hash. A validator allows SELECT only and rejects blocked keywords, and a dry run confirms every table exists before anything executes.",
+        "nodes": [
+          "sql_gen",
+          "validator",
+          "dry_run"
+        ],
+        "edges": [
+          [
+            "schema_gate",
+            "sql_gen"
+          ],
+          [
+            "sql_gen",
+            "validator"
+          ],
+          [
+            "validator",
+            "dry_run"
+          ]
+        ]
+      },
+      {
+        "title": "Invalid SQL is reviewed or retried",
+        "body": "If validation fails, the graph interrupts for review and can loop back to the generator with the error, instead of returning a broken query.",
+        "nodes": [
+          "sql_gate",
+          "hitl_sql"
+        ],
+        "edges": [
+          [
+            "dry_run",
+            "sql_gate"
+          ],
+          [
+            "sql_gate",
+            "hitl_sql"
+          ],
+          [
+            "hitl_sql",
+            "sql_gen"
+          ]
+        ]
+      },
+      {
+        "title": "A typed result, in under a minute",
+        "body": "The assemble step returns a typed result with status (success, partial, or failed), the deliverable queries, and which steps completed, failed, or were skipped. Analyst turnaround went from hours to under a minute.",
+        "nodes": [
+          "assemble",
+          "output"
+        ],
+        "edges": [
+          [
+            "sql_gate",
+            "assemble"
+          ],
+          [
+            "assemble",
+            "output"
           ]
         ]
       }
@@ -248,22 +706,71 @@
         "label": "Company records in hybrid retrieval"
       },
       {
-        "value": "10",
-        "label": "Core components"
+        "value": "4",
+        "label": "Human-in-the-loop interrupt points"
       },
       {
-        "value": "30",
-        "label": "Automated test suites"
+        "value": "3",
+        "label": "Subgraphs under one manager graph"
+      },
+      {
+        "value": "281",
+        "label": "Tests across 31 test files"
       },
       {
         "value": "4",
         "label": "FastAPI endpoints"
       }
     ],
+    "deepDive": [
+      {
+        "heading": "State you can stop and resume",
+        "body": "Every stage reads and writes one typed graph state, and every stage result is a Pydantic v2 model, so a malformed output fails at the boundary instead of three steps later.",
+        "points": [
+          "Typed state with merge reducers, so parallel branches combine cleanly",
+          "A SQLite checkpointer persists state across interrupt and resume cycles",
+          "Each run records completed, failed, and skipped steps in the final result"
+        ]
+      },
+      {
+        "heading": "Four places a person can step in",
+        "body": "Human review sits where a wrong answer is expensive, not everywhere.",
+        "points": [
+          "Intent: confidence below threshold",
+          "Normalize: an entity matches more than one record",
+          "Schema: no schema matches the request",
+          "SQL: the generated query fails validation"
+        ]
+      },
+      {
+        "heading": "Batch mode for bulk requests",
+        "body": "The same graph runs over a CSV of requests. Batch mode turns off every interrupt; an error is recorded, the row is marked failed, and processing continues with the next row.",
+        "points": [
+          "One failing request never stops the batch",
+          "A batch abort skips the remaining steps for that row"
+        ]
+      },
+      {
+        "heading": "Memory, caching, and routing",
+        "body": "Repeated work is cached at three levels, and each stage can use a different model.",
+        "points": [
+          "Plan memory keyed by request type",
+          "Query memory keyed by SQL hash",
+          "The schema knowledge graph loads once per process",
+          "Per-stage model routing for intent, schema, and SQL generation",
+          "Per-agent call statistics saved per session"
+        ]
+      },
+      {
+        "heading": "Read-only by construction",
+        "body": "The SQL path is built so a bad query cannot change data: SELECT-only validation, a keyword blocklist, and a dry run that checks table existence. The deliverable is the validated query set, marked as dry-run."
+      }
+    ],
     "decisions": [
-      "Specialised agents under a manager agent, not one prompt that does everything, so each stage can be tested and evaluated on its own.",
-      "Hybrid FAISS + BM25 retrieval for entity names: semantic search handles paraphrase, BM25 keeps exact names and acronyms from drifting.",
-      "Human-in-the-loop validation instead of full autonomy for queries whose output feeds client reports."
+      "A manager agent over three subgraphs instead of one prompt, so normalization, schema selection, and SQL generation are each tested and evaluated on their own.",
+      "Hybrid FAISS + BM25 for entity names: semantic search handles paraphrase, BM25 keeps exact names and acronyms from drifting.",
+      "Interrupts plus a checkpointer instead of full autonomy: a person resolves the four expensive failure modes and the run resumes without starting over.",
+      "Batch mode trades interactivity for throughput: no interrupts, failures recorded per row."
     ],
     "links": []
   },
@@ -271,184 +778,1450 @@
     "slug": "company-synonym-agent",
     "projectTitle": "Company Synonym Agent",
     "title": "Company Synonym Agent",
-    "subtitle": "Entity resolution for company names across 2.6M company and subsidiary records, with sub-second lookups.",
+    "subtitle": "Entity resolution for company names across 2.67M company and subsidiary records: semantic recall, lexical rescoring, rule boosts, and an LLM plus a person only for the hard cases.",
     "role": "Built",
     "org": "Zinnov (Draup)",
     "period": "Oct 2025",
     "visibility": "Work · private repo",
     "stack": [
       "Python",
+      "sentence-transformers (MiniLM)",
       "FAISS",
       "BM25",
-      "LLMs",
-      "Entity Resolution"
+      "RapidFuzz",
+      "LangGraph",
+      "Pydantic",
+      "Milvus",
+      "FastAPI"
     ],
-    "problem": "Matching company names across datasets broke on acronyms, subsidiaries, and spelling variants. A plain string match missed real matches; a loose one merged different companies.",
+    "keywords": [
+      "entity resolution",
+      "company name matching",
+      "hybrid search FAISS BM25",
+      "record linkage",
+      "subsidiary to parent resolution"
+    ],
+    "problem": "The same company shows up as an acronym, a spelling variant, a legal-suffix variant, or one of its subsidiaries, depending on the dataset. That breaks joins and every SQL query built on them. Exact matching misses real matches; loose fuzzy matching merges companies that are different.",
     "diagram": {
-      "width": 400,
-      "height": 440,
+      "width": 500,
+      "height": 1200,
+      "clusters": [
+        {
+          "id": "normalize",
+          "label": "Normalize",
+          "x": 14,
+          "y": 14,
+          "w": 472,
+          "h": 226
+        },
+        {
+          "id": "score",
+          "label": "Retrieve and score",
+          "x": 14,
+          "y": 254,
+          "w": 472,
+          "h": 512
+        },
+        {
+          "id": "decide",
+          "label": "Decide",
+          "x": 14,
+          "y": 820,
+          "w": 472,
+          "h": 368
+        }
+      ],
       "nodes": [
         {
-          "id": "input",
-          "label": "Company name",
-          "x": 150,
-          "y": 40
+          "id": "raw",
+          "label": "Raw company names",
+          "x": 210,
+          "y": 60,
+          "kind": "io",
+          "sub": "batch input",
+          "w": 170
         },
         {
-          "id": "faiss",
-          "label": "FAISS semantic",
-          "x": 80,
-          "y": 120
+          "id": "clean",
+          "label": "Normalize names",
+          "x": 210,
+          "y": 128,
+          "kind": "process",
+          "sub": "strip legal suffixes"
         },
         {
-          "id": "bm25",
-          "label": "BM25 lexical",
-          "x": 250,
-          "y": 120
+          "id": "embed",
+          "label": "Embed queries",
+          "x": 110,
+          "y": 196,
+          "kind": "process",
+          "sub": "MiniLM · 384-d"
         },
         {
           "id": "acronym",
-          "label": "Acronym validation",
-          "x": 150,
-          "y": 210
+          "label": "Acronym token",
+          "x": 380,
+          "y": 196,
+          "kind": "process",
+          "sub": "initials of the name",
+          "w": 140
         },
         {
-          "id": "overlap",
-          "label": "Token-overlap scoring",
-          "x": 150,
-          "y": 280
+          "id": "faiss",
+          "label": "FAISS index",
+          "x": 110,
+          "y": 300,
+          "kind": "store",
+          "sub": "≈ 2.67M records"
+        },
+        {
+          "id": "cand",
+          "label": "Top-k candidates",
+          "x": 110,
+          "y": 372,
+          "kind": "fanout",
+          "sub": "10× over-fetch, ≥ 50"
+        },
+        {
+          "id": "bm25",
+          "label": "BM25 rescoring",
+          "x": 210,
+          "y": 450,
+          "kind": "process",
+          "sub": "candidates only"
+        },
+        {
+          "id": "elig",
+          "label": "Eligible?",
+          "x": 210,
+          "y": 520,
+          "kind": "gate"
+        },
+        {
+          "id": "fuse",
+          "label": "Fused score",
+          "x": 210,
+          "y": 592,
+          "kind": "process",
+          "sub": "0.6 semantic + 0.4 BM25",
+          "w": 180
+        },
+        {
+          "id": "boosts",
+          "label": "Rule boosts",
+          "x": 210,
+          "y": 662,
+          "kind": "process",
+          "sub": "exact · prefix · acronym · parent",
+          "w": 196
+        },
+        {
+          "id": "rerank",
+          "label": "Master-first rerank",
+          "x": 210,
+          "y": 732,
+          "kind": "process",
+          "sub": "within 0.20 of top",
+          "w": 170
         },
         {
           "id": "parent",
-          "label": "Parent-company resolution",
-          "x": 150,
-          "y": 350
+          "label": "Parent resolution",
+          "x": 210,
+          "y": 870,
+          "kind": "process",
+          "sub": "subsidiary to parent"
         },
         {
-          "id": "resolved",
-          "label": "Resolved entity",
-          "sub": "sub-second",
-          "x": 150,
-          "y": 410
+          "id": "conf",
+          "label": "Score ≥ 0.85?",
+          "x": 210,
+          "y": 940,
+          "kind": "gate"
+        },
+        {
+          "id": "llm",
+          "label": "LLM decision",
+          "x": 405,
+          "y": 1010,
+          "kind": "llm",
+          "sub": "picks a candidate",
+          "w": 130
+        },
+        {
+          "id": "amb",
+          "label": "Top-2 tie?",
+          "x": 405,
+          "y": 1080,
+          "kind": "gate"
+        },
+        {
+          "id": "hitl",
+          "label": "Human resolve",
+          "x": 405,
+          "y": 1150,
+          "kind": "hitl",
+          "w": 130
+        },
+        {
+          "id": "out",
+          "label": "Canonical company",
+          "x": 210,
+          "y": 1150,
+          "kind": "io",
+          "sub": "match type · score",
+          "w": 170
         }
       ],
       "edges": [
         [
-          "input",
+          "raw",
+          "clean"
+        ],
+        [
+          "clean",
+          "embed"
+        ],
+        [
+          "clean",
+          "acronym"
+        ],
+        [
+          "embed",
           "faiss"
         ],
         [
-          "input",
+          "faiss",
+          "cand",
+          "fanout",
+          "top-k"
+        ],
+        [
+          "cand",
           "bm25"
         ],
         [
-          "faiss",
-          "acronym"
+          "acronym",
+          "bm25"
         ],
         [
           "bm25",
-          "acronym"
+          "elig"
         ],
         [
-          "acronym",
-          "overlap"
+          "elig",
+          "fuse",
+          "conditional",
+          "eligible"
         ],
         [
-          "overlap",
+          "fuse",
+          "boosts"
+        ],
+        [
+          "boosts",
+          "rerank"
+        ],
+        [
+          "rerank",
           "parent"
         ],
         [
           "parent",
+          "conf"
+        ],
+        [
+          "conf",
+          "out",
+          "conditional",
+          "≥ 0.85"
+        ],
+        [
+          "conf",
+          "llm",
+          "conditional",
+          "below"
+        ],
+        [
+          "llm",
+          "amb"
+        ],
+        [
+          "amb",
+          "out",
+          "conditional",
           "resolved"
+        ],
+        [
+          "amb",
+          "hitl",
+          "hitl",
+          "tie"
+        ],
+        [
+          "hitl",
+          "out",
+          "hitl",
+          "decision"
         ]
       ]
     },
     "steps": [
       {
-        "title": "Two kinds of candidates",
-        "body": "A name goes to FAISS semantic search and to BM25 at the same time. Semantic search catches paraphrased and reworded names; BM25 catches exact tokens that embeddings blur.",
+        "title": "Clean the name, keep the acronym",
+        "body": "Names are normalized and legal suffixes stripped. Multi-word names also get an acronym token, so a short form can match the full name.",
         "nodes": [
-          "input",
-          "faiss",
-          "bm25"
-        ],
-        "edges": [
-          [
-            "input",
-            "faiss"
-          ],
-          [
-            "input",
-            "bm25"
-          ]
-        ]
-      },
-      {
-        "title": "Acronyms checked, not guessed",
-        "body": "Acronym validation confirms that a short form really expands to the candidate, so an abbreviation does not match an unrelated company that happens to embed nearby.",
-        "nodes": [
+          "raw",
+          "clean",
           "acronym"
         ],
         "edges": [
           [
-            "faiss",
+            "raw",
+            "clean"
+          ],
+          [
+            "clean",
             "acronym"
+          ]
+        ]
+      },
+      {
+        "title": "Semantic recall over 2.67M records",
+        "body": "All queries in a batch are embedded at once and searched against a FAISS index of about 2.67M company and subsidiary records. Candidates are over-fetched at ten times top-k, at least 50, so the lexical step has room to work.",
+        "nodes": [
+          "embed",
+          "faiss",
+          "cand"
+        ],
+        "edges": [
+          [
+            "clean",
+            "embed"
+          ],
+          [
+            "embed",
+            "faiss"
+          ],
+          [
+            "faiss",
+            "cand"
+          ]
+        ]
+      },
+      {
+        "title": "Lexical rescoring, only where it matters",
+        "body": "BM25 runs over the semantic candidates rather than the whole corpus, which keeps lexical scoring cheap at this scale. Ineligible records drop out, and the score is 0.6 semantic plus 0.4 normalized BM25.",
+        "nodes": [
+          "bm25",
+          "elig",
+          "fuse"
+        ],
+        "edges": [
+          [
+            "cand",
+            "bm25"
+          ],
+          [
+            "acronym",
+            "bm25"
           ],
           [
             "bm25",
-            "acronym"
-          ]
-        ]
-      },
-      {
-        "title": "Scored on shared tokens",
-        "body": "Token-overlap scoring ranks the surviving candidates on the words they actually share with the query.",
-        "nodes": [
-          "overlap"
-        ],
-        "edges": [
-          [
-            "acronym",
-            "overlap"
-          ]
-        ]
-      },
-      {
-        "title": "Subsidiaries roll up",
-        "body": "Parent-company resolution maps subsidiaries to their parent, across 2.6M company and subsidiary records, and returns the resolved entity in under a second.",
-        "nodes": [
-          "parent",
-          "resolved"
-        ],
-        "edges": [
-          [
-            "overlap",
-            "parent"
+            "elig"
           ],
           [
+            "elig",
+            "fuse"
+          ]
+        ]
+      },
+      {
+        "title": "Rules for what embeddings miss",
+        "body": "Fixed boosts cover the cases embeddings get wrong: an exact clean match (+0.3), a prefix match (+0.15), the query equal to the candidate's acronym (+0.5), and the parent name contained in the candidate (+0.2).",
+        "nodes": [
+          "boosts"
+        ],
+        "edges": [
+          [
+            "fuse",
+            "boosts"
+          ]
+        ]
+      },
+      {
+        "title": "Hierarchy-aware selection",
+        "body": "A master record within 0.20 of the top score is promoted to first place, and a winning subsidiary is rolled up to its parent company.",
+        "nodes": [
+          "rerank",
+          "parent"
+        ],
+        "edges": [
+          [
+            "boosts",
+            "rerank"
+          ],
+          [
+            "rerank",
+            "parent"
+          ]
+        ]
+      },
+      {
+        "title": "Escalate only the hard cases",
+        "body": "A score of 0.85 or more is accepted without any model call. Below that, an LLM decision agent chooses among the candidates, and when the top two stay within 0.05 of each other the pipeline pauses for a person.",
+        "nodes": [
+          "conf",
+          "llm",
+          "amb",
+          "hitl",
+          "out"
+        ],
+        "edges": [
+          [
             "parent",
-            "resolved"
+            "conf"
+          ],
+          [
+            "conf",
+            "out"
+          ],
+          [
+            "conf",
+            "llm"
+          ],
+          [
+            "llm",
+            "amb"
+          ],
+          [
+            "amb",
+            "hitl"
+          ],
+          [
+            "hitl",
+            "out"
           ]
         ]
       }
     ],
     "results": [
       {
-        "value": "2.6M",
-        "label": "Company and subsidiary records"
+        "value": "2.67M",
+        "label": "Company and subsidiary records indexed"
       },
       {
-        "value": "< 1 s",
-        "label": "Lookup latency"
+        "value": "0.85",
+        "label": "Score accepted without an LLM call"
       },
       {
-        "value": "3",
-        "label": "Failure modes handled: acronyms, subsidiaries, spelling variants"
+        "value": "0.6 / 0.4",
+        "label": "Semantic / BM25 score fusion"
+      },
+      {
+        "value": "10×",
+        "label": "Candidate over-fetch before rescoring"
+      },
+      {
+        "value": "40+",
+        "label": "Tests in the extracted service"
+      }
+    ],
+    "deepDive": [
+      {
+        "heading": "Recall wide, score narrow",
+        "body": "Semantic search is good at recall and bad at exact names; BM25 is the opposite. Running BM25 only over the semantic candidates gets both without scoring 2.67M documents lexically on every query."
+      },
+      {
+        "heading": "An escalation ladder",
+        "body": "Cost and auditability go together: most names resolve with arithmetic, some need a model, a few need a person.",
+        "points": [
+          "Score ≥ 0.85: accepted, no model call",
+          "Fuzzy or no match: an LLM chooses among the retrieved candidates",
+          "Top two within 0.05: paused for a human decision"
+        ]
+      },
+      {
+        "heading": "From library to service",
+        "body": "The engine was later extracted into a standalone service (dense HNSW vectors plus sparse BM25 behind FastAPI), so the multi-agent app no longer loads the embedding stack and degrades to a stub when the service is down."
       }
     ],
     "decisions": [
-      "Semantic and lexical retrieval in parallel, because company names fail in both directions: paraphrase and exact abbreviations.",
-      "Deterministic validation and scoring after retrieval, so a nearby embedding is never enough on its own to merge two companies."
+      "Semantic recall over the full corpus, BM25 only on the candidates: cheap lexical precision at 2.67M scale.",
+      "Explicit acronym and parent boosts instead of hoping embeddings learn them.",
+      "The LLM sees only below-threshold cases and only chooses among retrieved candidates, so it cannot invent a company."
+    ],
+    "links": []
+  },
+  {
+    "slug": "dof",
+    "projectTitle": "DOF Automation: Deal Origination Framework",
+    "title": "Deal Origination Framework (DOF)",
+    "subtitle": "A weekly business-signal pipeline for 537 enterprise accounts: collect from newsrooms and news, deduplicate syndicated copies, classify each event once, and rank the top two per vertical.",
+    "role": "Built",
+    "org": "Zinnov (Draup)",
+    "period": "2025 to 2026",
+    "visibility": "Work · private repo",
+    "stack": [
+      "Python",
+      "Botasaurus (Chrome pool)",
+      "trafilatura",
+      "PyMuPDF",
+      "gnews",
+      "RapidFuzz",
+      "Pydantic",
+      "SQLite (WAL)",
+      "openpyxl",
+      "Gemini",
+      "pytest"
+    ],
+    "keywords": [
+      "business signal monitoring",
+      "news deduplication",
+      "event clustering union-find",
+      "LLM classification",
+      "web scraping pipeline",
+      "deal origination"
+    ],
+    "problem": "Every week a deal-origination team has to spot business signals (leadership changes, partnerships, acquisitions, investments) across hundreds of enterprise accounts, then pick the strongest two per industry vertical for a dashboard and a deck. By hand that means visiting every newsroom, searching the news, throwing away syndicated copies of the same story, and judging relevance one article at a time.",
+    "diagram": {
+      "width": 500,
+      "height": 1210,
+      "clusters": [
+        {
+          "id": "prepare",
+          "label": "Prepare",
+          "x": 14,
+          "y": 14,
+          "w": 472,
+          "h": 150
+        },
+        {
+          "id": "collect",
+          "label": "Collect",
+          "x": 14,
+          "y": 180,
+          "w": 472,
+          "h": 372
+        },
+        {
+          "id": "cluster",
+          "label": "Deduplicate",
+          "x": 14,
+          "y": 568,
+          "w": 472,
+          "h": 150
+        },
+        {
+          "id": "classify",
+          "label": "Classify",
+          "x": 14,
+          "y": 734,
+          "w": 472,
+          "h": 222
+        },
+        {
+          "id": "finalize",
+          "label": "Finalize",
+          "x": 14,
+          "y": 972,
+          "w": 472,
+          "h": 222
+        }
+      ],
+      "nodes": [
+        {
+          "id": "accounts",
+          "label": "Account list",
+          "x": 210,
+          "y": 60,
+          "kind": "io",
+          "sub": "537 accounts · weekly",
+          "w": 170
+        },
+        {
+          "id": "window",
+          "label": "Week window",
+          "x": 210,
+          "y": 128,
+          "kind": "process",
+          "sub": "Mon–Sun, 14-day lookback"
+        },
+        {
+          "id": "queue",
+          "label": "Task queue",
+          "x": 210,
+          "y": 226,
+          "kind": "fanout",
+          "sub": "atomic claim per account"
+        },
+        {
+          "id": "newsroom",
+          "label": "Newsroom discovery",
+          "x": 110,
+          "y": 300,
+          "kind": "process",
+          "sub": "new URLs only"
+        },
+        {
+          "id": "gnews",
+          "label": "News search",
+          "x": 320,
+          "y": 300,
+          "kind": "process",
+          "sub": "decoded publisher URL"
+        },
+        {
+          "id": "fetch",
+          "label": "Fetch + extract",
+          "x": 210,
+          "y": 376,
+          "kind": "process",
+          "sub": "≤ 4 pooled browsers"
+        },
+        {
+          "id": "dates",
+          "label": "Date ladder",
+          "x": 210,
+          "y": 446,
+          "kind": "process",
+          "sub": "9 sources, scored"
+        },
+        {
+          "id": "validate",
+          "label": "In window?",
+          "x": 210,
+          "y": 516,
+          "kind": "gate"
+        },
+        {
+          "id": "dedup",
+          "label": "4-layer dedup",
+          "x": 210,
+          "y": 614,
+          "kind": "process",
+          "sub": "URL · hash · title · content",
+          "w": 186
+        },
+        {
+          "id": "events",
+          "label": "Event clustering",
+          "x": 210,
+          "y": 682,
+          "kind": "process",
+          "sub": "union-find"
+        },
+        {
+          "id": "classify",
+          "label": "Classify event",
+          "x": 210,
+          "y": 780,
+          "kind": "llm",
+          "sub": "one call per event"
+        },
+        {
+          "id": "schema",
+          "label": "Taxonomy valid?",
+          "x": 210,
+          "y": 850,
+          "kind": "gate",
+          "w": 140
+        },
+        {
+          "id": "review_gate",
+          "label": "Needs review?",
+          "x": 210,
+          "y": 920,
+          "kind": "gate",
+          "w": 140
+        },
+        {
+          "id": "review",
+          "label": "Analyst review",
+          "x": 405,
+          "y": 920,
+          "kind": "hitl",
+          "sub": "spreadsheet round-trip",
+          "w": 130
+        },
+        {
+          "id": "rank",
+          "label": "Rank",
+          "x": 210,
+          "y": 1018,
+          "kind": "process",
+          "sub": "top 2 per vertical"
+        },
+        {
+          "id": "reports",
+          "label": "Reports",
+          "x": 210,
+          "y": 1088,
+          "kind": "io",
+          "sub": "CSV · XLSX · JSON · MD",
+          "w": 170
+        },
+        {
+          "id": "reconcile",
+          "label": "Counts match?",
+          "x": 210,
+          "y": 1158,
+          "kind": "gate",
+          "w": 140
+        },
+        {
+          "id": "store",
+          "label": "SQLite (WAL)",
+          "x": 405,
+          "y": 1158,
+          "kind": "store",
+          "sub": "source of truth",
+          "w": 130
+        }
+      ],
+      "edges": [
+        [
+          "accounts",
+          "window"
+        ],
+        [
+          "window",
+          "queue"
+        ],
+        [
+          "queue",
+          "newsroom",
+          "fanout"
+        ],
+        [
+          "queue",
+          "gnews",
+          "fanout"
+        ],
+        [
+          "newsroom",
+          "fetch"
+        ],
+        [
+          "gnews",
+          "fetch"
+        ],
+        [
+          "fetch",
+          "dates"
+        ],
+        [
+          "dates",
+          "validate"
+        ],
+        [
+          "validate",
+          "dedup",
+          "conditional",
+          "in window"
+        ],
+        [
+          "dedup",
+          "events"
+        ],
+        [
+          "events",
+          "classify",
+          "fanout",
+          "per event"
+        ],
+        [
+          "classify",
+          "schema"
+        ],
+        [
+          "schema",
+          "classify",
+          "retry",
+          "repair"
+        ],
+        [
+          "schema",
+          "review_gate"
+        ],
+        [
+          "review_gate",
+          "review",
+          "hitl",
+          "low conf"
+        ],
+        [
+          "review_gate",
+          "rank",
+          "conditional",
+          "clean"
+        ],
+        [
+          "review",
+          "rank",
+          "hitl",
+          "decisions"
+        ],
+        [
+          "rank",
+          "reports"
+        ],
+        [
+          "reports",
+          "reconcile"
+        ],
+        [
+          "reconcile",
+          "store",
+          "conditional",
+          "pass"
+        ]
+      ]
+    },
+    "steps": [
+      {
+        "title": "A fixed weekly window",
+        "body": "Each run loads the account list and the signal taxonomy and computes the previous Monday to Sunday in one timezone. Discovery looks back 14 days so late-listed releases are still caught; a late item is tagged, never dropped.",
+        "nodes": [
+          "accounts",
+          "window"
+        ],
+        "edges": [
+          [
+            "accounts",
+            "window"
+          ]
+        ]
+      },
+      {
+        "title": "Fan out per account",
+        "body": "Every account gets a newsroom-discovery task and a news-search task in a persistent SQLite queue that workers claim atomically. Newsroom discovery diffs links against a cumulative URL inventory, so only new URLs move on; news-search links are decoded to the real publisher URL.",
+        "nodes": [
+          "queue",
+          "newsroom",
+          "gnews"
+        ],
+        "edges": [
+          [
+            "window",
+            "queue"
+          ],
+          [
+            "queue",
+            "newsroom"
+          ],
+          [
+            "queue",
+            "gnews"
+          ]
+        ]
+      },
+      {
+        "title": "Fetch once, date carefully",
+        "body": "All fetches share a pool of at most four long-lived browsers, and HTML or PDF becomes Markdown. The publication date comes from a nine-step ladder, from structured data down to an LLM as the last resort, and every date records its source and confidence.",
+        "nodes": [
+          "fetch",
+          "dates"
+        ],
+        "edges": [
+          [
+            "newsroom",
+            "fetch"
+          ],
+          [
+            "gnews",
+            "fetch"
+          ],
+          [
+            "fetch",
+            "dates"
+          ]
+        ]
+      },
+      {
+        "title": "Validate without deleting",
+        "body": "Each document gets a window status (in window, outside, unknown date, late arrival) and a company-match check. Rejections are kept as statuses rather than deleted, and a barrier waits for every collect task before moving on.",
+        "nodes": [
+          "validate"
+        ],
+        "edges": [
+          [
+            "dates",
+            "validate"
+          ]
+        ]
+      },
+      {
+        "title": "Syndicated copies become one event",
+        "body": "Four dedup layers run per account: canonical URL, content hash, title similarity, and near-duplicate content. Union-find then merges syndicated copies into a single event, with the official release as the canonical document.",
+        "nodes": [
+          "dedup",
+          "events"
+        ],
+        "edges": [
+          [
+            "validate",
+            "dedup"
+          ],
+          [
+            "dedup",
+            "events"
+          ]
+        ]
+      },
+      {
+        "title": "One LLM call per event",
+        "body": "The model is called once per event, not per article: ten copies of a story cost one call. A single response carries relevance, vertical, signal strength, a summary, verbatim evidence, and confidence, validated against the taxonomy with one repair turn and one fresh retry.",
+        "nodes": [
+          "classify",
+          "schema"
+        ],
+        "edges": [
+          [
+            "events",
+            "classify"
+          ],
+          [
+            "classify",
+            "schema"
+          ],
+          [
+            "schema",
+            "classify"
+          ]
+        ]
+      },
+      {
+        "title": "Uncertain events go to an analyst",
+        "body": "Low confidence, a vertical mismatch, or a failed validation sends the event to review. Analysts work in an exported spreadsheet with taxonomy dropdowns, and importing their decisions rebuilds the ranking.",
+        "nodes": [
+          "review_gate",
+          "review"
+        ],
+        "edges": [
+          [
+            "schema",
+            "review_gate"
+          ],
+          [
+            "review_gate",
+            "review"
+          ]
+        ]
+      },
+      {
+        "title": "Rank, report, and prove it",
+        "body": "A deterministic sort picks the top two per vertical (strength, confidence, source count, official source, recency), at most one per account. Reports are written atomically, and a run is only marked complete when report row counts match the database.",
+        "nodes": [
+          "rank",
+          "reports",
+          "reconcile",
+          "store"
+        ],
+        "edges": [
+          [
+            "review_gate",
+            "rank"
+          ],
+          [
+            "review",
+            "rank"
+          ],
+          [
+            "rank",
+            "reports"
+          ],
+          [
+            "reports",
+            "reconcile"
+          ],
+          [
+            "reconcile",
+            "store"
+          ]
+        ]
+      }
+    ],
+    "results": [
+      {
+        "value": "537",
+        "label": "Enterprise accounts monitored weekly"
+      },
+      {
+        "value": "8",
+        "label": "Industry verticals ranked"
+      },
+      {
+        "value": "760",
+        "label": "Companies processed across 11 production runs"
+      },
+      {
+        "value": "97",
+        "label": "Tests in the pipeline"
+      },
+      {
+        "value": "1",
+        "label": "LLM call per event, however many copies"
+      }
+    ],
+    "deepDive": [
+      {
+        "heading": "Deterministic first",
+        "body": "The model is used only for semantic judgement: relevance, vertical, strength, and evidence. Dates, deduplication, clustering, and ranking are plain code, so they are fast, testable, and identical on every run."
+      },
+      {
+        "heading": "No silent data loss, no false done",
+        "body": "Phases are separated by barriers, every result is persisted as soon as it exists, and runs can pause and resume.",
+        "points": [
+          "Rejected documents become statuses, never deletions",
+          "A reconciliation mismatch marks the run FAILED instead of complete"
+        ]
+      },
+      {
+        "heading": "A real-data validation run",
+        "body": "A one-week run over the first 20 accounts produced 591 tasks (569 succeeded, 22 failed), 383 documents, and 27 events, and reconciliation passed. That run stubbed the classifier, so it validates collection through clustering, not classification quality."
+      },
+      {
+        "heading": "Browsers as a fixed pool",
+        "body": "A browser per page was rejected for cost, and multi-tab control would have depended on undocumented driver internals. A pool of at most four long-lived browsers, one per worker, keeps fetching predictable."
+      }
+    ],
+    "decisions": [
+      "Classify events, not articles: syndicated copies collapse first, so the model sees each story once.",
+      "The taxonomy is enforced by a validator, never trusted from the model output.",
+      "Analyst review happens in a spreadsheet the team already uses, with dropdowns generated from the taxonomy."
+    ],
+    "links": []
+  },
+  {
+    "slug": "skill-proficiency",
+    "projectTitle": "Skill Proficiency Engine",
+    "title": "Skill Proficiency Engine",
+    "subtitle": "Tags every skill in a job description with one of five proficiency levels, backed by a quote from the JD, and answers 'not stated' instead of guessing.",
+    "role": "Built",
+    "org": "Zinnov (Draup)",
+    "period": "2026",
+    "visibility": "Work · private repo",
+    "stack": [
+      "Python",
+      "Gemini",
+      "Pydantic v2 structured output",
+      "pandas",
+      "pytest"
+    ],
+    "keywords": [
+      "skill proficiency",
+      "job description analysis",
+      "evidence-grounded LLM",
+      "anti-hallucination",
+      "structured output"
+    ],
+    "problem": "Job descriptions list skills but rarely say how good someone needs to be at each one. An LLM asked to fill that gap will produce a confident level for every skill, including the ones the JD never mentions. The engine has to tag each mapped skill with one of five levels, Beginner to Master, and every level has to be backed by text in the JD.",
+    "diagram": {
+      "width": 500,
+      "height": 870,
+      "clusters": [
+        {
+          "id": "inputs",
+          "label": "Inputs",
+          "x": 14,
+          "y": 14,
+          "w": 472,
+          "h": 160
+        },
+        {
+          "id": "deterministic",
+          "label": "Deterministic first",
+          "x": 14,
+          "y": 188,
+          "w": 472,
+          "h": 160
+        },
+        {
+          "id": "llm",
+          "label": "LLM, with evidence",
+          "x": 14,
+          "y": 362,
+          "w": 472,
+          "h": 240
+        },
+        {
+          "id": "verify",
+          "label": "Verify",
+          "x": 14,
+          "y": 616,
+          "w": 472,
+          "h": 240
+        }
+      ],
+      "nodes": [
+        {
+          "id": "jd",
+          "label": "Job description",
+          "x": 120,
+          "y": 60,
+          "kind": "io",
+          "w": 150
+        },
+        {
+          "id": "skills",
+          "label": "Mapped skills",
+          "x": 310,
+          "y": 60,
+          "kind": "io",
+          "sub": "per JD",
+          "w": 150
+        },
+        {
+          "id": "assemble",
+          "label": "Assemble input",
+          "x": 210,
+          "y": 130,
+          "kind": "process",
+          "sub": "confirmed fields only"
+        },
+        {
+          "id": "cache",
+          "label": "Result cache",
+          "x": 395,
+          "y": 130,
+          "kind": "store",
+          "sub": "JD · skill · model · prompt",
+          "w": 170
+        },
+        {
+          "id": "explicit",
+          "label": "Explicit evidence",
+          "x": 210,
+          "y": 236,
+          "kind": "process",
+          "sub": "years regex · verb lexicon",
+          "w": 180
+        },
+        {
+          "id": "resolved",
+          "label": "Resolved?",
+          "x": 210,
+          "y": 306,
+          "kind": "gate"
+        },
+        {
+          "id": "batch",
+          "label": "Batches of 10",
+          "x": 210,
+          "y": 410,
+          "kind": "fanout",
+          "sub": "retry, then bisect"
+        },
+        {
+          "id": "propose",
+          "label": "Propose a level",
+          "x": 210,
+          "y": 480,
+          "kind": "llm",
+          "sub": "JD quote required"
+        },
+        {
+          "id": "quote",
+          "label": "Quote present?",
+          "x": 210,
+          "y": 554,
+          "kind": "gate",
+          "w": 140
+        },
+        {
+          "id": "not_stated",
+          "label": "NOT_STATED",
+          "x": 405,
+          "y": 554,
+          "kind": "process",
+          "sub": "never a guess",
+          "w": 130
+        },
+        {
+          "id": "standardize",
+          "label": "Standardize",
+          "x": 210,
+          "y": 664,
+          "kind": "process",
+          "sub": "5 canonical levels"
+        },
+        {
+          "id": "substr",
+          "label": "Quote in JD?",
+          "x": 210,
+          "y": 734,
+          "kind": "gate",
+          "w": 140
+        },
+        {
+          "id": "verify",
+          "label": "LLM verifier",
+          "x": 405,
+          "y": 734,
+          "kind": "llm",
+          "sub": "quote supports level?",
+          "w": 130
+        },
+        {
+          "id": "out",
+          "label": "Proficiency entry",
+          "x": 210,
+          "y": 812,
+          "kind": "io",
+          "sub": "level · evidence · tagged_by",
+          "w": 190
+        }
+      ],
+      "edges": [
+        [
+          "jd",
+          "assemble"
+        ],
+        [
+          "skills",
+          "assemble"
+        ],
+        [
+          "assemble",
+          "cache"
+        ],
+        [
+          "assemble",
+          "explicit"
+        ],
+        [
+          "explicit",
+          "resolved"
+        ],
+        [
+          "resolved",
+          "batch",
+          "conditional",
+          "unresolved"
+        ],
+        [
+          "resolved",
+          "standardize",
+          "bypass",
+          "explicit hit"
+        ],
+        [
+          "batch",
+          "propose",
+          "fanout"
+        ],
+        [
+          "propose",
+          "quote"
+        ],
+        [
+          "quote",
+          "not_stated",
+          "conditional",
+          "no quote"
+        ],
+        [
+          "quote",
+          "standardize",
+          "conditional",
+          "quoted"
+        ],
+        [
+          "standardize",
+          "substr"
+        ],
+        [
+          "substr",
+          "verify",
+          "conditional",
+          "LLM-sourced"
+        ],
+        [
+          "substr",
+          "out",
+          "conditional",
+          "deterministic"
+        ],
+        [
+          "verify",
+          "out",
+          "conditional",
+          "pass"
+        ],
+        [
+          "verify",
+          "not_stated",
+          "conditional",
+          "fail"
+        ]
+      ]
+    },
+    "steps": [
+      {
+        "title": "Assemble, then check the cache",
+        "body": "Inputs are rebuilt from confirmed fields only. A cache keyed on the JD, the skill, the model, and the prompt and rubric version skips anything already resolved.",
+        "nodes": [
+          "jd",
+          "skills",
+          "assemble",
+          "cache"
+        ],
+        "edges": [
+          [
+            "jd",
+            "assemble"
+          ],
+          [
+            "skills",
+            "assemble"
+          ],
+          [
+            "assemble",
+            "cache"
+          ]
+        ]
+      },
+      {
+        "title": "Explicit evidence before any model",
+        "body": "The engine finds the sentence that mentions the skill, then tries a years-of-experience pattern and a level-keyed phrase and verb lexicon. Evidence found this way skips the LLM entirely and is never overridden later.",
+        "nodes": [
+          "explicit",
+          "resolved"
+        ],
+        "edges": [
+          [
+            "assemble",
+            "explicit"
+          ],
+          [
+            "explicit",
+            "resolved"
+          ],
+          [
+            "resolved",
+            "standardize"
+          ]
+        ]
+      },
+      {
+        "title": "Batched proposals, with a quote",
+        "body": "Only unresolved skills reach the model, ten at a time. Every proposed level must come with a quote from the JD or it is rejected, and a failing batch is retried and then split in half down to single skills.",
+        "nodes": [
+          "batch",
+          "propose",
+          "quote",
+          "not_stated"
+        ],
+        "edges": [
+          [
+            "resolved",
+            "batch"
+          ],
+          [
+            "batch",
+            "propose"
+          ],
+          [
+            "propose",
+            "quote"
+          ],
+          [
+            "quote",
+            "not_stated"
+          ]
+        ]
+      },
+      {
+        "title": "One place to standardize",
+        "body": "Every raw signal, whether years, a phrase, a verb, or a model label, maps to one of five canonical levels in a single function.",
+        "nodes": [
+          "standardize"
+        ],
+        "edges": [
+          [
+            "quote",
+            "standardize"
+          ]
+        ]
+      },
+      {
+        "title": "Verify the quote twice",
+        "body": "Every entry gets a mechanical check that its quote really appears in the JD. Entries that came from the model also get a narrow second call that asks only whether the quote supports the level.",
+        "nodes": [
+          "substr",
+          "verify"
+        ],
+        "edges": [
+          [
+            "standardize",
+            "substr"
+          ],
+          [
+            "substr",
+            "verify"
+          ]
+        ]
+      },
+      {
+        "title": "Exactly one entry per skill",
+        "body": "Every input skill ends with one entry recording how it was resolved: years, phrase, verb, or LLM-verified. A failed check becomes NOT_STATED rather than a guessed level.",
+        "nodes": [
+          "out",
+          "not_stated"
+        ],
+        "edges": [
+          [
+            "substr",
+            "out"
+          ],
+          [
+            "verify",
+            "out"
+          ],
+          [
+            "verify",
+            "not_stated"
+          ]
+        ]
+      }
+    ],
+    "results": [
+      {
+        "value": "5",
+        "label": "Canonical proficiency levels"
+      },
+      {
+        "value": "2",
+        "label": "Anti-hallucination layers: quote check + verifier"
+      },
+      {
+        "value": "10",
+        "label": "Skills per LLM batch, bisected on failure"
+      },
+      {
+        "value": "37",
+        "label": "Tests"
+      }
+    ],
+    "deepDive": [
+      {
+        "heading": "'Not stated' is a valid answer",
+        "body": "Most proficiency tools always return a level. This one treats missing evidence as an outcome, so downstream analysis can tell 'the JD asks for expert Python' apart from 'the JD mentions Python'."
+      },
+      {
+        "heading": "Two layers against hallucination",
+        "body": "A quote is mandatory, the quote must be a substring of the JD, and a second model call must agree that the quote supports the level. Any failure ends in NOT_STATED."
+      },
+      {
+        "heading": "Scope kept small on purpose",
+        "body": "The first version made one call per skill. This version resolves what it can without a model, batches the rest, and defers cross-JD comparison to a separate later stage instead of building it in."
+      }
+    ],
+    "decisions": [
+      "Deterministic evidence first, and the model can never override it.",
+      "Bisect-on-failure batching, so one bad skill does not sink the other nine.",
+      "A single function maps every signal to the five levels, so the rubric lives in one place."
     ],
     "links": []
   },
@@ -456,7 +2229,7 @@
     "slug": "invoice-to-po",
     "projectTitle": "Invoice-to-PO Decision Workflow",
     "title": "Invoice-to-PO Decision Workflow",
-    "subtitle": "An auditable accounts-payable workflow where rules decide, models only advise, and every check cites its source record.",
+    "subtitle": "An accounts-payable workflow where AI reads, code decides, and people own the exceptions: every invoice ends as approve, hold with one question, or reject, and every check cites its source record.",
     "role": "Designed and built",
     "org": "Independent project",
     "period": "Oct 2026",
@@ -464,161 +2237,435 @@
     "stack": [
       "Python",
       "FastAPI",
+      "SQLite",
+      "poppler + tesseract OCR",
+      "TypeSafe Jev",
+      "OpenTelemetry",
       "Next.js",
-      "OCR",
-      "LLM-as-Judge",
       "Docker",
-      "CI/CD",
-      "OpenTelemetry"
+      "GitHub Actions",
+      "Render"
     ],
-    "problem": "Paying an invoice means matching it against the purchase order, the goods receipt, and the vendor master, then catching duplicates, payment fraud, and tax errors. An LLM that approves payments on its own is a liability; one that can be talked into approving by text inside the invoice is worse.",
+    "problem": "Accounts payable has to match each invoice against its purchase order, goods receipt, and vendor master, and catch duplicates, bank-change fraud, and GST errors. A model that approves payments is a liability, and one that can be talked into approving by text inside the invoice is worse.",
     "diagram": {
-      "width": 400,
-      "height": 500,
+      "width": 500,
+      "height": 1230,
+      "clusters": [
+        {
+          "id": "ingest",
+          "label": "Ingestion",
+          "x": 14,
+          "y": 14,
+          "w": 472,
+          "h": 236
+        },
+        {
+          "id": "checks",
+          "label": "Checks against systems of record",
+          "x": 14,
+          "y": 266,
+          "w": 472,
+          "h": 506
+        },
+        {
+          "id": "decide",
+          "label": "Decision",
+          "x": 14,
+          "y": 788,
+          "w": 472,
+          "h": 244
+        },
+        {
+          "id": "people",
+          "label": "People",
+          "x": 14,
+          "y": 1048,
+          "w": 472,
+          "h": 166
+        }
+      ],
       "nodes": [
         {
-          "id": "invoice",
-          "label": "Invoice",
+          "id": "upload",
+          "label": "Invoice in",
+          "x": 210,
+          "y": 60,
+          "kind": "io",
           "sub": "PDF · scan · CSV · JSON",
-          "x": 150,
-          "y": 40
+          "w": 170
+        },
+        {
+          "id": "ingest",
+          "label": "Ingest",
+          "x": 210,
+          "y": 128,
+          "kind": "process",
+          "sub": "idempotency key"
         },
         {
           "id": "extract",
           "label": "Extraction + OCR",
-          "x": 150,
-          "y": 120
+          "x": 210,
+          "y": 196,
+          "kind": "process",
+          "sub": "pdftotext · tesseract"
         },
         {
-          "id": "match",
-          "label": "Three-way match",
-          "sub": "PO · receipt · vendor",
-          "x": 150,
-          "y": 200
+          "id": "queue",
+          "label": "Durable job queue",
+          "x": 405,
+          "y": 196,
+          "kind": "store",
+          "sub": "3 tries, then HOLD",
+          "w": 130
         },
         {
-          "id": "checks",
-          "label": "Risk checks",
-          "sub": "duplicates · fraud · GST",
-          "x": 150,
-          "y": 280
+          "id": "intake",
+          "label": "Intake + injection scan",
+          "x": 210,
+          "y": 316,
+          "kind": "gate",
+          "w": 176
         },
         {
-          "id": "advisor",
-          "label": "Model advises",
-          "x": 325,
-          "y": 280,
-          "side": true
+          "id": "arith",
+          "label": "Arithmetic check",
+          "x": 210,
+          "y": 386,
+          "kind": "process",
+          "sub": "rows × price = totals"
+        },
+        {
+          "id": "vendor",
+          "label": "Vendor + bank",
+          "x": 210,
+          "y": 456,
+          "kind": "process",
+          "sub": "GSTIN · bank change"
+        },
+        {
+          "id": "po",
+          "label": "PO lookup",
+          "x": 210,
+          "y": 526,
+          "kind": "process",
+          "sub": "edited after invoice?"
+        },
+        {
+          "id": "threeway",
+          "label": "3-way match",
+          "x": 210,
+          "y": 596,
+          "kind": "process",
+          "sub": "invoice · PO · GRN"
+        },
+        {
+          "id": "tax",
+          "label": "Tax + GST",
+          "x": 210,
+          "y": 666,
+          "kind": "process",
+          "sub": "CGST+SGST vs IGST"
+        },
+        {
+          "id": "dup",
+          "label": "Duplicate check",
+          "x": 210,
+          "y": 736,
+          "kind": "process"
+        },
+        {
+          "id": "jev",
+          "label": "Jev advisor",
+          "x": 405,
+          "y": 836,
+          "kind": "llm",
+          "sub": "may only add HOLD",
+          "w": 130
         },
         {
           "id": "rules",
           "label": "Rules decide",
-          "x": 150,
-          "y": 360
+          "x": 210,
+          "y": 906,
+          "kind": "gate",
+          "w": 160
         },
         {
-          "id": "outcome",
-          "label": "Approve · hold · reject",
-          "x": 150,
-          "y": 450
+          "id": "harness",
+          "label": "Eval gate",
+          "x": 405,
+          "y": 906,
+          "kind": "gate",
+          "w": 130
+        },
+        {
+          "id": "out",
+          "label": "Approve · Hold · Reject",
+          "x": 210,
+          "y": 984,
+          "kind": "io",
+          "w": 190
+        },
+        {
+          "id": "evidence",
+          "label": "Evidence trail",
+          "x": 405,
+          "y": 984,
+          "kind": "store",
+          "sub": "every check cited",
+          "w": 130
+        },
+        {
+          "id": "review",
+          "label": "Review queue",
+          "x": 210,
+          "y": 1104,
+          "kind": "hitl",
+          "sub": "1 question · named owner",
+          "w": 180
         }
       ],
       "edges": [
         [
-          "invoice",
+          "upload",
+          "ingest"
+        ],
+        [
+          "ingest",
           "extract"
         ],
         [
+          "ingest",
+          "queue"
+        ],
+        [
           "extract",
-          "match"
+          "intake"
         ],
         [
-          "match",
-          "checks"
+          "queue",
+          "intake",
+          "conditional",
+          "claim · retry"
         ],
         [
-          "checks",
-          "advisor"
+          "intake",
+          "arith"
         ],
         [
-          "checks",
+          "arith",
+          "vendor"
+        ],
+        [
+          "vendor",
+          "po"
+        ],
+        [
+          "po",
+          "threeway"
+        ],
+        [
+          "po",
+          "tax",
+          "bypass",
+          "credit note"
+        ],
+        [
+          "threeway",
+          "tax"
+        ],
+        [
+          "tax",
+          "dup"
+        ],
+        [
+          "dup",
+          "jev",
+          "conditional",
+          "advisory"
+        ],
+        [
+          "dup",
           "rules"
         ],
         [
+          "jev",
           "rules",
-          "outcome"
+          "conditional",
+          "hold only"
+        ],
+        [
+          "harness",
+          "rules",
+          "conditional",
+          "regression"
+        ],
+        [
+          "rules",
+          "out"
+        ],
+        [
+          "rules",
+          "evidence"
+        ],
+        [
+          "out",
+          "review",
+          "hitl",
+          "HOLD"
         ]
       ]
     },
     "steps": [
       {
-        "title": "Any invoice format",
-        "body": "Text PDFs, scanned PDFs through OCR, CSV, or JSON. Extraction is measured: 32 of 32 PDF fields on the test set.",
+        "title": "Any format in, processed once",
+        "body": "Text PDFs go through pdftotext and scans through OCR. Row totals, subtotal, and grand total are cross-checked, so OCR digit errors are caught without a model, and an idempotency key means a resent invoice is processed once.",
         "nodes": [
-          "invoice",
+          "upload",
+          "ingest",
           "extract"
         ],
         "edges": [
           [
-            "invoice",
+            "upload",
+            "ingest"
+          ],
+          [
+            "ingest",
             "extract"
           ]
         ]
       },
       {
-        "title": "Matched against three records",
-        "body": "Each invoice is checked against its purchase order, the goods receipt, and the vendor master.",
+        "title": "A queue that fails closed",
+        "body": "A database-backed queue claims each job, retries with backoff up to three times, and turns a system error into HOLD. Nothing approves by accident.",
         "nodes": [
-          "match"
+          "queue",
+          "intake"
         ],
         "edges": [
           [
-            "extract",
-            "match"
-          ]
-        ]
-      },
-      {
-        "title": "Checks for what goes wrong",
-        "body": "Duplicate invoices, payment-fraud signals, and GST errors each get their own check, and every check cites the source record it used.",
-        "nodes": [
-          "checks"
-        ],
-        "edges": [
-          [
-            "match",
-            "checks"
-          ]
-        ]
-      },
-      {
-        "title": "Rules decide, the model advises",
-        "body": "A language model can explain and flag, but the decision belongs to deterministic rules. Across 600 adversarial variants there were 0 false approvals, and 0 of 489 prompt-injection attacks changed a decision.",
-        "nodes": [
-          "advisor",
-          "rules"
-        ],
-        "edges": [
-          [
-            "checks",
-            "advisor"
+            "ingest",
+            "queue"
           ],
           [
-            "checks",
+            "queue",
+            "intake"
+          ],
+          [
+            "extract",
+            "intake"
+          ]
+        ]
+      },
+      {
+        "title": "Checks against the systems of record",
+        "body": "Intake scans for injected instructions, then each check writes evidence of expected versus actual: arithmetic, vendor and bank details, and the PO. It catches a PO edited after the invoice date, a recently changed bank account, and a cancelled GSTIN.",
+        "nodes": [
+          "intake",
+          "arith",
+          "vendor",
+          "po"
+        ],
+        "edges": [
+          [
+            "intake",
+            "arith"
+          ],
+          [
+            "arith",
+            "vendor"
+          ],
+          [
+            "vendor",
+            "po"
+          ]
+        ]
+      },
+      {
+        "title": "Three-way match and GST",
+        "body": "Price is checked against the PO and the rate contract, quantity against cumulative goods receipts (which catches split-PO overruns), and the GST head against supplier and buyer state. Credit notes skip the match.",
+        "nodes": [
+          "threeway",
+          "tax",
+          "dup"
+        ],
+        "edges": [
+          [
+            "po",
+            "threeway"
+          ],
+          [
+            "po",
+            "tax"
+          ],
+          [
+            "threeway",
+            "tax"
+          ],
+          [
+            "tax",
+            "dup"
+          ]
+        ]
+      },
+      {
+        "title": "The model advises, rules decide",
+        "body": "A TypeSafe Jev decision model judges likely duplicates and suggests a PO, but an action allow-list drops anything it says except an added HOLD. The most severe finding wins, and approval needs confidence of at least 0.85.",
+        "nodes": [
+          "jev",
+          "rules",
+          "dup"
+        ],
+        "edges": [
+          [
+            "dup",
+            "jev"
+          ],
+          [
+            "dup",
+            "rules"
+          ],
+          [
+            "jev",
             "rules"
           ]
         ]
       },
       {
-        "title": "Three outcomes, one question",
-        "body": "Approve, reject, or hold with exactly one question for a human reviewer. 31 of 31 labelled cases land on the right outcome, and a regression gate in CI keeps it that way.",
+        "title": "One question for one person",
+        "body": "Every HOLD carries a named owner, a next step, and a draft email to the vendor (except suspected bank fraud, which gets no draft). Every check is cited in the evidence trail.",
         "nodes": [
-          "outcome"
+          "out",
+          "evidence",
+          "review"
         ],
         "edges": [
           [
             "rules",
-            "outcome"
+            "out"
+          ],
+          [
+            "rules",
+            "evidence"
+          ],
+          [
+            "out",
+            "review"
+          ]
+        ]
+      },
+      {
+        "title": "Evaluation as a gate",
+        "body": "One offline command runs every eval suite, and CI runs it on every change with recorded model answers, so no secrets are needed. A regression below the gate fails the build.",
+        "nodes": [
+          "harness"
+        ],
+        "edges": [
+          [
+            "harness",
+            "rules"
           ]
         ]
       }
@@ -634,7 +2681,11 @@
       },
       {
         "value": "31 / 31",
-        "label": "Labelled cases correct"
+        "label": "Labelled cases correct, 0 false rejects"
+      },
+      {
+        "value": "48 / 48",
+        "label": "Duplicate recall with Jev (from 0.75)"
       },
       {
         "value": "32 / 32",
@@ -643,12 +2694,20 @@
       {
         "value": "79",
         "label": "Tests, 20 of them guardrail tests"
+      },
+      {
+        "value": "14 ms",
+        "label": "Pipeline p95 latency"
+      },
+      {
+        "value": "$0.0052",
+        "label": "Cost of 180 Jev calls"
       }
     ],
     "decisions": [
-      "Rules own the decision and the model only advises, so no prompt can approve a payment.",
-      "Every check cites its source record, which makes each outcome auditable after the fact.",
-      "An LLM-as-judge is validated against a human-labelled gold set before its scores are trusted."
+      "AI reads, code decides, people own the exceptions.",
+      "Fail closed plus idempotency instead of best-effort processing.",
+      "Gate the judge only on what its own meta-evaluation supports."
     ],
     "links": [
       {
@@ -659,182 +2718,460 @@
         "label": "Live demo",
         "href": "https://zamp-ps1-invoice.onrender.com"
       }
+    ],
+    "keywords": [
+      "invoice processing AI",
+      "three-way match",
+      "LLM guardrails",
+      "prompt injection testing",
+      "LLM-as-judge evaluation",
+      "accounts payable automation"
+    ],
+    "deepDive": [
+      {
+        "heading": "The model may only add caution",
+        "body": "Model output passes through an action allow-list: the only thing it can contribute to a decision is an extra HOLD. Approval is a deterministic rule outcome with a confidence floor of 0.85."
+      },
+      {
+        "heading": "Fail closed, everywhere",
+        "body": "System errors become HOLD, a resent invoice is idempotent, and the queue gives up after three tries into HOLD rather than dropping the job."
+      },
+      {
+        "heading": "A judge that is itself evaluated",
+        "body": "The LLM-as-judge was checked against a 69-item human-labelled gold set (kappa 0.659, bad-item recall 1.0). It is only allowed to gate on criteria that passed that meta-evaluation; the explanation criteria failed it, so they stay advisory."
+      },
+      {
+        "heading": "Free to run, free to deploy",
+        "body": "Replay mode serves recorded model answers by default, so CI and the free Render deployment need no API key, and the whole eval suite costs nothing to rerun."
+      }
     ]
   },
   {
     "slug": "finn-advisor",
     "projectTitle": "Finn Advisor",
     "title": "Finn Advisor",
-    "subtitle": "A single-user financial advisor over read-only brokerage data, with a runtime safety policy and provider fallback.",
+    "subtitle": "A single-user financial assistant over read-only brokerage data, where every number comes from code and the LLM only explains it.",
     "role": "Designed and built",
     "org": "Independent project",
     "period": "Aug 2026",
     "visibility": "Public repo",
     "stack": [
-      "Google ADK",
+      "Python",
       "LangGraph",
-      "MCP",
-      "LangChain",
+      "Google ADK",
+      "MCP (Kite)",
+      "langchain-mcp-adapters",
       "NVIDIA NIM",
-      "Gemini",
+      "Gemini Flash",
       "SQLite",
+      "Streamlit",
       "Docker"
     ],
-    "problem": "An assistant with access to a brokerage account has to be useful about a real portfolio without ever being able to trade, leak credentials, or follow instructions hidden in web content.",
+    "problem": "An assistant connected to a brokerage account should answer 'how is my portfolio doing, why did this fall, am I over-concentrated' from real holdings and live news. It must never trade, leak tokens, invent numbers, or follow instructions buried in web content.",
     "diagram": {
-      "width": 400,
-      "height": 500,
-      "nodes": [
+      "width": 500,
+      "height": 1000,
+      "clusters": [
         {
-          "id": "question",
-          "label": "Question",
-          "x": 150,
-          "y": 40
+          "id": "gate",
+          "label": "Gate",
+          "x": 14,
+          "y": 14,
+          "w": 472,
+          "h": 166
         },
         {
-          "id": "safety",
-          "label": "Safety policy",
-          "x": 150,
-          "y": 120
+          "id": "route",
+          "label": "Routing",
+          "x": 14,
+          "y": 196,
+          "w": 472,
+          "h": 160
+        },
+        {
+          "id": "portfolio",
+          "label": "Portfolio",
+          "x": 14,
+          "y": 372,
+          "w": 214,
+          "h": 372
+        },
+        {
+          "id": "research",
+          "label": "Research",
+          "x": 238,
+          "y": 372,
+          "w": 160,
+          "h": 160
+        },
+        {
+          "id": "answer",
+          "label": "Answer",
+          "x": 14,
+          "y": 760,
+          "w": 472,
+          "h": 226
+        }
+      ],
+      "nodes": [
+        {
+          "id": "q",
+          "label": "Question",
+          "x": 210,
+          "y": 60,
+          "kind": "io",
+          "w": 150
+        },
+        {
+          "id": "in_gate",
+          "label": "Input safety",
+          "x": 210,
+          "y": 128,
+          "kind": "gate",
+          "w": 150
+        },
+        {
+          "id": "refuse",
+          "label": "Safe refusal",
+          "x": 405,
+          "y": 128,
+          "kind": "io",
+          "w": 130
+        },
+        {
+          "id": "router",
+          "label": "Router",
+          "x": 210,
+          "y": 244,
+          "kind": "process",
+          "sub": "deterministic intent"
         },
         {
           "id": "adk",
-          "label": "ADK orchestrator",
-          "x": 150,
-          "y": 200
+          "label": "ADK agent",
+          "x": 440,
+          "y": 310,
+          "kind": "llm",
+          "sub": "4 sub-agents",
+          "w": 96
         },
         {
-          "id": "graph",
-          "label": "LangGraph workflows",
-          "x": 150,
-          "y": 280
+          "id": "memory",
+          "label": "Load memory",
+          "x": 120,
+          "y": 420,
+          "kind": "store",
+          "sub": "privacy levels",
+          "w": 160
+        },
+        {
+          "id": "auth",
+          "label": "Kite auth?",
+          "x": 120,
+          "y": 490,
+          "kind": "gate",
+          "w": 140
         },
         {
           "id": "kite",
           "label": "Kite MCP",
+          "x": 120,
+          "y": 566,
+          "kind": "tool",
           "sub": "16 read-only tools",
-          "x": 325,
-          "y": 250,
-          "side": true
+          "w": 160
         },
         {
-          "id": "web",
+          "id": "analytics",
+          "label": "Portfolio analytics",
+          "x": 120,
+          "y": 636,
+          "kind": "process",
+          "sub": "computed in code",
+          "w": 160
+        },
+        {
+          "id": "snapshot",
+          "label": "Snapshot",
+          "x": 120,
+          "y": 706,
+          "kind": "process",
+          "sub": "provenance-tagged",
+          "w": 160
+        },
+        {
+          "id": "search",
           "label": "Web search",
-          "x": 325,
-          "y": 320,
-          "side": true
+          "x": 318,
+          "y": 420,
+          "kind": "tool",
+          "sub": "Bing, then Serper",
+          "w": 140
         },
         {
-          "id": "router",
+          "id": "untrusted",
+          "label": "Untrusted fence",
+          "x": 318,
+          "y": 490,
+          "kind": "process",
+          "sub": "wrapped as data",
+          "w": 140
+        },
+        {
+          "id": "llm",
           "label": "LLM router",
-          "sub": "NIM → Gemini Flash",
-          "x": 150,
-          "y": 370
+          "x": 210,
+          "y": 810,
+          "kind": "llm",
+          "sub": "NIM, then Gemini"
         },
         {
           "id": "log",
-          "label": "SQLite call log",
-          "x": 150,
-          "y": 450
+          "label": "Usage log",
+          "x": 420,
+          "y": 810,
+          "kind": "store",
+          "sub": "every call",
+          "w": 120
+        },
+        {
+          "id": "out_gate",
+          "label": "Output check",
+          "x": 210,
+          "y": 880,
+          "kind": "gate",
+          "w": 150
+        },
+        {
+          "id": "answer",
+          "label": "Answer",
+          "x": 210,
+          "y": 950,
+          "kind": "io",
+          "w": 150
         }
       ],
       "edges": [
         [
-          "question",
-          "safety"
+          "q",
+          "in_gate"
         ],
         [
-          "safety",
-          "adk"
+          "in_gate",
+          "refuse",
+          "conditional",
+          "block"
         ],
         [
-          "adk",
-          "graph"
-        ],
-        [
-          "graph",
-          "kite"
-        ],
-        [
-          "graph",
-          "web"
-        ],
-        [
-          "graph",
-          "router"
+          "in_gate",
+          "router",
+          "conditional",
+          "allow"
         ],
         [
           "router",
+          "memory",
+          "conditional",
+          "portfolio"
+        ],
+        [
+          "router",
+          "search",
+          "conditional",
+          "research"
+        ],
+        [
+          "router",
+          "adk",
+          "conditional",
+          "other"
+        ],
+        [
+          "memory",
+          "auth"
+        ],
+        [
+          "auth",
+          "kite",
+          "conditional",
+          "ok"
+        ],
+        [
+          "kite",
+          "analytics"
+        ],
+        [
+          "analytics",
+          "snapshot"
+        ],
+        [
+          "snapshot",
+          "llm"
+        ],
+        [
+          "search",
+          "untrusted"
+        ],
+        [
+          "untrusted",
+          "llm"
+        ],
+        [
+          "adk",
+          "llm"
+        ],
+        [
+          "llm",
           "log"
+        ],
+        [
+          "llm",
+          "out_gate"
+        ],
+        [
+          "out_gate",
+          "answer"
         ]
       ]
     },
     "steps": [
       {
-        "title": "A safety policy at runtime",
-        "body": "Requests for credentials, prompt-injection attempts, and any write tool are blocked by a runtime policy, not by a line in the system prompt.",
+        "title": "A safety gate with no model in it",
+        "body": "Regular-expression rules refuse prompt injection, credential requests, and questions about other people's data before any LLM or tool runs.",
         "nodes": [
-          "question",
-          "safety"
+          "q",
+          "in_gate",
+          "refuse"
         ],
         "edges": [
           [
-            "question",
-            "safety"
-          ]
-        ]
-      },
-      {
-        "title": "ADK routes, LangGraph executes",
-        "body": "A Google ADK orchestrator routes each question to a LangGraph workflow built for that kind of task.",
-        "nodes": [
-          "adk",
-          "graph"
-        ],
-        "edges": [
-          [
-            "safety",
-            "adk"
+            "q",
+            "in_gate"
           ],
           [
-            "adk",
-            "graph"
+            "in_gate",
+            "refuse"
           ]
         ]
       },
       {
-        "title": "Read-only tools over MCP",
-        "body": "Kite (Zerodha) MCP tools load as LangChain tools through langchain-mcp-adapters. 16 read-only tools are verified live; live web search covers market questions.",
-        "nodes": [
-          "kite",
-          "web"
-        ],
-        "edges": [
-          [
-            "graph",
-            "kite"
-          ],
-          [
-            "graph",
-            "web"
-          ]
-        ]
-      },
-      {
-        "title": "A router with a fallback",
-        "body": "NVIDIA NIM is the primary model and Gemini Flash takes over when it fails. Every LLM call is logged to SQLite.",
+        "title": "Deterministic routing",
+        "body": "Intent is matched in code and sent to a LangGraph workflow: portfolio or research. Only questions the router cannot place go to a Google ADK agent with four sub-agents.",
         "nodes": [
           "router",
-          "log"
+          "adk"
         ],
         "edges": [
           [
-            "graph",
+            "in_gate",
             "router"
           ],
           [
             "router",
+            "adk"
+          ]
+        ]
+      },
+      {
+        "title": "Memory, then a degradable login",
+        "body": "Long-term memory loads with privacy levels and writes only after the user confirms. If the brokerage login has expired, the workflow takes a degraded branch instead of failing.",
+        "nodes": [
+          "memory",
+          "auth"
+        ],
+        "edges": [
+          [
+            "router",
+            "memory"
+          ],
+          [
+            "memory",
+            "auth"
+          ]
+        ]
+      },
+      {
+        "title": "Read-only by policy",
+        "body": "The brokerage is reached over MCP, with its tools loaded as LangChain tools. An allow-list admits 16 read-only tools; trading tools and anything unknown are blocked inside the client.",
+        "nodes": [
+          "kite"
+        ],
+        "edges": [
+          [
+            "auth",
+            "kite"
+          ]
+        ]
+      },
+      {
+        "title": "Numbers come from code",
+        "body": "Allocation, concentration, and risk are computed without a model, and every section of the snapshot is tagged with where it came from: brokerage data, web search, or a deterministic calculation.",
+        "nodes": [
+          "analytics",
+          "snapshot"
+        ],
+        "edges": [
+          [
+            "kite",
+            "analytics"
+          ],
+          [
+            "analytics",
+            "snapshot"
+          ]
+        ]
+      },
+      {
+        "title": "Web results are data, not instructions",
+        "body": "Research questions search the web with a fallback provider, and results are fenced as untrusted external data before they reach the model.",
+        "nodes": [
+          "search",
+          "untrusted"
+        ],
+        "edges": [
+          [
+            "router",
+            "search"
+          ],
+          [
+            "search",
+            "untrusted"
+          ]
+        ]
+      },
+      {
+        "title": "Explain, log, and check the output",
+        "body": "The LLM router falls back from NVIDIA NIM to Gemini Flash and logs every call with the reason for any fallback. The model only explains numbers it was given, and a final check withholds anything that looks like a leaked secret.",
+        "nodes": [
+          "llm",
+          "log",
+          "out_gate",
+          "answer"
+        ],
+        "edges": [
+          [
+            "snapshot",
+            "llm"
+          ],
+          [
+            "untrusted",
+            "llm"
+          ],
+          [
+            "adk",
+            "llm"
+          ],
+          [
+            "llm",
             "log"
+          ],
+          [
+            "llm",
+            "out_gate"
+          ],
+          [
+            "out_gate",
+            "answer"
           ]
         ]
       }
@@ -842,25 +3179,57 @@
     "results": [
       {
         "value": "16",
-        "label": "Read-only MCP tools verified live"
+        "label": "Read-only brokerage tools, verified live"
+      },
+      {
+        "value": "343",
+        "label": "Tests (341 unit, 2 integration)"
+      },
+      {
+        "value": "0",
+        "label": "LLM calls in the input safety gate"
       },
       {
         "value": "2",
-        "label": "LLM providers with automatic fallback"
-      },
-      {
-        "value": "Read-only",
-        "label": "Brokerage access; write tools blocked by the runtime policy"
+        "label": "LLM providers with logged fallback"
       }
     ],
     "decisions": [
-      "Safety enforced as code at runtime, with an offline DeepEval-style evaluation harness and a RAMPART-style red-team suite to test it.",
-      "MCP tools adapted into LangChain instead of re-implementing the brokerage API, so the tool surface stays read-only by construction."
+      "Route in code; use the ADK agent only as a fallback for unmatched questions.",
+      "Enforce read-only access in the tool policy, not the prompt.",
+      "Treat a failed brokerage login as a degraded answer, not an error."
     ],
     "links": [
       {
         "label": "Source",
         "href": "https://github.com/selvin-paul-raj/Finn-Advisor"
+      }
+    ],
+    "keywords": [
+      "AI financial advisor",
+      "MCP client",
+      "LangGraph workflows",
+      "LLM guardrails",
+      "read-only tool policy",
+      "provenance"
+    ],
+    "deepDive": [
+      {
+        "heading": "The LLM explains, never calculates",
+        "body": "Every figure in an answer was computed in code and carries a provenance tag, so a number can be traced to brokerage data, a search result, or a calculation, and the model has nothing to invent."
+      },
+      {
+        "heading": "Safety as code, with honest limits",
+        "body": "Injection and credential requests are blocked by rules, write tools by the MCP tool policy, and leaked secrets by an output screen.",
+        "points": [
+          "Buy and sell advice is limited only by the system prompt",
+          "Web content is fenced as data, but not scanned for instructions",
+          "The offline eval set has 4 cases and the red-team suite 10, run through a mock evaluator"
+        ]
+      },
+      {
+        "heading": "Room to grow into A2A",
+        "body": "The ADK agent calls LangGraph workflows directly in Python, behind an interface that can later become an agent-to-agent call without changing the workflows."
       }
     ]
   },
@@ -868,69 +3237,218 @@
     "slug": "chunklab",
     "projectTitle": "ChunkLab: RAG Engineering Playground",
     "title": "ChunkLab",
-    "subtitle": "A RAG benchmarking lab: compare chunking, retrieval, and reranking strategies side by side on your own text.",
+    "subtitle": "A Streamlit lab for comparing chunking, retrieval, and reranking strategies side by side, scored with standard IR metrics on a built-in labelled set.",
     "role": "Designed and built",
     "org": "Independent project",
     "period": "Jul 2026",
     "visibility": "Public repo · live demo",
     "stack": [
       "Python",
-      "BM25",
-      "sentence-transformers",
-      "Chonkie",
       "Streamlit",
+      "Chonkie",
+      "LiteParse",
+      "sentence-transformers",
+      "BM25",
+      "tree-sitter",
       "pytest"
     ],
-    "problem": "RAG quality depends on choices made before the model sees anything: how text is chunked, how it is retrieved, how results are reranked. Those choices are usually made by habit, not by measurement.",
+    "problem": "RAG quality is decided before the model sees anything: by how text is chunked, embedded, retrieved, and reranked. Those choices are usually made by habit, and the effect of changing one is rarely measured.",
     "diagram": {
-      "width": 400,
-      "height": 470,
+      "width": 500,
+      "height": 830,
+      "clusters": [
+        {
+          "id": "core",
+          "label": "Core",
+          "x": 14,
+          "y": 14,
+          "w": 472,
+          "h": 160,
+          "sub": "registry per stage"
+        },
+        {
+          "id": "ingestion",
+          "label": "Chunk and embed",
+          "x": 14,
+          "y": 190,
+          "w": 214,
+          "h": 300
+        },
+        {
+          "id": "ranking",
+          "label": "Retrieve and rerank",
+          "x": 238,
+          "y": 190,
+          "w": 248,
+          "h": 300
+        },
+        {
+          "id": "eval",
+          "label": "Evaluate",
+          "x": 14,
+          "y": 506,
+          "w": 472,
+          "h": 310
+        }
+      ],
       "nodes": [
         {
-          "id": "text",
-          "label": "Your text",
-          "x": 150,
-          "y": 40
+          "id": "app",
+          "label": "Streamlit app",
+          "x": 210,
+          "y": 60,
+          "kind": "io",
+          "sub": "sidebar router",
+          "w": 160
+        },
+        {
+          "id": "reg",
+          "label": "Strategy registry",
+          "x": 210,
+          "y": 128,
+          "kind": "store",
+          "sub": "@register plugins",
+          "w": 170
+        },
+        {
+          "id": "upload",
+          "label": "File or text",
+          "x": 120,
+          "y": 236,
+          "kind": "io",
+          "w": 150
+        },
+        {
+          "id": "parse",
+          "label": "Preprocess",
+          "x": 120,
+          "y": 306,
+          "kind": "process",
+          "sub": "LiteParse · Chonkie",
+          "w": 160
         },
         {
           "id": "chunk",
-          "label": "Chunking",
-          "sub": "10 strategies",
-          "x": 150,
-          "y": 120
+          "label": "Chunkers",
+          "x": 120,
+          "y": 376,
+          "kind": "fanout",
+          "sub": "11 strategies",
+          "w": 150
         },
         {
           "id": "embed",
-          "label": "Embeddings",
-          "sub": "dense + sparse",
-          "x": 150,
-          "y": 200
+          "label": "Embedders",
+          "x": 120,
+          "y": 446,
+          "kind": "process",
+          "sub": "MiniLM · TF-IDF",
+          "w": 150
+        },
+        {
+          "id": "docs",
+          "label": "Docs + query",
+          "x": 340,
+          "y": 236,
+          "kind": "io",
+          "sub": "pasted in",
+          "w": 150
         },
         {
           "id": "retrieve",
-          "label": "Retrieval",
+          "label": "Retrievers",
+          "x": 340,
+          "y": 306,
+          "kind": "fanout",
           "sub": "7 strategies",
-          "x": 150,
-          "y": 280
+          "w": 150
+        },
+        {
+          "id": "rrf",
+          "label": "Hybrid RRF",
+          "x": 340,
+          "y": 376,
+          "kind": "process",
+          "sub": "BM25 + dense, k=60",
+          "w": 150
         },
         {
           "id": "rerank",
-          "label": "Reranking",
+          "label": "Rerankers",
+          "x": 340,
+          "y": 446,
+          "kind": "fanout",
           "sub": "6 strategies",
-          "x": 150,
-          "y": 360
+          "w": 150
         },
         {
-          "id": "metrics",
+          "id": "intrinsic",
+          "label": "Intrinsic evals",
+          "x": 120,
+          "y": 560,
+          "kind": "process",
+          "sub": "Spearman · ARI",
+          "w": 160
+        },
+        {
+          "id": "impact",
+          "label": "Rerank impact",
+          "x": 340,
+          "y": 560,
+          "kind": "process",
+          "sub": "before vs after",
+          "w": 150
+        },
+        {
+          "id": "qrels",
+          "label": "Built-in qrels",
+          "x": 120,
+          "y": 630,
+          "kind": "store",
+          "sub": "6 docs · 3 queries",
+          "w": 160
+        },
+        {
+          "id": "extrinsic",
           "label": "IR metrics",
-          "sub": "P@k · R@k · MRR · MAP · NDCG",
-          "x": 150,
-          "y": 430
+          "x": 340,
+          "y": 630,
+          "kind": "process",
+          "sub": "P@k R@k MRR MAP NDCG",
+          "w": 170
+        },
+        {
+          "id": "compare",
+          "label": "Metrics Explorer",
+          "x": 210,
+          "y": 710,
+          "kind": "process",
+          "sub": "best per metric",
+          "w": 170
+        },
+        {
+          "id": "obs",
+          "label": "Run log",
+          "x": 210,
+          "y": 780,
+          "kind": "store",
+          "sub": "stage · strategy · latency",
+          "w": 170
         }
       ],
       "edges": [
         [
-          "text",
+          "app",
+          "reg"
+        ],
+        [
+          "upload",
+          "parse",
+          "conditional",
+          "file"
+        ],
+        [
+          "parse",
           "chunk"
         ],
         [
@@ -938,41 +3456,86 @@
           "embed"
         ],
         [
-          "embed",
+          "docs",
           "retrieve"
         ],
         [
           "retrieve",
+          "rrf",
+          "conditional",
+          "hybrid"
+        ],
+        [
+          "rrf",
           "rerank"
         ],
         [
+          "embed",
+          "intrinsic"
+        ],
+        [
           "rerank",
-          "metrics"
+          "impact"
+        ],
+        [
+          "qrels",
+          "impact"
+        ],
+        [
+          "qrels",
+          "extrinsic"
+        ],
+        [
+          "extrinsic",
+          "compare"
+        ],
+        [
+          "compare",
+          "obs"
         ]
       ]
     },
     "steps": [
       {
-        "title": "Ten ways to cut a document",
-        "body": "The same text goes through 10 chunking strategies, so their effect on retrieval can be compared directly.",
+        "title": "A registry per stage",
+        "body": "Every strategy registers itself with a decorator, and a duplicate name raises an error. Adding a technique is one new file, and it shows up in every comparison for its stage.",
         "nodes": [
-          "text",
-          "chunk"
+          "app",
+          "reg"
         ],
         "edges": [
           [
-            "text",
-            "chunk"
+            "app",
+            "reg"
           ]
         ]
       },
       {
-        "title": "Dense and sparse",
-        "body": "Chunks are embedded both ways, dense vectors for meaning and sparse representations for exact terms.",
+        "title": "Messy files to clean text",
+        "body": "Uploads are converted to Markdown with LiteParse, or cleaned with Chonkie's text, Markdown, and table preprocessors.",
         "nodes": [
+          "upload",
+          "parse"
+        ],
+        "edges": [
+          [
+            "upload",
+            "parse"
+          ]
+        ]
+      },
+      {
+        "title": "Eleven ways to cut a document",
+        "body": "Character, recursive, token, semantic, embedding-semantic, Markdown, table, and tree-sitter code splitting, plus three Chonkie chunkers, each with its boundaries drawn on the text.",
+        "nodes": [
+          "chunk",
           "embed"
         ],
         "edges": [
+          [
+            "parse",
+            "chunk"
+          ],
           [
             "chunk",
             "embed"
@@ -980,40 +3543,79 @@
         ]
       },
       {
-        "title": "Seven retrievers",
-        "body": "Keyword, boolean, TF-IDF, BM25, dense, hybrid with reciprocal rank fusion, and MMR, all over the same chunks.",
+        "title": "Seven retrievers on the same documents",
+        "body": "Keyword, boolean, TF-IDF, BM25, dense, hybrid, and MMR rank the same pasted documents. Hybrid fuses BM25 and dense results with reciprocal rank fusion.",
         "nodes": [
-          "retrieve"
+          "docs",
+          "retrieve",
+          "rrf"
         ],
         "edges": [
           [
-            "embed",
+            "docs",
             "retrieve"
+          ],
+          [
+            "retrieve",
+            "rrf"
           ]
         ]
       },
       {
-        "title": "Reranked, then measured",
-        "body": "Six reranking strategies run on top, and every combination is scored with Precision@k, Recall@k, MRR, MAP, and NDCG@k, including the before and after impact of reranking.",
+        "title": "Rerank, then prove it helped",
+        "body": "Six rerankers run on the candidates, and MRR and NDCG are compared before and after reranking on the built-in labelled set.",
         "nodes": [
           "rerank",
-          "metrics"
+          "impact",
+          "qrels"
         ],
         "edges": [
           [
-            "retrieve",
+            "rrf",
             "rerank"
           ],
           [
             "rerank",
-            "metrics"
+            "impact"
+          ],
+          [
+            "qrels",
+            "impact"
+          ]
+        ]
+      },
+      {
+        "title": "One yardstick per stage",
+        "body": "Embeddings get intrinsic evals (Spearman correlation, analogies, clustering ARI); retrieval gets P@k, R@k, MRR, MAP, and NDCG. The Metrics Explorer names the best strategy per metric, and every run is logged with its latency.",
+        "nodes": [
+          "intrinsic",
+          "extrinsic",
+          "compare",
+          "obs"
+        ],
+        "edges": [
+          [
+            "embed",
+            "intrinsic"
+          ],
+          [
+            "qrels",
+            "extrinsic"
+          ],
+          [
+            "extrinsic",
+            "compare"
+          ],
+          [
+            "compare",
+            "obs"
           ]
         ]
       }
     ],
     "results": [
       {
-        "value": "10",
+        "value": "11",
         "label": "Chunking strategies"
       },
       {
@@ -1025,13 +3627,17 @@
         "label": "Reranking strategies"
       },
       {
+        "value": "5",
+        "label": "Evaluators across stages"
+      },
+      {
         "value": "95",
         "label": "pytest tests"
       }
     ],
     "decisions": [
-      "Every stage is a self-registering plugin registry, so adding a strategy is one file and it shows up in every comparison.",
-      "Standard IR metrics instead of eyeballing answers, so a change in chunking shows up as a number."
+      "Self-registering plugins with a duplicate-name check, so the registry stays the single list of strategies.",
+      "Deterministic, model-free approximations for speed and reproducibility, disclosed rather than hidden."
     ],
     "links": [
       {
@@ -1041,6 +3647,803 @@
       {
         "label": "Live demo",
         "href": "https://chunklab-spr.streamlit.app"
+      }
+    ],
+    "keywords": [
+      "RAG chunking strategies",
+      "retrieval evaluation",
+      "BM25 hybrid RRF",
+      "reranking",
+      "MRR NDCG",
+      "plugin registry"
+    ],
+    "deepDive": [
+      {
+        "heading": "What is real and what is simulated",
+        "body": "The lab runs with no model downloads, which means two components are approximations, said plainly:",
+        "points": [
+          "The 'dense' retriever uses a 64-dimension hash embedding, not a neural model",
+          "The cross-encoder reranker is simulated",
+          "IR metrics run on a built-in set of 6 documents and 3 queries, not on your own documents"
+        ]
+      },
+      {
+        "heading": "Comparisons within a stage",
+        "body": "Each page compares strategies for one stage at a time. Retrieval works on pasted documents rather than the chunker's output, so the lab answers 'which retriever is best here', not 'which full pipeline is best'."
+      }
+    ]
+  },
+  {
+    "slug": "instagram-mcp",
+    "projectTitle": "Instagram MCP Server",
+    "title": "Instagram MCP Server",
+    "subtitle": "An MCP server that gives Claude and ChatGPT 36 allow-listed Instagram actions through Composio, built to keep working when OAuth is unfinished or the upstream is down.",
+    "role": "Designed and built",
+    "org": "Independent project",
+    "period": "2026",
+    "visibility": "Public repo",
+    "stack": [
+      "Python",
+      "MCP (FastMCP)",
+      "Composio",
+      "OAuth 2.0",
+      "Pydantic",
+      "structlog",
+      "Docker",
+      "Alpic"
+    ],
+    "keywords": [
+      "MCP server",
+      "Model Context Protocol",
+      "Instagram Graph API",
+      "Composio",
+      "streamable HTTP",
+      "AI agent tools"
+    ],
+    "problem": "Claude and ChatGPT cannot act on an Instagram Business account (posts, carousels, comments, DMs, insights) without Graph API OAuth and glue code for every endpoint. The server has to expose those actions safely, on a serverless runtime with a read-only filesystem, and stay usable when the OAuth connection is not finished.",
+    "diagram": {
+      "width": 500,
+      "height": 720,
+      "clusters": [
+        {
+          "id": "startup",
+          "label": "Startup",
+          "x": 330,
+          "y": 94,
+          "w": 156,
+          "h": 140
+        },
+        {
+          "id": "discovery",
+          "label": "Discovery",
+          "x": 14,
+          "y": 250,
+          "w": 196,
+          "h": 230
+        },
+        {
+          "id": "exec",
+          "label": "Execution",
+          "x": 220,
+          "y": 250,
+          "w": 266,
+          "h": 300
+        },
+        {
+          "id": "errors",
+          "label": "Errors and stats",
+          "x": 14,
+          "y": 566,
+          "w": 472,
+          "h": 140
+        }
+      ],
+      "nodes": [
+        {
+          "id": "client",
+          "label": "Claude / ChatGPT",
+          "x": 210,
+          "y": 60,
+          "kind": "io",
+          "w": 160
+        },
+        {
+          "id": "http",
+          "label": "MCP endpoint",
+          "x": 210,
+          "y": 128,
+          "kind": "process",
+          "sub": "streamable HTTP",
+          "w": 150
+        },
+        {
+          "id": "boot",
+          "label": "Startup",
+          "x": 408,
+          "y": 140,
+          "kind": "process",
+          "sub": "build server",
+          "w": 130
+        },
+        {
+          "id": "oauth",
+          "label": "OAuth connect",
+          "x": 408,
+          "y": 204,
+          "kind": "hitl",
+          "sub": "waits up to 5 min",
+          "w": 130
+        },
+        {
+          "id": "list",
+          "label": "list_tools",
+          "x": 112,
+          "y": 300,
+          "kind": "process",
+          "sub": "runtime schemas",
+          "w": 160
+        },
+        {
+          "id": "discover",
+          "label": "Composio discovery",
+          "x": 112,
+          "y": 370,
+          "kind": "tool",
+          "sub": "36 allow-listed",
+          "w": 170
+        },
+        {
+          "id": "cache",
+          "label": "Schema cache",
+          "x": 112,
+          "y": 440,
+          "kind": "store",
+          "sub": "last-known fallback",
+          "w": 160
+        },
+        {
+          "id": "route",
+          "label": "Dispatch",
+          "x": 340,
+          "y": 300,
+          "kind": "gate",
+          "w": 140
+        },
+        {
+          "id": "exec",
+          "label": "Composio execute",
+          "x": 340,
+          "y": 370,
+          "kind": "tool",
+          "sub": "writes never retried",
+          "w": 160
+        },
+        {
+          "id": "ig",
+          "label": "Instagram Graph API",
+          "x": 340,
+          "y": 440,
+          "kind": "io",
+          "w": 170
+        },
+        {
+          "id": "util",
+          "label": "Utility tools",
+          "x": 340,
+          "y": 510,
+          "kind": "process",
+          "sub": "ping · health · version",
+          "w": 170
+        },
+        {
+          "id": "envelope",
+          "label": "Error envelope",
+          "x": 210,
+          "y": 616,
+          "kind": "gate",
+          "w": 150
+        },
+        {
+          "id": "stats",
+          "label": "Call stats",
+          "x": 210,
+          "y": 676,
+          "kind": "store",
+          "sub": "per tool",
+          "w": 150
+        }
+      ],
+      "edges": [
+        [
+          "client",
+          "http"
+        ],
+        [
+          "boot",
+          "oauth",
+          "hitl",
+          "not connected"
+        ],
+        [
+          "http",
+          "list"
+        ],
+        [
+          "http",
+          "route"
+        ],
+        [
+          "list",
+          "discover"
+        ],
+        [
+          "discover",
+          "cache"
+        ],
+        [
+          "cache",
+          "list",
+          "retry",
+          "fallback"
+        ],
+        [
+          "route",
+          "exec",
+          "conditional",
+          "action"
+        ],
+        [
+          "route",
+          "util",
+          "bypass",
+          "utility"
+        ],
+        [
+          "exec",
+          "ig"
+        ],
+        [
+          "ig",
+          "envelope"
+        ],
+        [
+          "envelope",
+          "stats"
+        ]
+      ]
+    },
+    "steps": [
+      {
+        "title": "One HTTP endpoint",
+        "body": "FastMCP serves the MCP protocol over streamable HTTP on the port the serverless runtime provides.",
+        "nodes": [
+          "client",
+          "http"
+        ],
+        "edges": [
+          [
+            "client",
+            "http"
+          ]
+        ]
+      },
+      {
+        "title": "OAuth that does not block startup",
+        "body": "If the Instagram account is not connected yet, the server starts the OAuth flow, logs the redirect URL, and waits up to five minutes. On timeout it boots anyway, so the utility tools still work.",
+        "nodes": [
+          "boot",
+          "oauth"
+        ],
+        "edges": [
+          [
+            "boot",
+            "oauth"
+          ]
+        ]
+      },
+      {
+        "title": "Tool schemas discovered at runtime",
+        "body": "A low-level list_tools handler maps Composio's JSON schemas straight into MCP tools, limited to an allow-list of 36 actions. If discovery fails, the last known list is served from cache.",
+        "nodes": [
+          "list",
+          "discover",
+          "cache"
+        ],
+        "edges": [
+          [
+            "http",
+            "list"
+          ],
+          [
+            "list",
+            "discover"
+          ],
+          [
+            "discover",
+            "cache"
+          ],
+          [
+            "cache",
+            "list"
+          ]
+        ]
+      },
+      {
+        "title": "Writes are never retried",
+        "body": "Any tool name that is not a utility passes through as a Composio action. Discovery retries with backoff, but writes do not: retrying after an unclear error could publish the same post twice.",
+        "nodes": [
+          "route",
+          "exec",
+          "ig",
+          "util"
+        ],
+        "edges": [
+          [
+            "http",
+            "route"
+          ],
+          [
+            "route",
+            "exec"
+          ],
+          [
+            "exec",
+            "ig"
+          ],
+          [
+            "route",
+            "util"
+          ]
+        ]
+      },
+      {
+        "title": "Errors as results, not crashes",
+        "body": "Every exception comes back as an MCP error result instead of breaking the session, and each call is counted in per-tool stats exposed by the health tool.",
+        "nodes": [
+          "envelope",
+          "stats"
+        ],
+        "edges": [
+          [
+            "ig",
+            "envelope"
+          ],
+          [
+            "envelope",
+            "stats"
+          ]
+        ]
+      }
+    ],
+    "results": [
+      {
+        "value": "36",
+        "label": "Allow-listed Instagram actions"
+      },
+      {
+        "value": "40",
+        "label": "MCP tools including 4 utilities"
+      },
+      {
+        "value": "27",
+        "label": "Tests"
+      },
+      {
+        "value": "5 min",
+        "label": "OAuth wait before booting anyway"
+      }
+    ],
+    "deepDive": [
+      {
+        "heading": "Why low-level handlers",
+        "body": "Decorator-based tools need their schemas at import time. Here the schemas only exist after Composio discovery, so the server implements list_tools and call_tool directly and maps schemas on the fly."
+      },
+      {
+        "heading": "Built for a read-only sandbox",
+        "body": "The serverless runtime ignores the Dockerfile and mounts a read-only home directory, so anything the server writes goes to a temporary directory and falls back to memory if that fails too."
+      },
+      {
+        "heading": "The allow-list is the security boundary",
+        "body": "Both the Composio session and discovery are limited to the same 36 actions, so a client cannot reach an Instagram endpoint that was not deliberately exposed."
+      }
+    ],
+    "decisions": [
+      "Retry reads, never writes.",
+      "Boot with partial capability rather than fail when OAuth is incomplete.",
+      "One allow-list shared by session and discovery."
+    ],
+    "links": [
+      {
+        "label": "Source",
+        "href": "https://github.com/selvin-paul-raj/Instagram-Alpic-mcp"
+      }
+    ]
+  },
+  {
+    "slug": "outlook-cli",
+    "projectTitle": "Outlook CLI",
+    "title": "Outlook CLI",
+    "subtitle": "An npm CLI and stdio MCP server for Outlook mail and calendar over Microsoft Graph: one OAuth login, one tool registry shared by humans and agents.",
+    "role": "Extended and published",
+    "org": "Independent project",
+    "period": "Apr 2026",
+    "visibility": "Public repo · npm",
+    "stack": [
+      "Node.js",
+      "MCP SDK",
+      "Microsoft Graph",
+      "OAuth 2.0",
+      "jest",
+      "npm"
+    ],
+    "keywords": [
+      "Outlook CLI",
+      "MCP server",
+      "Microsoft Graph API",
+      "npm package",
+      "email automation for AI agents"
+    ],
+    "problem": "Managing Outlook from a terminal or an agent usually means an OAuth dance on every run and output written only for humans. The tool needed one login, reusable tokens, and output an agent can parse, with the same behaviour whether a person or an assistant is calling it.",
+    "diagram": {
+      "width": 500,
+      "height": 800,
+      "clusters": [
+        {
+          "id": "interfaces",
+          "label": "Interfaces",
+          "x": 14,
+          "y": 14,
+          "w": 472,
+          "h": 222
+        },
+        {
+          "id": "core",
+          "label": "Core",
+          "x": 14,
+          "y": 252,
+          "w": 472,
+          "h": 132
+        },
+        {
+          "id": "auth",
+          "label": "Auth",
+          "x": 14,
+          "y": 400,
+          "w": 472,
+          "h": 160
+        },
+        {
+          "id": "graph",
+          "label": "Graph",
+          "x": 14,
+          "y": 576,
+          "w": 472,
+          "h": 210
+        }
+      ],
+      "nodes": [
+        {
+          "id": "user",
+          "label": "Terminal user",
+          "x": 110,
+          "y": 60,
+          "kind": "io",
+          "w": 150
+        },
+        {
+          "id": "agent",
+          "label": "MCP client",
+          "x": 340,
+          "y": 60,
+          "kind": "io",
+          "w": 150
+        },
+        {
+          "id": "cli",
+          "label": "CLI",
+          "x": 110,
+          "y": 128,
+          "kind": "process",
+          "sub": "commands · doctor",
+          "w": 150
+        },
+        {
+          "id": "mcp",
+          "label": "MCP server",
+          "x": 340,
+          "y": 128,
+          "kind": "process",
+          "sub": "stdio",
+          "w": 150
+        },
+        {
+          "id": "render",
+          "label": "Output renderer",
+          "x": 110,
+          "y": 196,
+          "kind": "process",
+          "sub": "themes or --json/--ai",
+          "w": 160
+        },
+        {
+          "id": "registry",
+          "label": "Shared tool registry",
+          "x": 210,
+          "y": 296,
+          "kind": "fanout",
+          "sub": "21 tools, one source",
+          "w": 180
+        },
+        {
+          "id": "handlers",
+          "label": "Domain handlers",
+          "x": 210,
+          "y": 356,
+          "kind": "tool",
+          "sub": "mail · calendar · rules",
+          "w": 180
+        },
+        {
+          "id": "refresh",
+          "label": "Token valid?",
+          "x": 110,
+          "y": 450,
+          "kind": "gate",
+          "w": 140
+        },
+        {
+          "id": "authsrv",
+          "label": "OAuth login",
+          "x": 340,
+          "y": 450,
+          "kind": "hitl",
+          "sub": "one time, in browser",
+          "w": 150
+        },
+        {
+          "id": "tokens",
+          "label": "Token store",
+          "x": 110,
+          "y": 520,
+          "kind": "store",
+          "sub": "auto-refresh",
+          "w": 140
+        },
+        {
+          "id": "testmode",
+          "label": "Test mode?",
+          "x": 210,
+          "y": 626,
+          "kind": "gate",
+          "w": 140
+        },
+        {
+          "id": "graphc",
+          "label": "Graph client",
+          "x": 210,
+          "y": 692,
+          "kind": "process",
+          "w": 150
+        },
+        {
+          "id": "msgraph",
+          "label": "Microsoft Graph",
+          "x": 210,
+          "y": 756,
+          "kind": "io",
+          "w": 170
+        }
+      ],
+      "edges": [
+        [
+          "user",
+          "cli"
+        ],
+        [
+          "agent",
+          "mcp"
+        ],
+        [
+          "cli",
+          "render"
+        ],
+        [
+          "cli",
+          "registry"
+        ],
+        [
+          "mcp",
+          "registry"
+        ],
+        [
+          "registry",
+          "handlers",
+          "fanout"
+        ],
+        [
+          "handlers",
+          "refresh"
+        ],
+        [
+          "refresh",
+          "authsrv",
+          "hitl",
+          "first login"
+        ],
+        [
+          "refresh",
+          "tokens"
+        ],
+        [
+          "authsrv",
+          "tokens",
+          "hitl",
+          "save"
+        ],
+        [
+          "handlers",
+          "testmode"
+        ],
+        [
+          "testmode",
+          "graphc",
+          "conditional",
+          "live"
+        ],
+        [
+          "graphc",
+          "msgraph"
+        ]
+      ]
+    },
+    "steps": [
+      {
+        "title": "Two front doors, one behaviour",
+        "body": "The terminal CLI and the stdio MCP server both call the same frozen tool registry, so a command and the matching agent tool cannot drift apart.",
+        "nodes": [
+          "user",
+          "agent",
+          "cli",
+          "mcp",
+          "registry"
+        ],
+        "edges": [
+          [
+            "user",
+            "cli"
+          ],
+          [
+            "agent",
+            "mcp"
+          ],
+          [
+            "cli",
+            "registry"
+          ],
+          [
+            "mcp",
+            "registry"
+          ]
+        ]
+      },
+      {
+        "title": "Log in once",
+        "body": "The first call opens a delegated-permission OAuth flow in the browser and saves the tokens locally. Every later call reuses them and refreshes them when they expire.",
+        "nodes": [
+          "refresh",
+          "authsrv",
+          "tokens"
+        ],
+        "edges": [
+          [
+            "handlers",
+            "refresh"
+          ],
+          [
+            "refresh",
+            "authsrv"
+          ],
+          [
+            "authsrv",
+            "tokens"
+          ],
+          [
+            "refresh",
+            "tokens"
+          ]
+        ]
+      },
+      {
+        "title": "21 tools across four domains",
+        "body": "Mail (including attachments), calendar, folders, and inbox rules, each a handler behind the shared registry.",
+        "nodes": [
+          "handlers"
+        ],
+        "edges": [
+          [
+            "registry",
+            "handlers"
+          ]
+        ]
+      },
+      {
+        "title": "Graph, or a mock",
+        "body": "Every request goes through one Graph client, and a test-mode switch swaps in mock data so the suite runs without an account.",
+        "nodes": [
+          "testmode",
+          "graphc",
+          "msgraph"
+        ],
+        "edges": [
+          [
+            "handlers",
+            "testmode"
+          ],
+          [
+            "testmode",
+            "graphc"
+          ],
+          [
+            "graphc",
+            "msgraph"
+          ]
+        ]
+      },
+      {
+        "title": "Output for people and for agents",
+        "body": "The CLI renders themed tables for people and switches to machine-readable output with --json or --ai.",
+        "nodes": [
+          "render"
+        ],
+        "edges": [
+          [
+            "cli",
+            "render"
+          ]
+        ]
+      }
+    ],
+    "results": [
+      {
+        "value": "21",
+        "label": "MCP tools"
+      },
+      {
+        "value": "65",
+        "label": "jest tests"
+      },
+      {
+        "value": "2",
+        "label": "Front ends sharing one registry"
+      },
+      {
+        "value": "3",
+        "label": "Runtime dependencies"
+      }
+    ],
+    "deepDive": [
+      {
+        "heading": "Built on an existing server",
+        "body": "The project extends the open-source ryaker/outlook-mcp server. The additions here are the CLI front end, the shared tool registry, attachment handling, the jest test suite, and npm packaging."
+      },
+      {
+        "heading": "Publishing with checks",
+        "body": "Publishing runs the test suite and a dry-run pack first, so a broken build or a missing file never reaches npm."
+      }
+    ],
+    "decisions": [
+      "One registry for both interfaces, so humans and agents get identical behaviour.",
+      "Machine-readable output as a first-class mode, not an afterthought.",
+      "A deliberately small dependency surface: the MCP SDK, chalk, and dotenv."
+    ],
+    "links": [
+      {
+        "label": "Source",
+        "href": "https://github.com/selvin-paul-raj/outlook-cli"
+      },
+      {
+        "label": "npm",
+        "href": "https://www.npmjs.com/package/outlook-cli"
       }
     ]
   }

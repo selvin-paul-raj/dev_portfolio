@@ -16,6 +16,7 @@ export interface AskData {
     publications: Array<{ title: string; publisher: string; publication_date: string; description: string }>;
   };
   skills: { skills: Record<string, string[]> };
+  caseStudies?: Array<{ slug: string; title: string; problem: string; steps: Array<{ title: string; body: string }>; deepDive?: Array<{ heading: string; body: string }>; results: Array<{ value: string; label: string }> }>;
   profile: { name: string; summary: string; roleNote: string; location: string; email: string; openTo: readonly string[]; currentCompany: string; currentRole: string; education: string };
 }
 
@@ -92,6 +93,13 @@ export function buildDocs(data: AskData): Doc[] {
   data.recognition.publications.forEach((pub, i) => {
     docs.push({ id: `pub-${i}`, kind: "publication", title: `${pub.title} — ${pub.publisher}`, text: `Published research paper: ${pub.description} (${pub.publication_date})`, url: "/#recognition" });
   });
+
+  for (const c of data.caseStudies ?? []) {
+    const url = `/work/${c.slug}`;
+    docs.push({ id: `case-${c.slug}`, kind: "project", title: `${c.title} — case study`, text: `${c.problem} Results: ${c.results.map((r) => `${r.value} ${r.label}`).join("; ")}.`, url });
+    c.steps.forEach((s, i) => docs.push({ id: `case-${c.slug}-${i}`, kind: "project", title: `${c.title}: ${s.title}`, text: s.body, url }));
+    (c.deepDive ?? []).forEach((s, i) => docs.push({ id: `case-${c.slug}-d${i}`, kind: "project", title: `${c.title}: ${s.heading}`, text: s.body, url }));
+  }
 
   for (const [group, items] of Object.entries(data.skills.skills)) {
     if (group === "all" || !items.length) continue;
