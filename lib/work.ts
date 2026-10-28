@@ -49,6 +49,8 @@ export interface CaseStudy {
   diagram: { width: number; height: number; clusters?: DiagramCluster[]; nodes: DiagramNode[]; edges: Edge[] };
   steps: Array<{ title: string; body: string; nodes: string[]; edges: Edge[] }>;
   results: Array<{ value: string; label: string }>;
+  /** How the system is verified; absent keys are omitted, never padded. */
+  assurance?: Partial<Record<"harness" | "evals" | "guardrails" | "testing", string>>;
   /** In-depth sections below the walkthrough (state, failure handling, evaluation...). */
   deepDive?: Array<{ heading: string; body: string; points?: string[] }>;
   decisions: string[];

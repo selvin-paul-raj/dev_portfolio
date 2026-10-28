@@ -46,6 +46,7 @@ export interface CaseStudyData {
   steps: Array<{ title: string; body: string }>;
   results: Array<{ value: string; label: string }>;
   deepDive?: Array<{ heading: string; body: string; points?: string[] }>;
+  assurance?: Partial<Record<"harness" | "evals" | "guardrails" | "testing", string>>;
   decisions: string[];
   links: Array<{ label: string; href: string }>;
 }
@@ -63,6 +64,7 @@ function caseStudyView(c: CaseStudyData) {
     problem: c.problem,
     flow: c.steps.map((s, i) => ({ step: i + 1, title: s.title, detail: s.body })),
     results: c.results,
+    verifiedBy: c.assurance ?? {},
     inDepth: c.deepDive ?? [],
     decisions: c.decisions,
     links: c.links,

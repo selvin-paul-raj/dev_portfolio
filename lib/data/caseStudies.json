@@ -772,7 +772,871 @@
       "Interrupts plus a checkpointer instead of full autonomy: a person resolves the four expensive failure modes and the run resumes without starting over.",
       "Batch mode trades interactivity for throughput: no interrupts, failures recorded per row."
     ],
+    "links": [],
+    "assurance": {
+      "harness": "LangGraph manager graph over three subgraphs, typed state with merge reducers, a SQLite checkpointer for interrupt and resume, and per-stage model routing.",
+      "evals": "An evaluation framework is one of the ten core components; per-agent call statistics are saved for every session.",
+      "guardrails": "Personal data is masked before any model call; SQL is SELECT-only with a keyword blocklist and a dry run; four human-in-the-loop interrupts cover the expensive failure modes.",
+      "testing": "281 tests across 31 test files."
+    }
+  },
+  {
+    "slug": "akavizhi",
+    "projectTitle": "Akavizhi: Personal AI with Specialist Agents",
+    "title": "Akavizhi",
+    "subtitle": "A single-user personal AI: a two-stage router hands each request to one of nine specialist agents, and every consequential action has to match what the owner actually said.",
+    "role": "Designed and built",
+    "org": "Personal project",
+    "period": "2026",
+    "visibility": "Private repo",
+    "stack": [
+      "Next.js 16",
+      "React 19",
+      "TypeScript",
+      "Supabase + pgvector",
+      "Gemini (function calling)",
+      "Groq",
+      "zod",
+      "Vitest",
+      "Playwright"
+    ],
+    "keywords": [
+      "multi-agent personal assistant",
+      "agent router",
+      "prompt injection defense",
+      "tool calling",
+      "RAG pgvector",
+      "human confirmation"
+    ],
+    "problem": "A personal assistant that can read notes, send messages, and change data is only useful if it can act, and only safe if nothing it reads can make it act. Web pages, documents, and another agent's output can all carry instructions, so the harness cannot rely on the model to tell data from orders.",
+    "diagram": {
+      "width": 500,
+      "height": 970,
+      "clusters": [
+        {
+          "id": "entry",
+          "label": "Entry",
+          "x": 14,
+          "y": 14,
+          "w": 472,
+          "h": 150
+        },
+        {
+          "id": "routing",
+          "label": "Routing",
+          "x": 14,
+          "y": 178,
+          "w": 472,
+          "h": 100
+        },
+        {
+          "id": "agents",
+          "label": "Agents",
+          "x": 14,
+          "y": 352,
+          "w": 472,
+          "h": 230
+        },
+        {
+          "id": "guards",
+          "label": "Guards",
+          "x": 14,
+          "y": 596,
+          "w": 472,
+          "h": 176
+        },
+        {
+          "id": "data",
+          "label": "Data",
+          "x": 14,
+          "y": 786,
+          "w": 472,
+          "h": 170
+        }
+      ],
+      "nodes": [
+        {
+          "id": "msg",
+          "label": "Owner message",
+          "x": 210,
+          "y": 60,
+          "kind": "io",
+          "w": 160
+        },
+        {
+          "id": "gate",
+          "label": "Owner gate",
+          "x": 210,
+          "y": 128,
+          "kind": "gate",
+          "w": 150
+        },
+        {
+          "id": "rules",
+          "label": "Rule router",
+          "x": 110,
+          "y": 228,
+          "kind": "process",
+          "sub": "regex fast path",
+          "w": 150
+        },
+        {
+          "id": "router",
+          "label": "LLM dispatcher",
+          "x": 330,
+          "y": 228,
+          "kind": "llm",
+          "sub": "JSON, temp 0",
+          "w": 150
+        },
+        {
+          "id": "agents",
+          "label": "9 specialists",
+          "x": 210,
+          "y": 400,
+          "kind": "fanout",
+          "sub": "scoped tool subsets",
+          "w": 170
+        },
+        {
+          "id": "loop",
+          "label": "Tool loop",
+          "x": 210,
+          "y": 470,
+          "kind": "llm",
+          "sub": "≤ 6 steps · tool budget",
+          "w": 170
+        },
+        {
+          "id": "delegate",
+          "label": "ask_agent",
+          "x": 405,
+          "y": 400,
+          "kind": "process",
+          "sub": "one level deep",
+          "w": 130
+        },
+        {
+          "id": "answer",
+          "label": "Streamed answer",
+          "x": 405,
+          "y": 548,
+          "kind": "io",
+          "sub": "numbered sources",
+          "w": 140
+        },
+        {
+          "id": "destr",
+          "label": "Destructive deny",
+          "x": 210,
+          "y": 640,
+          "kind": "gate",
+          "w": 160
+        },
+        {
+          "id": "intent",
+          "label": "Owner intent?",
+          "x": 210,
+          "y": 712,
+          "kind": "gate",
+          "w": 160
+        },
+        {
+          "id": "confirm",
+          "label": "Confirm deletes",
+          "x": 405,
+          "y": 712,
+          "kind": "hitl",
+          "sub": "ask, then confirm",
+          "w": 130
+        },
+        {
+          "id": "tools",
+          "label": "85 tools",
+          "x": 210,
+          "y": 834,
+          "kind": "tool",
+          "sub": "per-run budget",
+          "w": 160
+        },
+        {
+          "id": "rag",
+          "label": "pgvector brain",
+          "x": 110,
+          "y": 912,
+          "kind": "store",
+          "sub": "768-d · word fallback",
+          "w": 160
+        },
+        {
+          "id": "safefetch",
+          "label": "SSRF-safe fetch",
+          "x": 340,
+          "y": 912,
+          "kind": "gate",
+          "w": 150
+        }
+      ],
+      "edges": [
+        [
+          "msg",
+          "gate"
+        ],
+        [
+          "gate",
+          "rules"
+        ],
+        [
+          "rules",
+          "router",
+          "conditional",
+          "no match"
+        ],
+        [
+          "rules",
+          "agents"
+        ],
+        [
+          "router",
+          "agents"
+        ],
+        [
+          "agents",
+          "loop"
+        ],
+        [
+          "loop",
+          "delegate",
+          "fanout",
+          "colleague"
+        ],
+        [
+          "loop",
+          "answer"
+        ],
+        [
+          "loop",
+          "destr"
+        ],
+        [
+          "destr",
+          "intent"
+        ],
+        [
+          "intent",
+          "tools",
+          "conditional",
+          "matches"
+        ],
+        [
+          "tools",
+          "confirm",
+          "hitl",
+          "delete"
+        ],
+        [
+          "tools",
+          "rag"
+        ],
+        [
+          "tools",
+          "safefetch"
+        ]
+      ]
+    },
+    "steps": [
+      {
+        "title": "One owner, one gate",
+        "body": "Every page and API route sits behind an owner session; only a short list of paths is public. There is no multi-user surface to get wrong.",
+        "nodes": [
+          "msg",
+          "gate"
+        ],
+        "edges": [
+          [
+            "msg",
+            "gate"
+          ]
+        ]
+      },
+      {
+        "title": "Two-stage routing",
+        "body": "Pattern rules catch obvious intents and follow-ups first, which is fast and free. Anything else goes to a small LLM dispatcher that must return a schema-validated agent name, falling back to the knowledge agent.",
+        "nodes": [
+          "rules",
+          "router"
+        ],
+        "edges": [
+          [
+            "gate",
+            "rules"
+          ],
+          [
+            "rules",
+            "router"
+          ]
+        ]
+      },
+      {
+        "title": "Nine specialists, each with its own tools",
+        "body": "Each agent sees only the tools for its domain. A function-calling loop runs at most six steps with a per-run tool budget, and if a model stalls for eight seconds the loop moves to the next model.",
+        "nodes": [
+          "agents",
+          "loop",
+          "answer"
+        ],
+        "edges": [
+          [
+            "rules",
+            "agents"
+          ],
+          [
+            "router",
+            "agents"
+          ],
+          [
+            "agents",
+            "loop"
+          ],
+          [
+            "loop",
+            "answer"
+          ]
+        ]
+      },
+      {
+        "title": "Delegation without escalation",
+        "body": "An agent can ask one colleague for help, one level deep. Delegated runs can never call destructive tools, because a colleague's instructions may contain text from the web.",
+        "nodes": [
+          "delegate",
+          "destr"
+        ],
+        "edges": [
+          [
+            "loop",
+            "delegate"
+          ],
+          [
+            "loop",
+            "destr"
+          ]
+        ]
+      },
+      {
+        "title": "The owner's words, not the model's",
+        "body": "A consequential tool (delete, message, call, update, web task) only runs when the owner's own words in this turn ask for that action. Tool output is labelled as data in the system rules, but the check does not depend on the model obeying them.",
+        "nodes": [
+          "intent",
+          "tools"
+        ],
+        "edges": [
+          [
+            "destr",
+            "intent"
+          ],
+          [
+            "intent",
+            "tools"
+          ]
+        ]
+      },
+      {
+        "title": "Ask before deleting",
+        "body": "Deletes ask once and run only after the owner says yes. A guest mode limits the assistant to read-only tools and saves nothing.",
+        "nodes": [
+          "confirm"
+        ],
+        "edges": [
+          [
+            "tools",
+            "confirm"
+          ]
+        ]
+      },
+      {
+        "title": "Retrieval and fetching that fail safely",
+        "body": "Answers cite numbered sources from a pgvector store, and fall back to multilingual word search, Tamil included, when embeddings are unavailable. Every outbound fetch blocks private addresses, pins DNS, and rechecks each redirect.",
+        "nodes": [
+          "rag",
+          "safefetch"
+        ],
+        "edges": [
+          [
+            "tools",
+            "rag"
+          ],
+          [
+            "tools",
+            "safefetch"
+          ]
+        ]
+      }
+    ],
+    "results": [
+      {
+        "value": "9",
+        "label": "Specialist agents with scoped tools"
+      },
+      {
+        "value": "85",
+        "label": "Tools across 11 domains"
+      },
+      {
+        "value": "6",
+        "label": "Maximum steps per tool loop"
+      },
+      {
+        "value": "155",
+        "label": "Tests (151 unit, 4 end-to-end)"
+      }
+    ],
+    "assurance": {
+      "harness": "Rule router plus an LLM dispatcher into nine scoped specialists; a six-step function-calling loop with one-level delegation, a tool budget, a stall-timeout model fallback, and a multi-provider chain.",
+      "guardrails": "Owner-session gate on every route, an owner-intent check before any consequential tool, no destructive tools in delegated runs, ask-then-confirm deletes, a read-only guest mode, and SSRF-safe fetching.",
+      "testing": "151 unit tests and 4 Playwright tests, plus an opt-in live suite that exercises every tool against real data; CI runs lint, type checks, unit tests, and the build."
+    },
+    "deepDive": [
+      {
+        "heading": "Injection defense that does not trust the model",
+        "body": "Prompt rules alone can be talked around. The deciding check is deterministic: a consequential action needs a match in the owner's own message for this turn, so instructions hidden in a web page or a document cannot trigger it."
+      },
+      {
+        "heading": "Delegation without privilege escalation",
+        "body": "One agent can consult another, but only one level deep and never with destructive tools, so a chain of agents cannot launder an action the owner never asked for."
+      },
+      {
+        "heading": "A cloned voice, with consent",
+        "body": "Voice replication is off by default. Enabling it requires recording a sample together with the provider's fixed consent sentence, and the voice ID is stored server-side."
+      }
+    ],
+    "decisions": [
+      "Rules before the LLM router, for latency and free-tier cost.",
+      "Deterministic intent gating instead of trusting the model to resist injection.",
+      "Every model and data dependency has a fallback, so the assistant degrades instead of failing."
+    ],
     "links": []
+  },
+  {
+    "slug": "jobs-with-joe",
+    "projectTitle": "Jobs with Joe",
+    "title": "Jobs with Joe",
+    "subtitle": "A job board for Indian freshers: twelve source adapters, explainable rule-based classification, and AI resume tools behind a fact guard that rejects anything the candidate did not write.",
+    "role": "Designed and built",
+    "org": "Personal project",
+    "period": "2026",
+    "visibility": "Private repo · live product",
+    "stack": [
+      "Next.js",
+      "TypeScript",
+      "FastAPI",
+      "Supabase Postgres (RLS)",
+      "pgTAP",
+      "Gemini / OpenAI",
+      "Chrome extension (MV3)",
+      "Playwright",
+      "Vitest",
+      "Docker LaTeX"
+    ],
+    "keywords": [
+      "job board",
+      "LLM fact guard",
+      "resume tailoring AI",
+      "rule-based classification",
+      "Chrome extension autofill",
+      "pgTAP testing"
+    ],
+    "problem": "Freshers in India wade through listings that are mislabelled, duplicated, or scams, then rewrite the same resume for every application. AI can help with the writing, but a resume that gains a skill or a number the candidate never had is worse than no help.",
+    "diagram": {
+      "width": 500,
+      "height": 670,
+      "clusters": [
+        {
+          "id": "ingest",
+          "label": "Ingestion",
+          "x": 14,
+          "y": 14,
+          "w": 226,
+          "h": 470
+        },
+        {
+          "id": "ai",
+          "label": "AI layer",
+          "x": 250,
+          "y": 14,
+          "w": 236,
+          "h": 526
+        },
+        {
+          "id": "product",
+          "label": "Product",
+          "x": 14,
+          "y": 556,
+          "w": 472,
+          "h": 100
+        }
+      ],
+      "nodes": [
+        {
+          "id": "sources",
+          "label": "12 source adapters",
+          "x": 127,
+          "y": 60,
+          "kind": "fanout",
+          "sub": "ATS APIs · schema.org",
+          "w": 180
+        },
+        {
+          "id": "robots",
+          "label": "robots + sanitize",
+          "x": 127,
+          "y": 130,
+          "kind": "gate",
+          "w": 160
+        },
+        {
+          "id": "pipe",
+          "label": "Normalize + dedupe",
+          "x": 127,
+          "y": 200,
+          "kind": "process",
+          "sub": "pure plan, one transaction",
+          "w": 190
+        },
+        {
+          "id": "classify",
+          "label": "Rule classifier",
+          "x": 127,
+          "y": 270,
+          "kind": "process",
+          "sub": "returns rule ids",
+          "w": 180
+        },
+        {
+          "id": "db",
+          "label": "Postgres + RLS",
+          "x": 127,
+          "y": 350,
+          "kind": "store",
+          "sub": "37 migrations",
+          "w": 180
+        },
+        {
+          "id": "embed",
+          "label": "Match embeddings",
+          "x": 127,
+          "y": 430,
+          "kind": "llm",
+          "sub": "minimised fields",
+          "w": 180
+        },
+        {
+          "id": "user",
+          "label": "Candidate / extension",
+          "x": 368,
+          "y": 60,
+          "kind": "io",
+          "w": 190
+        },
+        {
+          "id": "token",
+          "label": "Token + quota",
+          "x": 368,
+          "y": 130,
+          "kind": "gate",
+          "w": 160
+        },
+        {
+          "id": "route",
+          "label": "Model router",
+          "x": 368,
+          "y": 200,
+          "kind": "process",
+          "sub": "Gemini, fallback, OpenAI",
+          "w": 190
+        },
+        {
+          "id": "llm",
+          "label": "LLM draft",
+          "x": 368,
+          "y": 270,
+          "kind": "llm",
+          "sub": "JSON mode",
+          "w": 180
+        },
+        {
+          "id": "factguard",
+          "label": "Fact guard",
+          "x": 368,
+          "y": 350,
+          "kind": "gate",
+          "w": 160
+        },
+        {
+          "id": "review",
+          "label": "User accepts lines",
+          "x": 368,
+          "y": 430,
+          "kind": "hitl",
+          "w": 180
+        },
+        {
+          "id": "fallback",
+          "label": "Deterministic path",
+          "x": 368,
+          "y": 500,
+          "kind": "process",
+          "sub": "every feature has one",
+          "w": 190
+        },
+        {
+          "id": "web",
+          "label": "Listings site",
+          "x": 127,
+          "y": 606,
+          "kind": "io",
+          "w": 180
+        },
+        {
+          "id": "scam",
+          "label": "Scam shield",
+          "x": 368,
+          "y": 606,
+          "kind": "gate",
+          "w": 150
+        }
+      ],
+      "edges": [
+        [
+          "sources",
+          "robots"
+        ],
+        [
+          "robots",
+          "pipe"
+        ],
+        [
+          "pipe",
+          "classify"
+        ],
+        [
+          "classify",
+          "db"
+        ],
+        [
+          "db",
+          "embed",
+          "conditional",
+          "key set"
+        ],
+        [
+          "db",
+          "web",
+          "bypass",
+          "listings"
+        ],
+        [
+          "user",
+          "token"
+        ],
+        [
+          "token",
+          "route"
+        ],
+        [
+          "route",
+          "llm"
+        ],
+        [
+          "llm",
+          "factguard"
+        ],
+        [
+          "factguard",
+          "review",
+          "hitl",
+          "passes"
+        ],
+        [
+          "factguard",
+          "fallback",
+          "bypass",
+          "rejected"
+        ]
+      ]
+    },
+    "steps": [
+      {
+        "title": "Twelve sources, one clean plan",
+        "body": "Adapters collect jobs from applicant-tracking APIs and structured job markup, respecting robots.txt and sanitizing every field. A pure, I/O-free plan normalizes, validates, classifies, and deduplicates, then applies everything in one transaction.",
+        "nodes": [
+          "sources",
+          "robots",
+          "pipe"
+        ],
+        "edges": [
+          [
+            "sources",
+            "robots"
+          ],
+          [
+            "robots",
+            "pipe"
+          ]
+        ]
+      },
+      {
+        "title": "Classification you can explain",
+        "body": "An ordered rule set labels each job's experience level and returns the IDs of the rules that fired. 'Unknown' is a normal answer and is never shown as fresher-friendly.",
+        "nodes": [
+          "classify",
+          "db"
+        ],
+        "edges": [
+          [
+            "pipe",
+            "classify"
+          ],
+          [
+            "classify",
+            "db"
+          ]
+        ]
+      },
+      {
+        "title": "AI is optional",
+        "body": "A model router uses Gemini Flash, retries on a lighter model after a rate limit or timeout, and can use OpenAI instead. With no key at all, every AI feature falls back to a deterministic version.",
+        "nodes": [
+          "user",
+          "token",
+          "route",
+          "fallback"
+        ],
+        "edges": [
+          [
+            "user",
+            "token"
+          ],
+          [
+            "token",
+            "route"
+          ]
+        ]
+      },
+      {
+        "title": "A fact guard after generation",
+        "body": "Prompts forbid new employers, numbers, or skills and turn missing facts into placeholders. Then a post-check rejects any rewrite that adds a number, a known skill, or a proper noun that is not in the original resume.",
+        "nodes": [
+          "llm",
+          "factguard"
+        ],
+        "edges": [
+          [
+            "route",
+            "llm"
+          ],
+          [
+            "llm",
+            "factguard"
+          ],
+          [
+            "factguard",
+            "fallback"
+          ]
+        ]
+      },
+      {
+        "title": "The candidate approves every line",
+        "body": "Rewrites are accepted line by line. Applying one checks the source line has not changed and escapes LaTeX, so a rewrite cannot inject commands into the generated PDF.",
+        "nodes": [
+          "review"
+        ],
+        "edges": [
+          [
+            "factguard",
+            "review"
+          ]
+        ]
+      },
+      {
+        "title": "Matching with minimal data",
+        "body": "Optional embeddings power job matching, built from skills and preferences only: no name, grades, or pay go to the embedding model.",
+        "nodes": [
+          "embed"
+        ],
+        "edges": [
+          [
+            "db",
+            "embed"
+          ]
+        ]
+      },
+      {
+        "title": "A scam shield with no model in it",
+        "body": "Lookalike domains, punycode, fee or UPI requests, and personal email addresses are caught by deterministic rules, logged anonymously, and rate limited.",
+        "nodes": [
+          "scam",
+          "web"
+        ],
+        "edges": [
+          [
+            "db",
+            "web"
+          ]
+        ]
+      }
+    ],
+    "results": [
+      {
+        "value": "12",
+        "label": "Job source adapters"
+      },
+      {
+        "value": "1,305",
+        "label": "Unit and end-to-end tests"
+      },
+      {
+        "value": "826",
+        "label": "Planned pgTAP database assertions"
+      },
+      {
+        "value": "11",
+        "label": "CI workflows"
+      },
+      {
+        "value": "37",
+        "label": "Database migrations with row-level security"
+      }
+    ],
+    "assurance": {
+      "harness": "One OpenAI-compatible client with a model fallback chain, a health probe, and a deterministic fallback for every AI feature; prompts and outputs are never logged.",
+      "guardrails": "Fact rules in every prompt plus a post-generation guard that rejects new numbers, skills, or names; schema-validated JSON output; rate-limited extension tokens with an origin allow-list; data minimisation for embeddings; line-by-line user acceptance.",
+      "testing": "About 1,305 tests (574 API, 581 web unit, 68 Playwright, 82 extension) plus 826 planned pgTAP assertions, run by separate CI workflows for web, API, database, extension, and LaTeX."
+    },
+    "deepDive": [
+      {
+        "heading": "Why a guard after the prompt",
+        "body": "A prompt that says 'do not invent facts' is a request. The fact guard is a check: it compares the rewrite against the original resume and throws the rewrite away if anything new appears."
+      },
+      {
+        "heading": "A browser extension that cannot be borrowed",
+        "body": "The Apply Copilot extension authenticates with its own bearer token, is allowed only from extension origins, and each user has a quota enforced in the database."
+      },
+      {
+        "heading": "Tests at every layer",
+        "body": "Pure functions get unit tests, the web app gets Playwright flows, the database gets pgTAP assertions run against a throwaway local Supabase in CI, and the LaTeX service gets its own build check."
+      }
+    ],
+    "decisions": [
+      "AI as an optional feature layer with a deterministic fallback for every feature.",
+      "Rule-based, explainable classification instead of an LLM.",
+      "Row-level security first, so reads work with the public key and nothing else."
+    ],
+    "links": [
+      {
+        "label": "Live site",
+        "href": "https://jobs-with-joe-web.vercel.app"
+      }
+    ]
   },
   {
     "slug": "company-synonym-agent",
@@ -1251,7 +2115,12 @@
       "Explicit acronym and parent boosts instead of hoping embeddings learn them.",
       "The LLM sees only below-threshold cases and only chooses among retrieved candidates, so it cannot invent a company."
     ],
-    "links": []
+    "links": [],
+    "assurance": {
+      "harness": "Runs as a normalization tool inside the DRI-MAS graph, with an LLM decision agent and a human step behind it.",
+      "guardrails": "Scores of 0.85 or more skip the model entirely; the LLM can only choose among retrieved candidates, so it cannot invent a company; ties go to a person.",
+      "testing": "14 unit tests for the hybrid normalizer and 40+ tests in the extracted service."
+    }
   },
   {
     "slug": "dof",
@@ -1791,7 +2660,13 @@
       "The taxonomy is enforced by a validator, never trusted from the model output.",
       "Analyst review happens in a spreadsheet the team already uses, with dropdowns generated from the taxonomy."
     ],
-    "links": []
+    "links": [],
+    "assurance": {
+      "harness": "Persistent SQLite task queue with atomic claims, barriers between phases, immediate persistence, and pause and resume.",
+      "evals": "A one-week real-data run over 20 accounts (591 tasks, 383 documents, 27 events) passed reconciliation; the classifier was stubbed in that run.",
+      "guardrails": "LLM output is validated against the signal taxonomy with one repair turn and one retry; low confidence or a vertical mismatch goes to an analyst; a run cannot be marked complete unless report counts match the database.",
+      "testing": "97 tests."
+    }
   },
   {
     "slug": "skill-proficiency",
@@ -2223,7 +3098,12 @@
       "Bisect-on-failure batching, so one bad skill does not sink the other nine.",
       "A single function maps every signal to the five levels, so the rubric lives in one place."
     ],
-    "links": []
+    "links": [],
+    "assurance": {
+      "harness": "Deterministic extraction first, then batched model calls of ten with retry and bisect-on-failure, cached by JD, skill, model, and prompt version.",
+      "guardrails": "Every model-proposed level needs a quote from the JD, the quote must appear verbatim, and a second verifier call must agree; anything else becomes NOT_STATED.",
+      "testing": "37 tests."
+    }
   },
   {
     "slug": "invoice-to-po",
@@ -2744,7 +3624,421 @@
         "heading": "Free to run, free to deploy",
         "body": "Replay mode serves recorded model answers by default, so CI and the free Render deployment need no API key, and the whole eval suite costs nothing to rerun."
       }
-    ]
+    ],
+    "assurance": {
+      "harness": "FastAPI service with a durable job queue (three tries, then HOLD), a nine-step check pipeline, and a TypeSafe Jev advisor running in replay mode by default.",
+      "evals": "A gated harness: 31/31 labelled cases, 0 false approvals across 600 adversarial variants, 48/48 duplicate recall, and an LLM judge validated against a 69-item gold set (kappa 0.659).",
+      "guardrails": "Intake scans for injected instructions; an action allow-list means the model can only add a HOLD; approval needs confidence of at least 0.85; 0 of 489 injection attacks changed a decision.",
+      "testing": "79 tests (20 of them guardrail tests), run in CI behind a regression gate."
+    }
+  },
+  {
+    "slug": "aeon",
+    "projectTitle": "AEON: Agent Governance Layer",
+    "title": "AEON",
+    "subtitle": "A governance layer for a team of AI agents: a git repository as shared memory, event-sourced state that changes only on independent verification, and a five-gate security CLI.",
+    "role": "Designed and built",
+    "org": "Personal project",
+    "period": "2026",
+    "visibility": "Private repo",
+    "stack": [
+      "Python",
+      "pytest",
+      "Next.js",
+      "TypeScript",
+      "GitHub Actions",
+      "JSONL event log",
+      "JSON Schema"
+    ],
+    "keywords": [
+      "multi-agent governance",
+      "event sourcing",
+      "AI agent permissions",
+      "prompt injection screening",
+      "human approval",
+      "agent memory"
+    ],
+    "problem": "Several AI agents (including Claude Code and Codex) work on the same projects, and each run starts with no memory. They need shared state, they must not overwrite each other, and no agent should be able to mark its own work done or take a sensitive action on its own say-so.",
+    "diagram": {
+      "width": 500,
+      "height": 670,
+      "clusters": [
+        {
+          "id": "harness",
+          "label": "Harness",
+          "x": 14,
+          "y": 120,
+          "w": 226,
+          "h": 410
+        },
+        {
+          "id": "guards",
+          "label": "Guardrails",
+          "x": 250,
+          "y": 120,
+          "w": 236,
+          "h": 410
+        },
+        {
+          "id": "operate",
+          "label": "Operate",
+          "x": 14,
+          "y": 548,
+          "w": 472,
+          "h": 104
+        }
+      ],
+      "nodes": [
+        {
+          "id": "agents",
+          "label": "AI agents + owner",
+          "x": 210,
+          "y": 60,
+          "kind": "io",
+          "sub": "5 agents, tiers T0–T4",
+          "w": 200
+        },
+        {
+          "id": "events",
+          "label": "Event log",
+          "x": 122,
+          "y": 172,
+          "kind": "store",
+          "sub": "append-only JSONL",
+          "w": 180
+        },
+        {
+          "id": "verify",
+          "label": "Verified by another?",
+          "x": 122,
+          "y": 244,
+          "kind": "gate",
+          "w": 190
+        },
+        {
+          "id": "reducer",
+          "label": "CORE reducer",
+          "x": 122,
+          "y": 322,
+          "kind": "process",
+          "sub": "pure, deterministic",
+          "w": 180
+        },
+        {
+          "id": "state",
+          "label": "State projection",
+          "x": 122,
+          "y": 400,
+          "kind": "store",
+          "sub": "rebuilt from events",
+          "w": 180
+        },
+        {
+          "id": "dashboard",
+          "label": "Command Center",
+          "x": 122,
+          "y": 476,
+          "kind": "io",
+          "sub": "read-mostly, gated",
+          "w": 180
+        },
+        {
+          "id": "guard_in",
+          "label": "Input screen",
+          "x": 368,
+          "y": 172,
+          "kind": "gate",
+          "w": 160
+        },
+        {
+          "id": "guard_act",
+          "label": "Action gate",
+          "x": 368,
+          "y": 244,
+          "kind": "gate",
+          "w": 160
+        },
+        {
+          "id": "approval",
+          "label": "Owner approval",
+          "x": 368,
+          "y": 322,
+          "kind": "hitl",
+          "sub": "approval_ref required",
+          "w": 180
+        },
+        {
+          "id": "guard_out",
+          "label": "Outbound screen",
+          "x": 368,
+          "y": 400,
+          "kind": "gate",
+          "w": 170
+        },
+        {
+          "id": "audit",
+          "label": "Audit log",
+          "x": 368,
+          "y": 476,
+          "kind": "store",
+          "sub": "redacted",
+          "w": 160
+        },
+        {
+          "id": "registry",
+          "label": "Agent registry",
+          "x": 105,
+          "y": 604,
+          "kind": "store",
+          "sub": "capability + tier",
+          "w": 160
+        },
+        {
+          "id": "projector",
+          "label": "Projection cron",
+          "x": 260,
+          "y": 604,
+          "kind": "process",
+          "sub": "twice daily",
+          "w": 140
+        },
+        {
+          "id": "ci",
+          "label": "CI checks",
+          "x": 410,
+          "y": 604,
+          "kind": "gate",
+          "w": 130
+        }
+      ],
+      "edges": [
+        [
+          "agents",
+          "events",
+          "conditional",
+          "claim · complete"
+        ],
+        [
+          "agents",
+          "guard_in",
+          "conditional",
+          "untrusted input"
+        ],
+        [
+          "events",
+          "verify"
+        ],
+        [
+          "verify",
+          "reducer",
+          "conditional",
+          "verified only"
+        ],
+        [
+          "reducer",
+          "state"
+        ],
+        [
+          "state",
+          "dashboard"
+        ],
+        [
+          "guard_in",
+          "guard_act"
+        ],
+        [
+          "guard_act",
+          "approval",
+          "hitl",
+          "sensitive"
+        ],
+        [
+          "guard_act",
+          "guard_out",
+          "bypass",
+          "allowed"
+        ],
+        [
+          "approval",
+          "guard_out",
+          "conditional",
+          "approved"
+        ],
+        [
+          "guard_out",
+          "audit"
+        ]
+      ]
+    },
+    "steps": [
+      {
+        "title": "Agents with no memory",
+        "body": "Every agent run starts by reading the repository's rules and current state. A registry gives each agent its capabilities and a maximum permission tier, from read-only up to owner-only.",
+        "nodes": [
+          "agents",
+          "registry"
+        ],
+        "edges": []
+      },
+      {
+        "title": "Claims are events, not edits",
+        "body": "Agents never edit a task's status. They append events such as 'claimed' or 'completed' to a daily log; the earliest verified claim wins and later ones are flagged as conflicts.",
+        "nodes": [
+          "events"
+        ],
+        "edges": [
+          [
+            "agents",
+            "events"
+          ]
+        ]
+      },
+      {
+        "title": "Nobody verifies their own work",
+        "body": "An event changes state only when a different party verifies it with evidence. Approvals and rejections must come from the owner and point to a real decision.",
+        "nodes": [
+          "verify"
+        ],
+        "edges": [
+          [
+            "events",
+            "verify"
+          ]
+        ]
+      },
+      {
+        "title": "State you can replay",
+        "body": "A pure reducer applies a fixed table of transitions to the ordered event log, so the same events always produce the same state. Events with bad timestamps are quarantined, and unverified events stay claims.",
+        "nodes": [
+          "reducer",
+          "state",
+          "projector"
+        ],
+        "edges": [
+          [
+            "verify",
+            "reducer"
+          ],
+          [
+            "reducer",
+            "state"
+          ]
+        ]
+      },
+      {
+        "title": "Five security gates",
+        "body": "Untrusted content is wrapped and scanned for injection, hidden text, and scams. External actions are checked against hard-deny rules, approval rules, quotas, and domain lists; outbound text is scanned for secrets and identity numbers; and every gated action is audited.",
+        "nodes": [
+          "guard_in",
+          "guard_act",
+          "guard_out",
+          "audit"
+        ],
+        "edges": [
+          [
+            "agents",
+            "guard_in"
+          ],
+          [
+            "guard_in",
+            "guard_act"
+          ],
+          [
+            "guard_act",
+            "guard_out"
+          ],
+          [
+            "guard_out",
+            "audit"
+          ]
+        ]
+      },
+      {
+        "title": "Approvals that cannot be faked",
+        "body": "Money, contracts, and identity are owner-only. An approval must reference a real decision or source message; a bare 'yes' or 'ok' is refused.",
+        "nodes": [
+          "approval"
+        ],
+        "edges": [
+          [
+            "guard_act",
+            "approval"
+          ],
+          [
+            "approval",
+            "guard_out"
+          ]
+        ]
+      },
+      {
+        "title": "CI that checks determinism",
+        "body": "CI runs a secret scan, the guard tests, and the full test suite, then rebuilds the state projection and fails if it differs or contains quarantined events.",
+        "nodes": [
+          "ci"
+        ],
+        "edges": []
+      },
+      {
+        "title": "A dashboard that never approves",
+        "body": "The Command Center is a read-mostly view behind an authenticated session. Unverified items are labelled as unconfirmed claims, and approvals never happen from the dashboard itself.",
+        "nodes": [
+          "dashboard"
+        ],
+        "edges": [
+          [
+            "state",
+            "dashboard"
+          ]
+        ]
+      }
+    ],
+    "results": [
+      {
+        "value": "5",
+        "label": "AI agents coordinated, plus the owner"
+      },
+      {
+        "value": "5",
+        "label": "Security gates in the guard CLI"
+      },
+      {
+        "value": "11",
+        "label": "State transition types"
+      },
+      {
+        "value": "441",
+        "label": "Tests across Python and TypeScript"
+      },
+      {
+        "value": "12",
+        "label": "CI workflows"
+      }
+    ],
+    "assurance": {
+      "harness": "A repository-as-state protocol: event-sourced, a deterministic reducer, a capability and tier registry, and claim ordering. There is no model loop in this layer; the agents bring their own.",
+      "guardrails": "Input screening for injection and hidden text, an action gate with hard-deny rules, approvals, and quotas, an outbound secret and identity screen, a commit secret scan, an audit log, tiered permissions, owner-only approvals, and no self-verification.",
+      "testing": "About 441 tests (194 Python, 160 dashboard, 87 site), run in GitHub Actions with a secret scan and a projection-determinism check."
+    },
+    "deepDive": [
+      {
+        "heading": "Capability is not permission",
+        "body": "What an agent can do and what it is allowed to do are kept apart. A capable agent still needs the right tier, and the highest tier belongs to the owner alone."
+      },
+      {
+        "heading": "No locks, explicit conflicts",
+        "body": "There is no git-level lock. Events are ordered deterministically by timestamp, file, and line, and conflicting claims are flagged for the owner instead of silently resolved."
+      },
+      {
+        "heading": "Closing the self-verification hole",
+        "body": "A later revision fixed a gap where an agent could name its own verifier. Verification now has to come from a different party with non-empty evidence."
+      }
+    ],
+    "decisions": [
+      "Event sourcing over shared mutable state, so every change has an author and a verifier.",
+      "Exit codes for every gate (allow, warn, block), so any agent or script can enforce them.",
+      "Content-only commits never trigger a deploy."
+    ],
+    "links": []
   },
   {
     "slug": "finn-advisor",
@@ -3231,7 +4525,468 @@
         "heading": "Room to grow into A2A",
         "body": "The ADK agent calls LangGraph workflows directly in Python, behind an interface that can later become an agent-to-agent call without changing the workflows."
       }
-    ]
+    ],
+    "assurance": {
+      "harness": "Deterministic router into LangGraph workflows with a Google ADK fallback agent, an MCP client for the brokerage, and an LLM router that falls back from NVIDIA NIM to Gemini with every call logged.",
+      "evals": "An offline evaluation harness (4 cases) and a red-team suite (10 cases) run through a mock evaluator; no committed scores yet.",
+      "guardrails": "A regex input gate before any model, an allow-list of 16 read-only brokerage tools with trading tools blocked, fenced web results, and an output screen for leaked secrets.",
+      "testing": "343 tests (341 unit, 2 integration)."
+    }
+  },
+  {
+    "slug": "fleetvoice",
+    "projectTitle": "FleetVoice: WhatsApp Agent for Truck Drivers",
+    "title": "FleetVoice",
+    "subtitle": "A WhatsApp agent for truck drivers that turns Tamil, Hindi, or English voice notes into trip updates, where the model proposes facts and plain code decides what happens.",
+    "role": "Designed and built",
+    "org": "DevFest Chennai 2026 hackathon",
+    "period": "Oct 2026",
+    "visibility": "Private repo",
+    "stack": [
+      "Python",
+      "FastAPI",
+      "SQLite",
+      "WhatsApp Cloud API",
+      "TypeSafe Jev",
+      "Gemini",
+      "Groq Whisper",
+      "NVIDIA NIM",
+      "OpenRouteService",
+      "Docker"
+    ],
+    "keywords": [
+      "WhatsApp AI agent",
+      "voice notes Tamil Hindi",
+      "LLM fallback cascade",
+      "circuit breaker",
+      "output guardrails",
+      "logistics AI"
+    ],
+    "problem": "Truck drivers report delays and problems by voice, in Tamil, Hindi, or English, often on a bad connection. Dispatchers and customers need structured updates fast, and a model that mishears a number or invents a place can send the wrong alert.",
+    "diagram": {
+      "width": 520,
+      "height": 890,
+      "clusters": [
+        {
+          "id": "intake",
+          "label": "Intake",
+          "x": 14,
+          "y": 14,
+          "w": 492,
+          "h": 284
+        },
+        {
+          "id": "cascade",
+          "label": "Model cascade",
+          "x": 14,
+          "y": 312,
+          "w": 492,
+          "h": 276
+        },
+        {
+          "id": "act",
+          "label": "Decide and act",
+          "x": 14,
+          "y": 602,
+          "w": 492,
+          "h": 274
+        }
+      ],
+      "nodes": [
+        {
+          "id": "wa_in",
+          "label": "WhatsApp webhook",
+          "x": 210,
+          "y": 60,
+          "kind": "io",
+          "sub": "signature check, fast ack",
+          "w": 190
+        },
+        {
+          "id": "dedupe",
+          "label": "Seen before?",
+          "x": 210,
+          "y": 128,
+          "kind": "gate",
+          "w": 150
+        },
+        {
+          "id": "router",
+          "label": "Router",
+          "x": 210,
+          "y": 196,
+          "kind": "process",
+          "sub": "text · voice · photo · button",
+          "w": 190
+        },
+        {
+          "id": "zero_ai",
+          "label": "Zero-AI path",
+          "x": 405,
+          "y": 196,
+          "kind": "process",
+          "sub": "buttons · pins · commands",
+          "w": 150
+        },
+        {
+          "id": "in_guard",
+          "label": "Input guard",
+          "x": 210,
+          "y": 266,
+          "kind": "gate",
+          "w": 150
+        },
+        {
+          "id": "jev",
+          "label": "Jev classifier",
+          "x": 210,
+          "y": 346,
+          "kind": "llm",
+          "sub": "typed facts, one call",
+          "w": 180
+        },
+        {
+          "id": "gemini",
+          "label": "Gemini",
+          "x": 210,
+          "y": 416,
+          "kind": "llm",
+          "sub": "when Jev is unsure",
+          "w": 180
+        },
+        {
+          "id": "nvidia",
+          "label": "NVIDIA NIM",
+          "x": 210,
+          "y": 486,
+          "kind": "llm",
+          "sub": "backup",
+          "w": 180
+        },
+        {
+          "id": "rules",
+          "label": "Rules engine",
+          "x": 210,
+          "y": 556,
+          "kind": "process",
+          "sub": "Tamil · Hindi · English",
+          "w": 180
+        },
+        {
+          "id": "breaker",
+          "label": "Circuit breakers",
+          "x": 405,
+          "y": 416,
+          "kind": "gate",
+          "w": 150
+        },
+        {
+          "id": "out_guard",
+          "label": "Output guard",
+          "x": 210,
+          "y": 650,
+          "kind": "gate",
+          "w": 160
+        },
+        {
+          "id": "actions",
+          "label": "Actions in code",
+          "x": 210,
+          "y": 720,
+          "kind": "tool",
+          "sub": "trip · ETA · flags",
+          "w": 180
+        },
+        {
+          "id": "notify",
+          "label": "Template replies",
+          "x": 210,
+          "y": 800,
+          "kind": "io",
+          "sub": "driver · customer · dispatch",
+          "w": 200
+        },
+        {
+          "id": "human",
+          "label": "Dispatcher",
+          "x": 405,
+          "y": 720,
+          "kind": "hitl",
+          "sub": "urgent or unsafe",
+          "w": 140
+        },
+        {
+          "id": "learn",
+          "label": "Learning loop",
+          "x": 405,
+          "y": 800,
+          "kind": "process",
+          "sub": "tunes the bar",
+          "w": 140
+        }
+      ],
+      "edges": [
+        [
+          "wa_in",
+          "dedupe"
+        ],
+        [
+          "dedupe",
+          "router",
+          "conditional",
+          "new"
+        ],
+        [
+          "router",
+          "zero_ai",
+          "conditional",
+          "no AI"
+        ],
+        [
+          "router",
+          "in_guard"
+        ],
+        [
+          "in_guard",
+          "jev",
+          "conditional",
+          "clean"
+        ],
+        [
+          "jev",
+          "gemini",
+          "conditional",
+          "unsure"
+        ],
+        [
+          "gemini",
+          "nvidia",
+          "conditional",
+          "down"
+        ],
+        [
+          "nvidia",
+          "rules",
+          "conditional",
+          "down"
+        ],
+        [
+          "breaker",
+          "gemini"
+        ],
+        [
+          "jev",
+          "out_guard",
+          "bypass",
+          "above bar"
+        ],
+        [
+          "rules",
+          "out_guard"
+        ],
+        [
+          "out_guard",
+          "actions"
+        ],
+        [
+          "actions",
+          "notify"
+        ],
+        [
+          "actions",
+          "human",
+          "hitl",
+          "urgent"
+        ],
+        [
+          "notify",
+          "learn",
+          "conditional",
+          "driver feedback"
+        ]
+      ]
+    },
+    "steps": [
+      {
+        "title": "Acknowledge fast, never twice",
+        "body": "The webhook verifies the signature, returns immediately, and processes the message in the background. A message ID it has already seen is ignored.",
+        "nodes": [
+          "wa_in",
+          "dedupe"
+        ],
+        "edges": [
+          [
+            "wa_in",
+            "dedupe"
+          ]
+        ]
+      },
+      {
+        "title": "No model when none is needed",
+        "body": "Greetings, button taps, location pins, and commands are handled entirely in code. Only free text, voice, and photos go further.",
+        "nodes": [
+          "router",
+          "zero_ai"
+        ],
+        "edges": [
+          [
+            "dedupe",
+            "router"
+          ],
+          [
+            "router",
+            "zero_ai"
+          ]
+        ]
+      },
+      {
+        "title": "An input guard before any model",
+        "body": "Control characters are stripped, text is capped, and injection phrases are caught by rules. A flagged message never reaches a model and can never change a trip.",
+        "nodes": [
+          "in_guard"
+        ],
+        "edges": [
+          [
+            "router",
+            "in_guard"
+          ]
+        ]
+      },
+      {
+        "title": "Cheap first, larger only when unsure",
+        "body": "A TypeSafe Jev decision model extracts typed facts in one call and is accepted only above a learned confidence bar. Below it, the message goes to Gemini, then NVIDIA NIM, then plain rules.",
+        "nodes": [
+          "jev",
+          "gemini",
+          "nvidia",
+          "rules"
+        ],
+        "edges": [
+          [
+            "in_guard",
+            "jev"
+          ],
+          [
+            "jev",
+            "gemini"
+          ],
+          [
+            "gemini",
+            "nvidia"
+          ],
+          [
+            "nvidia",
+            "rules"
+          ]
+        ]
+      },
+      {
+        "title": "Circuit breakers per provider",
+        "body": "Three failures open a provider's breaker, the cool-down doubles up to ten minutes, and a half-open probe brings it back. Background health checks run every two minutes.",
+        "nodes": [
+          "breaker"
+        ],
+        "edges": [
+          [
+            "breaker",
+            "gemini"
+          ]
+        ]
+      },
+      {
+        "title": "The output guard",
+        "body": "Facts are clamped to the schema, delay numbers must come from the driver's own words, places the driver never mentioned are dropped, and safety words force a human. The model has no tools.",
+        "nodes": [
+          "out_guard"
+        ],
+        "edges": [
+          [
+            "jev",
+            "out_guard"
+          ],
+          [
+            "rules",
+            "out_guard"
+          ]
+        ]
+      },
+      {
+        "title": "Code acts, templates speak",
+        "body": "Trip status, ETA, and flags are updated in plain code, and only fixed templates go to customers and dispatchers. Urgent or unsafe reports go straight to a person.",
+        "nodes": [
+          "actions",
+          "notify",
+          "human"
+        ],
+        "edges": [
+          [
+            "out_guard",
+            "actions"
+          ],
+          [
+            "actions",
+            "notify"
+          ],
+          [
+            "actions",
+            "human"
+          ]
+        ]
+      },
+      {
+        "title": "A bar that tunes itself",
+        "body": "Drivers' correct and wrong taps become few-shot examples and move the confidence bar: up when accuracy drops below 85%, down when it passes 95%, always between 0.60 and 0.98.",
+        "nodes": [
+          "learn"
+        ],
+        "edges": [
+          [
+            "notify",
+            "learn"
+          ]
+        ]
+      }
+    ],
+    "results": [
+      {
+        "value": "4",
+        "label": "Model paths plus a rules fallback"
+      },
+      {
+        "value": "3",
+        "label": "Failures before a provider's breaker opens"
+      },
+      {
+        "value": "25 s",
+        "label": "Deadline before a guaranteed reply"
+      },
+      {
+        "value": "0",
+        "label": "Tools given to the model"
+      }
+    ],
+    "assurance": {
+      "harness": "A fixed cascade (Jev, Gemini, NVIDIA NIM, rules) with a circuit breaker per provider, a 12-second per-call and 25-second per-message deadline, and SQLite state.",
+      "evals": "Online only: driver feedback on each answer is tracked per path and tunes the confidence bar; there is no offline eval set yet.",
+      "guardrails": "Rule-based injection blocking before any model, schema-clamped typed output, checks that numbers, places, and quantities came from the driver, no model tools, template-only outbound messages, and human escalation.",
+      "testing": "6 offline smoke tests; built in a hackathon, with no CI yet."
+    },
+    "deepDive": [
+      {
+        "heading": "The model proposes, code decides",
+        "body": "The model only fills a typed facts object. Everything with consequences (trip state, ETA, alerts) is plain code reading those facts after the output guard has checked them against what the driver actually said."
+      },
+      {
+        "heading": "Every message gets an answer",
+        "body": "A 25-second safety net replies to the driver even if every model is slow or down, and the message is replayed later once a provider recovers."
+      }
+    ],
+    "decisions": [
+      "A cheap typed classifier first and larger models only when it is unsure.",
+      "No tools for the model: it can describe the world, not change it.",
+      "An instant webhook acknowledgement plus a guaranteed reply, because drivers will not wait."
+    ],
+    "links": []
   },
   {
     "slug": "chunklab",
@@ -3671,7 +5426,452 @@
         "heading": "Comparisons within a stage",
         "body": "Each page compares strategies for one stage at a time. Retrieval works on pasted documents rather than the chunker's output, so the lab answers 'which retriever is best here', not 'which full pipeline is best'."
       }
-    ]
+    ],
+    "assurance": {
+      "harness": "A self-registering plugin registry per stage, with every run logged by stage, strategy, and latency.",
+      "evals": "Standard IR metrics (P@k, R@k, MRR, MAP, NDCG) and intrinsic embedding evals on a built-in labelled set, including rerank impact before and after.",
+      "testing": "95 tests."
+    }
+  },
+  {
+    "slug": "spr-studio",
+    "projectTitle": "SPR Studio: AI Video Pipeline",
+    "title": "SPR Studio",
+    "subtitle": "A script-to-video pipeline that turns a beat script into lip-synced comic videos in my own cloned voice, with AI disclosure rendered into every frame.",
+    "role": "Designed and built",
+    "org": "Personal project",
+    "period": "Oct 2026",
+    "visibility": "Private repo",
+    "stack": [
+      "Python",
+      "Chatterbox TTS",
+      "faster-whisper",
+      "Rhubarb Lip Sync",
+      "headless Chromium",
+      "ffmpeg",
+      "Manim",
+      "Remotion"
+    ],
+    "keywords": [
+      "AI video pipeline",
+      "voice cloning with consent",
+      "lip sync visemes",
+      "text to speech",
+      "AI disclosure",
+      "deterministic rendering"
+    ],
+    "problem": "Talking-head video models are slow on a CPU and their photo-real mouths look wrong on drawn characters. The goal was explainer videos in a comic style, voiced in my own cloned voice, rendered reproducibly, and clearly labelled as AI-generated.",
+    "diagram": {
+      "width": 520,
+      "height": 870,
+      "clusters": [
+        {
+          "id": "voice",
+          "label": "Voice",
+          "x": 14,
+          "y": 14,
+          "w": 492,
+          "h": 214
+        },
+        {
+          "id": "timing",
+          "label": "Timing",
+          "x": 14,
+          "y": 242,
+          "w": 492,
+          "h": 288
+        },
+        {
+          "id": "render",
+          "label": "Render",
+          "x": 14,
+          "y": 544,
+          "w": 492,
+          "h": 312
+        }
+      ],
+      "nodes": [
+        {
+          "id": "script",
+          "label": "Beat script",
+          "x": 210,
+          "y": 60,
+          "kind": "io",
+          "sub": "lines · poses · shots",
+          "w": 180
+        },
+        {
+          "id": "tts",
+          "label": "Voice clone",
+          "x": 210,
+          "y": 128,
+          "kind": "llm",
+          "sub": "zero-shot, on CPU",
+          "w": 180
+        },
+        {
+          "id": "ref",
+          "label": "Voice reference",
+          "x": 405,
+          "y": 128,
+          "kind": "store",
+          "sub": "private, never committed",
+          "w": 170
+        },
+        {
+          "id": "vocache",
+          "label": "Per-line VO cache",
+          "x": 210,
+          "y": 198,
+          "kind": "store",
+          "w": 180
+        },
+        {
+          "id": "align",
+          "label": "Word timing",
+          "x": 110,
+          "y": 290,
+          "kind": "process",
+          "sub": "faster-whisper",
+          "w": 160
+        },
+        {
+          "id": "lips",
+          "label": "Rhubarb visemes",
+          "x": 330,
+          "y": 290,
+          "kind": "tool",
+          "sub": "10 mouth shapes",
+          "w": 160
+        },
+        {
+          "id": "lipfb",
+          "label": "Letter fallback",
+          "x": 450,
+          "y": 360,
+          "kind": "process",
+          "w": 110
+        },
+        {
+          "id": "smooth",
+          "label": "Lip-sync rules",
+          "x": 210,
+          "y": 430,
+          "kind": "process",
+          "sub": "lead 1 frame · hold 2",
+          "w": 180
+        },
+        {
+          "id": "tl",
+          "label": "Timeline",
+          "x": 210,
+          "y": 500,
+          "kind": "store",
+          "sub": "words · visemes · blinks",
+          "w": 190
+        },
+        {
+          "id": "music",
+          "label": "Music bed",
+          "x": 100,
+          "y": 600,
+          "kind": "process",
+          "sub": "procedural",
+          "w": 150
+        },
+        {
+          "id": "page",
+          "label": "Comic page",
+          "x": 310,
+          "y": 600,
+          "kind": "process",
+          "sub": "seek(t), deterministic",
+          "w": 180
+        },
+        {
+          "id": "frames",
+          "label": "Headless Chromium",
+          "x": 310,
+          "y": 670,
+          "kind": "tool",
+          "sub": "frame by frame",
+          "w": 180
+        },
+        {
+          "id": "check",
+          "label": "Stills review",
+          "x": 455,
+          "y": 600,
+          "kind": "hitl",
+          "w": 100
+        },
+        {
+          "id": "mix",
+          "label": "ffmpeg mix",
+          "x": 210,
+          "y": 740,
+          "kind": "process",
+          "sub": "-14 LUFS",
+          "w": 170
+        },
+        {
+          "id": "out",
+          "label": "4 formats × 2 styles",
+          "x": 210,
+          "y": 810,
+          "kind": "fanout",
+          "w": 190
+        }
+      ],
+      "edges": [
+        [
+          "script",
+          "tts"
+        ],
+        [
+          "ref",
+          "tts"
+        ],
+        [
+          "tts",
+          "vocache"
+        ],
+        [
+          "vocache",
+          "align"
+        ],
+        [
+          "vocache",
+          "lips"
+        ],
+        [
+          "lips",
+          "lipfb",
+          "conditional",
+          "no binary"
+        ],
+        [
+          "align",
+          "smooth"
+        ],
+        [
+          "lips",
+          "smooth"
+        ],
+        [
+          "lipfb",
+          "smooth"
+        ],
+        [
+          "smooth",
+          "tl"
+        ],
+        [
+          "tl",
+          "music"
+        ],
+        [
+          "tl",
+          "page"
+        ],
+        [
+          "page",
+          "frames"
+        ],
+        [
+          "frames",
+          "mix"
+        ],
+        [
+          "music",
+          "mix"
+        ],
+        [
+          "mix",
+          "out"
+        ],
+        [
+          "page",
+          "check",
+          "hitl",
+          "stills"
+        ]
+      ]
+    },
+    "steps": [
+      {
+        "title": "The script is the source",
+        "body": "Each beat sets its line, a spoken spelling, the pose, the shot, gestures, and transitions. Everything downstream is derived from it.",
+        "nodes": [
+          "script"
+        ],
+        "edges": []
+      },
+      {
+        "title": "The voice is the clock",
+        "body": "Each line is spoken once by a zero-shot clone of my voice and cached, so re-voicing one line means regenerating one file. The reference recording stays private and is never committed.",
+        "nodes": [
+          "tts",
+          "ref",
+          "vocache"
+        ],
+        "edges": [
+          [
+            "script",
+            "tts"
+          ],
+          [
+            "ref",
+            "tts"
+          ],
+          [
+            "tts",
+            "vocache"
+          ]
+        ]
+      },
+      {
+        "title": "Words and mouth shapes from the audio",
+        "body": "Whisper word timings are mapped back onto the script's own words, and Rhubarb produces mouth shapes per line with the text as a hint. If Rhubarb is unavailable, a letter-based fallback takes over.",
+        "nodes": [
+          "align",
+          "lips",
+          "lipfb"
+        ],
+        "edges": [
+          [
+            "vocache",
+            "align"
+          ],
+          [
+            "vocache",
+            "lips"
+          ],
+          [
+            "lips",
+            "lipfb"
+          ]
+        ]
+      },
+      {
+        "title": "Lip-sync rules",
+        "body": "Mouth shapes lead the audio by one frame and hold for at least two, lip closures for M, B, and P are never dropped, and the mouth closes on silence. Blinks are seeded, so every render is identical.",
+        "nodes": [
+          "smooth",
+          "tl"
+        ],
+        "edges": [
+          [
+            "align",
+            "smooth"
+          ],
+          [
+            "lips",
+            "smooth"
+          ],
+          [
+            "lipfb",
+            "smooth"
+          ],
+          [
+            "smooth",
+            "tl"
+          ]
+        ]
+      },
+      {
+        "title": "A deterministic renderer",
+        "body": "An HTML page exposes seek(t), so any frame can be rendered exactly. Headless Chromium renders the frames, ffmpeg mixes voice and a procedural music bed to -14 LUFS, and one script produces four aspect ratios in two character styles.",
+        "nodes": [
+          "music",
+          "page",
+          "frames",
+          "mix",
+          "out"
+        ],
+        "edges": [
+          [
+            "tl",
+            "music"
+          ],
+          [
+            "tl",
+            "page"
+          ],
+          [
+            "page",
+            "frames"
+          ],
+          [
+            "frames",
+            "mix"
+          ],
+          [
+            "music",
+            "mix"
+          ],
+          [
+            "mix",
+            "out"
+          ]
+        ]
+      },
+      {
+        "title": "A person looks before anything ships",
+        "body": "Stills are rendered at key frames of every scene and reviewed by eye before release. Nothing publishes from the pipeline itself.",
+        "nodes": [
+          "check"
+        ],
+        "edges": [
+          [
+            "page",
+            "check"
+          ]
+        ]
+      }
+    ],
+    "results": [
+      {
+        "value": "8",
+        "label": "Renders per script (4 formats × 2 styles)"
+      },
+      {
+        "value": "10",
+        "label": "Mouth shapes for lip sync"
+      },
+      {
+        "value": "-14",
+        "label": "LUFS loudness target"
+      },
+      {
+        "value": "2",
+        "label": "ML models on CPU (voice clone, ASR)"
+      }
+    ],
+    "assurance": {
+      "harness": "A deterministic pipeline (voice clone, word alignment, visemes, render, mix) with per-line caching and a fallback lip-sync path.",
+      "guardrails": "Only my own face and voice are used; the voice reference is never committed; an AI disclosure label is rendered into every video, and uploads are marked as altered or synthetic content.",
+      "testing": "No automated tests yet; every scene is reviewed as stills before release."
+    },
+    "deepDive": [
+      {
+        "heading": "Consent and disclosure",
+        "body": "The pipeline exists for one person's likeness and voice: mine. The disclosure label is part of the renderer rather than an optional overlay, and every upload declares the content as synthetic."
+      },
+      {
+        "heading": "Why not a talking-head model",
+        "body": "A neural lip-sync model was evaluated and rejected: about 6.5 to 9 seconds per frame on two CPU cores, and a photo-real mouth that does not match drawn characters. Rule-based visemes are instant and match the style."
+      },
+      {
+        "heading": "Credit",
+        "body": "The method follows Kalyan Vemuri's 'AI video studio' approach, rebuilt from scratch for this pipeline."
+      }
+    ],
+    "decisions": [
+      "Audio is the timeline: everything is derived from measured voice timings rather than estimated durations.",
+      "A seekable HTML renderer, so every frame is reproducible and one script serves every format."
+    ],
+    "links": []
   },
   {
     "slug": "instagram-mcp",
@@ -4057,7 +6257,12 @@
         "label": "Source",
         "href": "https://github.com/selvin-paul-raj/Instagram-Alpic-mcp"
       }
-    ]
+    ],
+    "assurance": {
+      "harness": "Low-level MCP handlers with tool schemas discovered at runtime and a cached fallback when discovery fails.",
+      "guardrails": "One 36-action allow-list shared by the session and discovery; writes are never retried; every error returns as an MCP error result instead of crashing the session.",
+      "testing": "27 tests."
+    }
   },
   {
     "slug": "outlook-cli",
@@ -4445,6 +6650,11 @@
         "label": "npm",
         "href": "https://www.npmjs.com/package/outlook-cli"
       }
-    ]
+    ],
+    "assurance": {
+      "harness": "One frozen tool registry behind both the terminal CLI and the stdio MCP server.",
+      "guardrails": "Delegated OAuth scopes only; a test mode swaps in mock data so the suite never touches a real mailbox.",
+      "testing": "65 jest tests; publishing runs the suite and a dry-run pack first."
+    }
   }
 ]
