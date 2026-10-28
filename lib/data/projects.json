@@ -1,55 +1,5 @@
 [
   {
-    "title": "DOF Automation: Deal Origination Framework",
-    "description": "Weekly business-signal pipeline for 537 enterprise accounts across 8 industry verticals: newsroom discovery and news search, pooled-browser fetching, a confidence-scored date ladder, four-layer deduplication and union-find event clustering, one LLM classification per event validated against the signal taxonomy, analyst review for uncertain events, and deterministic top-2-per-vertical ranking with reconciled CSV/XLSX reports",
-    "tags": [
-      "Python",
-      "Botasaurus",
-      "Web Scraping",
-      "Deduplication",
-      "LLM Classification",
-      "Human-in-the-Loop",
-      "SQLite"
-    ],
-    "date": "2025-09-01",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "ai",
-      "automation"
-    ],
-    "code": null,
-    "live": null,
-    "order": 1,
-    "show": true,
-    "featured": true,
-    "private": true
-  },
-  {
-    "title": "Skill Proficiency Engine",
-    "description": "Tags every mapped skill in a job description with one of five proficiency levels, backed by a quote from the JD. Deterministic evidence (years of experience, level phrases and verbs) is used first; remaining skills go to the LLM in batches with a mandatory quote, a substring check, and a second verifier call, and anything unsupported is recorded as not stated instead of guessed",
-    "tags": [
-      "Python",
-      "LLMs",
-      "Structured Output",
-      "Evidence Grounding",
-      "Skills Taxonomy"
-    ],
-    "date": "2025-09-01",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "ai",
-      "evaluation"
-    ],
-    "code": null,
-    "live": null,
-    "order": 3,
-    "show": true,
-    "featured": true,
-    "private": true
-  },
-  {
     "title": "DRI-MAS: Multi-Agent Reporting System",
     "description": "Analysts spent hours turning business questions into SQL and Excel reports. I architected a LangGraph multi-agent system (intent and manager agents, schema router, SQL generator, memory and evaluation layers) that converts plain-English requests into validated Trino SQL and structured reports, with hybrid FAISS + BM25 retrieval over 2.6M company records and human-in-the-loop checks. Turnaround dropped from hours to under a minute",
     "tags": [
@@ -75,6 +25,112 @@
     "private": true
   },
   {
+    "title": "Akavizhi: Personal AI with Specialist Agents",
+    "description": "Single-user personal AI: a rule router and an LLM dispatcher hand each request to one of nine specialist agents with scoped tools (85 in total), running a six-step function-calling loop with one-level delegation and model fallback. Consequential actions run only when they match the owner's own words, deletes need confirmation, fetching is SSRF-safe, and answers cite pgvector sources. 155 tests",
+    "tags": [
+      "Next.js",
+      "TypeScript",
+      "Multi-Agent Systems",
+      "Tool Calling",
+      "RAG",
+      "pgvector",
+      "Guardrails",
+      "Prompt Injection Testing",
+      "Human-in-the-Loop",
+      "Vitest",
+      "Playwright"
+    ],
+    "date": "2026-10-19",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai"
+    ],
+    "code": null,
+    "live": null,
+    "order": 1,
+    "show": true,
+    "featured": true,
+    "private": true
+  },
+  {
+    "title": "Jobs with Joe",
+    "description": "Job board for Indian freshers: 12 source adapters with robots.txt checks, explainable rule-based classification, a scam shield, and AI resume tools behind a post-generation fact guard that rejects any new number, skill, or name. Every AI feature has a deterministic fallback. About 1,305 tests plus 826 pgTAP assertions across 11 CI workflows",
+    "tags": [
+      "Next.js",
+      "TypeScript",
+      "FastAPI",
+      "PostgreSQL",
+      "Supabase",
+      "LLM Guardrails",
+      "Guardrails",
+      "Playwright",
+      "CI/CD",
+      "Docker"
+    ],
+    "date": "2026-10-27",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai"
+    ],
+    "code": null,
+    "live": "https://jobs-with-joe-web.vercel.app",
+    "order": 2,
+    "show": true,
+    "featured": true,
+    "private": true
+  },
+  {
+    "title": "DOF Automation: Deal Origination Framework",
+    "description": "Weekly business-signal pipeline for 537 enterprise accounts across 8 industry verticals: newsroom discovery and news search, pooled-browser fetching, a confidence-scored date ladder, four-layer deduplication and union-find event clustering, one LLM classification per event validated against the signal taxonomy, analyst review for uncertain events, and deterministic top-2-per-vertical ranking with reconciled CSV/XLSX reports",
+    "tags": [
+      "Python",
+      "Botasaurus",
+      "Web Scraping",
+      "Deduplication",
+      "LLM Classification",
+      "Human-in-the-Loop",
+      "SQLite"
+    ],
+    "date": "2025-09-01",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
+      "automation"
+    ],
+    "code": null,
+    "live": null,
+    "order": 3,
+    "show": true,
+    "featured": true,
+    "private": true
+  },
+  {
+    "title": "Developer Portfolio",
+    "description": "Selvin PaulRaj K's portfolio, built with Next.js 16, TypeScript, Tailwind CSS, and Framer Motion, offers a sleek, responsive design and dynamic animations. It includes features like styled email integration, Vercel Analytics, and optimized performance",
+    "tags": [
+      "Next.js 16",
+      "TypeScript",
+      "Tailwind CSS",
+      "Framer Motion",
+      "Vercel Analytics",
+      "React Email"
+    ],
+    "date": "2024-08-20",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/dev_portfolio",
+    "live": "https://selvinpaulraj.vercel.app",
+    "order": 4,
+    "show": false,
+    "featured": false
+  },
+  {
     "title": "Company Synonym Agent",
     "description": "Matching company names across datasets broke on acronyms, subsidiaries, and spelling variants. I built an entity-resolution engine over 2.67M company and subsidiary records: FAISS semantic recall, BM25 rescoring on the candidates, acronym and parent-name boosts, and parent-company roll-up, with an LLM decision agent below a 0.85 confidence threshold and a human for genuine ties",
     "tags": [
@@ -93,7 +149,31 @@
     ],
     "code": null,
     "live": null,
-    "order": 2,
+    "order": 5,
+    "show": true,
+    "featured": true,
+    "private": true
+  },
+  {
+    "title": "Skill Proficiency Engine",
+    "description": "Tags every mapped skill in a job description with one of five proficiency levels, backed by a quote from the JD. Deterministic evidence (years of experience, level phrases and verbs) is used first; remaining skills go to the LLM in batches with a mandatory quote, a substring check, and a second verifier call, and anything unsupported is recorded as not stated instead of guessed",
+    "tags": [
+      "Python",
+      "LLMs",
+      "Structured Output",
+      "Evidence Grounding",
+      "Skills Taxonomy"
+    ],
+    "date": "2025-09-01",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
+      "evaluation"
+    ],
+    "code": null,
+    "live": null,
+    "order": 6,
     "show": true,
     "featured": true,
     "private": true
@@ -125,7 +205,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/zamp-ps1-invoice",
     "live": "https://zamp-ps1-invoice.onrender.com",
-    "order": 4,
+    "order": 7,
     "show": true,
     "featured": true
   },
@@ -155,7 +235,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Finn-Advisor",
     "live": null,
-    "order": 5,
+    "order": 8,
     "show": true,
     "featured": true
   },
@@ -184,7 +264,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/chunklab",
     "live": "https://chunklab-spr.streamlit.app",
-    "order": 6,
+    "order": 9,
     "show": true,
     "featured": true
   },
@@ -207,97 +287,9 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Instagram-Alpic-mcp",
     "live": null,
-    "order": 7,
+    "order": 10,
     "show": true,
     "featured": true
-  },
-  {
-    "title": "Developer Portfolio",
-    "description": "Selvin PaulRaj K's portfolio, built with Next.js 16, TypeScript, Tailwind CSS, and Framer Motion, offers a sleek, responsive design and dynamic animations. It includes features like styled email integration, Vercel Analytics, and optimized performance",
-    "tags": [
-      "Next.js 16",
-      "TypeScript",
-      "Tailwind CSS",
-      "Framer Motion",
-      "Vercel Analytics",
-      "React Email"
-    ],
-    "date": "2024-08-20",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "web"
-    ],
-    "code": "https://github.com/selvin-paul-raj/dev_portfolio",
-    "live": "https://selvinpaulraj.vercel.app",
-    "order": 1,
-    "show": false,
-    "featured": false
-  },
-  {
-    "title": "LinkedIn MCP Server (Alpic)",
-    "description": "Sibling of the Instagram server: exposes LinkedIn actions to Claude and ChatGPT with dynamic tool discovery from Composio, automatic OAuth, structured logging, and health reporting",
-    "tags": [
-      "Python",
-      "FastMCP",
-      "Composio",
-      "Alpic"
-    ],
-    "date": "2026-07-20",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "ai",
-      "tool"
-    ],
-    "code": "https://github.com/selvin-paul-raj/Linkedin-Alpic-Mcp",
-    "live": null,
-    "order": 15,
-    "show": true,
-    "featured": false
-  },
-  {
-    "title": "LinkedIn MCP Server",
-    "description": "MCP toolkit for LinkedIn automation: profile, job, company, and post scraping, plus post creation, reactions, and media uploads for agent workflows",
-    "tags": [
-      "Python",
-      "MCP",
-      "LinkedIn API",
-      "uv"
-    ],
-    "date": "2025-12-10",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "ai",
-      "tool"
-    ],
-    "code": "https://github.com/selvin-paul-raj/Linkedin-MCP-Server",
-    "live": null,
-    "order": 16,
-    "show": true,
-    "featured": false
-  },
-  {
-    "title": "Company Logo Finder",
-    "description": "Company name to official logo: parallel Bing and Serper search, official-URL ranking, then a three-tier extractor (logo.dev API, headless browser for JS-rendered sites, HTML scraping) behind a Streamlit UI",
-    "tags": [
-      "Python",
-      "Streamlit",
-      "Web Scraping",
-      "Headless Browser"
-    ],
-    "date": "2026-05-28",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "tool"
-    ],
-    "code": "https://github.com/selvin-paul-raj/Company-logo-finder",
-    "live": null,
-    "order": 17,
-    "show": true,
-    "featured": false
   },
   {
     "title": "Outlook CLI",
@@ -318,30 +310,83 @@
     ],
     "code": "https://github.com/selvin-paul-raj/outlook-cli",
     "live": "https://www.npmjs.com/package/outlook-cli",
-    "order": 8,
+    "order": 11,
     "show": true,
     "featured": true
   },
   {
-    "title": "GiftBuddy",
-    "description": "Installable PWA for group birthday gifts: create events, auto-split costs, track payments with UPI, and sign in with magic links",
+    "title": "AEON: Agent Governance Layer",
+    "description": "Governance layer for five AI agents sharing one git repository: event-sourced state that changes only when a different party verifies an event, a deterministic reducer checked in CI, tiered permissions with owner-only approvals, and a five-gate security CLI for injection, actions, outbound secrets, commits, and audit. About 441 tests",
     "tags": [
-      "React.js",
-      "PWA",
-      "UPI",
-      "JavaScript"
+      "Python",
+      "Multi-Agent Systems",
+      "Event Sourcing",
+      "Guardrails",
+      "Human-in-the-Loop",
+      "pytest",
+      "GitHub Actions"
     ],
-    "date": "2025-10-29",
+    "date": "2026-09-30",
     "imageUrl": "",
     "categories": [
       "all",
-      "web"
+      "ai"
     ],
-    "code": "https://github.com/selvin-paul-raj/Gift-Buddy",
+    "code": null,
     "live": null,
-    "order": 27,
+    "order": 12,
     "show": true,
-    "featured": false
+    "featured": false,
+    "private": true
+  },
+  {
+    "title": "FleetVoice: WhatsApp Agent for Truck Drivers",
+    "description": "Hackathon-built WhatsApp agent that turns Tamil, Hindi, and English voice notes into trip updates: a typed Jev classifier first, then Gemini, NVIDIA NIM, and rules, each behind a circuit breaker; an input guard before any model, an output guard that checks numbers and places against the driver's words, no model tools, and a feedback loop that tunes the confidence bar",
+    "tags": [
+      "Python",
+      "FastAPI",
+      "LLMs",
+      "Speech-to-Text",
+      "Guardrails",
+      "Circuit Breakers",
+      "SQLite"
+    ],
+    "date": "2026-10-17",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai"
+    ],
+    "code": null,
+    "live": null,
+    "order": 13,
+    "show": true,
+    "featured": false,
+    "private": true
+  },
+  {
+    "title": "SPR Studio: AI Video Pipeline",
+    "description": "Script-to-video pipeline: a zero-shot clone of my own voice, Whisper word alignment, Rhubarb visemes with lip-sync rules, a seekable HTML comic renderer, and an ffmpeg mix to -14 LUFS in four formats and two styles, with an AI disclosure label in every frame",
+    "tags": [
+      "Python",
+      "Text-to-Speech",
+      "Voice Cloning",
+      "Whisper",
+      "ffmpeg",
+      "Video Generation"
+    ],
+    "date": "2026-10-14",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai"
+    ],
+    "code": null,
+    "live": null,
+    "order": 14,
+    "show": true,
+    "featured": false,
+    "private": true
   },
   {
     "title": "ChatDex AI",
@@ -360,147 +405,8 @@
     ],
     "code": "https://github.com/selvin-paul-raj/ChatDex-AI",
     "live": null,
-    "order": 11,
-    "show": true,
-    "featured": false
-  },
-  {
-    "title": "Casita Fashion",
-    "description": "E-commerce fashion website",
-    "tags": [
-      "React.js",
-      "E-commerce",
-      "JavaScript"
-    ],
-    "date": "2025-10-31",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "web"
-    ],
-    "code": "https://github.com/selvin-paul-raj/Casita-Fashion",
-    "live": null,
-    "order": 14,
-    "show": false,
-    "featured": false
-  },
-  {
-    "title": "Prompt Test Sandbox",
-    "description": "Prompt Test Sandbox",
-    "tags": [
-      "TypeScript"
-    ],
-    "date": "2025-10-13",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "ai",
-      "web",
-      "tool"
-    ],
-    "code": "https://github.com/selvin-paul-raj/prompt-test",
-    "live": "https://prompt-test-three.vercel.app",
     "order": 15,
-    "show": false,
-    "featured": false
-  },
-  {
-    "title": "Manager App",
-    "description": "Manager App",
-    "tags": [
-      "TypeScript"
-    ],
-    "date": "2025-10-10",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "web",
-      "tool"
-    ],
-    "code": "https://github.com/selvin-paul-raj/manager",
-    "live": "https://manager-kohl-chi.vercel.app",
-    "order": 16,
-    "show": false,
-    "featured": false
-  },
-  {
-    "title": "PhishXcape: Phishing Detection Extension",
-    "description": "Chrome extension for real-time phishing detection that combines Google Safe Browsing, VirusTotal, an ML model, and URL heuristics into one verdict",
-    "tags": [
-      "JavaScript",
-      "Chrome Extension",
-      "ML",
-      "Security"
-    ],
-    "date": "2025-09-11",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "tool",
-      "ai"
-    ],
-    "code": "https://github.com/selvin-paul-raj/Phishing-Detection-Extension",
-    "live": null,
-    "order": 18,
     "show": true,
-    "featured": false
-  },
-  {
-    "title": "Phishing Detection ML FastAPI",
-    "description": "FastAPI backend for phishing detection using machine learning models",
-    "tags": [
-      "Python",
-      "FastAPI",
-      "Machine Learning",
-      "Security"
-    ],
-    "date": "2025-09-10",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "ai",
-      "tool"
-    ],
-    "code": "https://github.com/selvin-paul-raj/Phishing_Detection_ML_FastAPI",
-    "live": null,
-    "order": 18,
-    "show": false,
-    "featured": false
-  },
-  {
-    "title": "Quote Generator",
-    "description": "A React app that fetches and displays random inspirational quotes from the quotable.io API. Click 'New Quote' for daily inspiration",
-    "tags": [
-      "React.js",
-      "API",
-      "JavaScript"
-    ],
-    "date": "2023-09-03",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "web"
-    ],
-    "code": "https://github.com/selvin-paul-raj/Quote-Generator-React-App",
-    "live": "https://quote-generator-react-app.vercel.app",
-    "order": 19,
-    "show": false,
-    "featured": false
-  },
-  {
-    "title": "OAuth Generated Repo",
-    "description": "Repository created via OAuth",
-    "tags": [],
-    "date": "2025-02-18",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "tool"
-    ],
-    "code": "https://github.com/selvin-paul-raj/generated-1",
-    "live": null,
-    "order": 20,
-    "show": false,
     "featured": false
   },
   {
@@ -522,192 +428,195 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Dynamic-AI-Agent-CLI-System",
     "live": null,
-    "order": 12,
+    "order": 16,
     "show": true,
     "featured": false
   },
   {
-    "title": "AI Agent MCP Server",
-    "description": "Model Context Protocol server for AI agents",
+    "title": "Casita Fashion",
+    "description": "E-commerce fashion website",
     "tags": [
-      "MCP",
-      "AI",
-      "TypeScript"
+      "React.js",
+      "E-commerce",
+      "JavaScript"
     ],
-    "date": "2025-08-04",
+    "date": "2025-10-31",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Casita-Fashion",
+    "live": null,
+    "order": 17,
+    "show": false,
+    "featured": false
+  },
+  {
+    "title": "LinkedIn MCP Server (Alpic)",
+    "description": "Sibling of the Instagram server: exposes LinkedIn actions to Claude and ChatGPT with dynamic tool discovery from Composio, automatic OAuth, structured logging, and health reporting",
+    "tags": [
+      "Python",
+      "FastMCP",
+      "Composio",
+      "Alpic"
+    ],
+    "date": "2026-07-20",
     "imageUrl": "",
     "categories": [
       "all",
       "ai",
       "tool"
     ],
-    "code": null,
+    "code": "https://github.com/selvin-paul-raj/Linkedin-Alpic-Mcp",
     "live": null,
-    "order": 22,
+    "order": 18,
+    "show": true,
+    "featured": false
+  },
+  {
+    "title": "Prompt Test Sandbox",
+    "description": "Prompt Test Sandbox",
+    "tags": [
+      "TypeScript"
+    ],
+    "date": "2025-10-13",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/prompt-test",
+    "live": "https://prompt-test-three.vercel.app",
+    "order": 19,
     "show": false,
     "featured": false
   },
   {
-    "title": "Copy-ME",
-    "description": "Real-time shared clipboard across devices: draft privately, then publish to sync instantly with every connected participant over WebSockets",
+    "title": "LinkedIn MCP Server",
+    "description": "MCP toolkit for LinkedIn automation: profile, job, company, and post scraping, plus post creation, reactions, and media uploads for agent workflows",
     "tags": [
-      "Real-time",
-      "WebSockets",
-      "JavaScript",
-      "HTML",
-      "CSS"
+      "Python",
+      "MCP",
+      "LinkedIn API",
+      "uv"
     ],
-    "date": "2025-07-15",
+    "date": "2025-12-10",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Linkedin-MCP-Server",
+    "live": null,
+    "order": 20,
+    "show": true,
+    "featured": false
+  },
+  {
+    "title": "Manager App",
+    "description": "Manager App",
+    "tags": [
+      "TypeScript"
+    ],
+    "date": "2025-10-10",
     "imageUrl": "",
     "categories": [
       "all",
       "web",
       "tool"
     ],
-    "code": "https://github.com/selvin-paul-raj/copy-me",
+    "code": "https://github.com/selvin-paul-raj/manager",
+    "live": "https://manager-kohl-chi.vercel.app",
+    "order": 21,
+    "show": false,
+    "featured": false
+  },
+  {
+    "title": "Company Logo Finder",
+    "description": "Company name to official logo: parallel Bing and Serper search, official-URL ranking, then a three-tier extractor (logo.dev API, headless browser for JS-rendered sites, HTML scraping) behind a Streamlit UI",
+    "tags": [
+      "Python",
+      "Streamlit",
+      "Web Scraping",
+      "Headless Browser"
+    ],
+    "date": "2026-05-28",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Company-logo-finder",
     "live": null,
     "order": 22,
     "show": true,
     "featured": false
   },
   {
-    "title": "Test Repo",
-    "description": "Test Repo",
-    "tags": [],
-    "date": "2025-06-23",
+    "title": "PhishXcape: Phishing Detection Extension",
+    "description": "Chrome extension for real-time phishing detection that combines Google Safe Browsing, VirusTotal, an ML model, and URL heuristics into one verdict",
+    "tags": [
+      "JavaScript",
+      "Chrome Extension",
+      "ML",
+      "Security"
+    ],
+    "date": "2025-09-11",
     "imageUrl": "",
     "categories": [
       "all",
+      "tool",
+      "ai"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Phishing-Detection-Extension",
+    "live": null,
+    "order": 23,
+    "show": true,
+    "featured": false
+  },
+  {
+    "title": "Phishing Detection ML FastAPI",
+    "description": "FastAPI backend for phishing detection using machine learning models",
+    "tags": [
+      "Python",
+      "FastAPI",
+      "Machine Learning",
+      "Security"
+    ],
+    "date": "2025-09-10",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
       "tool"
     ],
-    "code": "https://github.com/selvin-paul-raj/test",
+    "code": "https://github.com/selvin-paul-raj/Phishing_Detection_ML_FastAPI",
     "live": null,
     "order": 24,
     "show": false,
     "featured": false
   },
   {
-    "title": "IBISWorld Web Scraper",
-    "description": "Web scraper for IBISWorld industry data",
-    "tags": [
-      "Python",
-      "Web Scraping",
-      "Data Analysis"
-    ],
-    "date": "2025-06-17",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "tool"
-    ],
-    "code": "https://github.com/selvin-paul-raj/-IBISWorld_Web_Scraper",
-    "live": null,
-    "order": 25,
-    "show": false,
-    "featured": false
-  },
-  {
-    "title": "Screener Companies Web Scraping",
-    "description": "Web scraping tool for company data from Screener",
-    "tags": [
-      "Python",
-      "Web Scraping",
-      "BeautifulSoup"
-    ],
-    "date": "2025-06-17",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "tool"
-    ],
-    "code": "https://github.com/selvin-paul-raj/screener_companies_Web_Scrapping",
-    "live": null,
-    "order": 26,
-    "show": false,
-    "featured": false
-  },
-  {
-    "title": "Deepfake Video Detection",
-    "description": "Deep-learning classifier for detecting deepfake videos, trained on the DFDC (Deepfake Detection Challenge) face-crop dataset",
-    "tags": [
-      "Python",
-      "Deep Learning",
-      "Computer Vision"
-    ],
-    "date": "2024-11-18",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "ai",
-      "tool"
-    ],
-    "code": "https://github.com/selvin-paul-raj/deepfake_Video",
-    "live": null,
-    "order": 28,
-    "show": true,
-    "featured": false
-  },
-  {
-    "title": "SPR Next Ink",
-    "description": "SPR Next Ink",
-    "tags": [
-      "JavaScript"
-    ],
-    "date": "2024-11-15",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "web"
-    ],
-    "code": "https://github.com/selvin-paul-raj/spr-nxt-ink",
-    "live": null,
-    "order": 28,
-    "show": false,
-    "featured": false
-  },
-  {
-    "title": "AI Content Generator",
-    "description": "AI content generator with dynamic templates, searchable filters, adaptive forms, and rich-text editing. Built on Next.js, Gemini, Clerk, Drizzle ORM, and PostgreSQL",
-    "tags": [
-      "Next.js 15",
-      "TypeScript",
-      "Tailwind CSS",
-      "Clerk",
-      "Gemini AI",
-      "Radix UI",
-      "Toast UI Editor"
-    ],
-    "date": "2024-11-12",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "web",
-      "ai",
-      "tool"
-    ],
-    "code": "https://github.com/selvin-paul-raj/AI-Content-Generator",
-    "live": null,
-    "order": 21,
-    "show": true,
-    "featured": false
-  },
-  {
-    "title": "Food Delivery Website",
-    "description": "Full-stack food delivery platform",
+    "title": "Quote Generator",
+    "description": "A React app that fetches and displays random inspirational quotes from the quotable.io API. Click 'New Quote' for daily inspiration",
     "tags": [
       "React.js",
-      "Node.js",
-      "Express.js"
+      "API",
+      "JavaScript"
     ],
-    "date": "2024-11-14",
+    "date": "2023-09-03",
     "imageUrl": "",
     "categories": [
       "all",
       "web"
     ],
-    "code": "https://github.com/selvin-paul-raj/Food-Delivery-Website",
-    "live": null,
-    "order": 30,
+    "code": "https://github.com/selvin-paul-raj/Quote-Generator-React-App",
+    "live": "https://quote-generator-react-app.vercel.app",
+    "order": 25,
     "show": false,
     "featured": false
   },
@@ -732,67 +641,23 @@
     ],
     "code": "https://github.com/selvin-paul-raj/SPR-AI-Calculator",
     "live": "https://spr-ai-calculator.vercel.app",
-    "order": 19,
+    "order": 26,
     "show": true,
     "featured": false
   },
   {
-    "title": "Vitersim",
-    "description": "npm CLI that strips a fresh Vite + React project down to a clean starter: removes boilerplate, simplifies the component structure, and prepares Tailwind CSS",
-    "tags": [
-      "CLI",
-      "Vite",
-      "React.js",
-      "Node.js",
-      "npm"
-    ],
-    "date": "2024-11-06",
+    "title": "OAuth Generated Repo",
+    "description": "Repository created via OAuth",
+    "tags": [],
+    "date": "2025-02-18",
     "imageUrl": "",
     "categories": [
       "all",
       "tool"
     ],
-    "code": "https://github.com/selvin-paul-raj/vitersim",
-    "live": "https://www.npmjs.com/package/vitersim",
-    "order": 23,
-    "show": true,
-    "featured": false
-  },
-  {
-    "title": "AI Calculator (Early Version)",
-    "description": "AI Calculator (Early Version)",
-    "tags": [
-      "TypeScript"
-    ],
-    "date": "2024-10-26",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "ai",
-      "web",
-      "tool"
-    ],
-    "code": "https://github.com/selvin-paul-raj/AI-Calculator",
-    "live": "https://spr-ai-calculator.vercel.app",
-    "order": 33,
-    "show": false,
-    "featured": false
-  },
-  {
-    "title": "PicoFoilo",
-    "description": "PicoFoilo",
-    "tags": [
-      "TypeScript"
-    ],
-    "date": "2024-10-16",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "web"
-    ],
-    "code": "https://github.com/selvin-paul-raj/PicoFoilo",
-    "live": "https://picofolio.vercel.app",
-    "order": 34,
+    "code": "https://github.com/selvin-paul-raj/generated-1",
+    "live": null,
+    "order": 27,
     "show": false,
     "featured": false
   },
@@ -817,8 +682,337 @@
     ],
     "code": "https://github.com/selvin-paul-raj/TroothView",
     "live": "https://trooth-view.vercel.app",
-    "order": 20,
+    "order": 28,
     "show": true,
+    "featured": false
+  },
+  {
+    "title": "AI Content Generator",
+    "description": "AI content generator with dynamic templates, searchable filters, adaptive forms, and rich-text editing. Built on Next.js, Gemini, Clerk, Drizzle ORM, and PostgreSQL",
+    "tags": [
+      "Next.js 15",
+      "TypeScript",
+      "Tailwind CSS",
+      "Clerk",
+      "Gemini AI",
+      "Radix UI",
+      "Toast UI Editor"
+    ],
+    "date": "2024-11-12",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "ai",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/AI-Content-Generator",
+    "live": null,
+    "order": 29,
+    "show": true,
+    "featured": false
+  },
+  {
+    "title": "AI Agent MCP Server",
+    "description": "Model Context Protocol server for AI agents",
+    "tags": [
+      "MCP",
+      "AI",
+      "TypeScript"
+    ],
+    "date": "2025-08-04",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
+      "tool"
+    ],
+    "code": null,
+    "live": null,
+    "order": 30,
+    "show": false,
+    "featured": false
+  },
+  {
+    "title": "Copy-ME",
+    "description": "Real-time shared clipboard across devices: draft privately, then publish to sync instantly with every connected participant over WebSockets",
+    "tags": [
+      "Real-time",
+      "WebSockets",
+      "JavaScript",
+      "HTML",
+      "CSS"
+    ],
+    "date": "2025-07-15",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/copy-me",
+    "live": null,
+    "order": 31,
+    "show": true,
+    "featured": false
+  },
+  {
+    "title": "Vitersim",
+    "description": "npm CLI that strips a fresh Vite + React project down to a clean starter: removes boilerplate, simplifies the component structure, and prepares Tailwind CSS",
+    "tags": [
+      "CLI",
+      "Vite",
+      "React.js",
+      "Node.js",
+      "npm"
+    ],
+    "date": "2024-11-06",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/vitersim",
+    "live": "https://www.npmjs.com/package/vitersim",
+    "order": 32,
+    "show": true,
+    "featured": false
+  },
+  {
+    "title": "Test Repo",
+    "description": "Test Repo",
+    "tags": [],
+    "date": "2025-06-23",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/test",
+    "live": null,
+    "order": 33,
+    "show": false,
+    "featured": false
+  },
+  {
+    "title": "SPR Censorify",
+    "description": "npm package that masks sensitive or offensive words in text with configurable replacements",
+    "tags": [
+      "JavaScript",
+      "npm",
+      "Content Moderation"
+    ],
+    "date": "2023-08-15",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/spr-censorify",
+    "live": "https://www.npmjs.com/package/spr-censorify",
+    "order": 34,
+    "show": true,
+    "featured": false
+  },
+  {
+    "title": "IBISWorld Web Scraper",
+    "description": "Web scraper for IBISWorld industry data",
+    "tags": [
+      "Python",
+      "Web Scraping",
+      "Data Analysis"
+    ],
+    "date": "2025-06-17",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/-IBISWorld_Web_Scraper",
+    "live": null,
+    "order": 35,
+    "show": false,
+    "featured": false
+  },
+  {
+    "title": "Own Amazon Scraper API",
+    "description": "Node.js and Express API that scrapes Amazon product details, reviews, offers, and search results",
+    "tags": [
+      "Node.js",
+      "Express.js",
+      "Web Scraping",
+      "API"
+    ],
+    "date": "2023-10-27",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Own_Amazon_Scraper_API",
+    "live": null,
+    "order": 36,
+    "show": true,
+    "featured": false
+  },
+  {
+    "title": "Screener Companies Web Scraping",
+    "description": "Web scraping tool for company data from Screener",
+    "tags": [
+      "Python",
+      "Web Scraping",
+      "BeautifulSoup"
+    ],
+    "date": "2025-06-17",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/screener_companies_Web_Scrapping",
+    "live": null,
+    "order": 37,
+    "show": false,
+    "featured": false
+  },
+  {
+    "title": "EzSumZ: Article Summarizer",
+    "description": "React app that turns long articles into concise summaries using OpenAI's GPT-4",
+    "tags": [
+      "React.js",
+      "OpenAI GPT-4",
+      "API",
+      "Tailwind CSS"
+    ],
+    "date": "2023-09-10",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web",
+      "ai"
+    ],
+    "code": "https://github.com/selvin-paul-raj/EzSumZ-Article_Summarizer-React-App",
+    "live": null,
+    "order": 38,
+    "show": true,
+    "featured": false
+  },
+  {
+    "title": "GiftBuddy",
+    "description": "Installable PWA for group birthday gifts: create events, auto-split costs, track payments with UPI, and sign in with magic links",
+    "tags": [
+      "React.js",
+      "PWA",
+      "UPI",
+      "JavaScript"
+    ],
+    "date": "2025-10-29",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Gift-Buddy",
+    "live": null,
+    "order": 39,
+    "show": true,
+    "featured": false
+  },
+  {
+    "title": "Deepfake Video Detection",
+    "description": "Deep-learning classifier for detecting deepfake videos, trained on the DFDC (Deepfake Detection Challenge) face-crop dataset",
+    "tags": [
+      "Python",
+      "Deep Learning",
+      "Computer Vision"
+    ],
+    "date": "2024-11-18",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/deepfake_Video",
+    "live": null,
+    "order": 40,
+    "show": true,
+    "featured": false
+  },
+  {
+    "title": "SPR Next Ink",
+    "description": "SPR Next Ink",
+    "tags": [
+      "JavaScript"
+    ],
+    "date": "2024-11-15",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/spr-nxt-ink",
+    "live": null,
+    "order": 41,
+    "show": false,
+    "featured": false
+  },
+  {
+    "title": "Food Delivery Website",
+    "description": "Full-stack food delivery platform",
+    "tags": [
+      "React.js",
+      "Node.js",
+      "Express.js"
+    ],
+    "date": "2024-11-14",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/Food-Delivery-Website",
+    "live": null,
+    "order": 42,
+    "show": false,
+    "featured": false
+  },
+  {
+    "title": "AI Calculator (Early Version)",
+    "description": "AI Calculator (Early Version)",
+    "tags": [
+      "TypeScript"
+    ],
+    "date": "2024-10-26",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "ai",
+      "web",
+      "tool"
+    ],
+    "code": "https://github.com/selvin-paul-raj/AI-Calculator",
+    "live": "https://spr-ai-calculator.vercel.app",
+    "order": 43,
+    "show": false,
+    "featured": false
+  },
+  {
+    "title": "PicoFoilo",
+    "description": "PicoFoilo",
+    "tags": [
+      "TypeScript"
+    ],
+    "date": "2024-10-16",
+    "imageUrl": "",
+    "categories": [
+      "all",
+      "web"
+    ],
+    "code": "https://github.com/selvin-paul-raj/PicoFoilo",
+    "live": "https://picofolio.vercel.app",
+    "order": 44,
+    "show": false,
     "featured": false
   },
   {
@@ -836,7 +1030,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Client_Expense_Tracker",
     "live": "https://spr-expense-tracker.vercel.app",
-    "order": 36,
+    "order": 45,
     "show": false,
     "featured": false
   },
@@ -856,7 +1050,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/RPi4",
     "live": null,
-    "order": 37,
+    "order": 46,
     "show": false,
     "featured": false
   },
@@ -878,7 +1072,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/MERN-Blog",
     "live": null,
-    "order": 38,
+    "order": 47,
     "show": false,
     "featured": false
   },
@@ -900,7 +1094,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Files-Share-App",
     "live": null,
-    "order": 39,
+    "order": 48,
     "show": false,
     "featured": false
   },
@@ -916,7 +1110,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/azure",
     "live": null,
-    "order": 40,
+    "order": 49,
     "show": false,
     "featured": false
   },
@@ -937,7 +1131,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Drag-and-Drop-Notes",
     "live": null,
-    "order": 41,
+    "order": 50,
     "show": false,
     "featured": false
   },
@@ -961,7 +1155,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Speed-Typing",
     "live": "https://spr-speed-typing.vercel.app",
-    "order": 42,
+    "order": 51,
     "show": false,
     "featured": false
   },
@@ -979,7 +1173,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Naan-Mudhalvan-Cybersecurity-",
     "live": null,
-    "order": 43,
+    "order": 52,
     "show": false,
     "featured": false
   },
@@ -998,7 +1192,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Nextjs-AI-Thief-Detection",
     "live": "https://thief-alarm.vercel.app",
-    "order": 44,
+    "order": 53,
     "show": false,
     "featured": false
   },
@@ -1018,7 +1212,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Multi-Lang-App-React",
     "live": null,
-    "order": 45,
+    "order": 54,
     "show": false,
     "featured": false
   },
@@ -1036,7 +1230,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/html_map",
     "live": null,
-    "order": 46,
+    "order": 55,
     "show": false,
     "featured": false
   },
@@ -1055,7 +1249,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/codealpha_gemini",
     "live": null,
-    "order": 47,
+    "order": 56,
     "show": false,
     "featured": false
   },
@@ -1073,7 +1267,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/codealpha_portfolio",
     "live": null,
-    "order": 48,
+    "order": 57,
     "show": false,
     "featured": false
   },
@@ -1094,7 +1288,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Oasis_Landing_Page",
     "live": null,
-    "order": 49,
+    "order": 58,
     "show": false,
     "featured": false
   },
@@ -1116,7 +1310,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/codealpha_expense_tracker",
     "live": null,
-    "order": 50,
+    "order": 59,
     "show": false,
     "featured": false
   },
@@ -1135,7 +1329,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Server_Expense_Tracker",
     "live": null,
-    "order": 51,
+    "order": 60,
     "show": false,
     "featured": false
   },
@@ -1156,7 +1350,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/PRODIGY-WD-02",
     "live": null,
-    "order": 52,
+    "order": 61,
     "show": false,
     "featured": false
   },
@@ -1175,7 +1369,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Flutter_API",
     "live": null,
-    "order": 53,
+    "order": 62,
     "show": false,
     "featured": false
   },
@@ -1196,7 +1390,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/PRODIGY_WD_01",
     "live": null,
-    "order": 54,
+    "order": 63,
     "show": false,
     "featured": false
   },
@@ -1217,7 +1411,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/QR-Code-Generator-React",
     "live": null,
-    "order": 55,
+    "order": 64,
     "show": false,
     "featured": false
   },
@@ -1237,7 +1431,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Tic-Tac-Toe-Game-in-Flutter",
     "live": null,
-    "order": 56,
+    "order": 65,
     "show": false,
     "featured": false
   },
@@ -1256,7 +1450,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/First_Flutter_App",
     "live": null,
-    "order": 57,
+    "order": 66,
     "show": false,
     "featured": false
   },
@@ -1277,7 +1471,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Random-Meme-React",
     "live": null,
-    "order": 58,
+    "order": 67,
     "show": false,
     "featured": false
   },
@@ -1298,7 +1492,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Cube-Threejs",
     "live": null,
-    "order": 59,
+    "order": 68,
     "show": false,
     "featured": false
   },
@@ -1320,7 +1514,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/React-Weather-App",
     "live": null,
-    "order": 60,
+    "order": 69,
     "show": false,
     "featured": false
   },
@@ -1339,7 +1533,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/simple_Todo_app",
     "live": null,
-    "order": 61,
+    "order": 70,
     "show": false,
     "featured": false
   },
@@ -1360,7 +1554,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/React_Calculator",
     "live": null,
-    "order": 62,
+    "order": 71,
     "show": false,
     "featured": false
   },
@@ -1380,7 +1574,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Cursor_Hearts",
     "live": null,
-    "order": 63,
+    "order": 72,
     "show": false,
     "featured": false
   },
@@ -1398,7 +1592,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Hireme",
     "live": null,
-    "order": 64,
+    "order": 73,
     "show": false,
     "featured": false
   },
@@ -1418,7 +1612,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/New_Year_CountDown",
     "live": null,
-    "order": 65,
+    "order": 74,
     "show": false,
     "featured": false
   },
@@ -1436,7 +1630,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/food",
     "live": null,
-    "order": 66,
+    "order": 75,
     "show": false,
     "featured": false
   },
@@ -1455,29 +1649,8 @@
     ],
     "code": "https://github.com/selvin-paul-raj/palm-Server",
     "live": null,
-    "order": 67,
+    "order": 76,
     "show": false,
-    "featured": false
-  },
-  {
-    "title": "Own Amazon Scraper API",
-    "description": "Node.js and Express API that scrapes Amazon product details, reviews, offers, and search results",
-    "tags": [
-      "Node.js",
-      "Express.js",
-      "Web Scraping",
-      "API"
-    ],
-    "date": "2023-10-27",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "tool"
-    ],
-    "code": "https://github.com/selvin-paul-raj/Own_Amazon_Scraper_API",
-    "live": null,
-    "order": 25,
-    "show": true,
     "featured": false
   },
   {
@@ -1496,7 +1669,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/BMI-Calculator-React-Native-App",
     "live": null,
-    "order": 69,
+    "order": 77,
     "show": false,
     "featured": false
   },
@@ -1517,30 +1690,8 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Random-Dog-Pic-Generate",
     "live": null,
-    "order": 70,
+    "order": 78,
     "show": false,
-    "featured": false
-  },
-  {
-    "title": "EzSumZ: Article Summarizer",
-    "description": "React app that turns long articles into concise summaries using OpenAI's GPT-4",
-    "tags": [
-      "React.js",
-      "OpenAI GPT-4",
-      "API",
-      "Tailwind CSS"
-    ],
-    "date": "2023-09-10",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "web",
-      "ai"
-    ],
-    "code": "https://github.com/selvin-paul-raj/EzSumZ-Article_Summarizer-React-App",
-    "live": null,
-    "order": 26,
-    "show": true,
     "featured": false
   },
   {
@@ -1561,7 +1712,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/React-Redux-Todo-App",
     "live": null,
-    "order": 72,
+    "order": 79,
     "show": false,
     "featured": false
   },
@@ -1583,7 +1734,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Electronjs-Calculator-App",
     "live": null,
-    "order": 73,
+    "order": 80,
     "show": false,
     "featured": false
   },
@@ -1601,7 +1752,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Portfolio",
     "live": null,
-    "order": 74,
+    "order": 81,
     "show": false,
     "featured": false
   },
@@ -1620,28 +1771,8 @@
     ],
     "code": "https://github.com/selvin-paul-raj/spr_censorify_Example",
     "live": null,
-    "order": 75,
+    "order": 82,
     "show": false,
-    "featured": false
-  },
-  {
-    "title": "SPR Censorify",
-    "description": "npm package that masks sensitive or offensive words in text with configurable replacements",
-    "tags": [
-      "JavaScript",
-      "npm",
-      "Content Moderation"
-    ],
-    "date": "2023-08-15",
-    "imageUrl": "",
-    "categories": [
-      "all",
-      "tool"
-    ],
-    "code": "https://github.com/selvin-paul-raj/spr-censorify",
-    "live": "https://www.npmjs.com/package/spr-censorify",
-    "order": 24,
-    "show": true,
     "featured": false
   },
   {
@@ -1658,7 +1789,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Form_Validation",
     "live": "https://sprhackz.github.io/Form_Validation/",
-    "order": 77,
+    "order": 83,
     "show": false,
     "featured": false
   },
@@ -1678,7 +1809,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/React_Food_Delivery",
     "live": null,
-    "order": 78,
+    "order": 84,
     "show": false,
     "featured": false
   },
@@ -1696,7 +1827,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Flames_Web_App",
     "live": "https://sprhackz.github.io/Flames_Web_App/",
-    "order": 79,
+    "order": 85,
     "show": false,
     "featured": false
   },
@@ -1714,7 +1845,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Library-Management-System",
     "live": null,
-    "order": 80,
+    "order": 86,
     "show": false,
     "featured": false
   },
@@ -1732,7 +1863,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/React_Personal_Portfolio",
     "live": null,
-    "order": 81,
+    "order": 87,
     "show": false,
     "featured": false
   },
@@ -1750,7 +1881,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Animation_Login_Page",
     "live": "https://sprhackz.github.io/Animation_Login_Page/",
-    "order": 82,
+    "order": 88,
     "show": false,
     "featured": false
   },
@@ -1768,7 +1899,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/Login_Page_01",
     "live": "https://sprhackz.github.io/Login_Page_01/",
-    "order": 83,
+    "order": 89,
     "show": false,
     "featured": false
   },
@@ -1786,7 +1917,7 @@
     ],
     "code": "https://github.com/selvin-paul-raj/FLAMES.py",
     "live": null,
-    "order": 84,
+    "order": 90,
     "show": false,
     "featured": false
   }

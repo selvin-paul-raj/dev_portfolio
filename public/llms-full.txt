@@ -155,6 +155,12 @@ A LangGraph multi-agent system that turns plain-English data requests into valid
 - 281: Tests across 31 test files
 - 4: FastAPI endpoints
 
+**How it's verified**
+- **Harness:** LangGraph manager graph over three subgraphs, typed state with merge reducers, a SQLite checkpointer for interrupt and resume, and per-stage model routing.
+- **Evals:** An evaluation framework is one of the ten core components; per-agent call statistics are saved for every session.
+- **Guardrails:** Personal data is masked before any model call; SQL is SELECT-only with a keyword blocklist and a dry run; four human-in-the-loop interrupts cover the expensive failure modes.
+- **Testing:** 281 tests across 31 test files.
+
 **Decisions**
 - A manager agent over three subgraphs instead of one prompt, so normalization, schema selection, and SQL generation are each tested and evaluated on their own.
 - Hybrid FAISS + BM25 for entity names: semantic search handles paraphrase, BM25 keeps exact names and acronyms from drifting.
@@ -162,6 +168,77 @@ A LangGraph multi-agent system that turns plain-English data requests into valid
 - Batch mode trades interactivity for throughput: no interrupts, failures recorded per row.
 
 **Stack:** LangGraph, Claude API, FastAPI, Trino, FAISS, BM25, Pydantic v2, SQLite checkpointer, pytest
+
+### Akavizhi
+
+https://selvinpaulraj.vercel.app/work/akavizhi · Designed and built · Personal project · 2026 · Private repo
+
+A single-user personal AI: a two-stage router hands each request to one of nine specialist agents, and every consequential action has to match what the owner actually said.
+
+**Problem.** A personal assistant that can read notes, send messages, and change data is only useful if it can act, and only safe if nothing it reads can make it act. Web pages, documents, and another agent's output can all carry instructions, so the harness cannot rely on the model to tell data from orders.
+
+**How it works**
+1. **One owner, one gate.** Every page and API route sits behind an owner session; only a short list of paths is public. There is no multi-user surface to get wrong.
+2. **Two-stage routing.** Pattern rules catch obvious intents and follow-ups first, which is fast and free. Anything else goes to a small LLM dispatcher that must return a schema-validated agent name, falling back to the knowledge agent.
+3. **Nine specialists, each with its own tools.** Each agent sees only the tools for its domain. A function-calling loop runs at most six steps with a per-run tool budget, and if a model stalls for eight seconds the loop moves to the next model.
+4. **Delegation without escalation.** An agent can ask one colleague for help, one level deep. Delegated runs can never call destructive tools, because a colleague's instructions may contain text from the web.
+5. **The owner's words, not the model's.** A consequential tool (delete, message, call, update, web task) only runs when the owner's own words in this turn ask for that action. Tool output is labelled as data in the system rules, but the check does not depend on the model obeying them.
+6. **Ask before deleting.** Deletes ask once and run only after the owner says yes. A guest mode limits the assistant to read-only tools and saves nothing.
+7. **Retrieval and fetching that fail safely.** Answers cite numbered sources from a pgvector store, and fall back to multilingual word search, Tamil included, when embeddings are unavailable. Every outbound fetch blocks private addresses, pins DNS, and rechecks each redirect.
+
+**Measured**
+- 9: Specialist agents with scoped tools
+- 85: Tools across 11 domains
+- 6: Maximum steps per tool loop
+- 155: Tests (151 unit, 4 end-to-end)
+
+**How it's verified**
+- **Harness:** Rule router plus an LLM dispatcher into nine scoped specialists; a six-step function-calling loop with one-level delegation, a tool budget, a stall-timeout model fallback, and a multi-provider chain.
+- **Guardrails:** Owner-session gate on every route, an owner-intent check before any consequential tool, no destructive tools in delegated runs, ask-then-confirm deletes, a read-only guest mode, and SSRF-safe fetching.
+- **Testing:** 151 unit tests and 4 Playwright tests, plus an opt-in live suite that exercises every tool against real data; CI runs lint, type checks, unit tests, and the build.
+
+**Decisions**
+- Rules before the LLM router, for latency and free-tier cost.
+- Deterministic intent gating instead of trusting the model to resist injection.
+- Every model and data dependency has a fallback, so the assistant degrades instead of failing.
+
+**Stack:** Next.js 16, React 19, TypeScript, Supabase + pgvector, Gemini (function calling), Groq, zod, Vitest, Playwright
+
+### Jobs with Joe
+
+https://selvinpaulraj.vercel.app/work/jobs-with-joe · Designed and built · Personal project · 2026 · Private repo · live product
+
+A job board for Indian freshers: twelve source adapters, explainable rule-based classification, and AI resume tools behind a fact guard that rejects anything the candidate did not write.
+
+**Problem.** Freshers in India wade through listings that are mislabelled, duplicated, or scams, then rewrite the same resume for every application. AI can help with the writing, but a resume that gains a skill or a number the candidate never had is worse than no help.
+
+**How it works**
+1. **Twelve sources, one clean plan.** Adapters collect jobs from applicant-tracking APIs and structured job markup, respecting robots.txt and sanitizing every field. A pure, I/O-free plan normalizes, validates, classifies, and deduplicates, then applies everything in one transaction.
+2. **Classification you can explain.** An ordered rule set labels each job's experience level and returns the IDs of the rules that fired. 'Unknown' is a normal answer and is never shown as fresher-friendly.
+3. **AI is optional.** A model router uses Gemini Flash, retries on a lighter model after a rate limit or timeout, and can use OpenAI instead. With no key at all, every AI feature falls back to a deterministic version.
+4. **A fact guard after generation.** Prompts forbid new employers, numbers, or skills and turn missing facts into placeholders. Then a post-check rejects any rewrite that adds a number, a known skill, or a proper noun that is not in the original resume.
+5. **The candidate approves every line.** Rewrites are accepted line by line. Applying one checks the source line has not changed and escapes LaTeX, so a rewrite cannot inject commands into the generated PDF.
+6. **Matching with minimal data.** Optional embeddings power job matching, built from skills and preferences only: no name, grades, or pay go to the embedding model.
+7. **A scam shield with no model in it.** Lookalike domains, punycode, fee or UPI requests, and personal email addresses are caught by deterministic rules, logged anonymously, and rate limited.
+
+**Measured**
+- 12: Job source adapters
+- 1,305: Unit and end-to-end tests
+- 826: Planned pgTAP database assertions
+- 11: CI workflows
+- 37: Database migrations with row-level security
+
+**How it's verified**
+- **Harness:** One OpenAI-compatible client with a model fallback chain, a health probe, and a deterministic fallback for every AI feature; prompts and outputs are never logged.
+- **Guardrails:** Fact rules in every prompt plus a post-generation guard that rejects new numbers, skills, or names; schema-validated JSON output; rate-limited extension tokens with an origin allow-list; data minimisation for embeddings; line-by-line user acceptance.
+- **Testing:** About 1,305 tests (574 API, 581 web unit, 68 Playwright, 82 extension) plus 826 planned pgTAP assertions, run by separate CI workflows for web, API, database, extension, and LaTeX.
+
+**Decisions**
+- AI as an optional feature layer with a deterministic fallback for every feature.
+- Rule-based, explainable classification instead of an LLM.
+- Row-level security first, so reads work with the public key and nothing else.
+
+**Stack:** Next.js, TypeScript, FastAPI, Supabase Postgres (RLS), pgTAP, Gemini / OpenAI, Chrome extension (MV3), Playwright, Vitest, Docker LaTeX
 
 ### Company Synonym Agent
 
@@ -186,6 +263,11 @@ Entity resolution for company names across 2.67M company and subsidiary records:
 - 10×: Candidate over-fetch before rescoring
 - 40+: Tests in the extracted service
 
+**How it's verified**
+- **Harness:** Runs as a normalization tool inside the DRI-MAS graph, with an LLM decision agent and a human step behind it.
+- **Guardrails:** Scores of 0.85 or more skip the model entirely; the LLM can only choose among retrieved candidates, so it cannot invent a company; ties go to a person.
+- **Testing:** 14 unit tests for the hybrid normalizer and 40+ tests in the extracted service.
+
 **Decisions**
 - Semantic recall over the full corpus, BM25 only on the candidates: cheap lexical precision at 2.67M scale.
 - Explicit acronym and parent boosts instead of hoping embeddings learn them.
@@ -193,7 +275,7 @@ Entity resolution for company names across 2.67M company and subsidiary records:
 
 **Stack:** Python, sentence-transformers (MiniLM), FAISS, BM25, RapidFuzz, LangGraph, Pydantic, Milvus, FastAPI
 
-### Deal Origination Framework
+### Deal Origination Framework (DOF)
 
 https://selvinpaulraj.vercel.app/work/dof · Built · Zinnov (Draup) · 2025 to 2026 · Work · private repo
 
@@ -217,6 +299,12 @@ A weekly business-signal pipeline for 537 enterprise accounts: collect from news
 - 760: Companies processed across 11 production runs
 - 97: Tests in the pipeline
 - 1: LLM call per event, however many copies
+
+**How it's verified**
+- **Harness:** Persistent SQLite task queue with atomic claims, barriers between phases, immediate persistence, and pause and resume.
+- **Evals:** A one-week real-data run over 20 accounts (591 tasks, 383 documents, 27 events) passed reconciliation; the classifier was stubbed in that run.
+- **Guardrails:** LLM output is validated against the signal taxonomy with one repair turn and one retry; low confidence or a vertical mismatch goes to an analyst; a run cannot be marked complete unless report counts match the database.
+- **Testing:** 97 tests.
 
 **Decisions**
 - Classify events, not articles: syndicated copies collapse first, so the model sees each story once.
@@ -246,6 +334,11 @@ Tags every skill in a job description with one of five proficiency levels, backe
 - 2: Anti-hallucination layers: quote check + verifier
 - 10: Skills per LLM batch, bisected on failure
 - 37: Tests
+
+**How it's verified**
+- **Harness:** Deterministic extraction first, then batched model calls of ten with retry and bisect-on-failure, cached by JD, skill, model, and prompt version.
+- **Guardrails:** Every model-proposed level needs a quote from the JD, the quote must appear verbatim, and a second verifier call must agree; anything else becomes NOT_STATED.
+- **Testing:** 37 tests.
 
 **Decisions**
 - Deterministic evidence first, and the model can never override it.
@@ -281,12 +374,55 @@ An accounts-payable workflow where AI reads, code decides, and people own the ex
 - 14 ms: Pipeline p95 latency
 - $0.0052: Cost of 180 Jev calls
 
+**How it's verified**
+- **Harness:** FastAPI service with a durable job queue (three tries, then HOLD), a nine-step check pipeline, and a TypeSafe Jev advisor running in replay mode by default.
+- **Evals:** A gated harness: 31/31 labelled cases, 0 false approvals across 600 adversarial variants, 48/48 duplicate recall, and an LLM judge validated against a 69-item gold set (kappa 0.659).
+- **Guardrails:** Intake scans for injected instructions; an action allow-list means the model can only add a HOLD; approval needs confidence of at least 0.85; 0 of 489 injection attacks changed a decision.
+- **Testing:** 79 tests (20 of them guardrail tests), run in CI behind a regression gate.
+
 **Decisions**
 - AI reads, code decides, people own the exceptions.
 - Fail closed plus idempotency instead of best-effort processing.
 - Gate the judge only on what its own meta-evaluation supports.
 
 **Stack:** Python, FastAPI, SQLite, poppler + tesseract OCR, TypeSafe Jev, OpenTelemetry, Next.js, Docker, GitHub Actions, Render
+
+### AEON
+
+https://selvinpaulraj.vercel.app/work/aeon · Designed and built · Personal project · 2026 · Private repo
+
+A governance layer for a team of AI agents: a git repository as shared memory, event-sourced state that changes only on independent verification, and a five-gate security CLI.
+
+**Problem.** Several AI agents (including Claude Code and Codex) work on the same projects, and each run starts with no memory. They need shared state, they must not overwrite each other, and no agent should be able to mark its own work done or take a sensitive action on its own say-so.
+
+**How it works**
+1. **Agents with no memory.** Every agent run starts by reading the repository's rules and current state. A registry gives each agent its capabilities and a maximum permission tier, from read-only up to owner-only.
+2. **Claims are events, not edits.** Agents never edit a task's status. They append events such as 'claimed' or 'completed' to a daily log; the earliest verified claim wins and later ones are flagged as conflicts.
+3. **Nobody verifies their own work.** An event changes state only when a different party verifies it with evidence. Approvals and rejections must come from the owner and point to a real decision.
+4. **State you can replay.** A pure reducer applies a fixed table of transitions to the ordered event log, so the same events always produce the same state. Events with bad timestamps are quarantined, and unverified events stay claims.
+5. **Five security gates.** Untrusted content is wrapped and scanned for injection, hidden text, and scams. External actions are checked against hard-deny rules, approval rules, quotas, and domain lists; outbound text is scanned for secrets and identity numbers; and every gated action is audited.
+6. **Approvals that cannot be faked.** Money, contracts, and identity are owner-only. An approval must reference a real decision or source message; a bare 'yes' or 'ok' is refused.
+7. **CI that checks determinism.** CI runs a secret scan, the guard tests, and the full test suite, then rebuilds the state projection and fails if it differs or contains quarantined events.
+8. **A dashboard that never approves.** The Command Center is a read-mostly view behind an authenticated session. Unverified items are labelled as unconfirmed claims, and approvals never happen from the dashboard itself.
+
+**Measured**
+- 5: AI agents coordinated, plus the owner
+- 5: Security gates in the guard CLI
+- 11: State transition types
+- 441: Tests across Python and TypeScript
+- 12: CI workflows
+
+**How it's verified**
+- **Harness:** A repository-as-state protocol: event-sourced, a deterministic reducer, a capability and tier registry, and claim ordering. There is no model loop in this layer; the agents bring their own.
+- **Guardrails:** Input screening for injection and hidden text, an action gate with hard-deny rules, approvals, and quotas, an outbound secret and identity screen, a commit secret scan, an audit log, tiered permissions, owner-only approvals, and no self-verification.
+- **Testing:** About 441 tests (194 Python, 160 dashboard, 87 site), run in GitHub Actions with a secret scan and a projection-determinism check.
+
+**Decisions**
+- Event sourcing over shared mutable state, so every change has an author and a verifier.
+- Exit codes for every gate (allow, warn, block), so any agent or script can enforce them.
+- Content-only commits never trigger a deploy.
+
+**Stack:** Python, pytest, Next.js, TypeScript, GitHub Actions, JSONL event log, JSON Schema
 
 ### Finn Advisor
 
@@ -311,12 +447,55 @@ A single-user financial assistant over read-only brokerage data, where every num
 - 0: LLM calls in the input safety gate
 - 2: LLM providers with logged fallback
 
+**How it's verified**
+- **Harness:** Deterministic router into LangGraph workflows with a Google ADK fallback agent, an MCP client for the brokerage, and an LLM router that falls back from NVIDIA NIM to Gemini with every call logged.
+- **Evals:** An offline evaluation harness (4 cases) and a red-team suite (10 cases) run through a mock evaluator; no committed scores yet.
+- **Guardrails:** A regex input gate before any model, an allow-list of 16 read-only brokerage tools with trading tools blocked, fenced web results, and an output screen for leaked secrets.
+- **Testing:** 343 tests (341 unit, 2 integration).
+
 **Decisions**
 - Route in code; use the ADK agent only as a fallback for unmatched questions.
 - Enforce read-only access in the tool policy, not the prompt.
 - Treat a failed brokerage login as a degraded answer, not an error.
 
 **Stack:** Python, LangGraph, Google ADK, MCP (Kite), langchain-mcp-adapters, NVIDIA NIM, Gemini Flash, SQLite, Streamlit, Docker
+
+### FleetVoice
+
+https://selvinpaulraj.vercel.app/work/fleetvoice · Designed and built · DevFest Chennai 2026 hackathon · Oct 2026 · Private repo
+
+A WhatsApp agent for truck drivers that turns Tamil, Hindi, or English voice notes into trip updates, where the model proposes facts and plain code decides what happens.
+
+**Problem.** Truck drivers report delays and problems by voice, in Tamil, Hindi, or English, often on a bad connection. Dispatchers and customers need structured updates fast, and a model that mishears a number or invents a place can send the wrong alert.
+
+**How it works**
+1. **Acknowledge fast, never twice.** The webhook verifies the signature, returns immediately, and processes the message in the background. A message ID it has already seen is ignored.
+2. **No model when none is needed.** Greetings, button taps, location pins, and commands are handled entirely in code. Only free text, voice, and photos go further.
+3. **An input guard before any model.** Control characters are stripped, text is capped, and injection phrases are caught by rules. A flagged message never reaches a model and can never change a trip.
+4. **Cheap first, larger only when unsure.** A TypeSafe Jev decision model extracts typed facts in one call and is accepted only above a learned confidence bar. Below it, the message goes to Gemini, then NVIDIA NIM, then plain rules.
+5. **Circuit breakers per provider.** Three failures open a provider's breaker, the cool-down doubles up to ten minutes, and a half-open probe brings it back. Background health checks run every two minutes.
+6. **The output guard.** Facts are clamped to the schema, delay numbers must come from the driver's own words, places the driver never mentioned are dropped, and safety words force a human. The model has no tools.
+7. **Code acts, templates speak.** Trip status, ETA, and flags are updated in plain code, and only fixed templates go to customers and dispatchers. Urgent or unsafe reports go straight to a person.
+8. **A bar that tunes itself.** Drivers' correct and wrong taps become few-shot examples and move the confidence bar: up when accuracy drops below 85%, down when it passes 95%, always between 0.60 and 0.98.
+
+**Measured**
+- 4: Model paths plus a rules fallback
+- 3: Failures before a provider's breaker opens
+- 25 s: Deadline before a guaranteed reply
+- 0: Tools given to the model
+
+**How it's verified**
+- **Harness:** A fixed cascade (Jev, Gemini, NVIDIA NIM, rules) with a circuit breaker per provider, a 12-second per-call and 25-second per-message deadline, and SQLite state.
+- **Evals:** Online only: driver feedback on each answer is tracked per path and tunes the confidence bar; there is no offline eval set yet.
+- **Guardrails:** Rule-based injection blocking before any model, schema-clamped typed output, checks that numbers, places, and quantities came from the driver, no model tools, template-only outbound messages, and human escalation.
+- **Testing:** 6 offline smoke tests; built in a hackathon, with no CI yet.
+
+**Decisions**
+- A cheap typed classifier first and larger models only when it is unsure.
+- No tools for the model: it can describe the world, not change it.
+- An instant webhook acknowledgement plus a guaranteed reply, because drivers will not wait.
+
+**Stack:** Python, FastAPI, SQLite, WhatsApp Cloud API, TypeSafe Jev, Gemini, Groq Whisper, NVIDIA NIM, OpenRouteService, Docker
 
 ### ChunkLab
 
@@ -341,11 +520,49 @@ A Streamlit lab for comparing chunking, retrieval, and reranking strategies side
 - 5: Evaluators across stages
 - 95: pytest tests
 
+**How it's verified**
+- **Harness:** A self-registering plugin registry per stage, with every run logged by stage, strategy, and latency.
+- **Evals:** Standard IR metrics (P@k, R@k, MRR, MAP, NDCG) and intrinsic embedding evals on a built-in labelled set, including rerank impact before and after.
+- **Testing:** 95 tests.
+
 **Decisions**
 - Self-registering plugins with a duplicate-name check, so the registry stays the single list of strategies.
 - Deterministic, model-free approximations for speed and reproducibility, disclosed rather than hidden.
 
 **Stack:** Python, Streamlit, Chonkie, LiteParse, sentence-transformers, BM25, tree-sitter, pytest
+
+### SPR Studio
+
+https://selvinpaulraj.vercel.app/work/spr-studio · Designed and built · Personal project · Oct 2026 · Private repo
+
+A script-to-video pipeline that turns a beat script into lip-synced comic videos in my own cloned voice, with AI disclosure rendered into every frame.
+
+**Problem.** Talking-head video models are slow on a CPU and their photo-real mouths look wrong on drawn characters. The goal was explainer videos in a comic style, voiced in my own cloned voice, rendered reproducibly, and clearly labelled as AI-generated.
+
+**How it works**
+1. **The script is the source.** Each beat sets its line, a spoken spelling, the pose, the shot, gestures, and transitions. Everything downstream is derived from it.
+2. **The voice is the clock.** Each line is spoken once by a zero-shot clone of my voice and cached, so re-voicing one line means regenerating one file. The reference recording stays private and is never committed.
+3. **Words and mouth shapes from the audio.** Whisper word timings are mapped back onto the script's own words, and Rhubarb produces mouth shapes per line with the text as a hint. If Rhubarb is unavailable, a letter-based fallback takes over.
+4. **Lip-sync rules.** Mouth shapes lead the audio by one frame and hold for at least two, lip closures for M, B, and P are never dropped, and the mouth closes on silence. Blinks are seeded, so every render is identical.
+5. **A deterministic renderer.** An HTML page exposes seek(t), so any frame can be rendered exactly. Headless Chromium renders the frames, ffmpeg mixes voice and a procedural music bed to -14 LUFS, and one script produces four aspect ratios in two character styles.
+6. **A person looks before anything ships.** Stills are rendered at key frames of every scene and reviewed by eye before release. Nothing publishes from the pipeline itself.
+
+**Measured**
+- 8: Renders per script (4 formats × 2 styles)
+- 10: Mouth shapes for lip sync
+- -14: LUFS loudness target
+- 2: ML models on CPU (voice clone, ASR)
+
+**How it's verified**
+- **Harness:** A deterministic pipeline (voice clone, word alignment, visemes, render, mix) with per-line caching and a fallback lip-sync path.
+- **Guardrails:** Only my own face and voice are used; the voice reference is never committed; an AI disclosure label is rendered into every video, and uploads are marked as altered or synthetic content.
+- **Testing:** No automated tests yet; every scene is reviewed as stills before release.
+
+**Decisions**
+- Audio is the timeline: everything is derived from measured voice timings rather than estimated durations.
+- A seekable HTML renderer, so every frame is reproducible and one script serves every format.
+
+**Stack:** Python, Chatterbox TTS, faster-whisper, Rhubarb Lip Sync, headless Chromium, ffmpeg, Manim, Remotion
 
 ### Instagram MCP Server
 
@@ -367,6 +584,11 @@ An MCP server that gives Claude and ChatGPT 36 allow-listed Instagram actions th
 - 40: MCP tools including 4 utilities
 - 27: Tests
 - 5 min: OAuth wait before booting anyway
+
+**How it's verified**
+- **Harness:** Low-level MCP handlers with tool schemas discovered at runtime and a cached fallback when discovery fails.
+- **Guardrails:** One 36-action allow-list shared by the session and discovery; writes are never retried; every error returns as an MCP error result instead of crashing the session.
+- **Testing:** 27 tests.
 
 **Decisions**
 - Retry reads, never writes.
@@ -395,6 +617,11 @@ An npm CLI and stdio MCP server for Outlook mail and calendar over Microsoft Gra
 - 65: jest tests
 - 2: Front ends sharing one registry
 - 3: Runtime dependencies
+
+**How it's verified**
+- **Harness:** One frozen tool registry behind both the terminal CLI and the stdio MCP server.
+- **Guardrails:** Delegated OAuth scopes only; a test mode swaps in mock data so the suite never touches a real mailbox.
+- **Testing:** 65 jest tests; publishing runs the suite and a dry-run pack first.
 
 **Decisions**
 - One registry for both interfaces, so humans and agents get identical behaviour.
