@@ -2719,18 +2719,68 @@
       {
         "heading": "Browsers as a fixed pool",
         "body": "A browser per page was rejected for cost, and multi-tab control would have depended on undocumented driver internals. A pool of at most four long-lived browsers, one per worker, keeps fetching predictable."
+      },
+      {
+        "heading": "Add-on: the weekly press-release watcher",
+        "body": "A second path runs every Monday over about 760 companies and covers exactly the previous Monday to Sunday. It reads each company newsroom first, then news search, validates only the articles published in that week, and writes two reports: a valid-only deliverable and a full audit file where every rejected row keeps its reason.",
+        "points": [
+          "Newsroom runs before news search, so the company's own copy wins and the media copy becomes the duplicate",
+          "Three duplicate layers on every article: URL already seen, identical content hash, near-identical title to a recent release",
+          "Publish dates come from the URL or the visible newsroom text and are never guessed; an impossible date counts as unknown"
+        ]
+      },
+      {
+        "heading": "Fixing a noisy news search",
+        "body": "About 45% of news-search rows were invalid: category pages, stock trackers, cookie pages, other companies. Adding movement keywords to the query made the search ignore the date range (0 of 89 results fell in the week), while a name-only exact-phrase search kept 93 to 98% in range. So category filtering moved to our side.",
+        "points": [
+          "Company names are cleaned of legal suffixes, with a short form and bracket acronym searched too",
+          "Proper encoding fixed 26 companies, including names with an ampersand, that had been returning unrelated news",
+          "A headline must name the company, carry a movement word, not be stock chatter, and fall in the week; only the best 5 per company are kept",
+          "Redirects are decoded last, after filtering, because decoding is rate-limited; a 7-company test ran in 42 s instead of 141 s"
+        ]
+      },
+      {
+        "heading": "HTTP first, Chrome only where needed",
+        "body": "Chrome costs 5 to 60 seconds a page and some sites hang; plain HTTP takes about a second but can silently return a partial page. HTTP is trusted per site only once it has matched Chrome, and the site falls back to Chrome automatically when it stops matching.",
+        "points": [
+          "Newsroom: HTTP must find at least 95% of Chrome's links; dropping below 80% of its own earlier count, or hitting a block page, sends it back to Chrome",
+          "Article: HTTP text must reach 90% of Chrome's on that site, and every page still needs 500+ characters, no block page, and no JavaScript-only shell",
+          "If Chrome fails, an HTTP result is used only when it passes the same checks; otherwise the page stays pending"
+        ]
+      },
+      {
+        "heading": "Validation that re-checks the model",
+        "body": "Each article gets a fresh Gemini chat and must come back as JSON with company match, one of nine signal categories (or NONE), a framed headline, the news date, confidence, a reason, and a verbatim evidence sentence. A row is valid only when the company is a direct party, the category is a real signal, and the event is announced, not rumoured or recapped.",
+        "points": [
+          "Valid with no company match, or valid with NONE, is turned into invalid",
+          "A category outside the nine becomes NONE; an invalid row never keeps a headline or category",
+          "Unreadable JSON is asked again in a new chat, then left pending for the next run, never guessed",
+          "Reason, evidence, confidence, and the raw answer are stored so a reviewer can confirm a row in seconds"
+        ]
+      },
+      {
+        "heading": "Resumable by re-running the same command",
+        "body": "Every scraped URL is saved to state immediately, so a crash, Ctrl+C, or power cut loses nothing: re-running the same command skips finished companies and retries failed ones, and a flag skips discovery when only scraping is left.",
+        "points": [
+          "Search failures retry after 20 s and then 60 s, fixing a network burst that had failed 759 companies in one run",
+          "Rate limits pause with growing waits, up to 30 minutes",
+          "Input headers are matched case-insensitively with the BOM skipped, after one account list had loaded zero companies without an error"
+        ]
       }
     ],
     "decisions": [
       "Classify events, not articles: syndicated copies collapse first, so the model sees each story once.",
       "The taxonomy is enforced by a validator, never trusted from the model output.",
-      "Analyst review happens in a spreadsheet the team already uses, with dropdowns generated from the taxonomy."
+      "Analyst review happens in a spreadsheet the team already uses, with dropdowns generated from the taxonomy.",
+      "Search news by company name only and filter headlines in code: adding keywords made the search ignore the date window.",
+      "Trust plain HTTP per site only after it matches Chrome; slower and complete beats faster and missing news.",
+      "Deliver valid signals only, but keep every rejected row with its reason in a separate audit report."
     ],
     "links": [],
     "assurance": {
       "harness": "Persistent SQLite task queue with atomic claims, barriers between phases, immediate persistence, and pause and resume.",
       "evals": "A one-week real-data run over 20 accounts (591 tasks, 383 documents, 27 events) passed reconciliation; the classifier was stubbed in that run.",
-      "guardrails": "LLM output is validated against the signal taxonomy with one repair turn and one retry; low confidence or a vertical mismatch goes to an analyst; a run cannot be marked complete unless report counts match the database.",
+      "guardrails": "LLM output is validated against the signal taxonomy with one repair turn and one retry; low confidence or a vertical mismatch goes to an analyst; a run cannot be marked complete unless report counts match the database. In the weekly watcher, Gemini verdicts are re-checked against a three-condition rule and the nine-category list, and unreadable answers stay pending rather than guessed.",
       "testing": "97 tests."
     }
   },
