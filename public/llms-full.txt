@@ -175,34 +175,37 @@ https://selvinpaulraj.vercel.app/work/akavizhi · Designed and built · Personal
 
 A single-user personal AI: a two-stage router hands each request to one of nine specialist agents, and every consequential action has to match what the owner actually said.
 
-**Problem.** A personal assistant that can read notes, send messages, and change data is only useful if it can act, and only safe if nothing it reads can make it act. Web pages, documents, and another agent's output can all carry instructions, so the harness cannot rely on the model to tell data from orders.
+**Problem.** A personal assistant that can read notes, send messages, and change data is only useful if it can act, and only safe if nothing it reads can make it act. Web pages, documents, and another agent's output can all carry instructions, so the harness cannot rely on the model to tell data from orders. It also holds the owner's private data, so which model sees a turn matters as much as what the model does with it.
 
 **How it works**
-1. **One owner, one gate.** Every page and API route sits behind an owner session; only a short list of paths is public. There is no multi-user surface to get wrong.
-2. **Two-stage routing.** Pattern rules catch obvious intents and follow-ups first, which is fast and free. Anything else goes to a small LLM dispatcher that must return a schema-validated agent name, falling back to the knowledge agent.
-3. **Nine specialists, each with its own tools.** Each agent sees only the tools for its domain. A function-calling loop runs at most six steps with a per-run tool budget, and if a model stalls for eight seconds the loop moves to the next model.
-4. **Delegation without escalation.** An agent can ask one colleague for help, one level deep. Delegated runs can never call destructive tools, because a colleague's instructions may contain text from the web.
-5. **The owner's words, not the model's.** A consequential tool (delete, message, call, update, web task) only runs when the owner's own words in this turn ask for that action. Tool output is labelled as data in the system rules, but the check does not depend on the model obeying them.
-6. **Ask before deleting.** Deletes ask once and run only after the owner says yes. A guest mode limits the assistant to read-only tools and saves nothing.
-7. **Retrieval and fetching that fail safely.** Answers cite numbered sources from a pgvector store, and fall back to multilingual word search, Tamil included, when embeddings are unavailable. Every outbound fetch blocks private addresses, pins DNS, and rechecks each redirect.
+1. **One owner, one gate.** Every page and API route sits behind an owner session; Telegram and WhatsApp answer only the owner's own chat or number, behind the platform's secret header or signature. Input is stripped of control and invisible characters, capped at 4,000 characters, and checked for injection attempts.
+2. **Two-stage routing.** Everyday phrases are answered at once from templates in English, Tamil, or Tanglish. Pattern rules catch obvious intents and follow-ups next, which is fast and free. Anything else goes to a small LLM dispatcher that must return a schema-validated agent name, falling back to the knowledge agent.
+3. **Nine specialists, each with its own tools.** Each agent sees only the tools for its domain. A function-calling loop runs at most six steps with a per-run tool budget, and the answer passes an output guard that redacts keys and blocks prompt leaks before it streams with numbered sources.
+4. **Private turns stay private.** Agent turns hold the owner's data, so the gateway only sends them to providers marked private-safe: Groq with an eight-second timeout, then a local Ollama model. Gemini, NVIDIA, and OpenRouter serve only turns that are allowed to leave that chain.
+5. **Providers that fail get skipped.** Every provider has a circuit breaker: three failures in a row open it, one test call runs after a cool-down that doubles up to ten minutes, and success closes it again. Breaker state is shared across server instances, every change lands in a healing log, and if every provider is down the owner still gets one calm reply in their language.
+6. **Delegation without escalation.** An agent can ask one colleague for help, one level deep. Delegated runs, routine steps, and Autopilot can never call destructive tools, because a colleague's instructions may contain text from the web.
+7. **The owner's words, not the model's.** A consequential tool (delete, message, call, update, web task) only runs when the owner's own words in this turn ask for that action. Each of the 106 tools has a risk level set on the server (47 read, 39 write, 8 send, 12 delete), not chosen by the model.
+8. **Confirm cards for sends and deletes.** A send or delete parks as a confirm card with a one-time ID that expires in ten minutes; the model only learns that approval is waiting. Approving a delete also needs a fresh second factor on the device, so Telegram and WhatsApp hand deletes back to the app. Every approve, decline, or refused token writes an audit row with tool and argument names only.
+9. **Retrieval and fetching that fail safely.** Answers cite numbered sources from a pgvector store, and fall back to multilingual word search, Tamil included, when embeddings are unavailable. Every outbound fetch blocks private addresses, pins DNS, and rechecks each redirect.
 
 **Measured**
 - 9: Specialist agents with scoped tools
-- 85: Tools across 11 domains
+- 106: Tools, each with a server-set risk level
 - 6: Maximum steps per tool loop
-- 155: Tests (151 unit, 4 end-to-end)
+- 1,144: Tests (1,140 unit, 4 end-to-end)
 
 **How it's verified**
-- **Harness:** Rule router plus an LLM dispatcher into nine scoped specialists; a six-step function-calling loop with one-level delegation, a tool budget, a stall-timeout model fallback, and a multi-provider chain.
-- **Guardrails:** Owner-session gate on every route, an owner-intent check before any consequential tool, no destructive tools in delegated runs, ask-then-confirm deletes, a read-only guest mode, and SSRF-safe fetching.
-- **Testing:** 151 unit tests and 4 Playwright tests, plus an opt-in live suite that exercises every tool against real data; CI runs lint, type checks, unit tests, and the build.
+- **Harness:** Rule router plus an LLM dispatcher into nine scoped specialists; a six-step function-calling loop with one-level delegation and a tool budget, run through an AI gateway that keeps agent turns on private-safe providers and puts a circuit breaker on each one.
+- **Guardrails:** Owner-session gate on every route, input and output guards, an owner-intent check before any consequential tool, no destructive tools in delegated runs, server-set risk levels, audited confirm cards for sends and deletes with step-up for deletes, a read-only guest mode, and SSRF-safe fetching.
+- **Testing:** 1,140 unit tests and 4 Playwright tests, plus an opt-in live suite of 13 tests against real data; CI runs lint, type checks, unit tests, and the build.
 
 **Decisions**
 - Rules before the LLM router, for latency and free-tier cost.
-- Deterministic intent gating instead of trusting the model to resist injection.
-- Every model and data dependency has a fallback, so the assistant degrades instead of failing.
+- Deterministic intent gating and server-set risk levels instead of trusting the model to resist injection.
+- Private data only goes to private-safe providers, even when a faster model is available.
+- Every model and data dependency has a fallback or a circuit breaker, so the assistant degrades instead of failing.
 
-**Stack:** Next.js 16, React 19, TypeScript, Supabase + pgvector, Gemini (function calling), Groq, zod, Vitest, Playwright
+**Stack:** Next.js 16, React 19, TypeScript, Supabase + pgvector, Groq + local Ollama (private turns), Gemini key pool, Telegram + WhatsApp webhooks, zod, Vitest, Playwright
 
 ### Jobs with Joe
 
