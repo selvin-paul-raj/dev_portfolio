@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "evals": "tsc -p tsconfig.evals.json && node dist/evals/evals/run.js",
+    "evals": "tsc -p tsconfig.evals.json && node --env-file-if-exists=.env.local dist/evals/evals/run.js",
     "build:mcp": "tsc -p tsconfig.server.json && node -e \"const{cpSync}=require('fs');cpSync('lib/data','dist/data',{recursive:true})\""
   },
   "dependencies": {
