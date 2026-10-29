@@ -26,7 +26,7 @@
   },
   {
     "title": "Akavizhi: Personal AI with Specialist Agents",
-    "description": "Single-user personal AI: a rule router and an LLM dispatcher hand each request to one of nine specialist agents with scoped tools (85 in total), running a six-step function-calling loop with one-level delegation and model fallback. Consequential actions run only when they match the owner's own words, deletes need confirmation, fetching is SSRF-safe, and answers cite pgvector sources. 155 tests",
+    "description": "Single-user personal AI: a rule router and an LLM dispatcher hand each request to one of nine specialist agents with scoped tools (106 in total, each with a server-set risk level), running a six-step function-calling loop with one-level delegation. Agent turns stay on private-safe models (Groq, then local Ollama), every provider sits behind a circuit breaker, consequential actions run only when they match the owner's own words, and sends and deletes wait on an audited confirm card. Also reachable from Telegram and WhatsApp. 1,144 tests",
     "tags": [
       "Next.js",
       "TypeScript",
@@ -35,6 +35,7 @@
       "RAG",
       "pgvector",
       "Guardrails",
+      "Circuit Breakers",
       "Prompt Injection Testing",
       "Human-in-the-Loop",
       "Vitest",
