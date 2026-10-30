@@ -1,17 +1,14 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
+import { useMemo, useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
-import { FaGithub, FaLock } from "react-icons/fa";
 import { MdArrowOutward } from "react-icons/md";
 import SectionHeading from "./SectionHeading";
+import FeaturedExplorer from "./projects/FeaturedExplorer";
+import { isNpm, primaryUrl, yearOf, type Project } from "./projects/meta";
 import { projectsData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
-import { caseStudySlugByProject } from "@/lib/work";
 
-type Project = (typeof projectsData)[number];
 
 const EASE_OUT: [number, number, number, number] = [0.23, 1, 0.32, 1];
 
@@ -26,178 +23,8 @@ const FILTERS = [
 ] as const;
 type FilterValue = (typeof FILTERS)[number]["value"];
 
-const isPrivate = (p: Project) => "private" in p && p.private === true;
-// Private repos are either work at Draup or personal projects kept private.
-const isPersonal = (p: Project) => "personal" in p && p.personal === true;
-const isWork = (p: Project) => isPrivate(p) && !isPersonal(p);
-const yearOf = (p: Project) => p.date.slice(0, 4);
-const isNpm = (url: string) => url.includes("npmjs.com");
-const primaryUrl = (p: Project) => p.code ?? p.live ?? undefined;
-
 const pressable =
   "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#09090b] active:scale-[0.97]";
-
-/* ─── Featured ─────────────────────────────────────────────────────────── */
-
-// Writes the pointer position to CSS variables on the card; no React state, no re-render.
-function trackSpotlight(e: React.PointerEvent<HTMLElement>) {
-  if (e.pointerType !== "mouse") return;
-  const el = e.currentTarget;
-  const rect = el.getBoundingClientRect();
-  el.style.setProperty("--x", `${e.clientX - rect.left}px`);
-  el.style.setProperty("--y", `${e.clientY - rect.top}px`);
-}
-
-function CaseStudyLink({ slug, title }: { slug: string; title: string }) {
-  return (
-    <Link
-      href={`/work/${slug}`}
-      aria-label={`${title} case study`}
-      className={`inline-flex items-center gap-1 rounded-md border border-accent/50 px-3 py-1.5 text-xs font-semibold text-accent-ink dark:text-accent hover:bg-accent/10 ${pressable}`}
-      style={{ transition: "transform 160ms cubic-bezier(0.23,1,0.32,1), background-color 150ms ease" }}
-    >
-      How it works <MdArrowOutward size={12} aria-hidden="true" />
-    </Link>
-  );
-}
-
-function FeaturedLinks({ project }: { project: Project }) {
-  const { title, code, live } = project;
-  const slug = caseStudySlugByProject[title];
-
-  if (isPrivate(project)) {
-    return (
-      <div className="flex flex-wrap items-center gap-3">
-        {slug && <CaseStudyLink slug={slug} title={title} />}
-        {live && (
-          <a
-            href={live}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`${title}, live site`}
-            className={`inline-flex items-center gap-1 rounded-md border border-black/10 bg-white px-3 py-1.5 text-xs font-semibold text-gray-900 hover:bg-gray-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/10 ${pressable}`}
-            style={{ transition: "transform 160ms cubic-bezier(0.23,1,0.32,1), background-color 150ms ease" }}
-          >
-            Live <MdArrowOutward size={12} aria-hidden="true" />
-          </a>
-        )}
-        <span className="inline-flex items-center gap-1.5 text-xs text-gray-600 dark:text-[#a1a1aa]">
-          <FaLock size={10} aria-hidden="true" />
-          {isPersonal(project) ? "Personal project · private repo" : `Private work project${slug ? "" : " · details on request"}`}
-        </span>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex items-center gap-2">
-      {slug && <CaseStudyLink slug={slug} title={title} />}
-      {code && (
-        <a
-          href={code}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`${title} source code on GitHub`}
-          className={`inline-flex items-center gap-1.5 rounded-md bg-gray-900 px-3 py-1.5 text-xs font-semibold text-white dark:bg-accent dark:text-[#1a1500] ${pressable}`}
-          style={{ transition: "transform 160ms cubic-bezier(0.23,1,0.32,1), opacity 150ms ease" }}
-        >
-          <FaGithub size={12} aria-hidden="true" /> GitHub
-        </a>
-      )}
-      {live && (
-        <a
-          href={live}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`${title}, ${isNpm(live) ? "npm package" : "live demo"}`}
-          className={`inline-flex items-center gap-1 rounded-md border border-black/10 bg-white px-3 py-1.5 text-xs font-semibold text-gray-900 hover:bg-gray-50 dark:border-white/10 dark:bg-white/[0.06] dark:text-white dark:hover:bg-white/10 ${pressable}`}
-          style={{ transition: "transform 160ms cubic-bezier(0.23,1,0.32,1), background-color 150ms ease" }}
-        >
-          {isNpm(live) ? "npm" : "Live"} <MdArrowOutward size={12} aria-hidden="true" />
-        </a>
-      )}
-    </div>
-  );
-}
-
-function FeaturedCard({ project, index }: { project: Project; index: number }) {
-  const { title, description, tags, imageUrl } = project;
-  const privateWork = isWork(project);
-  const badge = privateWork ? "Work · Draup" : isPersonal(project) ? "Personal · private" : "Open source";
-
-  return (
-    <m.article
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "0px 0px -60px 0px" }}
-      transition={{ duration: 0.35, delay: (index % 3) * 0.06, ease: EASE_OUT }}
-      onPointerMove={trackSpotlight}
-      className={`group relative flex flex-col overflow-hidden rounded-2xl border [@media(hover:hover)]:hover:-translate-y-0.5
-        ${privateWork
-          ? "border-accent/25 bg-accent/[0.05] dark:border-accent/[0.14] dark:bg-accent/[0.03]"
-          : "border-black/[0.08] bg-white dark:border-white/[0.07] dark:bg-[#101015]"
-        }`}
-      style={{ transition: "transform 220ms cubic-bezier(0.23,1,0.32,1), border-color 200ms ease" }}
-    >
-      {/* Pointer-following gold spotlight; position comes from --x/--y set in trackSpotlight */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-10 hidden opacity-0 [@media(hover:hover)]:block [@media(hover:hover)]:group-hover:opacity-100"
-        style={{
-          background:
-            "radial-gradient(360px circle at var(--x, 50%) var(--y, 50%), rgb(245 197 24 / 0.08), transparent 70%)",
-          transition: "opacity 200ms ease",
-        }}
-      />
-      {imageUrl && (
-        <div className="relative h-44 w-full shrink-0 overflow-hidden">
-          <Image
-            src={imageUrl}
-            alt={`${title} screenshot`}
-            fill
-            quality={80}
-            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
-            className="object-cover"
-          />
-        </div>
-      )}
-
-      <div className="flex flex-1 flex-col gap-3 p-6">
-        <div className="flex items-center justify-between gap-3 font-mono text-xs uppercase tracking-[0.14em]">
-          <span className="tabular-nums text-gray-500 dark:text-[#a1a1aa]">{String(index + 1).padStart(2, "0")}</span>
-          <span
-            className={`rounded-full px-2.5 py-0.5 ${
-              privateWork
-                ? "bg-accent/15 text-[#6b561d] dark:text-accent"
-                : "bg-black/[0.05] text-gray-600 dark:bg-white/[0.08] dark:text-[#d4d4d8]"
-            }`}
-          >
-            {badge}
-          </span>
-        </div>
-
-        <h3 className="text-lg font-semibold leading-snug text-gray-900 dark:text-white">{title}</h3>
-
-        <p className="flex-1 text-sm leading-relaxed text-gray-600 dark:text-[#c9c9cf]">{description}.</p>
-
-        <ul className="flex flex-wrap gap-1.5" aria-label="Tech stack">
-          {tags.map((tag) => (
-            <li
-              key={tag}
-              className="rounded bg-black/[0.05] px-2 py-0.5 font-mono text-xs text-gray-700 dark:bg-white/[0.07] dark:text-[#d4d4d8]"
-            >
-              {tag}
-            </li>
-          ))}
-        </ul>
-
-        <div className="pt-1">
-          <FeaturedLinks project={project} />
-        </div>
-      </div>
-    </m.article>
-  );
-}
 
 /* ─── Archive index ────────────────────────────────────────────────────── */
 
@@ -359,11 +186,7 @@ export default function Projects() {
         Projects
       </SectionHeading>
 
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-        {featured.map((project, i) => (
-          <FeaturedCard key={project.title} project={project} index={i} />
-        ))}
-      </div>
+      <FeaturedExplorer projects={featured} />
 
       {archive.length > 0 && <ProjectIndex />}
     </section>

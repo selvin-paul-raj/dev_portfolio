@@ -85,6 +85,12 @@ pre {
 .anim-ring-spin { animation: ring-spin 18s linear infinite; }
 
 .anim-fade-up  { animation: fadeUp  0.45s cubic-bezier(0.23,1,0.32,1) both; }
+/* Projects explorer: the detail panel settles in when a project is picked */
+@keyframes detailIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.anim-detail-in { animation: detailIn 0.22s cubic-bezier(0.23,1,0.32,1) both; }
 .anim-fade-in  { animation: fadeIn  0.45s cubic-bezier(0.23,1,0.32,1) both; }
 
 .anim-d0 { animation-delay: 0.05s; }
@@ -117,7 +123,8 @@ pre {
   }
 
   .anim-fade-up,
-  .anim-fade-in {
+  .anim-fade-in,
+  .anim-detail-in {
     animation: none;
     opacity: 1;
     transform: none;
