@@ -48,7 +48,7 @@ export default function GateScatter({ cases }: { cases: GateCase[] }) {
 
   return (
     <figure className="flex flex-col gap-3">
-      <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-gray-600 dark:text-white/60">
+      <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-fg-2">
         {KINDS.map((k) => (
           <span key={k.kind} className="inline-flex items-center gap-1.5">
             <KindKey kind={k.kind} />
@@ -110,19 +110,19 @@ export default function GateScatter({ cases }: { cases: GateCase[] }) {
         })}
       </svg>
 
-      <figcaption className="min-h-[3.25rem] rounded-lg border border-black/8 dark:border-white/10 px-3 py-2 text-xs" aria-live="polite">
+      <figcaption className="min-h-[3.25rem] rounded-lg border border-line px-3 py-2 text-xs" aria-live="polite">
         {shown ? (
           <>
-            <span className="block text-gray-900 dark:text-white/90 truncate">&ldquo;{shown.q}&rdquo;</span>
-            <span className="mt-0.5 block font-mono tabular-nums text-gray-500 dark:text-white/50">
+            <span className="block text-fg truncate">&ldquo;{shown.q}&rdquo;</span>
+            <span className="mt-0.5 block font-mono tabular-nums text-muted">
               {shown.kind} · on-topic {shown.onTopic!.toFixed(2)} · injection {shown.injection!.toFixed(2)} ·{" "}
-              <span className={shown.pass ? "text-green-700 dark:text-green-400" : "text-red-600 dark:text-red-400"}>
+              <span className={shown.pass ? "text-ok" : "text-danger"}>
                 {shown.pass ? "PASS" : "FAIL"}
               </span>
             </span>
           </>
         ) : (
-          <span className="text-gray-500 dark:text-white/45">
+          <span className="text-muted">
             Hover or tab to a point to see the question. Dashed cutoffs at 0.5; only the shaded corner gets an answer.
           </span>
         )}

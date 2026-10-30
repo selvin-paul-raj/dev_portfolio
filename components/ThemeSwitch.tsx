@@ -13,7 +13,7 @@ const ThemeSwitch = () => {
       onClick={toggleTheme}
       aria-label="Toggle dark mode"
       title="Toggle dark mode"
-      className="z-[999] fixed top-8 right-4 bg-transparent w-[3rem] h-[3rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-all opacity-80 hover:opacity-100 duration-300 outline-none focus-visible:ring-2 focus-visible:ring-accent"
+      className="z-[999] absolute md:fixed top-4 md:top-8 right-4 bg-transparent w-[3rem] h-[3rem] bg-opacity-80 backdrop-blur-md shadow-2xl rounded-full flex items-center justify-center active:scale-105 transition-[opacity,transform] opacity-80 hover:opacity-100 duration-300 outline-none focus-visible:ring-2 focus-visible:ring-accent"
     >
       <BsSun size={22} aria-hidden="true" className="dark:hidden" />
       <BsMoon size={22} aria-hidden="true" className="hidden dark:block" />

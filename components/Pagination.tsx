@@ -42,11 +42,11 @@ export default function Pagination({
     ? "bg-accent text-[#1a1500] border-accent font-semibold"
     : "bg-gray-900 dark:bg-accent text-white dark:text-black shadow-sm";
   const inactiveBtn = isPill
-    ? "border border-black/[0.08] dark:border-white/[0.07] text-gray-600 dark:text-[#c9c9cf] hover:border-black/[0.18] dark:hover:border-white/[0.14] hover:text-gray-900 dark:hover:text-white"
-    : "bg-white dark:bg-white/5 border border-black/[0.08] dark:border-white/10 text-gray-600 dark:text-white/50 hover:bg-gray-50 dark:hover:bg-white/10";
+    ? "border border-line text-fg-2 hover:border-line-strong hover:text-fg"
+    : "bg-white dark:bg-white/5 border border-line text-fg-2 hover:bg-gray-50 dark:hover:bg-white/10";
   const navBtn = isPill
-    ? "border border-black/[0.08] dark:border-white/[0.07] text-gray-500 dark:text-[#8a8a93] disabled:opacity-30 hover:not-disabled:border-black/[0.18] dark:hover:not-disabled:border-white/[0.14]"
-    : "bg-white dark:bg-white/5 border border-black/[0.08] dark:border-white/10 text-gray-500 dark:text-white/40 disabled:opacity-30 disabled:cursor-not-allowed hover:not-disabled:bg-gray-50 dark:hover:not-disabled:bg-white/10";
+    ? "border border-line text-muted disabled:opacity-30 hover:not-disabled:border-line-strong"
+    : "bg-white dark:bg-white/5 border border-line text-muted disabled:opacity-30 disabled:cursor-not-allowed hover:not-disabled:bg-gray-50 dark:hover:not-disabled:bg-white/10";
 
   return (
     <nav
@@ -57,7 +57,7 @@ export default function Pagination({
         onClick={() => onChange(currentPage - 1)}
         disabled={currentPage === 1}
         aria-label="Previous page"
-        className={`w-11 h-11 ${r} flex items-center justify-center transition-all active:scale-95 ${navBtn}`}
+        className={`w-11 h-11 ${r} flex items-center justify-center active:scale-95 ${navBtn}`}
         style={{ transition: "transform 120ms cubic-bezier(0.23,1,0.32,1)" }}
       >
         {isPill ? "←" : <MdChevronLeft size={20} />}
@@ -67,7 +67,7 @@ export default function Pagination({
         p === "…" ? (
           <span
             key={`ellipsis-${i}`}
-            className="w-11 h-11 flex items-center justify-center text-sm text-gray-500 dark:text-[#54545c] select-none"
+            className="w-11 h-11 flex items-center justify-center text-sm text-muted select-none"
           >
             {isPill ? "···" : "…"}
           </span>
@@ -77,7 +77,7 @@ export default function Pagination({
             onClick={() => onChange(p as number)}
             aria-label={`Page ${p}`}
             aria-current={p === currentPage ? "page" : undefined}
-            className={`w-11 h-11 ${r} flex items-center justify-center text-[12px] transition-all border active:scale-95 ${
+            className={`w-11 h-11 ${r} flex items-center justify-center text-[12px] border active:scale-95 ${
               p === currentPage ? activeBtn : inactiveBtn
             }`}
             style={{ transition: "transform 120ms cubic-bezier(0.23,1,0.32,1)" }}
@@ -91,7 +91,7 @@ export default function Pagination({
         onClick={() => onChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         aria-label="Next page"
-        className={`w-11 h-11 ${r} flex items-center justify-center transition-all active:scale-95 ${navBtn}`}
+        className={`w-11 h-11 ${r} flex items-center justify-center active:scale-95 ${navBtn}`}
         style={{ transition: "transform 120ms cubic-bezier(0.23,1,0.32,1)" }}
       >
         {isPill ? "→" : <MdChevronRight size={20} />}

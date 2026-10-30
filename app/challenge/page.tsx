@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function ChallengePage() {
   return (
-    <main id="content" className="flex flex-col items-center px-4 pt-16 pb-28 md:pl-20">
+    <main id="content" className="flex flex-col items-center px-4 pt-16 pb-28">
       <SectionHeading
         kicker="A model guards a password. Each level stacks one more defense I use in production LLM systems. Get it to talk, then enter the password to unlock the next level."
       >

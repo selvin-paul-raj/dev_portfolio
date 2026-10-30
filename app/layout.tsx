@@ -345,7 +345,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="bg-[#FAFAF9] text-gray-950 relative pt-20 pb-16 md:pb-0 dark:bg-[#09090b] dark:text-white/90">
+      <body className="bg-surface text-fg relative pt-20 pb-16 md:pb-0 md:pl-16 ">
         {/* Microsoft Clarity Analytics — deferred until page is idle */}
         <Script
           id="clarity-analytics"

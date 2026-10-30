@@ -30,7 +30,7 @@ All content is driven from `lib/data/*.json` — do not edit `lib/data.tsx` for 
 
 - **`lib/data/projects.json`** — full project archive; only `show: true` entries render. Fields: `show`, `featured` (top card grid; everything else shown goes in the compact "More projects" list), `private` (optional — work case studies with no public repo), `order` (ascending = first), `categories`, `code` (nullable), `live` (nullable), `imageUrl` (path or `""`).
 - **`lib/data/experiences.json`** — 8 entries. Fields: `dateStart`, `dateEnd` ("Present" supported), `icon` ("graduation"/"work"/"laptop"), `order`.
-- **`lib/data/skills.json`** — `{ skills: { <group>: string[] } }`. Group keys map to spec-sheet rows via `GROUPS` in `components/Skills.tsx` (the `all` list is not rendered); keep it to skills evidenced in experience/projects.
+- **`lib/data/skills.json`** — `{ skills: { <group>: string[] } }`. Group keys map to the agent-system layers via `LAYERS` in `components/Skills.tsx` (`languages` is the side rail; the `all` list is not rendered); keep it to skills evidenced in experience/projects.
 - **`lib/data/certifications.json`** — `show` controls visibility, `featured` picks the default 8; the rest sit behind "View all".
 - **`lib/data/recognition.json`** — publications and achievements.
 - **`lib/data/caseStudies.json`** — `/work/[slug]` case studies (problem, diagram nodes/edges, scroll steps, results, decisions). Every number must come from projects.json, experiences.json, or the public repo's README; `projectTitle` links a case study to its Projects card.
@@ -54,6 +54,10 @@ All content is driven from `lib/data/*.json` — do not edit `lib/data.tsx` for 
 
 `actions/sendEmails.ts` is a Next.js Server Action using [Resend](https://resend.com). It sends to `selvinpaulgomathi@gmail.com` using a React Email template at `email/custom-email.tsx`. Input is validated with the shared zod schema in `lib/validation/contact.ts`, a hidden `company_website` honeypot drops bots, and `lib/rateLimit.ts` applies a best-effort in-memory per-IP + global limit. The MCP `contact_selvin` tool uses the same schema and limiter. Never return provider error text to the client.
 
+### Colour
+
+Colours are semantic tokens defined in `app/globals.css` (`:root` for light, `.dark` for dark) and mapped in `tailwind.config.ts`: `text-fg`, `text-fg-2`, `text-muted`, `text-faint` (large/decorative text only), `text-accent-fg` (gold as text), `text-ok`/`info`/`warn`/`danger`, `bg-surface`/`surface-2`/`surface-3`, `border-line`/`line-strong`. Every pair is checked for WCAG AA in both themes, so use the tokens instead of `text-gray-*`/`dark:text-white/NN` pairs; `bg-accent` stays the gold fill.
+
 ### Theme
 
 `ThemeContext` (`context/theme-context.tsx`) manages light/dark mode. An inline script in `app/layout.tsx` sets the `dark` class before paint (dark is the default); the context reads that class after mount. `ThemeSwitch` renders its icons with `dark:` classes so there is no icon flash.
@@ -76,3 +80,13 @@ Metadata and JSON-LD live in `app/layout.tsx`. The social preview is generated b
 - Section components call `useSectionInView` and spread the returned `ref` onto the `<section>` element with `id` matching the nav hash.
 - `SectionName` is the union of `links[number]["name"]` (`links` is `as const`) — adding a section requires a `links` entry, and `useSectionInView` only accepts those names.
 - Public assets: profile images are in `public/` root; project screenshots go in `public/projects/`; skill icons go in `public/skills/`.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

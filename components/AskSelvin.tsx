@@ -64,8 +64,8 @@ export default function AskSelvin() {
             <p className="self-end max-w-[85%] rounded-2xl rounded-br-sm px-4 py-2.5 text-sm bg-gray-900 dark:bg-white/[0.08] text-white dark:text-white/90">
               {t.question}
             </p>
-            {!t.result && !t.error && <p className="text-sm text-gray-500 dark:text-white/50 animate-pulse motion-reduce:animate-none">Searching the portfolio…</p>}
-            {t.error && <p className="text-sm text-red-600 dark:text-red-400">{t.error}</p>}
+            {!t.result && !t.error && <p className="text-sm text-muted animate-pulse motion-reduce:animate-none">Searching the portfolio…</p>}
+            {t.error && <p className="text-sm text-danger">{t.error}</p>}
             {t.result && <Answer result={t.result} />}
           </li>
         ))}
@@ -106,16 +106,16 @@ export default function AskSelvin() {
 function Answer({ result }: { result: AskResult }) {
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-[0.95rem] leading-relaxed text-gray-800 dark:text-white/80">{result.answer}</p>
+      <p className="text-[0.95rem] leading-relaxed text-fg">{result.answer}</p>
       {result.citations.length > 0 && (
         <ul className="flex flex-col gap-1.5">
           {result.citations.map((c) => (
-            <li key={c.n} className="text-xs leading-relaxed text-gray-600 dark:text-white/55">
-              <span className="font-mono text-gray-500 dark:text-white/45">[{c.n}] bm25 {c.score.toFixed(2)} · </span>
+            <li key={c.n} className="text-xs leading-relaxed text-fg-2">
+              <span className="font-mono text-muted">[{c.n}] bm25 {c.score.toFixed(2)} · </span>
               <a
                 href={c.url}
                 {...(c.url.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                className="font-medium text-gray-800 dark:text-white/75 underline decoration-accent/60 underline-offset-2 hover:decoration-accent"
+                className="font-medium text-fg underline decoration-accent/60 underline-offset-2 hover:decoration-accent"
               >
                 {c.title}
               </a>
@@ -123,11 +123,11 @@ function Answer({ result }: { result: AskResult }) {
           ))}
         </ul>
       )}
-      <p className="font-mono text-[0.7rem] uppercase tracking-[0.12em] text-gray-500 dark:text-white/40">
+      <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted">
         {result.mode === "llm" ? "LLM answer, grounded in the cited snippets" : "Retrieval-only (no LLM): quoted from the portfolio"}
       </p>
       {result.gate.source === "typesafe" && (
-        <p className="font-mono text-[0.7rem] tracking-[0.04em] text-gray-500 dark:text-white/40">
+        <p className="font-mono text-xs tracking-[0.04em] text-muted">
           Gate · TypeSafe {result.gate.model} · on-topic {result.gate.onTopic?.toFixed(2)} · injection {result.gate.injection?.toFixed(2)}
         </p>
       )}

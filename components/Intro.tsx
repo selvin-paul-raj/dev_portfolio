@@ -1,21 +1,21 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import NumberTicker from "./ui/NumberTicker";
+import PokeFace from "./PokeFace";
 import { BsArrowRight } from "react-icons/bs";
 import { FaLinkedin, FaGithub, FaHackerrank } from "react-icons/fa";
 import { HiDownload } from "react-icons/hi";
+import { LuGauge, LuMessageCircle, LuShieldAlert, LuTarget, LuWorkflow } from "react-icons/lu";
 import { SiLeetcode, SiKaggle } from "react-icons/si";
-import HeroImg from "../public/Selvin_PaulRaj.webp";
 
 import { useSectionInView } from "@/lib/hooks";
 import { useActiveSectionContext } from "@/context/active-section-context";
 import { projectsData, experienceMetrics } from "@/lib/data";
 
 const DeepMlIcon = ({ size = 17 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
+  <svg aria-hidden="true" width={size} height={size} viewBox="0 0 20 20" fill="none">
     <circle cx="2.5"  cy="6.5"  r="1.7" fill="currentColor" opacity="0.75"/>
     <circle cx="2.5"  cy="13.5" r="1.7" fill="currentColor" opacity="0.75"/>
     <circle cx="10"   cy="3.5"  r="1.7" fill="currentColor"/>
@@ -43,13 +43,23 @@ const SOCIAL_LINKS = [
   { href: "https://www.deep-ml.com/profile/fdmYEE5bBFgqLwHxlBFW1lgLUR22", icon: <DeepMlIcon size={17} />, label: "deep-ml" },
 ];
 
+// Each shortcut lets a recruiter check a claim on this page for themselves.
 const RECRUITER_LINKS = [
-  { href: "/work", label: "How my systems work" },
-  { href: "/fit", label: "Check my fit for your role" },
-  { href: "/ask", label: "Ask me anything" },
-  { href: "/evals", label: "See my evals" },
-  { href: "/challenge", label: "Break my guardrails" },
+  { href: "/work", label: "How it works", title: "How my systems work, step by step", Icon: LuWorkflow },
+  { href: "/fit", label: "Fit check", title: "Check my fit for your role", Icon: LuTarget },
+  { href: "/ask", label: "Ask me", title: "Ask me anything, with cited answers", Icon: LuMessageCircle },
+  { href: "/evals", label: "Evals", title: "See the evals that grade those answers", Icon: LuGauge },
+  { href: "/challenge", label: "Break my guardrails", title: "A five-level prompt-injection game", Icon: LuShieldAlert },
 ];
+
+const SHORTCUT_PILL =
+  "group inline-flex h-11 [@media(pointer:fine)]:h-9 items-center gap-2 rounded-full border px-3.5 text-sm " +
+  "border-black/10 bg-black/[0.03] text-gray-700 hover:border-amber-600/50 hover:text-gray-950 " +
+  "dark:border-white/10 dark:bg-white/[0.03] dark:text-white/70 dark:hover:border-accent/45 dark:hover:text-white " +
+  "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#09090b] " +
+  "transition-[color,border-color,background-color] duration-150";
+const SHORTCUT_ICON =
+  "shrink-0 text-muted group-hover:text-accent-fg transition-colors duration-150";
 
 const TECH_BADGES = [
   "LangGraph", "MCP", "RAG", "LangChain", "Python",
@@ -89,11 +99,11 @@ export default function Intro() {
     <section
       ref={ref}
       id="home"
-      className="w-full max-w-5xl mx-auto px-4 mb-16 scroll-mt-[100rem] md:pt-8"
+      className="w-full max-w-5xl mx-auto px-0 sm:px-4 mb-16 scroll-mt-[100rem] md:pt-8"
     >
       {/* Mobile-only status pill */}
-      <div className="anim-fade-up anim-d0 lg:hidden flex items-center justify-center gap-2 mb-5 font-mono text-xs text-gray-600 dark:text-white/55">
-        <span className="flex items-center gap-2 bg-black/[0.04] dark:bg-white/[0.05] border border-black/6 dark:border-white/8 rounded-full px-4 py-1.5">
+      <div className="anim-fade-up anim-d0 lg:hidden flex items-center justify-center gap-2 mb-5 font-mono text-xs text-fg-2">
+        <span className="flex items-center gap-2 bg-black/[0.04] dark:bg-white/[0.05] border border-line rounded-full px-4 py-1.5">
           <span className="relative flex h-2 w-2" aria-hidden="true">
             <span className="animate-ping motion-reduce:animate-none absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
@@ -106,45 +116,45 @@ export default function Intro() {
       <div className="flex flex-col-reverse lg:flex-row items-center lg:items-start gap-6 lg:gap-16 mb-14">
 
         {/* Left: text */}
-        <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
+        <div className="w-full lg:w-auto flex-1 min-w-0 flex flex-col items-center lg:items-start text-center lg:text-left">
 
           {/* Desktop status pill */}
-          <div className="anim-fade-up anim-d0 hidden lg:flex items-center gap-2 mb-5 font-mono text-xs text-gray-600 dark:text-white/55 bg-black/[0.04] dark:bg-white/[0.05] border border-black/6 dark:border-white/8 rounded-full px-4 py-1.5">
+          <div className="anim-fade-up anim-d0 hidden lg:flex items-center gap-2 mb-5 font-mono text-xs text-fg-2 bg-black/[0.04] dark:bg-white/[0.05] border border-line rounded-full px-4 py-1.5">
             <span className="relative flex h-2 w-2" aria-hidden="true">
               <span className="animate-ping motion-reduce:animate-none absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
             </span>
             Chennai, India &nbsp;·&nbsp; {time} &nbsp;·&nbsp;
-            <span className="text-green-700 dark:text-green-400/80">Open to AI Engineer roles</span>
+            <span className="text-ok">Open to AI Engineer roles</span>
           </div>
 
           {/* Name */}
-          <h1 className="anim-fade-up anim-d1 text-4xl sm:text-5xl lg:text-[3.6rem] font-bold tracking-tight text-gray-900 dark:text-white leading-[1.08] mb-3">
+          <h1 className="anim-fade-up anim-d1 text-4xl sm:text-5xl lg:text-[3.6rem] font-bold tracking-tight text-fg leading-[1.08] mb-3">
             Selvin{" "}
-            <span className="text-gray-500 dark:text-white/35">PaulRaj K</span>
+            <span className="text-muted">PaulRaj K</span>
             {/* Role — kept inside the H1 so search engines see the role keyword, styled identically to the old sibling <p> */}
-            <span className="anim-fade-up anim-d2 block font-mono text-sm sm:text-[0.9rem] font-normal normal-case tracking-wide text-accent-ink dark:text-accent/65 mt-3">
+            <span className="anim-fade-up anim-d2 block font-mono text-sm sm:text-[0.9rem] font-normal normal-case tracking-wide text-accent-fg mt-3">
               AI Engineer &nbsp;·&nbsp; MCP &nbsp;·&nbsp; Agentic Systems &nbsp;·&nbsp; RAG &nbsp;·&nbsp; LangGraph
             </span>
           </h1>
 
           {/* Mobile inline stats */}
-          <div className="anim-fade-up anim-d3 lg:hidden flex items-center justify-center gap-3 mt-1 mb-5 font-mono">
-            <span className="text-lg font-bold text-gray-900 dark:text-white/90 tabular-nums">
+          <div className="anim-fade-up anim-d3 lg:hidden flex flex-wrap items-center justify-center gap-x-2.5 sm:gap-x-3 gap-y-1 mt-1 mb-5 font-mono whitespace-nowrap">
+            <span className="text-lg font-bold text-fg tabular-nums">
               <NumberTicker value={_projectCount} />+
             </span>
-            <span className="text-xs uppercase tracking-[0.15em] text-gray-600 dark:text-white/50">Projects</span>
+            <span className="text-xs uppercase tracking-[0.08em] sm:tracking-[0.15em] text-fg-2">Projects</span>
             <span className="w-px h-3.5 bg-black/10 dark:bg-white/10" />
-            <span className="text-lg font-bold text-gray-900 dark:text-white/90 tabular-nums" suppressHydrationWarning>
+            <span className="text-lg font-bold text-fg tabular-nums" suppressHydrationWarning>
               {_fmtDur(experienceMetrics.workRoleMonths)}
             </span>
-            <span className="text-xs uppercase tracking-[0.15em] text-gray-600 dark:text-white/50">Full-time</span>
+            <span className="text-xs uppercase tracking-[0.08em] sm:tracking-[0.15em] text-fg-2">Full-time</span>
           </div>
 
           {/* Bio */}
-          <p className="anim-fade-up anim-d3 text-base text-gray-600 dark:text-white/50 leading-relaxed max-w-xl mb-3">
+          <p className="anim-fade-up anim-d3 text-base text-fg-2 leading-relaxed max-w-xl mb-3">
             I build{" "}
-            <span className="text-gray-900 dark:text-white/80 font-medium">
+            <span className="text-fg font-medium">
               AI agents, MCP servers, and LangGraph multi-agent pipelines
             </span>{" "}
             that run in production. Before agents I shipped full-stack MERN and Next.js apps,
@@ -152,16 +162,16 @@ export default function Intro() {
           </p>
 
           {/* Secondary bio — hidden on mobile so the CTAs land above the fold */}
-          <p className="anim-fade-up anim-d4 hidden sm:block text-sm text-gray-500 dark:text-white/55 leading-relaxed max-w-xl mb-7">
+          <p className="anim-fade-up anim-d4 hidden sm:block text-sm text-muted leading-relaxed max-w-xl mb-7">
             At{" "}
-            <span className="text-gray-700 dark:text-white/60 font-medium">Zinnov (Draup)</span>
-             I built DRI-MAS, a LangGraph multi-agent system that turns plain-English
+            <span className="text-fg-2 font-medium">Zinnov (Draup)</span>
+             I built DRI-MAS (Data Request Intelligence Multi-Agent System), a LangGraph multi-agent system that turns plain-English
             requests into validated SQL reports. Analyst turnaround went from hours to under a
             minute. Outside work I publish MCP servers and CLI agents.
           </p>
 
           {/* CTAs */}
-          <div className="anim-fade-up anim-d5 flex flex-row gap-2.5 w-full sm:w-auto mb-7">
+          <div className="anim-fade-up anim-d5 flex flex-row flex-wrap gap-2.5 w-full sm:w-auto mb-7">
             <a
               href="#contact"
               onClick={() => { setActiveSection("Contact"); setTimeOfLastClick(Date.now()); }}
@@ -208,31 +218,32 @@ export default function Intro() {
           {/* Recruiter shortcuts: every claim on this page can be checked */}
           <nav
             aria-label="For recruiters"
-            className="anim-fade-up anim-d5 -mt-3 mb-7 flex flex-wrap items-center justify-center lg:justify-start gap-x-4 gap-y-1.5 text-sm"
+            className="anim-fade-up anim-d5 -mt-2 mb-7 flex flex-col items-center lg:items-start gap-3"
           >
-            <span className="lg:hidden w-full text-green-700 dark:text-green-400/80 font-medium">Open to AI Engineer roles</span>
-            {RECRUITER_LINKS.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className="group inline-flex items-center gap-1.5 text-gray-600 dark:text-white/55 hover:text-gray-900 dark:hover:text-white/85
-                  outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
-                style={{ transition: "color 150ms ease" }}
-              >
-                {label}
-                <BsArrowRight size={11} className="group-hover:translate-x-0.5 motion-reduce:transform-none" style={{ transition: "transform 150ms ease" }} />
-              </Link>
-            ))}
-            <button
-              type="button"
-              onClick={() => window.dispatchEvent(new Event("open-command-palette"))}
-              className="hidden sm:inline-flex items-center gap-1.5 text-gray-600 dark:text-white/55 hover:text-gray-900 dark:hover:text-white/85
-                outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
-              style={{ transition: "color 150ms ease" }}
-            >
-              <kbd className="font-mono text-[0.7rem] px-1.5 py-0.5 rounded border border-black/15 dark:border-white/20">⌘K</kbd>
-              Everything else
-            </button>
+            <span className="lg:hidden text-sm text-ok font-medium">Open to AI Engineer roles</span>
+            <ul className="flex flex-wrap justify-center lg:justify-start gap-2">
+              {RECRUITER_LINKS.map(({ href, label, title, Icon }) => (
+                <li key={href}>
+                  <Link href={href} title={title} className={SHORTCUT_PILL}>
+                    <Icon size={15} aria-hidden="true" className={SHORTCUT_ICON} />
+                    {label}
+                  </Link>
+                </li>
+              ))}
+              <li className="hidden sm:block">
+                <button
+                  type="button"
+                  title="Open the command palette"
+                  onClick={() => window.dispatchEvent(new Event("open-command-palette"))}
+                  className={`${SHORTCUT_PILL} border-dashed`}
+                >
+                  <kbd className="font-mono text-xs leading-none px-1.5 py-1 rounded border border-line-strong text-fg-2">
+                    ⌘K
+                  </kbd>
+                  Everything else
+                </button>
+              </li>
+            </ul>
           </nav>
 
           {/* Socials */}
@@ -258,44 +269,17 @@ export default function Intro() {
           </div>
         </div>
 
-        {/* Right: profile image with rotating ring */}
+        {/* Right: interactive portrait (drag to stretch; whistles, then sleeps, when idle) */}
         <div className="anim-fade-in anim-d1 shrink-0">
-          <div>
-            <div className="relative w-52 h-52 sm:w-64 sm:h-64 lg:w-80 lg:h-80">
-              {/* Conic arc ring — 2px strip outside image edge; no mask needed, works in any bg.
-                  Slow 18s spin via .anim-ring-spin (globals.css), stopped under reduced motion. */}
-              <div
-                aria-hidden="true"
-                className="anim-ring-spin motion-reduce:animate-none absolute rounded-full"
-                style={{
-                  inset: "-2px",
-                  background:
-                    "conic-gradient(from 0deg, #FFD700 0deg, #FFA500 40deg, transparent 90deg, transparent 300deg, #FFD700 360deg)",
-                }}
-              />
-              {/* Image container clips gradient center — creates ring with no color dependency */}
-              <div className="absolute inset-0 rounded-full overflow-hidden shadow-2xl">
-                <Image
-                  src={HeroImg}
-                  alt="Selvin PaulRaj K — AI Engineer"
-                  width={320}
-                  height={320}
-                  quality={75}
-                  priority
-                  sizes="(max-width: 640px) 208px, (max-width: 1024px) 256px, 320px"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              {/* Gold glow */}
-              <div className="absolute inset-0 rounded-full bg-accent/10 blur-2xl scale-110 -z-10" />
-            </div>
+          <div className="w-64 sm:w-80 lg:w-[26rem]">
+            <PokeFace circleColor="rgb(var(--portrait-bg))" label="Selvin PaulRaj K, AI Engineer. Grab and stretch his face." />
           </div>
         </div>
       </div>
 
       {/* Tech stack badges */}
       <div className="anim-fade-up anim-d8 hidden lg:flex flex-wrap justify-start gap-2 mb-4">
-        <span className="font-mono text-[0.65rem] text-gray-500 dark:text-white/50 self-center mr-1 tracking-widest uppercase">
+        <span className="font-mono text-xs text-muted self-center mr-1 tracking-widest uppercase">
           Core stack
         </span>
         {TECH_BADGES.map((tech) => (

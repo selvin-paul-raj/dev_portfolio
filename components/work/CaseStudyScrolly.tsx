@@ -53,7 +53,7 @@ export default function CaseStudyScrolly({ study }: { study: CaseStudy }) {
         bg-[#FAFAF9]/90 dark:bg-[#09090b]/90 backdrop-blur-sm lg:bg-transparent lg:dark:bg-transparent lg:backdrop-blur-none
         border-b border-black/5 dark:border-white/5 lg:border-0">
         <figure className="w-full h-full flex flex-col">
-          <figcaption className="flex justify-between font-mono text-[0.7rem] uppercase tracking-[0.14em] text-gray-500 dark:text-white/50 mb-2">
+          <figcaption className="flex justify-between font-mono text-xs uppercase tracking-[0.14em] text-muted mb-2">
             <span>System</span>
             <span aria-live="polite">
               Step {pad(active + 1)} / {pad(steps.length)}
@@ -100,11 +100,11 @@ export default function CaseStudyScrolly({ study }: { study: CaseStudy }) {
               className={i === active ? "opacity-100" : "opacity-50"}
               style={{ transition: "opacity 400ms cubic-bezier(0.25,1,0.5,1)" }}
             >
-              <p className="font-mono text-xs tabular-nums text-accent-ink dark:text-accent mb-3">{pad(i + 1)}</p>
-              <h3 className="text-[1.35rem] sm:text-2xl font-semibold tracking-tight text-gray-900 dark:text-white leading-snug mb-3">
+              <p className="font-mono text-xs tabular-nums text-accent-fg mb-3">{pad(i + 1)}</p>
+              <h3 className="text-[1.35rem] sm:text-2xl font-semibold tracking-tight text-fg leading-snug mb-3">
                 {step.title}
               </h3>
-              <p className="text-base leading-[1.7] text-gray-600 dark:text-white/65 max-w-[52ch]">{step.body}</p>
+              <p className="text-base leading-[1.7] text-fg-2 max-w-[52ch]">{step.body}</p>
             </div>
           </li>
         ))}

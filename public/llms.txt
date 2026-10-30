@@ -28,7 +28,7 @@
 
 In-depth, stage-by-stage walkthroughs with measured results and how each system is verified (also via MCP: `get_case_study`, resource `selvin://case-studies`):
 
-- [DRI-MAS](https://selvinpaulraj.vercel.app/work/dri-mas): A LangGraph multi-agent system that turns plain-English data requests into validated Trino SQL, with four human-in-the-loop interrupts and resumable state.
+- [DRI-MAS](https://selvinpaulraj.vercel.app/work/dri-mas): Data Request Intelligence Multi-Agent System. A LangGraph multi-agent system that turns plain-English data requests into validated Trino SQL, with four human-in-the-loop interrupts and resumable state.
 - [Akavizhi](https://selvinpaulraj.vercel.app/work/akavizhi): A single-user personal AI: a two-stage router hands each request to one of nine specialist agents, and every consequential action has to match what the owner actually said.
 - [Jobs with Joe](https://selvinpaulraj.vercel.app/work/jobs-with-joe): A job board for Indian freshers: twelve source adapters, explainable rule-based classification, and AI resume tools behind a fact guard that rejects anything the candidate did not write.
 - [Company Synonym Agent](https://selvinpaulraj.vercel.app/work/company-synonym-agent): Entity resolution for company names across 2.67M company and subsidiary records: semantic recall, lexical rescoring, rule boosts, and an LLM plus a person only for the hard cases.

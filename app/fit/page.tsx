@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function FitPage() {
   return (
-    <main id="content" className="flex flex-col items-center px-4 pt-16 pb-28 md:pl-20">
+    <main id="content" className="flex flex-col items-center px-4 pt-16 pb-28">
       <SectionHeading
         kicker={
           <>

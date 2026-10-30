@@ -3,7 +3,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import type { FormEvent } from "react";
 
-type Level = { level: number; name: string; defense: string };
+type Level = { level: number; name: string; defense: string; clues: readonly string[] };
 type Msg = { role: "you" | "gate"; text: string; blocked?: boolean };
 
 const STORAGE_KEY = "spr-challenge-level";
@@ -38,6 +38,7 @@ export default function Challenge() {
   const [guess, setGuess] = useState("");
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [cluesShown, setCluesShown] = useState(0);
 
   useEffect(() => {
     fetch("/api/challenge")
@@ -90,6 +91,7 @@ export default function Challenge() {
         if (level < 5) {
           setLevel(level + 1);
           setLog([]);
+          setCluesShown(0);
         }
       } else {
         setStatus("Not quite. Keep probing.");
@@ -101,7 +103,7 @@ export default function Challenge() {
 
   if (enabled === false) {
     return (
-      <p className="text-center text-sm text-gray-600 dark:text-white/55">
+      <p className="text-center text-sm text-fg-2">
         The challenge is offline right now (no model configured). Check back soon.
       </p>
     );
@@ -122,9 +124,10 @@ export default function Challenge() {
               setLevel(l.level);
               setLog([]);
               setStatus(null);
+              setCluesShown(0);
             }}
-            className={`font-mono text-xs px-3 py-1.5 rounded-full border outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-35
-              ${l.level === level ? "bg-gray-900 dark:bg-accent text-white dark:text-black border-transparent" : "border-black/10 dark:border-white/15 text-gray-700 dark:text-white/65"}`}
+            className={`font-mono text-xs px-3 min-h-11 [@media(pointer:fine)]:min-h-0 py-1.5 rounded-full border outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-35
+ ${l.level === level ? "bg-gray-900 dark:bg-accent text-white dark:text-[#1a1500] border-transparent" : "border-line text-fg-2"}`}
           >
             {l.level <= unlocked - 1 ? "✓ " : ""}L{l.level} · {l.name}
           </button>
@@ -132,10 +135,32 @@ export default function Challenge() {
       </div>
 
       {current && (
-        <p className="text-sm text-gray-600 dark:text-white/55">
-          <span className="font-mono text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-white/45">Defense · </span>
+        <p className="text-sm text-fg-2">
+          <span className="font-mono text-xs uppercase tracking-[0.12em] text-muted">Defense · </span>
           {current.defense}
         </p>
+      )}
+
+      {current && current.clues.length > 0 && (
+        <div className="flex flex-col gap-2">
+          {cluesShown > 0 && (
+            <ol aria-label="Clues" className="list-decimal pl-5 flex flex-col gap-1.5 text-sm text-fg-2">
+              {current.clues.slice(0, cluesShown).map((clue) => (
+                <li key={clue}>{clue}</li>
+              ))}
+            </ol>
+          )}
+          {cluesShown < current.clues.length && (
+            <button
+              type="button"
+              onClick={() => setCluesShown((n) => n + 1)}
+              className="self-start inline-flex items-center min-h-11 [@media(pointer:fine)]:min-h-0 rounded text-sm font-medium text-amber-700 dark:text-accent underline underline-offset-4 decoration-dotted
+                outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            >
+              {cluesShown === 0 ? "Stuck? Show a clue" : `Show clue ${cluesShown + 1} of ${current.clues.length}`}
+            </button>
+          )}
+        </div>
       )}
 
       <ol aria-live="polite" className="flex flex-col gap-3 min-h-[6rem]">
@@ -143,9 +168,9 @@ export default function Challenge() {
           <li
             key={i}
             className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${
-              m.role === "you"
-                ? "self-end rounded-br-sm bg-gray-900 dark:bg-white/[0.08] text-white dark:text-white/90"
-                : `self-start rounded-bl-sm border ${m.blocked ? "border-red-500/30 text-red-700 dark:text-red-300" : "border-black/10 dark:border-white/10 text-gray-800 dark:text-white/80"}`
+ m.role === "you"
+ ? "self-end rounded-br-sm bg-gray-900 dark:bg-white/[0.08] text-white dark:text-white/90"
+ : `self-start rounded-bl-sm border ${m.blocked ? "border-red-500/30 text-danger" : "border-line text-fg"}`
             }`}
           >
             {m.text}
@@ -161,7 +186,7 @@ export default function Challenge() {
           onChange={(e) => setInput(e.target.value)}
           maxLength={400}
           placeholder="Convince the gatekeeper…"
-          className="flex-1 rounded-full px-5 py-3 text-sm bg-white dark:bg-white/[0.04] border border-black/10 dark:border-white/10
+          className="flex-1 min-w-0 rounded-full px-5 py-3 text-base sm:text-sm bg-white dark:bg-white/[0.04] border border-black/10 dark:border-white/10
             text-gray-900 dark:text-white/85 placeholder:text-gray-500 dark:placeholder:text-white/40 outline-none focus-visible:ring-2 focus-visible:ring-accent"
         />
         <button
@@ -175,7 +200,7 @@ export default function Challenge() {
       </form>
 
       <form onSubmit={submitGuess} className="flex flex-wrap items-center gap-2">
-        <label htmlFor="guess" className="font-mono text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-white/45">
+        <label htmlFor="guess" className="font-mono text-xs uppercase tracking-[0.12em] text-muted">
           Password
         </label>
         <input
@@ -187,10 +212,10 @@ export default function Challenge() {
           className="w-48 rounded-full px-4 py-2 text-sm font-mono uppercase bg-white dark:bg-white/[0.04] border border-black/10 dark:border-white/10
             text-gray-900 dark:text-white/85 outline-none focus-visible:ring-2 focus-visible:ring-accent"
         />
-        <button type="submit" className="px-4 py-2 rounded-full border border-black/10 dark:border-white/15 text-sm font-medium text-gray-800 dark:text-white/75 outline-none focus-visible:ring-2 focus-visible:ring-accent">
+        <button type="submit" className="px-4 py-2 rounded-full border border-line text-sm font-medium text-fg outline-none focus-visible:ring-2 focus-visible:ring-accent">
           Check
         </button>
-        {status && <span role="status" className="text-sm text-gray-700 dark:text-white/70">{status}</span>}
+        {status && <span role="status" className="text-sm text-fg-2">{status}</span>}
       </form>
     </div>
   );

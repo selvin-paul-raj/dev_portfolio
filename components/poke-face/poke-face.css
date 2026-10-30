@@ -1,0 +1,31 @@
+/* PokeFace styles, scoped to .pf-stage */
+.pf-stage{position:relative;width:100%;aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none}
+.pf-stage canvas{position:absolute;inset:0;width:100%;height:100%;cursor:grab}
+.pf-stage canvas.grabbing{cursor:grabbing}
+.pf-stage .circle{position:absolute;left:12%;top:18%;width:76%;height:76%;border-radius:50%;background:var(--pf-circle,#ff2d0a);pointer-events:none}
+.pf-stage .hit{position:absolute;left:35%;top:22%;width:30%;height:30%;opacity:0;border:0;background:none;pointer-events:none}
+.pf-stage .hit:focus-visible{opacity:1;outline:3px dashed rgb(var(--accent-fg,124 94 0));border-radius:50%}
+.pf-stage .bubble{position:absolute;left:62%;top:4%;background:#fff;color:#111;font-weight:800;font-size:clamp(.85rem,1.6vw,1.05rem);padding:.6rem .9rem;border-radius:16px 16px 16px 4px;box-shadow:0 6px 20px rgba(0,0,0,.12);opacity:0;transform:translateY(8px) scale(.9);transition:opacity .2s,transform .2s;pointer-events:none;max-width:46%}
+.pf-stage .bubble.on{opacity:1;transform:none}
+.pf-stage .ghost{position:absolute;width:44px;height:44px;left:0;top:0;pointer-events:none;opacity:0;transition:opacity .3s;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
+.pf-stage .ghost.on{opacity:1}
+.pf-stage .ghost .grab{display:none}
+.pf-stage .ghost.hold .open{display:none}
+.pf-stage .ghost.hold .grab{display:block}
+.pf-stage .ghost path{fill:#fff;stroke:#111;stroke-width:1.4;stroke-linejoin:round}
+.pf-stage .notes{position:absolute;left:50%;top:20%;width:20%;height:30%;pointer-events:none;opacity:0;transition:opacity .4s}
+.pf-stage .notes.on{opacity:1}
+.pf-stage .notes span{position:absolute;left:-.3em;bottom:-.2em;font:900 clamp(1.1rem,2.6vw,1.9rem)/1 system-ui,sans-serif;color:#fff;opacity:0}
+.pf-stage .notes.on span{animation:nt 2.4s ease-out infinite}
+.pf-stage .notes.on span:nth-child(2){animation-delay:.8s}
+.pf-stage .notes.on span:nth-child(3){animation-delay:1.6s}
+@keyframes nt{0%{transform:translate(0,0) rotate(-10deg) scale(.5);opacity:0}20%{opacity:1}50%{transform:translate(.6rem,-2.4rem) rotate(10deg)}100%{transform:translate(-.2rem,-5rem) rotate(-8deg) scale(1.1);opacity:0}}
+.pf-stage .zzz{position:absolute;left:50%;top:20%;width:20%;height:30%;pointer-events:none;opacity:0;transition:opacity .6s}
+.pf-stage .zzz.on{opacity:1}
+.pf-stage .zzz span{position:absolute;left:-.25em;bottom:-.2em;font:900 clamp(1.2rem,3vw,2.2rem)/1 system-ui,sans-serif;color:#f4f2ef;opacity:0}
+.pf-stage .zzz.on span{animation:zz 3.6s ease-in-out infinite}
+.pf-stage .zzz.on span:nth-child(2){animation-delay:1.2s}
+.pf-stage .zzz.on span:nth-child(3){animation-delay:2.4s}
+@keyframes zz{0%{transform:translate(0,0) scale(.45);opacity:0}15%{opacity:1}40%{transform:translate(.5rem,-2.2rem) rotate(8deg) scale(.8)}70%{transform:translate(-.4rem,-4.4rem) rotate(-8deg) scale(1.05);opacity:.9}100%{transform:translate(.3rem,-6.4rem) rotate(6deg) scale(1.25);opacity:0}}
+/* Reduced motion: no floating notes or Zzz, no demo hand; the face still responds to touch and drag */
+@media (prefers-reduced-motion:reduce){.pf-stage .notes,.pf-stage .zzz,.pf-stage .ghost{display:none}.pf-stage .bubble{transition:none}}

@@ -138,8 +138,8 @@ export default function CommandPalette({ studies }: { studies: PaletteStudy[] })
       className="command-palette w-[min(36rem,calc(100vw-2rem))] p-0 rounded-xl border border-black/10 dark:border-white/12
         bg-[#FAFAF9] dark:bg-[#111113] text-gray-900 dark:text-white shadow-2xl backdrop:bg-black/40 dark:backdrop:bg-black/60 mt-[12vh]"
     >
-      <div className="flex items-center gap-3 px-4 border-b border-black/10 dark:border-white/10">
-        <span aria-hidden="true" className="font-mono text-xs text-accent-ink dark:text-accent">⌘K</span>
+      <div className="flex items-center gap-3 px-4 border-b border-line">
+        <span aria-hidden="true" className="font-mono text-xs text-accent-fg">⌘K</span>
         <input
           ref={inputRef}
           value={query}
@@ -154,19 +154,19 @@ export default function CommandPalette({ studies }: { studies: PaletteStudy[] })
           aria-expanded="true"
           aria-controls="command-list"
           aria-activedescendant={results[index] ? `cmd-${results[index].id}` : undefined}
-          className="flex-1 py-4 bg-transparent text-[0.95rem] outline-none placeholder:text-gray-500 dark:placeholder:text-white/40"
+          className="flex-1 py-4 bg-transparent text-[0.95rem] outline-none placeholder:text-muted"
         />
-        <kbd className="font-mono text-[0.65rem] px-1.5 py-0.5 rounded border border-black/10 dark:border-white/15 text-gray-500 dark:text-white/50">esc</kbd>
+        <kbd className="font-mono text-xs px-1.5 py-0.5 rounded border border-line text-muted">esc</kbd>
       </div>
 
       <div id="command-list" role="listbox" aria-label="Commands" className="max-h-[min(24rem,55vh)] overflow-y-auto py-2">
-        {results.length === 0 && <p className="px-4 py-6 text-sm text-gray-500 dark:text-white/50">No matches for &ldquo;{query}&rdquo;.</p>}
+        {results.length === 0 && <p className="px-4 py-6 text-sm text-muted">No matches for &ldquo;{query}&rdquo;.</p>}
         {results.map((cmd, i) => {
           const header = i === 0 || results[i - 1].group !== cmd.group ? cmd.group : null;
           return (
             <div key={cmd.id} role="presentation">
               {header && (
-                <p role="presentation" className="px-4 pt-3 pb-1.5 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-gray-500 dark:text-white/45">
+                <p role="presentation" className="px-4 pt-3 pb-1.5 font-mono text-xs uppercase tracking-[0.14em] text-muted">
                   {header}
                 </p>
               )}
@@ -178,23 +178,23 @@ export default function CommandPalette({ studies }: { studies: PaletteStudy[] })
                 onMouseMove={() => setIndex(i)}
                 onClick={() => execute(cmd)}
                 className={`mx-2 px-3 py-2.5 rounded-lg flex items-center justify-between gap-4 cursor-pointer text-sm ${
-                  i === index ? "bg-black/[0.05] dark:bg-white/[0.07] text-gray-950 dark:text-white" : "text-gray-700 dark:text-white/70"
-                }`}
+ i === index ? "bg-black/[0.05] dark:bg-white/[0.07] text-fg " : "text-fg-2 "
+ }`}
               >
                 <span className="flex items-center gap-2.5">
                   <span aria-hidden="true" className={`w-1 h-1 rounded-full ${i === index ? "bg-accent" : "bg-transparent"}`} />
                   {cmd.label}
                 </span>
-                {cmd.hint && <span className="font-mono text-xs text-gray-500 dark:text-white/45 truncate">{cmd.hint}</span>}
+                {cmd.hint && <span className="font-mono text-xs text-muted truncate">{cmd.hint}</span>}
               </div>
             </div>
           );
         })}
       </div>
 
-      <output className="block px-4 py-2.5 border-t border-black/10 dark:border-white/10 font-mono text-[0.65rem] text-gray-500 dark:text-white/45 flex justify-between">
+      <output className="block px-4 py-2.5 border-t border-line font-mono text-xs text-muted flex justify-between">
         <span>↑↓ to move · enter to run</span>
-        <span className="text-accent-ink dark:text-accent">{notice}</span>
+        <span className="text-accent-fg">{notice}</span>
       </output>
     </dialog>
   );

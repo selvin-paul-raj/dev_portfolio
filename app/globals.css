@@ -2,6 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Colour tokens. Every pairing is checked for WCAG AA in both themes:
+ * fg, fg-2, muted and the status colours reach 4.5:1 on surface, surface-2 and surface-3;
+ * faint is for large or decorative text only (3:1). accent is a fill; accent-fg is accent as text.
+ * Stored as RGB channels so Tailwind opacity modifiers (bg-surface-2/80) keep working.
+ */
+:root {
+  --surface: 250 250 249;   /* #fafaf9 page */
+  --surface-2: 255 255 255; /* #ffffff cards, panels */
+  --surface-3: 244 244 245; /* #f4f4f5 wells, hover */
+  --fg: 24 24 27;           /* #18181b */
+  --fg-2: 63 63 70;         /* #3f3f46 */
+  --muted: 92 92 102;       /* #5c5c66 */
+  --faint: 133 133 142;     /* #85858e, large text only */
+  --line: 228 228 231;      /* #e4e4e7 */
+  --line-strong: 212 212 216; /* #d4d4d8 */
+  --accent-fg: 124 94 0;    /* #7c5e00 */
+  --ok: 22 101 52;          /* #166534, deep enough for tinted pills */
+  --info: 3 105 161;        /* #0369a1 */
+  --warn: 180 83 9;         /* #b45309 */
+  --danger: 185 28 28;      /* #b91c1c */
+  --portrait-bg: 246 231 166; /* #f6e7a6 pale gold, so the face leads in light mode */
+}
+.dark {
+  --surface: 9 9 11;        /* #09090b */
+  --surface-2: 17 17 20;    /* #111114 */
+  --surface-3: 24 24 27;    /* #18181b */
+  --fg: 244 244 245;        /* #f4f4f5 */
+  --fg-2: 212 212 216;      /* #d4d4d8 */
+  --muted: 161 161 170;     /* #a1a1aa */
+  --faint: 113 113 122;     /* #71717a, large text only */
+  --line: 39 39 42;         /* #27272a */
+  --line-strong: 63 63 70;  /* #3f3f46 */
+  --accent-fg: 245 197 24;  /* #f5c518 */
+  --ok: 74 222 128;         /* #4ade80 */
+  --info: 125 211 252;      /* #7dd3fc */
+  --warn: 253 186 116;      /* #fdba74 */
+  --danger: 252 165 165;    /* #fca5a5 */
+  --portrait-bg: 245 197 24; /* #f5c518 brand gold, matches the CTA */
+}
+
 html,
 body,
 :root {
@@ -11,6 +52,19 @@ body,
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Nothing on the page may scroll sideways on a phone; clip keeps sticky/fixed working. */
+html,
+body {
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
 }
 
 body {
@@ -27,7 +81,7 @@ pre {
 
 ::selection {
   background-color: theme("colors.accent.DEFAULT");
-  color: #000000;
+  color: theme("colors.accent.ink");
 }
 
 .borderBlack {
@@ -72,6 +126,12 @@ pre {
 .anim-ring-spin { animation: ring-spin 18s linear infinite; }
 
 .anim-fade-up  { animation: fadeUp  0.45s cubic-bezier(0.23,1,0.32,1) both; }
+/* Projects explorer: the detail panel settles in when a project is picked */
+@keyframes detailIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.anim-detail-in { animation: detailIn 0.22s cubic-bezier(0.23,1,0.32,1) both; }
 .anim-fade-in  { animation: fadeIn  0.45s cubic-bezier(0.23,1,0.32,1) both; }
 
 .anim-d0 { animation-delay: 0.05s; }
@@ -104,7 +164,8 @@ pre {
   }
 
   .anim-fade-up,
-  .anim-fade-in {
+  .anim-fade-in,
+  .anim-detail-in {
     animation: none;
     opacity: 1;
     transform: none;
@@ -137,8 +198,7 @@ pre {
 }
 
 /* /work diagrams render full width and pan so the active stage sits mid-panel. */
-:root { --diagram-bg: #FAFAF9; }
-.dark { --diagram-bg: #09090b; }
+:root, .dark { --diagram-bg: rgb(var(--surface)); }
 .pipeline-viewport { --pan-center: calc(20vh - 26px); }
 @media (min-width: 1024px) {
   .pipeline-viewport { --pan-center: calc((100vh - 10rem) / 2); }

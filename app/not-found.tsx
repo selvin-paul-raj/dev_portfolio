@@ -4,14 +4,14 @@ import { BsArrowRight } from "react-icons/bs";
 export default function NotFound() {
   return (
     <main id="content" className="flex flex-col items-center justify-center min-h-[50vh] gap-5 text-center px-4">
-      <span className="font-mono text-[5rem] font-bold leading-none text-gray-200 dark:text-white/10">
+      <span className="font-mono text-[5rem] font-bold leading-none text-muted">
         404
       </span>
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white/90 mb-1">
+        <h2 className="text-lg font-semibold text-fg mb-1">
           Page not found
         </h2>
-        <p className="text-sm text-gray-500 dark:text-white/40">
+        <p className="text-sm text-muted">
           This page doesn&apos;t exist or was moved.
         </p>
       </div>

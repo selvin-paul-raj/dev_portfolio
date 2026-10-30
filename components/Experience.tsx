@@ -1,16 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { m } from "framer-motion";
 import SectionHeading from "./SectionHeading";
-import { experiencesData } from "@/lib/data";
+import { experienceMetrics } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
+import { commits, graph, LANES, shortHash, type Entry, type GraphRow } from "./experience/gitLog";
 
-const EASE_OUT: [number, number, number, number] = [0.23, 1, 0.32, 1];
-const COLLAPSED_COUNT = 2;
 const STACK_PREFIX = /^(stack|technologies)\s*:\s*/i;
-
-type Entry = (typeof experiencesData)[number];
 
 /** Split a raw description into bullet lines plus an optional trailing stack list. */
 function parseDescription(raw: string | undefined): { bullets: string[]; stack: string[] } {
@@ -18,209 +14,156 @@ function parseDescription(raw: string | undefined): { bullets: string[]; stack: 
     .split(/\r?\n/)
     .map((line) => line.replace(/^[\s\-•]+/, "").trim())
     .filter(Boolean);
-
   const stack: string[] = [];
   const bullets = lines.filter((line) => {
     if (!STACK_PREFIX.test(line)) return true;
-    stack.push(
-      ...line
-        .replace(STACK_PREFIX, "")
-        .replace(/\.$/, "")
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean)
-    );
+    stack.push(...line.replace(STACK_PREFIX, "").replace(/\.$/, "").split(",").map((s) => s.trim()).filter(Boolean));
     return false;
   });
-
   return { bullets, stack };
 }
 
-const workEntries = experiencesData.filter((e) => e.iconType !== "graduation");
-const educationEntries = experiencesData.filter((e) => e.iconType === "graduation");
+const fmtMonths = (n: number) => {
+  const y = Math.floor(n / 12);
+  const m = n % 12;
+  if (y === 0) return `${m} mo`;
+  if (m === 0) return `${y} yr`;
+  return `${y} yr ${m} mo`;
+};
 
-function BulletList({ items, current }: { items: string[]; current: boolean }) {
+const LANE_W = 18; // px per lane in the graph column
+
+/** The graph cell for one row: lane lines above and below, and this commit's dot. */
+function GraphCell({ row }: { row: GraphRow }) {
   return (
-    <ul className="m-0 list-none space-y-2 p-0">
-      {items.map((item, i) => (
-        <li
-          key={i}
-          className={`relative max-w-[70ch] pl-4 text-[0.95rem] leading-[1.6] text-gray-600 dark:text-[#c9c9cf]
-            before:absolute before:left-0 before:top-[0.68em] before:h-1 before:w-1 before:rounded-full before:content-['']
-            ${current ? "before:bg-amber-600 dark:before:bg-accent" : "before:bg-gray-400 dark:before:bg-[#71717a]"}`}
-        >
-          {item}
-        </li>
+    <div aria-hidden="true" className="relative shrink-0 self-stretch" style={{ width: LANE_W * LANES.length }}>
+      {LANES.map((l, lane) => (
+        <span key={l.name} className="absolute inset-y-0" style={{ left: lane * LANE_W + LANE_W / 2 - 0.5, width: 1 }}>
+          {row.up[lane] && <span className={`absolute left-0 top-0 h-[22px] w-px ${l.line}`} />}
+          {row.down[lane] && <span className={`absolute left-0 top-[22px] bottom-0 w-px ${l.line}`} />}
+        </span>
       ))}
-    </ul>
+      <span
+        className={`absolute top-[17px] h-[11px] w-[11px] rounded-full ring-4 ring-white dark:ring-[#0c0c10] ${LANES[row.lane].dot}`}
+        style={{ left: row.lane * LANE_W + LANE_W / 2 - 5.5 }}
+      />
+    </div>
   );
 }
 
-function WorkItem({ exp, index }: { exp: Entry; index: number }) {
-  const [expanded, setExpanded] = useState(false);
-  const { bullets, stack } = parseDescription(exp.description);
-  const collapsible = !exp.isCurrent && bullets.length > COLLAPSED_COUNT;
-  const visible = collapsible ? bullets.slice(0, COLLAPSED_COUNT) : bullets;
-  const hidden = collapsible ? bullets.slice(COLLAPSED_COUNT) : [];
-  const panelId = `exp-more-${exp.id ?? index}`;
-
+/** `git show` for one entry: who, when, where, then the diff of what it added. */
+function CommitDetail({ entry }: { entry: Entry }) {
+  const { bullets, stack } = parseDescription(entry.description);
   return (
-    <m.li
-      initial={{ opacity: 0, y: 8 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.3, ease: EASE_OUT, delay: Math.min(index, 3) * 0.05 }}
-      className="relative min-w-0 pb-12 pl-8 last:pb-0 sm:pl-10"
-    >
-      {/* Timeline node */}
-      <span aria-hidden="true" className="absolute left-0 top-[0.35rem] flex h-[11px] w-[11px]">
-        {exp.isCurrent && (
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-40 motion-reduce:animate-none" />
-        )}
-        <span
-          className={`relative inline-flex h-[11px] w-[11px] rounded-full border-2 ${
-            exp.isCurrent
-              ? "border-accent bg-accent"
-              : "border-gray-300 bg-white dark:border-[#3f3f46] dark:bg-[#101015]"
-          }`}
-        />
-      </span>
-
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-        <h4 className="order-2 m-0 min-w-0 text-lg font-semibold leading-snug text-gray-900 dark:text-white sm:order-1">
-          {exp.title}
-          {exp.isCurrent && <span className="sr-only"> (current role)</span>}
-        </h4>
-        <span
-          className="order-1 shrink-0 font-mono text-xs tracking-wide text-gray-500 dark:text-[#a1a1aa] sm:order-2"
-          // "Present" durations are computed at request time and again in the browser;
-          // they can differ by a month across a rollover, which is expected.
-          suppressHydrationWarning
-        >
-          {exp.date}
-        </span>
-      </div>
-
-      <p className="m-0 mt-1 text-sm">
-        <span className="font-medium text-amber-700 dark:text-accent">{exp.company}</span>
-        {exp.location && (
-          <span className="text-gray-500 dark:text-[#a1a1aa]">
-            <span aria-hidden="true" className="mx-2">·</span>
-            {exp.location}
-          </span>
-        )}
+    <div className="pb-5 pt-1 font-mono text-[13px] leading-relaxed">
+      <p className="text-muted">Author: Selvin PaulRaj K</p>
+      <p className="text-muted" suppressHydrationWarning>
+        Date:   {entry.dateStart} to {entry.dateEnd} ({entry.duration})
       </p>
-
+      {entry.location && <p className="text-muted">Where:  {entry.location}</p>}
       {bullets.length > 0 && (
-        <div className="mt-4">
-          <BulletList items={visible} current={exp.isCurrent} />
-
-          {collapsible && (
-            <>
-              <div
-                id={panelId}
-                inert={!expanded}
-                className={`grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none ${
-                  expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-                }`}
-              >
-                <div className="min-h-0 overflow-hidden">
-                  <div className="pt-2">
-                    <BulletList items={hidden} current={false} />
-                  </div>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setExpanded((v) => !v)}
-                aria-expanded={expanded}
-                aria-controls={panelId}
-                className="-ml-2 mt-2 inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium text-amber-700 outline-none transition-transform duration-150 ease-out active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-accent dark:text-accent [@media(hover:hover)]:hover:bg-accent/10"
-              >
-                {expanded ? "Show fewer" : `Show all ${bullets.length}`}
-                <svg
-                  aria-hidden="true"
-                  viewBox="0 0 16 16"
-                  className={`h-3.5 w-3.5 transition-transform duration-200 ease-out ${expanded ? "rotate-180" : ""}`}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M4 6l4 4 4-4" />
-                </svg>
-              </button>
-            </>
-          )}
-        </div>
-      )}
-
-      {stack.length > 0 && (
-        <ul aria-label="Stack" className="m-0 mt-4 flex list-none flex-wrap gap-1.5 p-0">
-          {stack.map((tech) => (
-            <li
-              key={tech}
-              className="rounded-md border border-black/[0.08] px-2 py-0.5 font-mono text-xs text-gray-500 dark:border-white/[0.07] dark:text-[#a1a1aa]"
-            >
-              {tech}
+        <ul className="mt-3 space-y-1.5 font-sans text-sm">
+          {bullets.map((b) => (
+            <li key={b} className="flex gap-2.5 text-fg-2">
+              <span aria-hidden="true" className="font-mono text-ok">+</span>
+              <span className="max-w-[72ch]">{b}</span>
             </li>
           ))}
         </ul>
       )}
-    </m.li>
+      {stack.length > 0 && <p className="mt-3 text-muted">stack: {stack.join(", ")}</p>}
+    </div>
+  );
+}
+
+function CommitRow({ entry, row, open, onToggle }: { entry: Entry; row: GraphRow; open: boolean; onToggle: () => void }) {
+  const lane = LANES[row.lane];
+  const ref = entry.isCurrent && row.lane === 0 ? "HEAD -> work" : row.lane === 0 ? null : lane.name;
+  const panelId = `commit-${entry.id}`;
+  return (
+    <li className="flex gap-3">
+      <GraphCell row={row} />
+      <div className="min-w-0 flex-1 border-b border-line">
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-controls={panelId}
+          onClick={onToggle}
+          className="group flex w-full min-h-11 flex-wrap items-baseline gap-x-3 gap-y-1 py-3 text-left rounded-sm
+            outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
+        >
+          <span aria-hidden="true" className="font-mono text-[13px] text-accent-fg">{shortHash(entry)}</span>
+          {ref && <span className={`font-mono text-[13px] ${lane.text}`}>({ref})</span>}
+          <span className="font-mono text-[13px] text-muted">{entry.dateStart}</span>
+          <span className="basis-full sm:basis-auto text-[15px] font-semibold text-fg group-hover:underline underline-offset-4 decoration-black/20 dark:decoration-white/25">
+            {entry.title}
+          </span>
+          <span className="text-sm text-fg-2">{entry.company}</span>
+          <span aria-hidden="true" className="ml-auto font-mono text-xs text-muted">{open ? "−" : "+"}</span>
+        </button>
+        <div id={panelId} hidden={!open}>
+          <CommitDetail entry={entry} />
+        </div>
+      </div>
+    </li>
   );
 }
 
 export default function Experience() {
   const { ref } = useSectionInView("Experience", 0.15);
+  // The current role opens by default, the way `git show` lands on HEAD.
+  const [open, setOpen] = useState<Set<string>>(() => new Set(commits.filter((c) => c.isCurrent && c.iconType === "work").map((c) => c.id)));
+  const toggle = (id: string) =>
+    setOpen((s) => {
+      const next = new Set(s);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
 
   return (
     <section ref={ref} id="experience" className="mx-auto mb-28 w-full max-w-5xl scroll-mt-28 px-4">
-      <SectionHeading kicker="Full-time AI automation work, internships, and study.">Experience</SectionHeading>
+      <SectionHeading kicker="My career as a git log: work, study and founding run as parallel branches. Open any commit.">
+        Experience
+      </SectionHeading>
 
-      <div className="mx-auto max-w-4xl">
-        <h3 className="m-0 mb-6 font-mono text-xs uppercase tracking-[0.14em] text-gray-500 dark:text-[#a1a1aa]">
-          Work <span className="ml-1">{String(workEntries.length).padStart(2, "0")}</span>
-        </h3>
+      <div className="rounded-2xl border border-line bg-surface-2 overflow-hidden">
+        {/* Terminal header: the command, then a legend of the branches */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 sm:px-6 py-3">
+          <p className="font-mono text-[13px] text-fg-2">
+            <span aria-hidden="true" className="text-muted">$ </span>git log --graph career
+          </p>
+          <ul aria-label="Branches" className="flex flex-wrap gap-x-4 gap-y-1">
+            {LANES.map((l) => (
+              <li key={l.name} className="flex items-center gap-1.5 font-mono text-[13px] text-fg-2">
+                <span aria-hidden="true" className={`h-2 w-2 rounded-full ${l.dot}`} />
+                {l.name}
+              </li>
+            ))}
+          </ul>
+        </div>
 
-        <ol className="relative m-0 list-none p-0 before:absolute before:bottom-2 before:left-[5px] before:top-2 before:w-px before:bg-black/[0.08] before:content-[''] dark:before:bg-white/[0.07]">
-          {workEntries.map((exp, index) => (
-            <WorkItem key={exp.id ?? index} exp={exp} index={index} />
+        <ol className="px-4 sm:px-6 pt-1">
+          {commits.map((c, i) => (
+            <CommitRow key={c.id} entry={c} row={graph[i]} open={open.has(c.id)} onToggle={() => toggle(c.id)} />
           ))}
         </ol>
 
-        {educationEntries.length > 0 && (
-          <div className="mt-16">
-            <h3 className="m-0 mb-4 font-mono text-xs uppercase tracking-[0.14em] text-gray-500 dark:text-[#a1a1aa]">
-              Education
-            </h3>
-            <ul className="m-0 grid list-none gap-x-8 gap-y-6 p-0 sm:grid-cols-2">
-              {educationEntries.map((edu, index) => (
-                <li
-                  key={edu.id ?? index}
-                  className="min-w-0 border-t border-black/[0.08] pt-4 dark:border-white/[0.07]"
-                >
-                  <span
-                    className="block font-mono text-xs tracking-wide text-gray-500 dark:text-[#a1a1aa]"
-                    suppressHydrationWarning
-                  >
-                    {edu.date}
-                  </span>
-                  <h4 className="m-0 mt-1.5 text-base font-semibold leading-snug text-gray-900 dark:text-white">
-                    {edu.title}
-                  </h4>
-                  <p className="m-0 mt-0.5 text-sm font-medium text-amber-700 dark:text-accent">{edu.company}</p>
-                  {edu.description && (
-                    <p className="m-0 mt-2 line-clamp-2 max-w-[70ch] text-sm leading-[1.6] text-gray-600 dark:text-[#c9c9cf]">
-                      {edu.description}
-                    </p>
-                  )}
-                </li>
-              ))}
-            </ul>
+        {/* Like `git shortlog -s`: totals computed from the entries */}
+        <dl className="flex flex-wrap gap-x-8 gap-y-2 border-t border-line px-4 sm:px-6 py-4 font-mono text-[13px]">
+          <div className="flex gap-2">
+            <dt className="text-muted">full-time</dt>
+            <dd className="m-0 text-fg" suppressHydrationWarning>{fmtMonths(experienceMetrics.workRoleMonths)}</dd>
           </div>
-        )}
+          <div className="flex gap-2">
+            <dt className="text-muted">internships</dt>
+            <dd className="m-0 text-fg" suppressHydrationWarning>{fmtMonths(experienceMetrics.internMonths)}</dd>
+          </div>
+          <div className="flex gap-2">
+            <dt className="text-muted">commits</dt>
+            <dd className="m-0 text-fg">{commits.length}</dd>
+          </div>
+        </dl>
       </div>
     </section>
   );

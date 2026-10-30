@@ -2,7 +2,7 @@ import { FaHackerrank, FaLinkedin } from "react-icons/fa";
 import { SiLeetcode, SiGeeksforgeeks, SiGithub, SiCodechef, SiKaggle } from "react-icons/si";
 
 const DeepMlIcon = ({ size = 17 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
+  <svg aria-hidden="true" width={size} height={size} viewBox="0 0 20 20" fill="none">
     <circle cx="2.5"  cy="6.5"  r="1.7" fill="currentColor" opacity="0.75"/>
     <circle cx="2.5"  cy="13.5" r="1.7" fill="currentColor" opacity="0.75"/>
     <circle cx="10"   cy="3.5"  r="1.7" fill="currentColor"/>
