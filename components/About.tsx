@@ -177,7 +177,7 @@ export default function About() {
 
             {/* Split: Internships / Certifications, live from data */}
             <div className="border-l border-black/[0.08] dark:border-white/[0.07] grid grid-rows-2">
-              <div className="px-[14px] py-3 flex items-center justify-between gap-2 border-b border-black/[0.08] dark:border-white/[0.07]">
+              <div className="min-w-0 px-2.5 sm:px-[14px] py-3 flex items-center justify-between gap-2 border-b border-black/[0.08] dark:border-white/[0.07]">
                 <span
                   className="text-xs tracking-[0.18em] text-gray-500 dark:text-[#a1a1aa] uppercase"
                   style={{ fontFamily: MONO }}
@@ -188,7 +188,7 @@ export default function About() {
                   <NumberTicker value={experienceMetrics.internMonths} format={_fmtDur} duration={1.6} />
                 </span>
               </div>
-              <div className="px-[14px] py-3 flex items-center justify-between gap-2">
+              <div className="min-w-0 px-2.5 sm:px-[14px] py-3 flex items-center justify-between gap-2">
                 <span
                   className="text-xs tracking-[0.18em] text-gray-500 dark:text-[#a1a1aa] uppercase"
                   style={{ fontFamily: MONO }}

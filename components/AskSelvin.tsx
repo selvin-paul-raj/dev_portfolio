@@ -123,11 +123,11 @@ function Answer({ result }: { result: AskResult }) {
           ))}
         </ul>
       )}
-      <p className="font-mono text-[0.7rem] uppercase tracking-[0.12em] text-gray-500 dark:text-white/40">
+      <p className="font-mono text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-white/40">
         {result.mode === "llm" ? "LLM answer, grounded in the cited snippets" : "Retrieval-only (no LLM): quoted from the portfolio"}
       </p>
       {result.gate.source === "typesafe" && (
-        <p className="font-mono text-[0.7rem] tracking-[0.04em] text-gray-500 dark:text-white/40">
+        <p className="font-mono text-xs tracking-[0.04em] text-gray-500 dark:text-white/40">
           Gate · TypeSafe {result.gate.model} · on-topic {result.gate.onTopic?.toFixed(2)} · injection {result.gate.injection?.toFixed(2)}
         </p>
       )}

@@ -10,6 +10,7 @@ import SubmitBtn from "./SubmitBtn";
 import toast from "react-hot-toast";
 import { FaLinkedin, FaGithub, FaWhatsapp } from "react-icons/fa";
 import { HiMail, HiPhone } from "react-icons/hi";
+import { MdArrowOutward } from "react-icons/md";
 
 const EASE_OUT: [number, number, number, number] = [0.23, 1, 0.32, 1];
 
@@ -142,7 +143,7 @@ const Contact = () => {
                     className="shrink-0 font-mono text-xs text-gray-500 dark:text-[#a1a1aa] group-hover:translate-x-0.5"
                     style={{ transition: "transform 150ms cubic-bezier(0.23,1,0.32,1)" }}
                   >
-                    {copyable ? "Copy" : "↗"}
+                    {copyable ? "Copy" : <MdArrowOutward size={14} />}
                   </span>
                 </>
               );
@@ -206,7 +207,7 @@ const Contact = () => {
                   autoComplete="name"
                   placeholder="Your name"
                   className="h-11 px-4 rounded-xl
-                    bg-gray-50 dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/[0.07]
+                    bg-gray-50 dark:bg-white/[0.06] border border-black/40 dark:border-white/35
                     text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-[#8a8a93]
                     outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2
                     transition-colors duration-150"
@@ -225,7 +226,7 @@ const Contact = () => {
                   autoComplete="email"
                   placeholder="your@email.com"
                   className="h-11 px-4 rounded-xl
-                    bg-gray-50 dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/[0.07]
+                    bg-gray-50 dark:bg-white/[0.06] border border-black/40 dark:border-white/35
                     text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-[#8a8a93]
                     outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2
                     transition-colors duration-150"
@@ -246,7 +247,7 @@ const Contact = () => {
                 placeholder="Tell me about your project, idea, or just say hi..."
                 rows={5}
                 className="px-4 py-3 rounded-xl resize-none
-                  bg-gray-50 dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/[0.07]
+                  bg-gray-50 dark:bg-white/[0.06] border border-black/40 dark:border-white/35
                   text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-[#8a8a93]
                   outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2
                   leading-relaxed transition-colors duration-150"

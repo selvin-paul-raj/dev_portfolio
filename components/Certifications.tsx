@@ -718,7 +718,7 @@ export default function Certifications() {
       <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3 mb-4">
         {/* Search */}
         <div className="relative flex items-center gap-2.5 px-4 border border-black/[0.08] dark:border-white/[0.07] rounded-xl bg-white dark:bg-[#101015] transition-colors focus-within:border-accent/40">
-          <svg className="w-4 h-4 shrink-0 text-gray-500 dark:text-[#a1a1aa]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+          <svg aria-hidden="true" className="w-4 h-4 shrink-0 text-gray-500 dark:text-[#a1a1aa]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
             <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
           </svg>
           <input
@@ -769,12 +769,12 @@ export default function Certifications() {
             style={{ fontFamily: MONO, letterSpacing: "0.14em", textTransform: "uppercase" }}
           >
             {viewMode === "grid" ? (
-              <svg className="w-[14px] h-[14px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <svg aria-hidden="true" className="w-[14px] h-[14px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                 <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
                 <rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" />
               </svg>
             ) : (
-              <svg className="w-[14px] h-[14px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <svg aria-hidden="true" className="w-[14px] h-[14px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                 <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" />
                 <line x1="3" y1="18" x2="21" y2="18" />
               </svg>
@@ -935,7 +935,7 @@ export default function Certifications() {
             setShowAll((v) => !v);
           }}
           aria-expanded={showAll}
-          className="px-5 py-2.5 border border-black/[0.12] dark:border-white/[0.16] rounded-full text-xs uppercase tracking-[0.18em] text-gray-800 dark:text-white hover:bg-black/[0.03] dark:hover:bg-white/[0.05] active:scale-[0.97] transition-[background-color,transform] duration-150 outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          className="whitespace-nowrap px-5 py-2.5 border border-black/[0.12] dark:border-white/[0.16] rounded-full text-xs uppercase tracking-[0.18em] text-gray-800 dark:text-white hover:bg-black/[0.03] dark:hover:bg-white/[0.05] active:scale-[0.97] transition-[background-color,transform] duration-150 outline-none focus-visible:ring-2 focus-visible:ring-accent"
           style={{ fontFamily: MONO }}
         >
           {showAll ? "Show featured only" : `View all ${total} certifications`}

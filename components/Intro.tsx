@@ -15,7 +15,7 @@ import { useActiveSectionContext } from "@/context/active-section-context";
 import { projectsData, experienceMetrics } from "@/lib/data";
 
 const DeepMlIcon = ({ size = 17 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 20 20" fill="none">
+  <svg aria-hidden="true" width={size} height={size} viewBox="0 0 20 20" fill="none">
     <circle cx="2.5"  cy="6.5"  r="1.7" fill="currentColor" opacity="0.75"/>
     <circle cx="2.5"  cy="13.5" r="1.7" fill="currentColor" opacity="0.75"/>
     <circle cx="10"   cy="3.5"  r="1.7" fill="currentColor"/>
@@ -106,7 +106,7 @@ export default function Intro() {
       <div className="flex flex-col-reverse lg:flex-row items-center lg:items-start gap-6 lg:gap-16 mb-14">
 
         {/* Left: text */}
-        <div className="flex-1 flex flex-col items-center lg:items-start text-center lg:text-left">
+        <div className="flex-1 min-w-0 flex flex-col items-center lg:items-start text-center lg:text-left">
 
           {/* Desktop status pill */}
           <div className="anim-fade-up anim-d0 hidden lg:flex items-center gap-2 mb-5 font-mono text-xs text-gray-600 dark:text-white/55 bg-black/[0.04] dark:bg-white/[0.05] border border-black/6 dark:border-white/8 rounded-full px-4 py-1.5">
@@ -230,7 +230,7 @@ export default function Intro() {
                 outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
               style={{ transition: "color 150ms ease" }}
             >
-              <kbd className="font-mono text-[0.7rem] px-1.5 py-0.5 rounded border border-black/15 dark:border-white/20">⌘K</kbd>
+              <kbd className="font-mono text-xs px-1.5 py-0.5 rounded border border-black/15 dark:border-white/20">⌘K</kbd>
               Everything else
             </button>
           </nav>
@@ -295,7 +295,7 @@ export default function Intro() {
 
       {/* Tech stack badges */}
       <div className="anim-fade-up anim-d8 hidden lg:flex flex-wrap justify-start gap-2 mb-4">
-        <span className="font-mono text-[0.65rem] text-gray-500 dark:text-white/50 self-center mr-1 tracking-widest uppercase">
+        <span className="font-mono text-xs text-gray-500 dark:text-white/50 self-center mr-1 tracking-widest uppercase">
           Core stack
         </span>
         {TECH_BADGES.map((tech) => (

@@ -13,6 +13,19 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Nothing on the page may scroll sideways on a phone; clip keeps sticky/fixed working. */
+html,
+body {
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+
 body {
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
 }
@@ -27,7 +40,7 @@ pre {
 
 ::selection {
   background-color: theme("colors.accent.DEFAULT");
-  color: #000000;
+  color: theme("colors.accent.ink");
 }
 
 .borderBlack {

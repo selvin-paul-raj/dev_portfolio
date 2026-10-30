@@ -124,7 +124,11 @@ function WorkItem({ exp, index }: { exp: Entry; index: number }) {
                   expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
                 }`}
               >
-                <div className="min-h-0 overflow-hidden">
+                <div
+                  className={`min-h-0 overflow-hidden transition-[visibility] motion-reduce:transition-none ${
+                    expanded ? "visible" : "invisible delay-300"
+                  }`}
+                >
                   <div className="pt-2">
                     <BulletList items={hidden} current={false} />
                   </div>

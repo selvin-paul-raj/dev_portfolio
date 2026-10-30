@@ -83,9 +83,9 @@ export default function Recognition() {
               onClick={() => setTab(t)}
               aria-pressed={tab === t}
               className={`
-                flex items-center gap-2 px-[18px] py-[9px] rounded-full active:scale-[0.97]
+                flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-[18px] py-[9px] rounded-full active:scale-[0.97]
                 transition-[background-color,color,transform] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]
-                font-mono text-xs tracking-[0.2em] uppercase outline-none
+                font-mono text-xs tracking-[0.08em] sm:tracking-[0.2em] uppercase outline-none
                 focus-visible:ring-2 focus-visible:ring-accent
                 ${tab === t
                   ? "bg-accent text-[#1a1500] font-medium"
@@ -153,13 +153,13 @@ export default function Recognition() {
                 </div>
 
                 {/* Description */}
-                <p className="text-[15px] leading-[1.7] text-gray-600 dark:text-[#c9c9cf] mb-4 max-w-[920px]">
+                <p className="text-[15px] leading-[1.7] text-gray-600 dark:text-[#c9c9cf] mb-4 max-w-[70ch]">
                   {pub.description}
                 </p>
 
                 {/* Abstract */}
                 <div
-                  className="mb-[22px] max-w-[880px] rounded-xl bg-black/[0.03] dark:bg-white/[0.03] p-5"
+                  className="mb-[22px] max-w-[75ch] rounded-xl bg-black/[0.03] dark:bg-white/[0.03] p-5"
                   style={{ fontFamily: SERIF, fontStyle: "italic" }}
                 >
                   <span
@@ -291,7 +291,7 @@ export default function Recognition() {
 
                 {/* Description */}
                 {ach.description && (
-                  <p className="text-[15px] leading-[1.7] text-gray-600 dark:text-[#c9c9cf] mb-[22px] max-w-[920px]">
+                  <p className="text-[15px] leading-[1.7] text-gray-600 dark:text-[#c9c9cf] mb-[22px] max-w-[70ch]">
                     {ach.description}
                   </p>
                 )}

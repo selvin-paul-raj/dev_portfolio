@@ -156,7 +156,7 @@ export default function CommandPalette({ studies }: { studies: PaletteStudy[] })
           aria-activedescendant={results[index] ? `cmd-${results[index].id}` : undefined}
           className="flex-1 py-4 bg-transparent text-[0.95rem] outline-none placeholder:text-gray-500 dark:placeholder:text-white/40"
         />
-        <kbd className="font-mono text-[0.65rem] px-1.5 py-0.5 rounded border border-black/10 dark:border-white/15 text-gray-500 dark:text-white/50">esc</kbd>
+        <kbd className="font-mono text-xs px-1.5 py-0.5 rounded border border-black/10 dark:border-white/15 text-gray-500 dark:text-white/50">esc</kbd>
       </div>
 
       <div id="command-list" role="listbox" aria-label="Commands" className="max-h-[min(24rem,55vh)] overflow-y-auto py-2">
@@ -166,7 +166,7 @@ export default function CommandPalette({ studies }: { studies: PaletteStudy[] })
           return (
             <div key={cmd.id} role="presentation">
               {header && (
-                <p role="presentation" className="px-4 pt-3 pb-1.5 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-gray-500 dark:text-white/45">
+                <p role="presentation" className="px-4 pt-3 pb-1.5 font-mono text-xs uppercase tracking-[0.14em] text-gray-500 dark:text-white/45">
                   {header}
                 </p>
               )}
@@ -192,7 +192,7 @@ export default function CommandPalette({ studies }: { studies: PaletteStudy[] })
         })}
       </div>
 
-      <output className="block px-4 py-2.5 border-t border-black/10 dark:border-white/10 font-mono text-[0.65rem] text-gray-500 dark:text-white/45 flex justify-between">
+      <output className="block px-4 py-2.5 border-t border-black/10 dark:border-white/10 font-mono text-xs text-gray-500 dark:text-white/45 flex justify-between">
         <span>↑↓ to move · enter to run</span>
         <span className="text-accent-ink dark:text-accent">{notice}</span>
       </output>
