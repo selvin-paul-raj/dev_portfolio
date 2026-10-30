@@ -1,14 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import NumberTicker from "./ui/NumberTicker";
+import PokeFace from "./PokeFace";
 import { BsArrowRight } from "react-icons/bs";
 import { FaLinkedin, FaGithub, FaHackerrank } from "react-icons/fa";
 import { HiDownload } from "react-icons/hi";
 import { SiLeetcode, SiKaggle } from "react-icons/si";
-import HeroImg from "../public/Selvin_PaulRaj.webp";
 
 import { useSectionInView } from "@/lib/hooks";
 import { useActiveSectionContext } from "@/context/active-section-context";
@@ -129,7 +128,7 @@ export default function Intro() {
           </h1>
 
           {/* Mobile inline stats */}
-          <div className="anim-fade-up anim-d3 lg:hidden flex items-center justify-center gap-3 mt-1 mb-5 font-mono">
+          <div className="anim-fade-up anim-d3 lg:hidden flex items-center justify-center gap-3 mt-1 mb-5 font-mono whitespace-nowrap">
             <span className="text-lg font-bold text-gray-900 dark:text-white/90 tabular-nums">
               <NumberTicker value={_projectCount} />+
             </span>
@@ -258,37 +257,10 @@ export default function Intro() {
           </div>
         </div>
 
-        {/* Right: profile image with rotating ring */}
+        {/* Right: interactive portrait (drag to stretch; whistles, then sleeps, when idle) */}
         <div className="anim-fade-in anim-d1 shrink-0">
-          <div>
-            <div className="relative w-52 h-52 sm:w-64 sm:h-64 lg:w-80 lg:h-80">
-              {/* Conic arc ring — 2px strip outside image edge; no mask needed, works in any bg.
-                  Slow 18s spin via .anim-ring-spin (globals.css), stopped under reduced motion. */}
-              <div
-                aria-hidden="true"
-                className="anim-ring-spin motion-reduce:animate-none absolute rounded-full"
-                style={{
-                  inset: "-2px",
-                  background:
-                    "conic-gradient(from 0deg, #FFD700 0deg, #FFA500 40deg, transparent 90deg, transparent 300deg, #FFD700 360deg)",
-                }}
-              />
-              {/* Image container clips gradient center — creates ring with no color dependency */}
-              <div className="absolute inset-0 rounded-full overflow-hidden shadow-2xl">
-                <Image
-                  src={HeroImg}
-                  alt="Selvin PaulRaj K — AI Engineer"
-                  width={320}
-                  height={320}
-                  quality={75}
-                  priority
-                  sizes="(max-width: 640px) 208px, (max-width: 1024px) 256px, 320px"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              {/* Gold glow */}
-              <div className="absolute inset-0 rounded-full bg-accent/10 blur-2xl scale-110 -z-10" />
-            </div>
+          <div className="w-64 sm:w-80 lg:w-[26rem]">
+            <PokeFace circleColor="#FFD700" label="Selvin PaulRaj K, AI Engineer. Grab and stretch his face." />
           </div>
         </div>
       </div>
