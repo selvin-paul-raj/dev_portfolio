@@ -58,3 +58,6 @@ graft/
 
 # aislop local scan state
 /.aislop/
+
+# design-tool screenshots and logs (local only)
+/.hallmark/

@@ -3,3 +3,4 @@
 !graft/
 graft/.cache/
 graft/.graph/
+!.hallmark/
