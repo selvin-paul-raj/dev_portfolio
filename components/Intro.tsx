@@ -165,7 +165,7 @@ export default function Intro() {
           <p className="anim-fade-up anim-d4 hidden sm:block text-sm text-gray-500 dark:text-white/55 leading-relaxed max-w-xl mb-7">
             At{" "}
             <span className="text-gray-700 dark:text-white/60 font-medium">Zinnov (Draup)</span>
-             I built DRI-MAS, a LangGraph multi-agent system that turns plain-English
+             I built DRI-MAS (Data Request Intelligence Multi-Agent System), a LangGraph multi-agent system that turns plain-English
             requests into validated SQL reports. Analyst turnaround went from hours to under a
             minute. Outside work I publish MCP servers and CLI agents.
           </p>

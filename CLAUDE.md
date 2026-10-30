@@ -30,7 +30,7 @@ All content is driven from `lib/data/*.json` — do not edit `lib/data.tsx` for 
 
 - **`lib/data/projects.json`** — full project archive; only `show: true` entries render. Fields: `show`, `featured` (top card grid; everything else shown goes in the compact "More projects" list), `private` (optional — work case studies with no public repo), `order` (ascending = first), `categories`, `code` (nullable), `live` (nullable), `imageUrl` (path or `""`).
 - **`lib/data/experiences.json`** — 8 entries. Fields: `dateStart`, `dateEnd` ("Present" supported), `icon` ("graduation"/"work"/"laptop"), `order`.
-- **`lib/data/skills.json`** — `{ skills: { <group>: string[] } }`. Group keys map to spec-sheet rows via `GROUPS` in `components/Skills.tsx` (the `all` list is not rendered); keep it to skills evidenced in experience/projects.
+- **`lib/data/skills.json`** — `{ skills: { <group>: string[] } }`. Group keys map to the agent-system layers via `LAYERS` in `components/Skills.tsx` (`languages` is the side rail; the `all` list is not rendered); keep it to skills evidenced in experience/projects.
 - **`lib/data/certifications.json`** — `show` controls visibility, `featured` picks the default 8; the rest sit behind "View all".
 - **`lib/data/recognition.json`** — publications and achievements.
 - **`lib/data/caseStudies.json`** — `/work/[slug]` case studies (problem, diagram nodes/edges, scroll steps, results, decisions). Every number must come from projects.json, experiences.json, or the public repo's README; `projectTitle` links a case study to its Projects card.
@@ -76,3 +76,13 @@ Metadata and JSON-LD live in `app/layout.tsx`. The social preview is generated b
 - Section components call `useSectionInView` and spread the returned `ref` onto the `<section>` element with `id` matching the nav hash.
 - `SectionName` is the union of `links[number]["name"]` (`links` is `as const`) — adding a section requires a `links` entry, and `useSectionInView` only accepts those names.
 - Public assets: profile images are in `public/` root; project screenshots go in `public/projects/`; skill icons go in `public/skills/`.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

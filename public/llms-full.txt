@@ -21,7 +21,7 @@ Selvin PaulRaj K builds agentic AI systems, MCP (Model Context Protocol) servers
 ### 1. Associate Data Analyst, AI Automation — Zinnov (Draup)
 **Duration:** September 2025 – Present (full-time)
 **Location:** Arakkonam, Tamil Nadu, India (On-site)
-- Architected DRI-MAS, a LangGraph multi-agent system that converts natural-language business requests into validated Trino SQL and structured Excel reports — analyst turnaround dropped from hours to under a minute
+- Architected DRI-MAS (Data Request Intelligence Multi-Agent System), a LangGraph multi-agent system that converts natural-language business requests into validated Trino SQL and structured Excel reports — analyst turnaround dropped from hours to under a minute
 - Built its 10 core components (intent and manager agents, normalisation engine, schema router, SQL generator, memory layer, evaluation framework) behind 4 FastAPI endpoints, covered by 30 automated test suites
 - Implemented hybrid retrieval (FAISS + BM25) over 2.6M company records with human-in-the-loop validation
 - Built a Company Synonym Agent for entity resolution across 2.6M company and subsidiary records
@@ -128,7 +128,7 @@ More: ChatDex AI, Dynamic AI Agent System, LinkedIn MCP servers, Company Logo Fi
 
 ## Case Studies (in depth)
 
-### DRI-MAS
+### DRI-MAS (Data Request Intelligence Multi-Agent System)
 
 https://selvinpaulraj.vercel.app/work/dri-mas · Architect and lead engineer · Zinnov (Draup) · Sep 2025 to present · Work · private repo
 

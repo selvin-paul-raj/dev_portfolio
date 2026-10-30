@@ -1,9 +1,9 @@
 [
   {
     "slug": "dri-mas",
-    "projectTitle": "DRI-MAS: Multi-Agent Reporting System",
+    "projectTitle": "DRI-MAS: Data Request Intelligence Multi-Agent System",
     "title": "DRI-MAS",
-    "subtitle": "A LangGraph multi-agent system that turns plain-English data requests into validated Trino SQL, with four human-in-the-loop interrupts and resumable state.",
+    "subtitle": "Data Request Intelligence Multi-Agent System. A LangGraph multi-agent system that turns plain-English data requests into validated Trino SQL, with four human-in-the-loop interrupts and resumable state.",
     "role": "Architect and lead engineer",
     "org": "Zinnov (Draup)",
     "period": "Sep 2025 to present",
