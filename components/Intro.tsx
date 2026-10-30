@@ -7,6 +7,7 @@ import PokeFace from "./PokeFace";
 import { BsArrowRight } from "react-icons/bs";
 import { FaLinkedin, FaGithub, FaHackerrank } from "react-icons/fa";
 import { HiDownload } from "react-icons/hi";
+import { LuGauge, LuMessageCircle, LuShieldAlert, LuTarget, LuWorkflow } from "react-icons/lu";
 import { SiLeetcode, SiKaggle } from "react-icons/si";
 
 import { useSectionInView } from "@/lib/hooks";
@@ -42,13 +43,23 @@ const SOCIAL_LINKS = [
   { href: "https://www.deep-ml.com/profile/fdmYEE5bBFgqLwHxlBFW1lgLUR22", icon: <DeepMlIcon size={17} />, label: "deep-ml" },
 ];
 
+// Each shortcut lets a recruiter check a claim on this page for themselves.
 const RECRUITER_LINKS = [
-  { href: "/work", label: "How my systems work" },
-  { href: "/fit", label: "Check my fit for your role" },
-  { href: "/ask", label: "Ask me anything" },
-  { href: "/evals", label: "See my evals" },
-  { href: "/challenge", label: "Break my guardrails" },
+  { href: "/work", label: "How it works", title: "How my systems work, step by step", Icon: LuWorkflow },
+  { href: "/fit", label: "Fit check", title: "Check my fit for your role", Icon: LuTarget },
+  { href: "/ask", label: "Ask me", title: "Ask me anything, with cited answers", Icon: LuMessageCircle },
+  { href: "/evals", label: "Evals", title: "See the evals that grade those answers", Icon: LuGauge },
+  { href: "/challenge", label: "Break my guardrails", title: "A five-level prompt-injection game", Icon: LuShieldAlert },
 ];
+
+const SHORTCUT_PILL =
+  "group inline-flex h-11 sm:h-9 items-center gap-2 rounded-full border px-3.5 text-sm " +
+  "border-black/10 bg-black/[0.03] text-gray-700 hover:border-amber-600/50 hover:text-gray-950 " +
+  "dark:border-white/10 dark:bg-white/[0.03] dark:text-white/70 dark:hover:border-accent/45 dark:hover:text-white " +
+  "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#09090b] " +
+  "transition-[color,border-color,background-color] duration-150";
+const SHORTCUT_ICON =
+  "shrink-0 text-gray-500 group-hover:text-amber-700 dark:text-white/45 dark:group-hover:text-accent transition-colors duration-150";
 
 const TECH_BADGES = [
   "LangGraph", "MCP", "RAG", "LangChain", "Python",
@@ -207,31 +218,32 @@ export default function Intro() {
           {/* Recruiter shortcuts: every claim on this page can be checked */}
           <nav
             aria-label="For recruiters"
-            className="anim-fade-up anim-d5 -mt-3 mb-7 flex flex-wrap items-center justify-center lg:justify-start gap-x-4 gap-y-1.5 text-sm"
+            className="anim-fade-up anim-d5 -mt-2 mb-7 flex flex-col items-center lg:items-start gap-3"
           >
-            <span className="lg:hidden w-full text-green-700 dark:text-green-400/80 font-medium">Open to AI Engineer roles</span>
-            {RECRUITER_LINKS.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className="group inline-flex items-center gap-1.5 text-gray-600 dark:text-white/55 hover:text-gray-900 dark:hover:text-white/85
-                  outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
-                style={{ transition: "color 150ms ease" }}
-              >
-                {label}
-                <BsArrowRight size={11} className="group-hover:translate-x-0.5 motion-reduce:transform-none" style={{ transition: "transform 150ms ease" }} />
-              </Link>
-            ))}
-            <button
-              type="button"
-              onClick={() => window.dispatchEvent(new Event("open-command-palette"))}
-              className="hidden sm:inline-flex items-center gap-1.5 text-gray-600 dark:text-white/55 hover:text-gray-900 dark:hover:text-white/85
-                outline-none focus-visible:ring-2 focus-visible:ring-accent rounded"
-              style={{ transition: "color 150ms ease" }}
-            >
-              <kbd className="font-mono text-xs px-1.5 py-0.5 rounded border border-black/15 dark:border-white/20">⌘K</kbd>
-              Everything else
-            </button>
+            <span className="lg:hidden text-sm text-green-700 dark:text-green-400/80 font-medium">Open to AI Engineer roles</span>
+            <ul className="flex flex-wrap justify-center lg:justify-start gap-2">
+              {RECRUITER_LINKS.map(({ href, label, title, Icon }) => (
+                <li key={href}>
+                  <Link href={href} title={title} className={SHORTCUT_PILL}>
+                    <Icon size={15} aria-hidden="true" className={SHORTCUT_ICON} />
+                    {label}
+                  </Link>
+                </li>
+              ))}
+              <li className="hidden sm:block">
+                <button
+                  type="button"
+                  title="Open the command palette"
+                  onClick={() => window.dispatchEvent(new Event("open-command-palette"))}
+                  className={`${SHORTCUT_PILL} border-dashed`}
+                >
+                  <kbd className="font-mono text-xs leading-none px-1.5 py-1 rounded border border-black/15 dark:border-white/20 text-gray-600 dark:text-white/60">
+                    ⌘K
+                  </kbd>
+                  Everything else
+                </button>
+              </li>
+            </ul>
           </nav>
 
           {/* Socials */}
