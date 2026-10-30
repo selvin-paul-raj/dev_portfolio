@@ -45,7 +45,7 @@ Personal portfolio for **Selvin PaulRaj K** — AI Engineer at Zinnov (Draup), s
 | `/api/a2a` + [`/.well-known/agent-card.json`](https://selvinpaulraj.vercel.app/.well-known/agent-card.json) | A2A v0.3 JSON-RPC agent (`message/send`); skills `job_fit` and `profile`. |
 | [`/ask`](https://selvinpaulraj.vercel.app/ask) | Grounded Q&A: BM25 over `lib/data` (`lib/ask/retrieve.ts`), answers may only use retrieved snippets, `[n]` citations validated, off-topic gate. Works without an LLM key (extractive mode). |
 | [`/evals`](https://selvinpaulraj.vercel.app/evals) | Renders `lib/data/evals.json`, produced by `npm run evals` from `evals/golden.json` (retrieval hit@3/MRR, off-topic refusal, fit-check cases; `-- --llm` grades live answers). |
-| [`/challenge`](https://selvinpaulraj.vercel.app/challenge) | Prompt-injection game, 5 levels of stacked defenses (`lib/ask/challenge.ts`). Needs `LLM_*` and `CHALLENGE_SALT`. |
+| [`/challenge`](https://selvinpaulraj.vercel.app/challenge) | Prompt-injection game, 5 levels of stacked defenses (`lib/ask/challenge.ts`). Needs `LLM_*`, `CHALLENGE_SALT` and a private `CHALLENGE_WORDS` list. |
 | [`/resume.json`](https://selvinpaulraj.vercel.app/resume.json) | Resume in the [JSON Resume](https://jsonresume.org) schema, generated from `lib/data`. |
 | [`/view/Selvin_Resume.pdf`](https://selvinpaulraj.vercel.app/view/Selvin_Resume.pdf) | The PDF resume. |
 
