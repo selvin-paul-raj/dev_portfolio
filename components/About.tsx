@@ -2,7 +2,7 @@
 
 import { useSectionInView } from "@/lib/hooks";
 import { projectsData, certificationsData, experienceMetrics } from "@/lib/data";
-import AgentMeshCanvas from "./ui/AgentMeshCanvas";
+import AgentTrace from "./about/AgentTrace";
 import SectionHeading from "./SectionHeading";
 import NumberTicker from "./ui/NumberTicker";
 
@@ -69,50 +69,47 @@ export default function About() {
             <span className="font-medium text-green-700 dark:text-green-400/85">Open to AI Engineer roles.</span>{" "}
             Chennai, India (GMT+5:30).
           </p>
+
+          <div className="mt-8 flex flex-col gap-5">
+          <dl className="grid grid-cols-2 border border-black/[0.08] dark:border-white/[0.07] rounded-[14px] overflow-hidden bg-gray-50 dark:bg-[#101015]">
+              {STATS.map(({ value, label, format }, i) => (
+                <div
+                  key={label}
+                  className={`min-w-0 px-4 sm:px-5 py-4 flex flex-col-reverse gap-1.5
+                    ${i % 2 === 1 ? "border-l border-black/[0.08] dark:border-white/[0.07]" : ""}
+                    ${i >= 2 ? "border-t border-black/[0.08] dark:border-white/[0.07]" : ""}`}
+                >
+                  <dt className="text-sm text-gray-600 dark:text-[#a1a1aa]">{label}</dt>
+                  <dd className="m-0 whitespace-nowrap text-2xl sm:text-[28px] font-semibold leading-none tracking-[-0.02em] tabular-nums text-gray-900 dark:text-[#ededee]">
+                    <NumberTicker value={value} format={format} duration={1.6} className="!text-left" />
+                  </dd>
+                </div>
+              ))}
+            </dl>
+
+            <div className="flex flex-col gap-2.5">
+              <span className="text-sm text-gray-600 dark:text-[#a1a1aa]">Working with now</span>
+              <ul className="flex flex-wrap gap-2">
+                {STACK_NOW.map((tech) => (
+                  <li
+                    key={tech}
+                    className="font-mono text-xs text-gray-700 dark:text-[#d8d8de] px-2.5 py-1 border border-black/[0.08] dark:border-white/[0.07] rounded-full bg-white dark:bg-white/[0.015]"
+                  >
+                    {tech}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
 
-        {/* Right: the agent mesh, then the numbers */}
+        {/* Right: a replay of the system behind the quote, then the numbers */}
         <div className="flex flex-col gap-5">
-          <figure
-            className="relative rounded-[18px] overflow-hidden border border-black/[0.08] dark:border-white/[0.07]"
-            style={{
-              aspectRatio: "16/11",
-              background: "radial-gradient(120% 100% at 50% 50%, #0c0c12 0%, #050507 80%)",
-            }}
-          >
-            <AgentMeshCanvas />
-            <figcaption className="sr-only">Decorative animation of agents passing messages across a mesh.</figcaption>
+          <figure>
+            <AgentTrace />
+            <figcaption className="sr-only">A replay of one DRI-MAS run, stage by stage, from the case study.</figcaption>
           </figure>
 
-          <dl className="grid grid-cols-2 border border-black/[0.08] dark:border-white/[0.07] rounded-[14px] overflow-hidden bg-gray-50 dark:bg-[#101015]">
-            {STATS.map(({ value, label, format }, i) => (
-              <div
-                key={label}
-                className={`min-w-0 px-4 sm:px-5 py-4 flex flex-col-reverse gap-1.5
-                  ${i % 2 === 1 ? "border-l border-black/[0.08] dark:border-white/[0.07]" : ""}
-                  ${i >= 2 ? "border-t border-black/[0.08] dark:border-white/[0.07]" : ""}`}
-              >
-                <dt className="text-sm text-gray-600 dark:text-[#a1a1aa]">{label}</dt>
-                <dd className="m-0 whitespace-nowrap text-2xl sm:text-[28px] font-semibold leading-none tracking-[-0.02em] tabular-nums text-gray-900 dark:text-[#ededee]">
-                  <NumberTicker value={value} format={format} duration={1.6} className="!text-left" />
-                </dd>
-              </div>
-            ))}
-          </dl>
-
-          <div className="flex flex-col gap-2.5">
-            <span className="text-sm text-gray-600 dark:text-[#a1a1aa]">Working with now</span>
-            <ul className="flex flex-wrap gap-2">
-              {STACK_NOW.map((tech) => (
-                <li
-                  key={tech}
-                  className="font-mono text-xs text-gray-700 dark:text-[#d8d8de] px-2.5 py-1 border border-black/[0.08] dark:border-white/[0.07] rounded-full bg-white dark:bg-white/[0.015]"
-                >
-                  {tech}
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
       </div>
     </section>
