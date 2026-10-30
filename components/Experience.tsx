@@ -1,12 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { LuArrowUp, LuBriefcase, LuGraduationCap, LuRocket } from "react-icons/lu";
 import SectionHeading from "./SectionHeading";
-import { experiencesData, experienceMetrics } from "@/lib/data";
+import { experienceMetrics } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
-
-type Entry = (typeof experiencesData)[number];
+import { commits, graph, LANES, shortHash, type Entry, type GraphRow } from "./experience/gitLog";
 
 const STACK_PREFIX = /^(stack|technologies)\s*:\s*/i;
 
@@ -33,156 +31,140 @@ const fmtMonths = (n: number) => {
   return `${y} yr ${m} mo`;
 };
 
-const KIND = {
-  work: { Icon: LuBriefcase, label: "Work" },
-  graduation: { Icon: LuGraduationCap, label: "Study" },
-  laptop: { Icon: LuRocket, label: "Founder" },
-} as const;
+const LANE_W = 18; // px per lane in the graph column
 
-const startTime = (e: Entry) => Date.parse(`1 ${e.dateStart}`);
-const nowWork = experiencesData.find((e) => e.isCurrent && e.iconType === "work");
-const nowStudy = experiencesData.find((e) => e.isCurrent && e.iconType === "graduation");
-// Everything that isn't "now", oldest first, so the path reads as the road to the current role.
-const path = experiencesData.filter((e) => e !== nowWork && e !== nowStudy).sort((a, b) => startTime(a) - startTime(b));
-
-const FOCUS = "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#09090b]";
-const MORE_BTN = `mt-3 inline-flex min-h-11 [@media(pointer:fine)]:min-h-0 items-center rounded-sm text-sm font-medium text-amber-700 dark:text-accent underline underline-offset-4 decoration-dotted ${FOCUS}`;
-
-function Bullets({ items }: { items: string[] }) {
+/** The graph cell for one row: lane lines above and below, and this commit's dot. */
+function GraphCell({ row }: { row: GraphRow }) {
   return (
-    <ul className="m-0 list-none space-y-2 p-0">
-      {items.map((item) => (
-        <li key={item} className="relative max-w-[70ch] pl-4 text-[0.95rem] leading-[1.6] text-gray-600 dark:text-[#c9c9cf] before:absolute before:left-0 before:top-[0.7em] before:h-1 before:w-1 before:rounded-full before:bg-gray-400 dark:before:bg-white/35 before:content-['']">
-          {item}
-        </li>
+    <div aria-hidden="true" className="relative shrink-0 self-stretch" style={{ width: LANE_W * LANES.length }}>
+      {LANES.map((l, lane) => (
+        <span key={l.name} className="absolute inset-y-0" style={{ left: lane * LANE_W + LANE_W / 2 - 0.5, width: 1 }}>
+          {row.up[lane] && <span className={`absolute left-0 top-0 h-[22px] w-px ${l.line}`} />}
+          {row.down[lane] && <span className={`absolute left-0 top-[22px] bottom-0 w-px ${l.line}`} />}
+        </span>
       ))}
-    </ul>
-  );
-}
-
-/** Bullets with the first `shown` always visible and the rest behind a toggle. */
-function MoreBullets({ id, bullets, shown }: { id: string; bullets: string[]; shown: number }) {
-  const [open, setOpen] = useState(false);
-  const rest = bullets.slice(shown);
-  return (
-    <div className="mt-4">
-      <Bullets items={bullets.slice(0, shown)} />
-      {rest.length > 0 && (
-        <>
-          <div id={id} hidden={!open} className="mt-2">
-            <Bullets items={rest} />
-          </div>
-          <button type="button" aria-expanded={open} aria-controls={id} onClick={() => setOpen((v) => !v)} className={MORE_BTN}>
-            {open ? "Show less" : `Show ${rest.length} more`}
-          </button>
-        </>
-      )}
+      <span
+        className={`absolute top-[17px] h-[11px] w-[11px] rounded-full ring-4 ring-white dark:ring-[#0c0c10] ${LANES[row.lane].dot}`}
+        style={{ left: row.lane * LANE_W + LANE_W / 2 - 5.5 }}
+      />
     </div>
   );
 }
 
-function NowCard({ entry, primary }: { entry: Entry; primary: boolean }) {
+/** `git show` for one entry: who, when, where, then the diff of what it added. */
+function CommitDetail({ entry }: { entry: Entry }) {
   const { bullets, stack } = parseDescription(entry.description);
-  const { Icon, label } = KIND[entry.iconType];
   return (
-    <article
-      className={`rounded-2xl border p-6 sm:p-7 ${primary
-        ? "border-amber-600/30 dark:border-accent/25 bg-white dark:bg-[#101015]"
-        : "border-black/[0.08] dark:border-white/[0.07] bg-gray-50 dark:bg-white/[0.02]"}`}
-    >
-      <p className="flex items-center gap-2 text-sm font-medium text-amber-700 dark:text-accent">
-        <Icon size={15} aria-hidden="true" />
-        {label}, now
+    <div className="pb-5 pt-1 font-mono text-[13px] leading-relaxed">
+      <p className="text-gray-500 dark:text-white/50">Author: Selvin PaulRaj K</p>
+      <p className="text-gray-500 dark:text-white/50" suppressHydrationWarning>
+        Date:   {entry.dateStart} to {entry.dateEnd} ({entry.duration})
       </p>
-      <h4 className="mt-3 text-xl sm:text-2xl font-semibold leading-snug text-gray-900 dark:text-white text-balance">{entry.title}</h4>
-      <p className="mt-1 text-base text-gray-700 dark:text-white/80">{entry.company}</p>
-      <p className="mt-1 text-sm text-gray-500 dark:text-white/50" suppressHydrationWarning>
-        Since {entry.dateStart}, {entry.duration}
-        {entry.location ? `. ${entry.location}` : ""}
-      </p>
-      {bullets.length > 0 && <MoreBullets id={`now-more-${entry.id}`} bullets={bullets} shown={primary ? 4 : 2} />}
-      {stack.length > 0 && <p className="mt-5 text-xs leading-relaxed text-gray-500 dark:text-white/45">{stack.join(", ")}</p>}
-    </article>
+      {entry.location && <p className="text-gray-500 dark:text-white/50">Where:  {entry.location}</p>}
+      {bullets.length > 0 && (
+        <ul className="mt-3 space-y-1.5 font-sans text-sm">
+          {bullets.map((b) => (
+            <li key={b} className="flex gap-2.5 text-gray-700 dark:text-[#d4d4d8]">
+              <span aria-hidden="true" className="font-mono text-emerald-600 dark:text-emerald-400">+</span>
+              <span className="max-w-[72ch]">{b}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+      {stack.length > 0 && <p className="mt-3 text-gray-500 dark:text-white/45">stack: {stack.join(", ")}</p>}
+    </div>
   );
 }
 
-function PathStep({ entry, showYear }: { entry: Entry; showYear: boolean }) {
-  const { bullets, stack } = parseDescription(entry.description);
-  const { Icon, label } = KIND[entry.iconType];
+function CommitRow({ entry, row, open, onToggle }: { entry: Entry; row: GraphRow; open: boolean; onToggle: () => void }) {
+  const lane = LANES[row.lane];
+  const ref = entry.isCurrent && row.lane === 0 ? "HEAD -> work" : row.lane === 0 ? null : lane.name;
+  const panelId = `commit-${entry.id}`;
   return (
-    <li className="relative pl-12 pb-10 last:pb-0">
-      {/* The node on the path, marked by the kind of step */}
-      <span
-        aria-hidden="true"
-        className="absolute left-0 top-0 flex h-9 w-9 items-center justify-center rounded-full border border-black/10 dark:border-white/15 bg-[#FAFAF9] dark:bg-[#09090b] text-gray-600 dark:text-white/60"
-      >
-        <Icon size={15} />
-      </span>
-      {showYear && (
-        <p aria-hidden="true" className="mb-1 text-3xl font-semibold tracking-[-0.03em] tabular-nums text-gray-400 dark:text-white/35">
-          {entry.dateStart.slice(-4)}
-        </p>
-      )}
-      <p className="text-sm text-gray-500 dark:text-white/50" suppressHydrationWarning>
-        <span className="sr-only">{label}, </span>
-        {entry.dateStart} to {entry.dateEnd}, {entry.duration}
-      </p>
-      <h4 className="mt-1 text-lg font-semibold leading-snug text-gray-900 dark:text-white">{entry.title}</h4>
-      <p className="text-sm font-medium text-amber-700 dark:text-accent">{entry.company}</p>
-      {bullets.length > 0 && <MoreBullets id={`path-more-${entry.id}`} bullets={bullets} shown={1} />}
-      {stack.length > 0 && <p className="mt-3 text-xs text-gray-500 dark:text-white/45">{stack.join(", ")}</p>}
+    <li className="flex gap-3">
+      <GraphCell row={row} />
+      <div className="min-w-0 flex-1 border-b border-black/[0.06] dark:border-white/[0.06]">
+        <button
+          type="button"
+          aria-expanded={open}
+          aria-controls={panelId}
+          onClick={onToggle}
+          className="group flex w-full min-h-11 flex-wrap items-baseline gap-x-3 gap-y-1 py-3 text-left rounded-sm
+            outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
+        >
+          <span aria-hidden="true" className="font-mono text-[13px] text-amber-700 dark:text-accent/90">{shortHash(entry)}</span>
+          {ref && <span className={`font-mono text-[13px] ${lane.text}`}>({ref})</span>}
+          <span className="font-mono text-[13px] text-gray-500 dark:text-white/45">{entry.dateStart}</span>
+          <span className="basis-full sm:basis-auto text-[15px] font-semibold text-gray-900 dark:text-white group-hover:underline underline-offset-4 decoration-black/20 dark:decoration-white/25">
+            {entry.title}
+          </span>
+          <span className="text-sm text-gray-600 dark:text-white/60">{entry.company}</span>
+          <span aria-hidden="true" className="ml-auto font-mono text-xs text-gray-400 dark:text-white/35">{open ? "−" : "+"}</span>
+        </button>
+        <div id={panelId} hidden={!open}>
+          <CommitDetail entry={entry} />
+        </div>
+      </div>
     </li>
   );
 }
 
 export default function Experience() {
   const { ref } = useSectionInView("Experience", 0.15);
+  // The current role opens by default, the way `git show` lands on HEAD.
+  const [open, setOpen] = useState<Set<string>>(() => new Set(commits.filter((c) => c.isCurrent && c.iconType === "work").map((c) => c.id)));
+  const toggle = (id: string) =>
+    setOpen((s) => {
+      const next = new Set(s);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
 
   return (
     <section ref={ref} id="experience" className="mx-auto mb-28 w-full max-w-5xl scroll-mt-28 px-4">
-      <SectionHeading kicker="Where I am now, and the road that led here.">Experience</SectionHeading>
+      <SectionHeading kicker="My career as a git log: work, study and founding run as parallel branches. Open any commit.">
+        Experience
+      </SectionHeading>
 
-      <dl className="mb-8 flex flex-wrap gap-x-10 gap-y-3">
-        <div className="flex flex-col-reverse">
-          <dt className="text-sm text-gray-600 dark:text-[#a1a1aa]">Full-time</dt>
-          <dd className="m-0 text-2xl font-semibold tabular-nums text-gray-900 dark:text-white" suppressHydrationWarning>
-            {fmtMonths(experienceMetrics.workRoleMonths)}
-          </dd>
-        </div>
-        <div className="flex flex-col-reverse">
-          <dt className="text-sm text-gray-600 dark:text-[#a1a1aa]">Internships</dt>
-          <dd className="m-0 text-2xl font-semibold tabular-nums text-gray-900 dark:text-white" suppressHydrationWarning>
-            {fmtMonths(experienceMetrics.internMonths)}
-          </dd>
-        </div>
-      </dl>
-
-      <h3 id="experience-now" className="sr-only">Now</h3>
-      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-5 items-start">
-        {nowWork && <NowCard entry={nowWork} primary />}
-        {nowStudy && <NowCard entry={nowStudy} primary={false} />}
-      </div>
-
-      {path.length > 0 && (
-        <div className="mt-20 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-x-12 gap-y-8">
-          <div className="lg:sticky lg:top-24 self-start">
-            <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">How I got here</h3>
-            <p className="mt-1 text-sm text-gray-600 dark:text-[#a1a1aa]">Oldest first, from the first degree to the current role.</p>
-          </div>
-
-          <div>
-          <ol className="relative before:absolute before:left-[17px] before:top-2 before:bottom-2 before:w-px before:bg-black/[0.1] dark:before:bg-white/[0.1] before:content-['']">
-            {path.map((e, i) => (
-              <PathStep key={e.id} entry={e} showYear={i === 0 || path[i - 1].dateStart.slice(-4) !== e.dateStart.slice(-4)} />
+      <div className="rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#0c0c10] overflow-hidden">
+        {/* Terminal header: the command, then a legend of the branches */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-black/[0.06] dark:border-white/[0.06] px-4 sm:px-6 py-3">
+          <p className="font-mono text-[13px] text-gray-700 dark:text-white/75">
+            <span aria-hidden="true" className="text-gray-400 dark:text-white/35">$ </span>git log --graph career
+          </p>
+          <ul aria-label="Branches" className="flex flex-wrap gap-x-4 gap-y-1">
+            {LANES.map((l) => (
+              <li key={l.name} className="flex items-center gap-1.5 font-mono text-[13px] text-gray-600 dark:text-white/60">
+                <span aria-hidden="true" className={`h-2 w-2 rounded-full ${l.dot}`} />
+                {l.name}
+              </li>
             ))}
-          </ol>
-
-          <a href="#experience" className={`mt-8 ml-12 inline-flex min-h-11 [@media(pointer:fine)]:min-h-0 items-center gap-2 rounded-sm text-sm font-medium text-gray-700 dark:text-white/75 hover:text-gray-950 dark:hover:text-white ${FOCUS}`}>
-            <LuArrowUp size={14} aria-hidden="true" /> Which led to now
-          </a>
-          </div>
+          </ul>
         </div>
-      )}
+
+        <ol className="px-4 sm:px-6 pt-1">
+          {commits.map((c, i) => (
+            <CommitRow key={c.id} entry={c} row={graph[i]} open={open.has(c.id)} onToggle={() => toggle(c.id)} />
+          ))}
+        </ol>
+
+        {/* Like `git shortlog -s`: totals computed from the entries */}
+        <dl className="flex flex-wrap gap-x-8 gap-y-2 border-t border-black/[0.06] dark:border-white/[0.06] px-4 sm:px-6 py-4 font-mono text-[13px]">
+          <div className="flex gap-2">
+            <dt className="text-gray-500 dark:text-white/45">full-time</dt>
+            <dd className="m-0 text-gray-900 dark:text-white" suppressHydrationWarning>{fmtMonths(experienceMetrics.workRoleMonths)}</dd>
+          </div>
+          <div className="flex gap-2">
+            <dt className="text-gray-500 dark:text-white/45">internships</dt>
+            <dd className="m-0 text-gray-900 dark:text-white" suppressHydrationWarning>{fmtMonths(experienceMetrics.internMonths)}</dd>
+          </div>
+          <div className="flex gap-2">
+            <dt className="text-gray-500 dark:text-white/45">commits</dt>
+            <dd className="m-0 text-gray-900 dark:text-white">{commits.length}</dd>
+          </div>
+        </dl>
+      </div>
     </section>
   );
 }
