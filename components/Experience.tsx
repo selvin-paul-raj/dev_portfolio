@@ -1,230 +1,171 @@
 "use client";
 
 import { useState } from "react";
-import { m } from "framer-motion";
+import type { CSSProperties } from "react";
+import { useInView } from "react-intersection-observer";
+import { LuChevronDown } from "react-icons/lu";
 import SectionHeading from "./SectionHeading";
-import { experiencesData } from "@/lib/data";
 import { useSectionInView } from "@/lib/hooks";
+import { barPosition, parseDescription, studyEntries, workEntries, yearTicks, type Entry } from "./experience/timeline";
 
-const EASE_OUT: [number, number, number, number] = [0.23, 1, 0.32, 1];
-const COLLAPSED_COUNT = 2;
-const STACK_PREFIX = /^(stack|technologies)\s*:\s*/i;
+const TICKS = yearTicks();
+const entryId = (e: Entry) => `exp-${e.id ?? e.title.replace(/\W+/g, "-").toLowerCase()}`;
 
-type Entry = (typeof experiencesData)[number];
-
-/** Split a raw description into bullet lines plus an optional trailing stack list. */
-function parseDescription(raw: string | undefined): { bullets: string[]; stack: string[] } {
-  const lines = (raw ?? "")
-    .split(/\r?\n/)
-    .map((line) => line.replace(/^[\s\-•]+/, "").trim())
-    .filter(Boolean);
-
-  const stack: string[] = [];
-  const bullets = lines.filter((line) => {
-    if (!STACK_PREFIX.test(line)) return true;
-    stack.push(
-      ...line
-        .replace(STACK_PREFIX, "")
-        .replace(/\.$/, "")
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean)
-    );
-    return false;
-  });
-
-  return { bullets, stack };
-}
-
-const workEntries = experiencesData.filter((e) => e.iconType !== "graduation");
-const educationEntries = experiencesData.filter((e) => e.iconType === "graduation");
-
-function BulletList({ items, current }: { items: string[]; current: boolean }) {
+/** Faint January lines behind every track, so the rows read as one chart. */
+function Gridlines() {
   return (
-    <ul className="m-0 list-none space-y-2 p-0">
-      {items.map((item, i) => (
-        <li
-          key={i}
-          className={`relative max-w-[70ch] pl-4 text-[0.95rem] leading-[1.6] text-gray-600 dark:text-[#c9c9cf]
-            before:absolute before:left-0 before:top-[0.68em] before:h-1 before:w-1 before:rounded-full before:content-['']
-            ${current ? "before:bg-amber-600 dark:before:bg-accent" : "before:bg-gray-400 dark:before:bg-[#71717a]"}`}
-        >
-          {item}
-        </li>
+    <>
+      {TICKS.map((t) => (
+        <span key={t.year} aria-hidden="true" className="absolute inset-y-0 w-px bg-black/[0.06] dark:bg-white/[0.06]" style={{ left: t.left }} />
       ))}
-    </ul>
+    </>
   );
 }
 
-function WorkItem({ exp, index }: { exp: Entry; index: number }) {
-  const [expanded, setExpanded] = useState(false);
-  const { bullets, stack } = parseDescription(exp.description);
-  const collapsible = !exp.isCurrent && bullets.length > COLLAPSED_COUNT;
-  const visible = collapsible ? bullets.slice(0, COLLAPSED_COUNT) : bullets;
-  const hidden = collapsible ? bullets.slice(COLLAPSED_COUNT) : [];
-  const panelId = `exp-more-${exp.id ?? index}`;
-
+function Bar({ entry, index, open }: { entry: Entry; index: number; open: boolean }) {
+  const study = entry.iconType === "graduation";
+  const tone = study
+    ? `border ${open ? "border-gray-700 dark:border-white/80" : "border-gray-400 dark:border-white/40"} bg-transparent`
+    : entry.isCurrent
+      ? "bg-amber-500 dark:bg-accent"
+      : open
+        ? "bg-gray-700 dark:bg-white/75"
+        : "bg-gray-400 dark:bg-white/35";
   return (
-    <m.li
-      initial={{ opacity: 0, y: 8 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.3, ease: EASE_OUT, delay: Math.min(index, 3) * 0.05 }}
-      className="relative min-w-0 pb-12 pl-8 last:pb-0 sm:pl-10"
-    >
-      {/* Timeline node */}
-      <span aria-hidden="true" className="absolute left-0 top-[0.35rem] flex h-[11px] w-[11px]">
-        {exp.isCurrent && (
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-40 motion-reduce:animate-none" />
-        )}
-        <span
-          className={`relative inline-flex h-[11px] w-[11px] rounded-full border-2 ${
-            exp.isCurrent
-              ? "border-accent bg-accent"
-              : "border-gray-300 bg-white dark:border-[#3f3f46] dark:bg-[#101015]"
-          }`}
-        />
-      </span>
+    <span
+      aria-hidden="true"
+      className={`exp-bar absolute top-[calc(50%-5px)] h-2.5 min-w-[6px] rounded-full ${tone}`}
+      style={{ ...barPosition(entry), "--i": index } as CSSProperties}
+    />
+  );
+}
 
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-        <h4 className="order-2 m-0 min-w-0 text-lg font-semibold leading-snug text-gray-900 dark:text-white sm:order-1">
-          {exp.title}
-          {exp.isCurrent && <span className="sr-only"> (current role)</span>}
-        </h4>
-        <span
-          className="order-1 shrink-0 font-mono text-xs tracking-wide text-gray-500 dark:text-[#a1a1aa] sm:order-2"
-          // "Present" durations are computed at request time and again in the browser;
-          // they can differ by a month across a rollover, which is expected.
-          suppressHydrationWarning
-        >
-          {exp.date}
-        </span>
-      </div>
-
-      <p className="m-0 mt-1 text-sm">
-        <span className="font-medium text-amber-700 dark:text-accent">{exp.company}</span>
-        {exp.location && (
-          <span className="text-gray-500 dark:text-[#a1a1aa]">
-            <span aria-hidden="true" className="mx-2">·</span>
-            {exp.location}
-          </span>
-        )}
-      </p>
-
+function Detail({ entry }: { entry: Entry }) {
+  const { bullets, stack } = parseDescription(entry.description);
+  return (
+    <div className="anim-detail-in px-3 pb-7 pt-1 md:pl-[calc(15rem+1.5rem)]">
+      {entry.location && <p className="text-sm text-gray-600 dark:text-white/55">{entry.location}</p>}
       {bullets.length > 0 && (
-        <div className="mt-4">
-          <BulletList items={visible} current={exp.isCurrent} />
-
-          {collapsible && (
-            <>
-              <div
-                id={panelId}
-                inert={!expanded}
-                className={`grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none ${
-                  expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-                }`}
-              >
-                <div
-                  className={`min-h-0 overflow-hidden transition-[visibility] motion-reduce:transition-none ${
-                    expanded ? "visible" : "invisible delay-300"
-                  }`}
-                >
-                  <div className="pt-2">
-                    <BulletList items={hidden} current={false} />
-                  </div>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setExpanded((v) => !v)}
-                aria-expanded={expanded}
-                aria-controls={panelId}
-                className="-ml-2 mt-2 inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-medium text-amber-700 outline-none transition-transform duration-150 ease-out active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-accent dark:text-accent [@media(hover:hover)]:hover:bg-accent/10"
-              >
-                {expanded ? "Show fewer" : `Show all ${bullets.length}`}
-                <svg
-                  aria-hidden="true"
-                  viewBox="0 0 16 16"
-                  className={`h-3.5 w-3.5 transition-transform duration-200 ease-out ${expanded ? "rotate-180" : ""}`}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.75"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M4 6l4 4 4-4" />
-                </svg>
-              </button>
-            </>
-          )}
-        </div>
+        <ul className="mt-3 flex flex-col gap-2 pl-4 list-disc marker:text-gray-400 dark:marker:text-white/30">
+          {bullets.map((b) => (
+            <li key={b} className="max-w-[70ch] text-[0.95rem] leading-[1.6] text-gray-700 dark:text-[#c9c9cf]">
+              {b}
+            </li>
+          ))}
+        </ul>
       )}
-
       {stack.length > 0 && (
-        <ul aria-label="Stack" className="m-0 mt-4 flex list-none flex-wrap gap-1.5 p-0">
+        <ul aria-label="Stack" className="mt-4 flex flex-wrap gap-1.5">
           {stack.map((tech) => (
-            <li
-              key={tech}
-              className="rounded-md border border-black/[0.08] px-2 py-0.5 font-mono text-xs text-gray-500 dark:border-white/[0.07] dark:text-[#a1a1aa]"
-            >
+            <li key={tech} className="rounded-full border border-black/[0.08] dark:border-white/[0.1] px-2.5 py-1 font-mono text-xs text-gray-600 dark:text-[#a1a1aa]">
               {tech}
             </li>
           ))}
         </ul>
       )}
-    </m.li>
+    </div>
+  );
+}
+
+function Row({ entry, index, open, onToggle }: { entry: Entry; index: number; open: boolean; onToggle: () => void }) {
+  const panel = `${entryId(entry)}-detail`;
+  return (
+    <li className="border-b border-black/[0.08] dark:border-white/[0.07]">
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={panel}
+        onClick={onToggle}
+        className={`group grid w-full grid-cols-1 md:grid-cols-[15rem_minmax(0,1fr)] gap-x-6 gap-y-3 py-4 text-left rounded-lg
+          transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent
+          ${open ? "bg-black/[0.03] dark:bg-white/[0.04]" : "hover:bg-black/[0.02] dark:hover:bg-white/[0.025]"}`}
+      >
+        <span className="min-w-0 px-3 flex items-start justify-between gap-2">
+          <span className="min-w-0">
+            <span className="block font-medium leading-snug text-gray-900 dark:text-white">
+              {entry.title}
+              {entry.isCurrent && <span className="sr-only"> (current)</span>}
+            </span>
+            <span className={`block text-sm ${entry.isCurrent ? "text-amber-700 dark:text-accent" : "text-gray-600 dark:text-white/55"}`}>{entry.company}</span>
+            <span className="block mt-1 font-mono text-xs leading-relaxed text-gray-500 dark:text-white/45" suppressHydrationWarning>
+              {entry.dateStart} to {entry.dateEnd}
+              <span className="block">{entry.duration}</span>
+            </span>
+          </span>
+          <LuChevronDown
+            size={16}
+            aria-hidden="true"
+            className={`mt-1 shrink-0 text-gray-400 dark:text-white/40 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          />
+        </span>
+        <span className="relative block h-6 md:h-auto md:self-stretch mx-3 md:mx-0 md:mr-3">
+          <Gridlines />
+          <Bar entry={entry} index={index} open={open} />
+        </span>
+      </button>
+      <div id={panel} hidden={!open}>
+        {open && <Detail entry={entry} />}
+      </div>
+    </li>
+  );
+}
+
+function Group({ label, entries, offset, openId, setOpenId }: {
+  label: string;
+  entries: Entry[];
+  offset: number;
+  openId: string | null;
+  setOpenId: (id: string | null) => void;
+}) {
+  return (
+    <div>
+      <h3 className="px-3 pb-2 text-sm font-medium text-gray-600 dark:text-white/55">{label}</h3>
+      <ol className="border-t border-black/[0.08] dark:border-white/[0.07]">
+        {entries.map((e, i) => {
+          const id = entryId(e);
+          return (
+            <Row key={id} entry={e} index={offset + i} open={openId === id} onToggle={() => setOpenId(openId === id ? null : id)} />
+          );
+        })}
+      </ol>
+    </div>
   );
 }
 
 export default function Experience() {
   const { ref } = useSectionInView("Experience", 0.15);
+  // Bars grow in once, the first time the chart is on screen; without JS they are simply drawn.
+  const { ref: chartRef, inView } = useInView({ triggerOnce: true, threshold: 0.2 });
+  const [openId, setOpenId] = useState<string | null>(() => {
+    const current = workEntries.find((e) => e.isCurrent);
+    return current ? entryId(current) : null;
+  });
 
   return (
     <section ref={ref} id="experience" className="mx-auto mb-28 w-full max-w-5xl scroll-mt-28 px-4">
-      <SectionHeading kicker="Full-time AI automation work, internships, and study.">Experience</SectionHeading>
+      <SectionHeading kicker="Full-time AI automation work, internships and study, drawn to scale. Pick a row for the details.">
+        Experience
+      </SectionHeading>
 
-      <div className="mx-auto max-w-4xl">
-        <h3 className="m-0 mb-6 font-mono text-xs uppercase tracking-[0.14em] text-gray-500 dark:text-[#a1a1aa]">
-          Work <span className="ml-1">{String(workEntries.length).padStart(2, "0")}</span>
-        </h3>
-
-        <ol className="relative m-0 list-none p-0 before:absolute before:bottom-2 before:left-[5px] before:top-2 before:w-px before:bg-black/[0.08] before:content-[''] dark:before:bg-white/[0.07]">
-          {workEntries.map((exp, index) => (
-            <WorkItem key={exp.id ?? index} exp={exp} index={index} />
-          ))}
-        </ol>
-
-        {educationEntries.length > 0 && (
-          <div className="mt-16">
-            <h3 className="m-0 mb-4 font-mono text-xs uppercase tracking-[0.14em] text-gray-500 dark:text-[#a1a1aa]">
-              Education
-            </h3>
-            <ul className="m-0 grid list-none gap-x-8 gap-y-6 p-0 sm:grid-cols-2">
-              {educationEntries.map((edu, index) => (
-                <li
-                  key={edu.id ?? index}
-                  className="min-w-0 border-t border-black/[0.08] pt-4 dark:border-white/[0.07]"
-                >
-                  <span
-                    className="block font-mono text-xs tracking-wide text-gray-500 dark:text-[#a1a1aa]"
-                    suppressHydrationWarning
-                  >
-                    {edu.date}
-                  </span>
-                  <h4 className="m-0 mt-1.5 text-base font-semibold leading-snug text-gray-900 dark:text-white">
-                    {edu.title}
-                  </h4>
-                  <p className="m-0 mt-0.5 text-sm font-medium text-amber-700 dark:text-accent">{edu.company}</p>
-                  {edu.description && (
-                    <p className="m-0 mt-2 line-clamp-2 max-w-[70ch] text-sm leading-[1.6] text-gray-600 dark:text-[#c9c9cf]">
-                      {edu.description}
-                    </p>
-                  )}
-                </li>
-              ))}
-            </ul>
+      <div ref={chartRef} data-armed={inView || undefined} className="flex flex-col gap-10">
+        {/* Year axis and legend */}
+        <div className="grid grid-cols-1 md:grid-cols-[15rem_minmax(0,1fr)] gap-x-6 gap-y-3 items-end">
+          <ul className="px-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-600 dark:text-white/55" aria-label="Legend">
+            <li className="flex items-center gap-1.5"><span aria-hidden="true" className="h-2 w-4 rounded-full bg-amber-500 dark:bg-accent" />Ongoing</li>
+            <li className="flex items-center gap-1.5"><span aria-hidden="true" className="h-2 w-4 rounded-full bg-gray-400 dark:bg-white/35" />Finished</li>
+            <li className="flex items-center gap-1.5"><span aria-hidden="true" className="h-2 w-4 rounded-full border border-gray-400 dark:border-white/40" />Study</li>
+          </ul>
+          <div aria-hidden="true" className="relative h-5 mx-3 md:mx-0 md:mr-3">
+            {TICKS.map((t) => (
+              <span key={t.year} className="absolute bottom-0 -translate-x-1/2 font-mono text-xs tabular-nums text-gray-500 dark:text-white/45" style={{ left: t.left }}>
+                {t.year}
+              </span>
+            ))}
           </div>
-        )}
+        </div>
+
+        <Group label="Work" entries={workEntries} offset={0} openId={openId} setOpenId={setOpenId} />
+        <Group label="Education" entries={studyEntries} offset={workEntries.length} openId={openId} setOpenId={setOpenId} />
       </div>
     </section>
   );
