@@ -98,6 +98,13 @@ pre {
 }
 .exp-bar { transform-origin: left center; }
 [data-armed] .exp-bar { animation: barGrow 0.7s cubic-bezier(0.23,1,0.32,1) both; animation-delay: calc(var(--i, 0) * 60ms); }
+/* Recognition podium: steps rise from the floor once, second, first, then third */
+@keyframes stepRise {
+  from { transform: scaleY(0); }
+  to   { transform: scaleY(1); }
+}
+.podium-step { transform-origin: bottom center; }
+[data-armed] .podium-step { animation: stepRise 0.6s cubic-bezier(0.23,1,0.32,1) both; animation-delay: calc(var(--i, 0) * 90ms); }
 .anim-fade-in  { animation: fadeIn  0.45s cubic-bezier(0.23,1,0.32,1) both; }
 
 .anim-d0 { animation-delay: 0.05s; }
@@ -132,7 +139,8 @@ pre {
   .anim-fade-up,
   .anim-fade-in,
   .anim-detail-in,
-  [data-armed] .exp-bar {
+  [data-armed] .exp-bar,
+  [data-armed] .podium-step {
     animation: none;
     opacity: 1;
     transform: none;

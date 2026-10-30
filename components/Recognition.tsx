@@ -1,425 +1,84 @@
 "use client";
 
-import { useState } from "react";
-import { m, AnimatePresence } from "framer-motion";
+import { MdArrowOutward } from "react-icons/md";
 import { useSectionInView } from "@/lib/hooks";
 import { recognitionData } from "@/lib/data";
 import SectionHeading from "./SectionHeading";
+import Podium, { type Placing } from "./recognition/Podium";
+import Publication, { fmtMonth } from "./recognition/Publication";
 
-const EASE_OUT: [number, number, number, number] = [0.23, 1, 0.32, 1];
-const MONO = "var(--font-geist-mono)";
-const SERIF = "var(--font-instrument-serif), ui-serif, Georgia, serif";
+type Achievement = Placing & { description?: string; links?: { linkedin?: string } };
 
-type Tab = "pubs" | "ach";
+const pubs = recognitionData.publications;
+const achievements = recognitionData.achievements as Achievement[];
+// Awards without a rank are recognition at work; ranked ones are competition placings.
+const atWork = achievements.filter((a) => a.rank === undefined);
+const placings = achievements.filter((a) => a.rank !== undefined);
+const wins = placings.filter((a) => a.rank === 1).length;
 
-type Achievement = {
-  title: string;
-  issuer: string;
-  date: string;
-  category: string;
-  associated_with: string;
-  certificate_available: boolean;
-  rank?: number;
-  roman?: string;
-  ordinal?: string;
-  description?: string;
-  links?: { linkedin?: string };
-};
+const LABEL = "text-sm font-medium text-gray-600 dark:text-white/55";
 
-const RANK_COLORS: Record<number, string> = {
-  1: "#f5c518",
-  2: "#c5c8cf",
-  3: "#d99565",
-};
-
-/* Darker text tones for light mode so the rank numerals keep contrast on white. */
-const RANK_TEXT_LIGHT: Record<number, string> = {
-  1: "#a16207",
-  2: "#52525b",
-  3: "#9a3412",
-};
-
-function formatDate(dateStr: string) {
-  const [y, m] = dateStr.split("-");
-  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  return `${months[parseInt(m) - 1]} ${y}`;
+function WorkAward({ award }: { award: Achievement }) {
+  return (
+    <article className="flex flex-col gap-3">
+      <p className="text-sm text-gray-600 dark:text-white/55">
+        <span className="font-medium text-amber-700 dark:text-accent">{award.issuer}</span>, {award.associated_with},{" "}
+        <span className="font-mono text-xs tabular-nums">{fmtMonth(award.date)}</span>
+      </p>
+      <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{award.title}</h3>
+      {award.description && <p className="max-w-[60ch] text-[15px] leading-relaxed text-gray-700 dark:text-[#c9c9cf]">{award.description}</p>}
+      {award.links?.linkedin && (
+        <a
+          href={award.links.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="self-start inline-flex items-center gap-1 text-sm font-medium text-amber-700 dark:text-accent hover:underline underline-offset-4 rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        >
+          See it on LinkedIn <MdArrowOutward size={14} aria-hidden="true" />
+        </a>
+      )}
+    </article>
+  );
 }
 
 export default function Recognition() {
   const { ref } = useSectionInView("Recognition", 0.3);
-  const [tab, setTab] = useState<Tab>("pubs");
-
-  const pubs = recognitionData.publications;
-  const achs = recognitionData.achievements as Achievement[];
-  const featuredAchs = achs.filter((a) => a.rank === undefined);
-  const rankedAchs = achs.filter((a) => a.rank !== undefined);
 
   return (
-    <m.section
-      ref={ref}
-      id="recognition"
-      className="mb-28 w-full max-w-[1240px] mx-auto px-4 sm:px-10 scroll-mt-28"
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, ease: EASE_OUT }}
-    >
+    <section ref={ref} id="recognition" className="mb-28 w-full max-w-[1240px] mx-auto px-4 sm:px-10 scroll-mt-28">
       <SectionHeading
-        className="!mb-8"
-        kicker={`${pubs.length} published research ${pubs.length === 1 ? "paper" : "papers"} and ${achs.length} awards across hackathons, coding contests and workplace recognition.`}
+        kicker={`${pubs.length} published ${pubs.length === 1 ? "paper" : "papers"}, recognition at work, and ${placings.length} competition placings including ${wins} wins.`}
       >
         Recognition
       </SectionHeading>
 
-      {/* Tab switcher */}
-      <div className="flex justify-center mb-10">
-        <div
-          className="inline-flex gap-1 p-1 border border-black/[0.08] dark:border-white/[0.07] rounded-full bg-black/[0.02] dark:bg-white/[0.03]"
-        >
-          {(["pubs", "ach"] as Tab[]).map((t) => (
-            <button
-              key={t}
-              type="button"
-              onClick={() => setTab(t)}
-              aria-pressed={tab === t}
-              className={`
-                flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-[18px] py-[9px] rounded-full active:scale-[0.97]
-                transition-[background-color,color,transform] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]
-                font-mono text-xs tracking-[0.08em] sm:tracking-[0.2em] uppercase outline-none
-                focus-visible:ring-2 focus-visible:ring-accent
-                ${tab === t
-                  ? "bg-accent text-[#1a1500] font-medium"
-                  : "text-gray-500 dark:text-[#a1a1aa] hover:text-gray-900 dark:hover:text-white"
-                }
-              `}
-              style={{ fontFamily: MONO }}
-            >
-              {t === "pubs" ? "Publications" : "Achievements"}
-              <span
-                className={`text-xs px-[7px] py-[1px] rounded-full
-                  ${tab === t ? "bg-black/[0.18] text-[#1a1500]" : "bg-black/[0.05] dark:bg-white/[0.05] text-gray-500 dark:text-[#a1a1aa]"}
-                `}
-              >
-                0{t === "pubs" ? pubs.length : achs.length}
-              </span>
-            </button>
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] gap-12 lg:gap-16 items-start">
+        <div className="flex flex-col gap-4">
+          <h3 className={LABEL}>Research</h3>
+          {pubs.map((p) => (
+            <Publication key={p.paperId} paper={p} />
           ))}
         </div>
-      </div>
 
-      {/* Panels */}
-      <AnimatePresence mode="wait">
-        {tab === "pubs" && (
-          <m.div
-            key="pubs"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.25, ease: EASE_OUT }}
-          >
-            {pubs.map((pub) => (
-              <article
-                key={pub.paperId}
-                className="relative overflow-hidden rounded-[20px] border border-black/[0.08] dark:border-white/[0.07] bg-white dark:bg-[#101015] p-7 sm:p-8"
-              >
-
-                {/* Meta row */}
-                <div
-                  className="flex items-center flex-wrap gap-[10px] text-xs tracking-[0.22em] uppercase text-gray-500 dark:text-[#a1a1aa] mb-[18px]"
-                  style={{ fontFamily: MONO }}
-                >
-                  <span className="inline-flex items-center gap-[7px] px-[10px] py-1 rounded-full bg-green-50 dark:bg-[#6fcf97]/10 text-green-700 dark:text-[#6fcf97] border border-green-200 dark:border-[#6fcf97]/25">
-                    <span className="w-[6px] h-[6px] rounded-full bg-green-600 dark:bg-[#6fcf97]" />
-                    {pub.status}
-                  </span>
-                  <span aria-hidden="true" className="text-gray-400 dark:text-[#71717a]">/</span>
-                  <span>{formatDate(pub.publication_date)}</span>
-                  <span aria-hidden="true" className="text-gray-400 dark:text-[#71717a]">/</span>
-                  <span className="px-[10px] py-1 rounded-full border border-black/[0.08] dark:border-white/[0.07]">{pub.type}</span>
-                </div>
-
-                {/* Title */}
-                <h3
-                  className="text-[clamp(18px,2.4vw,28px)] font-semibold leading-[1.2] tracking-[-0.015em] text-gray-900 dark:text-white mb-[14px] max-w-[920px]"
-                >
-                  {pub.title}
-                </h3>
-
-                {/* Publisher */}
-                <div className="flex items-center flex-wrap gap-[10px] text-[14px] text-gray-600 dark:text-[#c9c9cf] mb-[18px]">
-                  <span className="text-amber-700 dark:text-accent font-medium">{pub.publisher}</span>
-                  <span className="w-1 h-1 rounded-full bg-gray-400 dark:bg-[#71717a]" />
-                  <span>{pub.publisherFull}</span>
-                </div>
-
-                {/* Description */}
-                <p className="text-[15px] leading-[1.7] text-gray-600 dark:text-[#c9c9cf] mb-4 max-w-[70ch]">
-                  {pub.description}
-                </p>
-
-                {/* Abstract */}
-                <div
-                  className="mb-[22px] max-w-[75ch] rounded-xl bg-black/[0.03] dark:bg-white/[0.03] p-5"
-                  style={{ fontFamily: SERIF, fontStyle: "italic" }}
-                >
-                  <span
-                    className="block not-italic text-xs tracking-[0.24em] text-amber-700 dark:text-accent uppercase mb-[6px]"
-                    style={{ fontFamily: MONO, fontStyle: "normal" }}
-                  >
-                    Abstract
-                  </span>
-                  <p className="text-[1.0625rem] leading-[1.55] text-gray-700 dark:text-[#e0e0e6] m-0">
-                    {pub.abstract}
-                  </p>
-                </div>
-
-                {/* 2-col: Features + Stack */}
-                <div className="grid grid-cols-1 md:grid-cols-[1.1fr_0.9fr] gap-8 mt-[6px]">
-                  {/* Features */}
-                  <div>
-                    <div
-                      className="flex items-center gap-2 text-xs tracking-[0.24em] text-gray-500 dark:text-[#a1a1aa] uppercase mb-3"
-                      style={{ fontFamily: MONO }}
-                    >
-                      <span className="text-amber-700 dark:text-accent">01</span> · Key Features
-                    </div>
-                    <ul className="list-none p-0 m-0 grid gap-2">
-                      {pub.features.map((f) => (
-                        <li key={f} className="flex items-start gap-[10px] text-[13.5px] text-gray-600 dark:text-[#d5d5db] leading-[1.5]">
-                          <span
-                            className="flex-none w-[18px] h-[18px] mt-[1px] flex items-center justify-center rounded-[4px] bg-amber-50 dark:bg-accent/[0.08] border border-amber-300 dark:border-accent/30 text-amber-700 dark:text-accent"
-                            style={{ fontFamily: MONO, fontSize: "0.75rem", lineHeight: 1 }}
-                          >
-                            ✓
-                          </span>
-                          {f}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Stack */}
-                  <div>
-                    <div
-                      className="flex items-center gap-2 text-xs tracking-[0.24em] text-gray-500 dark:text-[#a1a1aa] uppercase mb-3"
-                      style={{ fontFamily: MONO }}
-                    >
-                      <span className="text-amber-700 dark:text-accent">02</span> · Stack
-                    </div>
-                    <div className="flex flex-wrap gap-[6px]">
-                      {pub.technologies.map((t) => (
-                        <span
-                          key={t}
-                          className="text-xs text-gray-600 dark:text-[#dcdce2] tracking-[0.02em] px-[10px] py-[6px] border border-black/[0.08] dark:border-white/[0.07] rounded-full bg-white dark:bg-white/[0.015]"
-                          style={{ fontFamily: MONO }}
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Footer: only when there is a verifiable link to the paper */}
-                {pub.research_link && (
-                <div className="flex items-center justify-between flex-wrap gap-[14px] mt-[26px] pt-[22px] border-t border-dashed border-black/[0.10] dark:border-white/[0.14]">
-                  <div className="text-xs text-gray-500 dark:text-[#a1a1aa] tracking-[0.06em]" style={{ fontFamily: MONO }}>
-                    Paper ID · <span className="text-gray-900 dark:text-white font-medium">{pub.paperId}</span>
-                  </div>
-                  <a
-                    href={pub.research_link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-[10px] px-4 py-[10px] rounded-full bg-accent text-[#1a1500] font-semibold text-[13px] hover:bg-[#ffd93a] active:scale-[0.97] transition-[background-color,transform] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-                  >
-                    Read Paper
-                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1a1500] text-accent text-xs" aria-hidden="true">↗</span>
-                  </a>
-                </div>
-                )}
-              </article>
-            ))}
-          </m.div>
-        )}
-
-        {tab === "ach" && (
-          <m.div
-            key="ach"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.25, ease: EASE_OUT }}
-            className="flex flex-col gap-4"
-          >
-            {/* Featured awards (no rank): full-width cards */}
-            {featuredAchs.map((ach, i) => (
-              <m.article
-                key={ach.title}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: i * 0.07, ease: EASE_OUT }}
-                className="relative overflow-hidden rounded-[20px] border border-black/[0.08] dark:border-white/[0.07] bg-white dark:bg-[#101015] p-7 sm:p-8"
-              >
-                {/* Meta row */}
-                <div
-                  className="flex items-center flex-wrap gap-[10px] text-xs tracking-[0.22em] uppercase text-gray-500 dark:text-[#a1a1aa] mb-[16px]"
-                  style={{ fontFamily: MONO }}
-                >
-                  <span className="inline-flex items-center gap-[7px] px-[10px] py-1 rounded-full bg-amber-50 dark:bg-accent/[0.1] text-amber-700 dark:text-accent border border-amber-200 dark:border-accent/25">
-                    <span
-                      className="w-[6px] h-[6px] rounded-full bg-amber-500 dark:bg-accent shrink-0"
-                      style={{ boxShadow: "0 0 7px #f5c51880" }}
-                    />
-                    {ach.category}
-                  </span>
-                  <span aria-hidden="true" className="text-gray-400 dark:text-[#71717a]">/</span>
-                  <span>{formatDate(ach.date)}</span>
-                  <span aria-hidden="true" className="text-gray-400 dark:text-[#71717a]">/</span>
-                  <span className="px-[10px] py-1 rounded-full border border-black/[0.08] dark:border-white/[0.07]">{ach.issuer}</span>
-                  {ach.associated_with && (
-                    <>
-                      <span aria-hidden="true" className="text-gray-400 dark:text-[#71717a]">/</span>
-                      <span>{ach.associated_with}</span>
-                    </>
-                  )}
-                </div>
-
-                {/* Title */}
-                <h3 className="text-[clamp(20px,2.4vw,26px)] font-semibold leading-[1.2] tracking-[-0.015em] text-gray-900 dark:text-white mb-[14px]">
-                  {ach.title}
-                </h3>
-
-                {/* Description */}
-                {ach.description && (
-                  <p className="text-[15px] leading-[1.7] text-gray-600 dark:text-[#c9c9cf] mb-[22px] max-w-[70ch]">
-                    {ach.description}
-                  </p>
-                )}
-
-                {/* Footer */}
-                <div className="flex items-center justify-between flex-wrap gap-[14px] pt-[18px] border-t border-dashed border-black/[0.10] dark:border-white/[0.14]">
-                  {ach.certificate_available && (
-                    <div
-                      className="flex items-center gap-[6px] text-xs tracking-[0.16em] uppercase text-green-700 dark:text-[#6fcf97]"
-                      style={{ fontFamily: MONO }}
-                    >
-                      <span
-                        className="w-[5px] h-[5px] rounded-full bg-green-600 dark:bg-[#6fcf97] shrink-0"
-                        style={{ boxShadow: "0 0 6px #6fcf97" }}
-                      />
-                      Certificate Available
-                    </div>
-                  )}
-                  {ach.links?.linkedin && (
-                    <a
-                      href={ach.links.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-[10px] px-4 py-[10px] rounded-full bg-accent text-[#1a1500] font-semibold text-[13px] hover:bg-[#ffd93a] active:scale-[0.97] transition-[background-color,transform] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-                    >
-                      View on LinkedIn
-                      <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#1a1500] text-accent text-xs" aria-hidden="true">↗</span>
-                    </a>
-                  )}
-                </div>
-              </m.article>
-            ))}
-
-            {/* Competition wins: 4-col grid */}
-            {rankedAchs.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-                {rankedAchs.map((ach, i) => {
-                  const rankColor = RANK_COLORS[ach.rank!] ?? "#a1a1aa";
-                  const rankTextLight = RANK_TEXT_LIGHT[ach.rank!] ?? "#52525b";
-                  return (
-                    <m.article
-                      key={ach.title}
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: (featuredAchs.length + i) * 0.07, ease: EASE_OUT }}
-                      className="relative overflow-hidden rounded-[16px] border border-black/[0.08] dark:border-white/[0.07] bg-white dark:bg-[#101015] p-[22px_20px_20px] flex flex-col gap-[14px] hover:-translate-y-[2px] hover:border-black/[0.14] dark:hover:border-white/[0.14] transition-[transform,border-color] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)]"
-                    >
-                      {/* Rank glow */}
-                      <span
-                        className="absolute pointer-events-none"
-                        style={{
-                          top: "-50%", right: "-10%",
-                          width: 180, height: 180,
-                          borderRadius: "50%",
-                          background: `radial-gradient(closest-side, ${rankColor}, transparent 70%)`,
-                          opacity: 0.12,
-                        }}
-                      />
-
-                      {/* Top row: medal + category */}
-                      <div className="flex items-start justify-between gap-[10px]">
-                        <div
-                          className="w-14 h-14 rounded-[16px] flex items-center justify-center text-[28px] leading-none shrink-0 text-[color:var(--rank-light)] dark:text-[color:var(--rank-dark)]"
-                          style={{
-                            ["--rank-light" as string]: rankTextLight,
-                            ["--rank-dark" as string]: rankColor,
-                            background: `linear-gradient(160deg, ${rankColor}30, ${rankColor}0d)`,
-                            border: `1px solid ${rankColor}66`,
-                            fontFamily: SERIF,
-                            fontStyle: "italic",
-                          }}
-                        >
-                          {ach.roman}
-                          <span
-                            className="text-xs self-start mt-[4px] not-italic"
-                            style={{ fontFamily: MONO, fontStyle: "normal", letterSpacing: "0.04em", opacity: 0.85 }}
-                          >
-                            {ach.ordinal}
-                          </span>
-                        </div>
-                        <span
-                          className="text-xs tracking-[0.22em] uppercase text-gray-500 dark:text-[#a1a1aa] px-[9px] py-[5px] rounded-full border border-black/[0.08] dark:border-white/[0.07] whitespace-nowrap mt-1"
-                          style={{ fontFamily: MONO }}
-                        >
-                          {ach.category}
-                        </span>
-                      </div>
-
-                      {/* Title */}
-                      <h4 className="text-[16px] font-semibold leading-[1.35] text-gray-900 dark:text-white mt-1">
-                        {ach.title}
-                      </h4>
-
-                      {/* Meta */}
-                      <div
-                        className="mt-auto flex flex-col gap-[6px] pt-2 border-t border-dashed border-black/[0.08] dark:border-white/[0.07]"
-                        style={{ fontFamily: MONO }}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs tracking-[0.22em] uppercase text-gray-500 dark:text-[#a1a1aa] min-w-[58px]">Issuer</span>
-                          <span className="text-gray-800 dark:text-[#e0e0e6] font-medium text-xs">{ach.issuer}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs tracking-[0.22em] uppercase text-gray-500 dark:text-[#a1a1aa] min-w-[58px]">Date</span>
-                          <span className="text-gray-800 dark:text-[#e0e0e6] font-medium text-xs">{formatDate(ach.date)}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs tracking-[0.22em] uppercase text-gray-500 dark:text-[#a1a1aa] min-w-[58px]">Repping</span>
-                          <span className="text-gray-800 dark:text-[#e0e0e6] font-medium text-xs leading-[1.3]">{ach.associated_with}</span>
-                        </div>
-                        {ach.certificate_available && (
-                          <div className="flex items-center gap-[6px] text-xs tracking-[0.16em] uppercase text-green-700 dark:text-[#6fcf97] mt-[4px]">
-                            <span
-                              className="w-[5px] h-[5px] rounded-full bg-green-600 dark:bg-[#6fcf97] shrink-0"
-                              style={{ boxShadow: "0 0 6px #6fcf97" }}
-                            />
-                            Certificate Available
-                          </div>
-                        )}
-                      </div>
-                    </m.article>
-                  );
-                })}
+        <div className="flex flex-col gap-12">
+          {atWork.length > 0 && (
+            <div className="flex flex-col gap-4">
+              <h3 className={LABEL}>Recognised at work</h3>
+              <div className="rounded-2xl border border-black/[0.08] dark:border-white/[0.07] bg-white dark:bg-[#101015] p-6">
+                {atWork.map((a) => (
+                  <WorkAward key={a.title} award={a} />
+                ))}
               </div>
-            )}
-          </m.div>
-        )}
-      </AnimatePresence>
-    </m.section>
+            </div>
+          )}
+          {placings.length > 0 && (
+            <div className="flex flex-col gap-4">
+              <h3 className={LABEL}>Competitions</h3>
+              <Podium placings={placings} />
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
   );
 }
