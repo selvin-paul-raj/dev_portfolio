@@ -53,7 +53,7 @@ export default function CaseStudyScrolly({ study }: { study: CaseStudy }) {
         bg-[#FAFAF9]/90 dark:bg-[#09090b]/90 backdrop-blur-sm lg:bg-transparent lg:dark:bg-transparent lg:backdrop-blur-none
         border-b border-black/5 dark:border-white/5 lg:border-0">
         <figure className="w-full h-full flex flex-col">
-          <figcaption className="flex justify-between font-mono text-[0.7rem] uppercase tracking-[0.14em] text-gray-500 dark:text-white/50 mb-2">
+          <figcaption className="flex justify-between font-mono text-xs uppercase tracking-[0.14em] text-gray-500 dark:text-white/50 mb-2">
             <span>System</span>
             <span aria-live="polite">
               Step {pad(active + 1)} / {pad(steps.length)}

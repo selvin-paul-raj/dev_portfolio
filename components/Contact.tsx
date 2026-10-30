@@ -64,7 +64,7 @@ function DirectLinks() {
         <div className="flex items-center gap-2 min-w-0">
           <a
             href={`mailto:${EMAIL}`}
-            className="min-w-0 truncate text-lg sm:text-xl font-semibold text-gray-900 dark:text-white underline decoration-accent decoration-2 underline-offset-[6px]
+            className="min-w-0 truncate py-2 text-lg sm:text-xl font-semibold text-gray-900 dark:text-white underline decoration-accent decoration-2 underline-offset-[6px]
               hover:decoration-[3px] rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             {EMAIL}

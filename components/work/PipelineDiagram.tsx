@@ -304,7 +304,7 @@ export function DiagramLegend({ nodes, edges }: { nodes: DiagramNode[]; edges: E
   const shown = items.filter(([on]) => on);
   if (shown.length === 0) return null;
   return (
-    <ul aria-label="Diagram legend" className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-[0.65rem] text-gray-500 dark:text-white/45">
+    <ul aria-label="Diagram legend" className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs text-gray-500 dark:text-white/45">
       {shown.map(([, mark, label]) => (
         <li key={label}>
           <span className={mark === "HITL" ? "text-orange-600 dark:text-orange-400" : "text-accent-ink dark:text-accent"}>{mark}</span> {label}

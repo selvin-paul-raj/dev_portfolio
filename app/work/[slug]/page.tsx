@@ -34,7 +34,7 @@ const ASSURANCE_ROWS = [
   ["testing", "Testing"],
 ] as const;
 
-const label = "font-mono text-[0.7rem] uppercase tracking-[0.14em] text-gray-500 dark:text-white/50";
+const label = "font-mono text-xs uppercase tracking-[0.14em] text-gray-500 dark:text-white/50";
 
 export default async function CaseStudyPage({ params }: Params) {
   const study = getCaseStudy((await params).slug);

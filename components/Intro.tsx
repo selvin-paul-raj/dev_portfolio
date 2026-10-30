@@ -53,7 +53,7 @@ const RECRUITER_LINKS = [
 ];
 
 const SHORTCUT_PILL =
-  "group inline-flex h-11 sm:h-9 items-center gap-2 rounded-full border px-3.5 text-sm " +
+  "group inline-flex h-11 [@media(pointer:fine)]:h-9 items-center gap-2 rounded-full border px-3.5 text-sm " +
   "border-black/10 bg-black/[0.03] text-gray-700 hover:border-amber-600/50 hover:text-gray-950 " +
   "dark:border-white/10 dark:bg-white/[0.03] dark:text-white/70 dark:hover:border-accent/45 dark:hover:text-white " +
   "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#09090b] " +
@@ -99,7 +99,7 @@ export default function Intro() {
     <section
       ref={ref}
       id="home"
-      className="w-full max-w-5xl mx-auto px-4 mb-16 scroll-mt-[100rem] md:pt-8"
+      className="w-full max-w-5xl mx-auto px-0 sm:px-4 mb-16 scroll-mt-[100rem] md:pt-8"
     >
       {/* Mobile-only status pill */}
       <div className="anim-fade-up anim-d0 lg:hidden flex items-center justify-center gap-2 mb-5 font-mono text-xs text-gray-600 dark:text-white/55">
@@ -116,7 +116,7 @@ export default function Intro() {
       <div className="flex flex-col-reverse lg:flex-row items-center lg:items-start gap-6 lg:gap-16 mb-14">
 
         {/* Left: text */}
-        <div className="flex-1 min-w-0 flex flex-col items-center lg:items-start text-center lg:text-left">
+        <div className="w-full lg:w-auto flex-1 min-w-0 flex flex-col items-center lg:items-start text-center lg:text-left">
 
           {/* Desktop status pill */}
           <div className="anim-fade-up anim-d0 hidden lg:flex items-center gap-2 mb-5 font-mono text-xs text-gray-600 dark:text-white/55 bg-black/[0.04] dark:bg-white/[0.05] border border-black/6 dark:border-white/8 rounded-full px-4 py-1.5">
@@ -139,16 +139,16 @@ export default function Intro() {
           </h1>
 
           {/* Mobile inline stats */}
-          <div className="anim-fade-up anim-d3 lg:hidden flex items-center justify-center gap-3 mt-1 mb-5 font-mono whitespace-nowrap">
+          <div className="anim-fade-up anim-d3 lg:hidden flex flex-wrap items-center justify-center gap-x-2.5 sm:gap-x-3 gap-y-1 mt-1 mb-5 font-mono whitespace-nowrap">
             <span className="text-lg font-bold text-gray-900 dark:text-white/90 tabular-nums">
               <NumberTicker value={_projectCount} />+
             </span>
-            <span className="text-xs uppercase tracking-[0.15em] text-gray-600 dark:text-white/50">Projects</span>
+            <span className="text-xs uppercase tracking-[0.08em] sm:tracking-[0.15em] text-gray-600 dark:text-white/50">Projects</span>
             <span className="w-px h-3.5 bg-black/10 dark:bg-white/10" />
             <span className="text-lg font-bold text-gray-900 dark:text-white/90 tabular-nums" suppressHydrationWarning>
               {_fmtDur(experienceMetrics.workRoleMonths)}
             </span>
-            <span className="text-xs uppercase tracking-[0.15em] text-gray-600 dark:text-white/50">Full-time</span>
+            <span className="text-xs uppercase tracking-[0.08em] sm:tracking-[0.15em] text-gray-600 dark:text-white/50">Full-time</span>
           </div>
 
           {/* Bio */}
@@ -171,7 +171,7 @@ export default function Intro() {
           </p>
 
           {/* CTAs */}
-          <div className="anim-fade-up anim-d5 flex flex-row gap-2.5 w-full sm:w-auto mb-7">
+          <div className="anim-fade-up anim-d5 flex flex-row flex-wrap gap-2.5 w-full sm:w-auto mb-7">
             <a
               href="#contact"
               onClick={() => { setActiveSection("Contact"); setTimeOfLastClick(Date.now()); }}

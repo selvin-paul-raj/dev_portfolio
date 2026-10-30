@@ -77,7 +77,7 @@ const Footer = () => {
                 <Link
                   key={name}
                   href={`/${hash}`}
-                  className="rounded-sm text-sm text-gray-600 dark:text-[#c9c9cf] hover:text-gray-900 dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                  className="inline-flex items-center min-h-11 [@media(pointer:fine)]:min-h-0 rounded-sm text-sm text-gray-600 dark:text-[#c9c9cf] hover:text-gray-900 dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                   style={{ transition: "color 150ms ease" }}
                 >
                   {name}
@@ -89,7 +89,7 @@ const Footer = () => {
                 <Link
                   key={href}
                   href={href}
-                  className="rounded-sm font-mono text-xs text-gray-500 dark:text-white/55 hover:text-gray-900 dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                  className="inline-flex items-center justify-center min-h-11 min-w-11 [@media(pointer:fine)]:min-h-0 [@media(pointer:fine)]:min-w-0 rounded-sm font-mono text-xs text-gray-500 dark:text-white/55 hover:text-gray-900 dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                   style={{ transition: "color 150ms ease" }}
                 >
                   {name}

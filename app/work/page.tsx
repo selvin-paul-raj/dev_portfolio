@@ -17,7 +17,7 @@ export default function WorkIndex() {
   return (
     <main id="content" className="w-full max-w-5xl mx-auto px-4 pt-14 pb-28 md:pl-24 md:pr-8">
       <header className="mb-14 max-w-2xl">
-        <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-gray-500 dark:text-white/50 mb-4">Work</p>
+        <p className="font-mono text-xs uppercase tracking-[0.14em] text-gray-500 dark:text-white/50 mb-4">Work</p>
         <h1 className="text-[clamp(2.25rem,1.6rem+3vw,3.75rem)] font-semibold tracking-[-0.03em] leading-[1.02] text-gray-950 dark:text-white mb-5">
           How the systems work
         </h1>

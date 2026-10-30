@@ -126,7 +126,7 @@ export default function Challenge() {
               setStatus(null);
               setCluesShown(0);
             }}
-            className={`font-mono text-xs px-3 py-1.5 rounded-full border outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-35
+            className={`font-mono text-xs px-3 min-h-11 [@media(pointer:fine)]:min-h-0 py-1.5 rounded-full border outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-35
               ${l.level === level ? "bg-gray-900 dark:bg-accent text-white dark:text-black border-transparent" : "border-black/10 dark:border-white/15 text-gray-700 dark:text-white/65"}`}
           >
             {l.level <= unlocked - 1 ? "✓ " : ""}L{l.level} · {l.name}
@@ -154,7 +154,7 @@ export default function Challenge() {
             <button
               type="button"
               onClick={() => setCluesShown((n) => n + 1)}
-              className="self-start rounded text-sm font-medium text-amber-700 dark:text-accent underline underline-offset-4 decoration-dotted
+              className="self-start inline-flex items-center min-h-11 [@media(pointer:fine)]:min-h-0 rounded text-sm font-medium text-amber-700 dark:text-accent underline underline-offset-4 decoration-dotted
                 outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               {cluesShown === 0 ? "Stuck? Show a clue" : `Show clue ${cluesShown + 1} of ${current.clues.length}`}
@@ -186,7 +186,7 @@ export default function Challenge() {
           onChange={(e) => setInput(e.target.value)}
           maxLength={400}
           placeholder="Convince the gatekeeper…"
-          className="flex-1 rounded-full px-5 py-3 text-sm bg-white dark:bg-white/[0.04] border border-black/10 dark:border-white/10
+          className="flex-1 min-w-0 rounded-full px-5 py-3 text-base sm:text-sm bg-white dark:bg-white/[0.04] border border-black/10 dark:border-white/10
             text-gray-900 dark:text-white/85 placeholder:text-gray-500 dark:placeholder:text-white/40 outline-none focus-visible:ring-2 focus-visible:ring-accent"
         />
         <button

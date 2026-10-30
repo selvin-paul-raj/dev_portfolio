@@ -24,7 +24,7 @@ interface Suite {
 
 function Status({ pass }: { pass: boolean }) {
   return (
-    <span className={`inline-flex items-center gap-1 font-mono text-[0.7rem] tracking-wide ${pass ? "text-green-700 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
+    <span className={`inline-flex items-center gap-1 font-mono text-xs tracking-wide ${pass ? "text-green-700 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
       <span aria-hidden="true">{pass ? "✓" : "✕"}</span>
       {pass ? "PASS" : "FAIL"}
     </span>
@@ -48,7 +48,7 @@ function CaseStrip({ cases, size = "sm" }: { cases: Suite["cases"]; size?: "sm" 
 }
 
 function Eyebrow({ children }: { children: ReactNode }) {
-  return <p className="font-mono text-[0.7rem] uppercase tracking-[0.14em] text-gray-500 dark:text-white/50">{children}</p>;
+  return <p className="font-mono text-xs uppercase tracking-[0.14em] text-gray-500 dark:text-white/50">{children}</p>;
 }
 
 function SectionTitle({ index, children, aside }: { index: string; children: ReactNode; aside?: ReactNode }) {
@@ -68,7 +68,7 @@ function CaseTable({ head, rows }: { head: string[]; rows: Array<{ key: string; 
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="text-left font-mono text-[0.7rem] uppercase tracking-[0.1em] text-gray-500 dark:text-white/45">
+          <tr className="text-left font-mono text-xs uppercase tracking-[0.1em] text-gray-500 dark:text-white/45">
             {head.map((h) => <th key={h} className="py-2 pr-4 font-normal">{h}</th>)}
             <th className="py-2 font-normal text-right">Result</th>
           </tr>
@@ -211,7 +211,7 @@ export default function EvalsPage() {
               ["Indexed docs", String(evals.corpusDocs)],
             ].map(([k, v]) => (
               <div key={k}>
-                <dt className="font-mono text-[0.65rem] uppercase tracking-[0.12em] text-gray-500 dark:text-white/45">{k}</dt>
+                <dt className="font-mono text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-white/45">{k}</dt>
                 <dd className="mt-1 text-2xl font-semibold tabular-nums text-gray-900 dark:text-white">{v}</dd>
               </div>
             ))}
@@ -236,10 +236,10 @@ export default function EvalsPage() {
           {suites.map((s) => (
             <li key={s.id} className="flex flex-col gap-4 bg-[#FAFAF9] dark:bg-[#09090b] p-5">
               <div className="flex items-start justify-between gap-3">
-                <a href={`#${s.id}`} className="text-sm font-medium text-gray-900 dark:text-white hover:text-accent-ink dark:hover:text-accent">
+                <a href={`#${s.id}`} className="inline-flex items-center min-h-11 [@media(pointer:fine)]:min-h-0 text-sm font-medium text-gray-900 dark:text-white hover:text-accent-ink dark:hover:text-accent">
                   {s.label}
                 </a>
-                <span className="shrink-0 rounded-full border border-black/10 dark:border-white/15 px-2 py-0.5 font-mono text-[0.6rem] uppercase tracking-[0.1em] text-gray-500 dark:text-white/50">
+                <span className="shrink-0 rounded-full border border-black/10 dark:border-white/15 px-2 py-0.5 font-mono text-xs uppercase tracking-[0.1em] text-gray-500 dark:text-white/50">
                   {s.method}
                 </span>
               </div>
@@ -267,7 +267,7 @@ export default function EvalsPage() {
         <div className="mt-6 grid grid-cols-4 gap-3 max-w-xl">
           {[...rankCounts.map((n, i) => ({ k: `Rank ${i + 1}`, n })), { k: "Missed", n: misses }].map(({ k, n }) => (
             <div key={k} className="rounded-xl border border-black/8 dark:border-white/10 p-3">
-              <p className="font-mono text-[0.65rem] uppercase tracking-[0.1em] text-gray-500 dark:text-white/45">{k}</p>
+              <p className="font-mono text-xs uppercase tracking-[0.1em] text-gray-500 dark:text-white/45">{k}</p>
               <p className={`mt-1 text-2xl font-semibold tabular-nums ${k === "Missed" && n > 0 ? "text-red-600 dark:text-red-400" : "text-gray-950 dark:text-white"}`}>{n}</p>
             </div>
           ))}
@@ -378,7 +378,7 @@ export default function EvalsPage() {
               <div className="mt-2 h-1.5 rounded-full bg-black/8 dark:bg-white/10 overflow-hidden">
                 <div className="h-full rounded-full bg-accent" style={{ width: `${c.score}%` }} />
               </div>
-              <p className="mt-2 font-mono text-[0.65rem] uppercase tracking-[0.1em] text-gray-500 dark:text-white/45">fit score</p>
+              <p className="mt-2 font-mono text-xs uppercase tracking-[0.1em] text-gray-500 dark:text-white/45">fit score</p>
             </li>
           ))}
         </ul>
