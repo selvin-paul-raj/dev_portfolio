@@ -3,7 +3,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import type { FormEvent } from "react";
 
-type Level = { level: number; name: string; defense: string };
+type Level = { level: number; name: string; defense: string; clues: readonly string[] };
 type Msg = { role: "you" | "gate"; text: string; blocked?: boolean };
 
 const STORAGE_KEY = "spr-challenge-level";
@@ -38,6 +38,7 @@ export default function Challenge() {
   const [guess, setGuess] = useState("");
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [cluesShown, setCluesShown] = useState(0);
 
   useEffect(() => {
     fetch("/api/challenge")
@@ -90,6 +91,7 @@ export default function Challenge() {
         if (level < 5) {
           setLevel(level + 1);
           setLog([]);
+          setCluesShown(0);
         }
       } else {
         setStatus("Not quite. Keep probing.");
@@ -122,6 +124,7 @@ export default function Challenge() {
               setLevel(l.level);
               setLog([]);
               setStatus(null);
+              setCluesShown(0);
             }}
             className={`font-mono text-xs px-3 py-1.5 rounded-full border outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-35
               ${l.level === level ? "bg-gray-900 dark:bg-accent text-white dark:text-black border-transparent" : "border-black/10 dark:border-white/15 text-gray-700 dark:text-white/65"}`}
@@ -136,6 +139,28 @@ export default function Challenge() {
           <span className="font-mono text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-white/45">Defense · </span>
           {current.defense}
         </p>
+      )}
+
+      {current && current.clues.length > 0 && (
+        <div className="flex flex-col gap-2">
+          {cluesShown > 0 && (
+            <ol aria-label="Clues" className="list-decimal pl-5 flex flex-col gap-1.5 text-sm text-gray-700 dark:text-white/70">
+              {current.clues.slice(0, cluesShown).map((clue) => (
+                <li key={clue}>{clue}</li>
+              ))}
+            </ol>
+          )}
+          {cluesShown < current.clues.length && (
+            <button
+              type="button"
+              onClick={() => setCluesShown((n) => n + 1)}
+              className="self-start rounded text-sm font-medium text-amber-700 dark:text-accent underline underline-offset-4 decoration-dotted
+                outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            >
+              {cluesShown === 0 ? "Stuck? Show a clue" : `Show clue ${cluesShown + 1} of ${current.clues.length}`}
+            </button>
+          )}
+        </div>
       )}
 
       <ol aria-live="polite" className="flex flex-col gap-3 min-h-[6rem]">
