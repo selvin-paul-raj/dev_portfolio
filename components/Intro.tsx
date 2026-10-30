@@ -272,7 +272,7 @@ export default function Intro() {
         {/* Right: interactive portrait (drag to stretch; whistles, then sleeps, when idle) */}
         <div className="anim-fade-in anim-d1 shrink-0">
           <div className="w-64 sm:w-80 lg:w-[26rem]">
-            <PokeFace circleColor="#FFD700" label="Selvin PaulRaj K, AI Engineer. Grab and stretch his face." />
+            <PokeFace circleColor="rgb(var(--portrait-bg))" label="Selvin PaulRaj K, AI Engineer. Grab and stretch his face." />
           </div>
         </div>
       </div>

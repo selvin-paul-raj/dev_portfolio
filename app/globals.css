@@ -23,6 +23,7 @@
   --info: 3 105 161;        /* #0369a1 */
   --warn: 180 83 9;         /* #b45309 */
   --danger: 185 28 28;      /* #b91c1c */
+  --portrait-bg: 246 231 166; /* #f6e7a6 pale gold, so the face leads in light mode */
 }
 .dark {
   --surface: 9 9 11;        /* #09090b */
@@ -39,6 +40,7 @@
   --info: 125 211 252;      /* #7dd3fc */
   --warn: 253 186 116;      /* #fdba74 */
   --danger: 252 165 165;    /* #fca5a5 */
+  --portrait-bg: 245 197 24; /* #f5c518 brand gold, matches the CTA */
 }
 
 html,

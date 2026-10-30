@@ -4,7 +4,7 @@
 .pf-stage canvas.grabbing{cursor:grabbing}
 .pf-stage .circle{position:absolute;left:12%;top:18%;width:76%;height:76%;border-radius:50%;background:var(--pf-circle,#ff2d0a);pointer-events:none}
 .pf-stage .hit{position:absolute;left:35%;top:22%;width:30%;height:30%;opacity:0;border:0;background:none;pointer-events:none}
-.pf-stage .hit:focus-visible{opacity:1;outline:3px dashed var(--pf-circle,#ff2d0a);border-radius:50%}
+.pf-stage .hit:focus-visible{opacity:1;outline:3px dashed rgb(var(--accent-fg,124 94 0));border-radius:50%}
 .pf-stage .bubble{position:absolute;left:62%;top:4%;background:#fff;color:#111;font-weight:800;font-size:clamp(.85rem,1.6vw,1.05rem);padding:.6rem .9rem;border-radius:16px 16px 16px 4px;box-shadow:0 6px 20px rgba(0,0,0,.12);opacity:0;transform:translateY(8px) scale(.9);transition:opacity .2s,transform .2s;pointer-events:none;max-width:46%}
 .pf-stage .bubble.on{opacity:1;transform:none}
 .pf-stage .ghost{position:absolute;width:44px;height:44px;left:0;top:0;pointer-events:none;opacity:0;transition:opacity .3s;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
