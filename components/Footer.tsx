@@ -39,9 +39,9 @@ const MACHINE_ENTRIES = [
 const CURRENT_YEAR = new Date().getFullYear();
 
 const LINK =
-  "inline-flex items-center gap-2 min-h-11 min-w-11 [@media(pointer:fine)]:min-h-0 [@media(pointer:fine)]:min-w-0 rounded-sm text-sm text-gray-600 dark:text-[#c9c9cf] " +
-  "hover:text-gray-900 dark:hover:text-white transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-accent";
-const COL_HEAD = "mb-3 text-sm font-semibold text-gray-900 dark:text-white";
+  "inline-flex items-center gap-2 min-h-11 min-w-11 [@media(pointer:fine)]:min-h-0 [@media(pointer:fine)]:min-w-0 rounded-sm text-sm text-fg-2" +
+  "hover:text-fg transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-accent";
+const COL_HEAD = "mb-3 text-sm font-semibold text-fg";
 
 function LinkColumns() {
   return (
@@ -72,7 +72,7 @@ function LinkColumns() {
           {SOCIAL_LINKS.map(({ href, Icon, label }) => (
             <li key={label}>
               <a href={href} target="_blank" rel="noopener noreferrer" className={LINK}>
-                <Icon size={14} aria-hidden="true" className="shrink-0 text-gray-500 dark:text-white/45" />
+                <Icon size={14} aria-hidden="true" className="shrink-0 text-muted" />
                 {label}
               </a>
             </li>
@@ -85,17 +85,17 @@ function LinkColumns() {
 
 const Footer = () => {
   return (
-    <footer className="border-t border-black/[0.08] dark:border-white/[0.07]">
+    <footer className="border-t border-line">
       <div className="max-w-5xl mx-auto px-4 pt-16 pb-10">
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] gap-12 lg:gap-16">
           {/* Sign-off: who, what, and the two ways to act on it */}
           <div className="flex flex-col gap-10">
             <div>
-              <p className="text-3xl sm:text-4xl font-semibold tracking-[-0.02em] text-gray-900 dark:text-white">Selvin PaulRaj K</p>
-              <p className="mt-3 max-w-[42ch] text-base leading-relaxed text-gray-600 dark:text-[#c9c9cf]">
+              <p className="text-3xl sm:text-4xl font-semibold tracking-[-0.02em] text-fg">Selvin PaulRaj K</p>
+              <p className="mt-3 max-w-[42ch] text-base leading-relaxed text-fg-2">
                 AI engineer in Chennai, building agents, MCP servers and RAG pipelines that run in production.
               </p>
-              <p className="mt-2 text-sm font-medium text-green-700 dark:text-green-400/85">Open to AI Engineer roles.</p>
+              <p className="mt-2 text-sm font-medium text-ok">Open to AI Engineer roles.</p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <a
                   href={`mailto:${EMAIL}`}
@@ -122,8 +122,8 @@ const Footer = () => {
         </div>
 
         {/* Colophon */}
-        <div className="mt-14 pt-6 border-t border-black/[0.08] dark:border-white/[0.07] flex flex-col-reverse gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-gray-500 dark:text-[#a1a1aa]">
+        <div className="mt-14 pt-6 border-t border-line flex flex-col-reverse gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-muted">
             &copy; {CURRENT_YEAR} Selvin PaulRaj K. Built with Next.js 16, React 19, Tailwind CSS and Resend, on Vercel.
           </p>
           <a href="#" className={`${LINK} self-start sm:self-auto`}>

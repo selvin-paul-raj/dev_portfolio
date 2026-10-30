@@ -18,11 +18,11 @@ export default function SectionHeading({ children, kicker, className = "" }: Sec
         aria-hidden="true"
         className="h-12 w-px bg-gradient-to-b from-transparent via-black/15 to-transparent dark:via-white/[0.16]"
       />
-      <h2 className="m-0 text-[clamp(1.75rem,1.2rem+1.6vw,2.25rem)] font-semibold uppercase leading-none tracking-[0.18em] text-gray-900 dark:text-[#ededee]">
+      <h2 className="m-0 text-[clamp(1.75rem,1.2rem+1.6vw,2.25rem)] font-semibold uppercase leading-none tracking-[0.18em] text-fg">
         {children}
       </h2>
       {kicker && (
-        <p className="max-w-[60ch] text-[0.95rem] leading-relaxed text-gray-600 dark:text-[#a1a1aa]">{kicker}</p>
+        <p className="max-w-[60ch] text-[0.95rem] leading-relaxed text-fg-2">{kicker}</p>
       )}
     </header>
   );

@@ -71,11 +71,11 @@ export default function AgentTrace() {
   const result = study.results[0];
 
   return (
-    <div ref={root} className="rounded-[18px] border border-black/[0.08] dark:border-white/[0.07] bg-white dark:bg-[#0c0c10] overflow-hidden">
-      <div className="flex items-center justify-between gap-3 border-b border-black/[0.06] dark:border-white/[0.06] px-4 sm:px-5 py-3">
-        <p className="font-mono text-[13px] text-gray-700 dark:text-white/75 min-w-0 truncate">
-          <span aria-hidden="true" className="text-gray-400 dark:text-white/35">$ </span>dri-mas run
-          <span className="text-gray-500 dark:text-white/45"> --request &quot;plain English&quot;</span>
+    <div ref={root} className="rounded-[18px] border border-line bg-surface-2 overflow-hidden">
+      <div className="flex items-center justify-between gap-3 border-b border-line px-4 sm:px-5 py-3">
+        <p className="font-mono text-[13px] text-fg-2 min-w-0 truncate">
+          <span aria-hidden="true" className="text-muted">$ </span>dri-mas run
+          <span className="text-muted"> --request &quot;plain English&quot;</span>
         </p>
         <button
           type="button"
@@ -98,30 +98,30 @@ export default function AgentTrace() {
               key={line.title}
               className={`grid grid-cols-[1.75rem_minmax(0,1fr)_1.25rem] gap-x-2 py-1 transition-opacity duration-200 ${visible ? "opacity-100" : "opacity-0"}`}
             >
-              <span className="text-gray-400 dark:text-white/30 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+              <span className="text-muted tabular-nums">{String(i + 1).padStart(2, "0")}</span>
               <span className="min-w-0">
-                <span className="font-sans text-sm text-gray-900 dark:text-white/90">{line.title}</span>
-                <span className="block truncate text-gray-500 dark:text-white/40">
+                <span className="font-sans text-sm text-fg">{line.title}</span>
+                <span className="block truncate text-muted">
                   {line.actors.join(", ").toLowerCase()}
-                  {line.human && <span className="text-sky-700 dark:text-sky-300">{line.actors.length ? ", " : ""}person, if unsure</span>}
+                  {line.human && <span className="text-info">{line.actors.length ? ", " : ""}person, if unsure</span>}
                 </span>
               </span>
-              <span aria-hidden="true" className={running ? "text-amber-600 dark:text-accent animate-pulse motion-reduce:animate-none" : "text-emerald-600 dark:text-emerald-400"}>
+              <span aria-hidden="true" className={running ? "text-accent-fg animate-pulse motion-reduce:animate-none" : "text-ok"}>
                 {running ? "…" : "✓"}
               </span>
             </li>
           );
         })}
         <li
-          className={`mt-3 border-t border-black/[0.06] dark:border-white/[0.06] pt-3 transition-opacity duration-300 ${done ? "opacity-100" : "opacity-0"}`}
+          className={`mt-3 border-t border-line pt-3 transition-opacity duration-300 ${done ? "opacity-100" : "opacity-0"}`}
         >
-          <span className="text-amber-700 dark:text-accent">result </span>
-          <span className="font-sans text-base font-semibold text-gray-900 dark:text-white">{result.value}</span>
-          <span className="text-gray-500 dark:text-white/50">, {result.label.toLowerCase()}</span>
+          <span className="text-accent-fg">result </span>
+          <span className="font-sans text-base font-semibold text-fg">{result.value}</span>
+          <span className="text-muted">, {result.label.toLowerCase()}</span>
         </li>
       </ol>
 
-      <div className="border-t border-black/[0.06] dark:border-white/[0.06] px-4 sm:px-5 py-3">
+      <div className="border-t border-line px-4 sm:px-5 py-3">
         <Link
           href={`/work/${study.slug}`}
           className="inline-flex min-h-11 [@media(pointer:fine)]:min-h-0 items-center gap-1.5 rounded-sm text-sm font-medium text-gray-700 dark:text-white/75 hover:text-gray-950 dark:hover:text-white

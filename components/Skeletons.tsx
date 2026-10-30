@@ -20,7 +20,7 @@ export function ProjectsSkeleton() {
         {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
-            className="rounded-2xl overflow-hidden border border-black/5 dark:border-white/10 flex flex-col"
+            className="rounded-2xl overflow-hidden border border-line flex flex-col"
           >
             <div className="p-6 flex flex-col gap-3">
               <div className="flex justify-between">
@@ -56,11 +56,11 @@ export function SkillsSkeleton() {
         <Sh className="h-3 w-80 rounded-full" />
       </div>
       {/* Spec-sheet rows: label column + wrapped skill chips */}
-      <div className="border-t border-black/[0.06] dark:border-white/[0.06]">
+      <div className="border-t border-line">
         {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
-            className="grid grid-cols-1 sm:grid-cols-[11rem_minmax(0,1fr)] gap-3 sm:gap-8 py-5 border-b border-black/[0.06] dark:border-white/[0.06]"
+            className="grid grid-cols-1 sm:grid-cols-[11rem_minmax(0,1fr)] gap-3 sm:gap-8 py-5 border-b border-line"
           >
             <Sh className="h-3 w-24 rounded" />
             <div className="flex flex-wrap gap-2">
@@ -113,14 +113,14 @@ export function RecognitionSkeleton() {
 
       {/* Tab switcher */}
       <div className="flex justify-center mb-10">
-        <div className="flex gap-1 p-1 border border-black/[0.08] dark:border-white/[0.07] rounded-full bg-black/[0.02] dark:bg-white/[0.03]">
+        <div className="flex gap-1 p-1 border border-line rounded-full bg-black/[0.02] dark:bg-white/[0.03]">
           <Sh className="h-9 w-32 rounded-full" />
           <Sh className="h-9 w-36 rounded-full" />
         </div>
       </div>
 
       {/* Card */}
-      <div className="rounded-[20px] border border-black/[0.08] dark:border-white/[0.07] p-7 sm:p-8">
+      <div className="rounded-[20px] border border-line p-7 sm:p-8">
         <Sh className="h-3 w-24 mb-4 rounded-full" />
         <Sh className="h-7 w-3/4 mb-3 rounded" />
         <Sh className="h-7 w-1/2 mb-6 rounded" />
@@ -156,9 +156,9 @@ export function CertificationsSkeleton() {
       </div>
 
       {/* Stat strip */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 border border-black/[0.08] dark:border-white/[0.07] rounded-[14px] overflow-hidden mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-4 border border-line rounded-[14px] overflow-hidden mb-8">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className={`px-5 py-4 ${i > 0 ? "border-l border-black/[0.08] dark:border-white/[0.07]" : ""}`}>
+          <div key={i} className={`px-5 py-4 ${i > 0 ? "border-l border-line " : ""}`}>
             <Sh className="h-2.5 w-16 mb-3 rounded-full" />
             <Sh className="h-7 w-20 rounded" />
           </div>
@@ -186,7 +186,7 @@ export function CertificationsSkeleton() {
         {Array.from({ length: 8 }).map((_, i) => (
           <div
             key={i}
-            className="rounded-[14px] overflow-hidden border border-black/[0.08] dark:border-white/[0.07] flex flex-col"
+            className="rounded-[14px] overflow-hidden border border-line flex flex-col"
           >
             <Sh className="w-full aspect-[16/10] rounded-none" />
             <div className="p-3.5 flex flex-col gap-[10px]">
@@ -201,7 +201,7 @@ export function CertificationsSkeleton() {
                   <Sh key={j} className="h-5 rounded-full" style={{ width: w } as React.CSSProperties} />
                 ))}
               </div>
-              <div className="flex justify-between pt-2 border-t border-dashed border-black/[0.08] dark:border-white/[0.07]">
+              <div className="flex justify-between pt-2 border-t border-dashed border-line">
                 <Sh className="h-3 w-20 rounded-full" />
                 <Sh className="h-3 w-12 rounded-full" />
               </div>

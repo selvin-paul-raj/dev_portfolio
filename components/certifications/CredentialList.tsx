@@ -24,17 +24,17 @@ function pick(selection: Selection): { list: Cert[]; title: string } {
 
 function CredentialRow({ cert }: { cert: Cert }) {
   return (
-    <li className="grid grid-cols-1 sm:grid-cols-[5.5rem_minmax(0,1fr)_auto] items-start gap-x-5 gap-y-2 py-4 border-t border-black/[0.06] dark:border-white/[0.06] first:border-t-0">
-      <span className="font-mono text-xs text-gray-500 dark:text-white/45 sm:pt-0.5">{monthLabel(cert.date)}</span>
+    <li className="grid grid-cols-1 sm:grid-cols-[5.5rem_minmax(0,1fr)_auto] items-start gap-x-5 gap-y-2 py-4 border-t border-line first:border-t-0">
+      <span className="font-mono text-xs text-muted sm:pt-0.5">{monthLabel(cert.date)}</span>
       <div className="min-w-0">
-        <h4 className="text-[15px] font-semibold leading-snug text-gray-900 dark:text-white">{cert.title}</h4>
+        <h4 className="text-[15px] font-semibold leading-snug text-fg">{cert.title}</h4>
         <p className="mt-0.5 text-sm">
-          <span className={isAI(cert) ? "text-amber-700 dark:text-accent font-medium" : "text-gray-700 dark:text-white/75 font-medium"}>{cert.issuer}</span>
-          <span className="text-gray-500 dark:text-white/45">, {cert.category}</span>
+          <span className={isAI(cert) ? "text-accent-fg font-medium" : "text-fg-2 font-medium"}>{cert.issuer}</span>
+          <span className="text-muted">, {cert.category}</span>
         </p>
-        {cert.skills.length > 0 && <p className="mt-1 text-xs text-gray-500 dark:text-white/45">{cert.skills.slice(0, 4).join(", ")}</p>}
+        {cert.skills.length > 0 && <p className="mt-1 text-xs text-muted">{cert.skills.slice(0, 4).join(", ")}</p>}
         {cert.certId && (
-          <p className="mt-1 truncate font-mono text-[11px] text-gray-400 dark:text-white/30" title={cert.certId}>
+          <p className="mt-1 truncate font-mono text-[11px] text-muted" title={cert.certId}>
             ID {cert.certId}
           </p>
         )}
@@ -45,13 +45,13 @@ function CredentialRow({ cert }: { cert: Cert }) {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Verify ${cert.title} with ${cert.issuer} (opens in new tab)`}
-          className={`justify-self-start inline-flex h-11 [@media(pointer:fine)]:h-9 items-center gap-1.5 rounded-full border border-black/15 dark:border-white/15 px-3.5 text-sm font-medium
-            text-gray-800 dark:text-white/85 hover:border-emerald-500/60 hover:text-emerald-700 dark:hover:border-emerald-400/50 dark:hover:text-emerald-300 transition-colors duration-150 ${FOCUS}`}
+          className={`justify-self-start inline-flex h-11 [@media(pointer:fine)]:h-9 items-center gap-1.5 rounded-full border border-line-strong px-3.5 text-sm font-medium
+ text-fg hover:border-emerald-500/60 hover:text-ok dark:hover:border-emerald-400/50 transition-colors duration-150 ${FOCUS}`}
         >
           <LuShieldCheck size={15} aria-hidden="true" /> Verify <MdArrowOutward size={13} aria-hidden="true" />
         </a>
       ) : (
-        <span className="text-sm text-gray-500 dark:text-white/45">No public link</span>
+        <span className="text-sm text-muted">No public link</span>
       )}
     </li>
   );
@@ -73,13 +73,13 @@ export default function CredentialList({ selection, onSelect }: { selection: Sel
   };
   const chip = (on: boolean) =>
     `inline-flex h-10 items-center rounded-full border px-4 text-sm font-medium transition-colors duration-150 ${FOCUS} ${
-      on
-        ? "border-gray-900 bg-gray-900 text-white dark:border-accent dark:bg-accent dark:text-[#1a1500]"
-        : "border-black/[0.1] text-gray-700 hover:border-black/25 dark:border-white/[0.12] dark:text-white/80 dark:hover:border-white/30"
-    }`;
+ on
+ ? "border-gray-900 bg-gray-900 text-white dark:border-accent dark:bg-accent dark:text-[#1a1500]"
+ : "border-line text-fg-2 hover:border-line-strong "
+ }`;
 
   return (
-    <div className="mt-6 rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#0c0c10] p-4 sm:p-6">
+    <div className="mt-6 rounded-2xl border border-line bg-surface-2 p-4 sm:p-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div role="group" aria-label="Show" className="flex flex-wrap gap-2">
           <button type="button" aria-pressed={!q && selection.kind === "featured"} onClick={() => choose({ kind: "featured" })} className={chip(!q && selection.kind === "featured")}>
@@ -91,7 +91,7 @@ export default function CredentialList({ selection, onSelect }: { selection: Sel
         </div>
         <div className="relative sm:w-72">
           <label htmlFor="cert-search" className="sr-only">Search certificates</label>
-          <LuSearch size={15} aria-hidden="true" className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 dark:text-white/45" />
+          <LuSearch size={15} aria-hidden="true" className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" />
           <input
             id="cert-search"
             type="search"
@@ -109,7 +109,7 @@ export default function CredentialList({ selection, onSelect }: { selection: Sel
               type="button"
               onClick={() => setQuery("")}
               aria-label="Clear search"
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex h-7 w-7 items-center justify-center rounded-full text-gray-500 hover:text-gray-900 dark:text-white/50 dark:hover:text-white outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex h-7 w-7 items-center justify-center rounded-full text-muted hover:text-fg outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <LuX size={14} aria-hidden="true" />
             </button>
@@ -117,8 +117,8 @@ export default function CredentialList({ selection, onSelect }: { selection: Sel
         </div>
       </div>
 
-      <h3 className="mt-6 text-lg font-semibold text-gray-900 dark:text-white">
-        {title} <span className="font-normal text-gray-500 dark:text-white/45">({matches.length})</span>
+      <h3 className="mt-6 text-lg font-semibold text-fg">
+        {title} <span className="font-normal text-muted">({matches.length})</span>
       </h3>
       <p role="status" className="sr-only">{matches.length} certificates shown</p>
 
@@ -129,7 +129,7 @@ export default function CredentialList({ selection, onSelect }: { selection: Sel
           ))}
         </ul>
       ) : (
-        <p className="mt-4 text-sm text-gray-600 dark:text-white/55">No certificates match &ldquo;{query.trim()}&rdquo;.</p>
+        <p className="mt-4 text-sm text-fg-2">No certificates match &ldquo;{query.trim()}&rdquo;.</p>
       )}
 
       {matches.length > limit && (

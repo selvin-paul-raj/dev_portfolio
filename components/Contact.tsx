@@ -22,11 +22,11 @@ const CHANNELS = [
 ];
 
 const FIELD =
-  "w-full px-4 rounded-xl text-base sm:text-sm bg-gray-50 dark:bg-white/[0.06] border border-black/40 dark:border-white/35 " +
-  "text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-[#8a8a93] " +
+  "w-full px-4 rounded-xl text-base sm:text-sm bg-gray-50 dark:bg-white/[0.06] border border-line-strong" +
+  "text-fg placeholder-gray-500 dark:placeholder-[#8a8a93] " +
   "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#101015] " +
   "transition-colors duration-150";
-const LABEL = "text-sm font-medium text-gray-700 dark:text-white/75";
+const LABEL = "text-sm font-medium text-fg-2";
 
 type Status = { kind: "ok" | "error"; text: string } | null;
 
@@ -48,13 +48,13 @@ function DirectLinks() {
   return (
     <div className="lg:col-span-2 flex flex-col gap-8">
       <div>
-        <h3 className="text-2xl font-semibold leading-tight text-gray-900 dark:text-white">
+        <h3 className="text-2xl font-semibold leading-tight text-fg">
           Send the role, or the problem.
         </h3>
-        <p className="mt-3 text-base leading-relaxed text-gray-600 dark:text-[#c9c9cf]">
+        <p className="mt-3 text-base leading-relaxed text-fg-2">
           Agents, MCP servers, RAG pipelines, or an AI engineering opening. I reply within 24 hours.
         </p>
-        <p className="mt-3 text-sm font-medium text-green-700 dark:text-green-400/85">
+        <p className="mt-3 text-sm font-medium text-ok">
           Open to AI Engineer roles, based in Chennai, India.
         </p>
       </div>
@@ -78,18 +78,18 @@ function DirectLinks() {
               text-gray-600 dark:text-white/65 hover:text-gray-900 dark:hover:text-white hover:border-black/25 dark:hover:border-white/30
               outline-none focus-visible:ring-2 focus-visible:ring-accent transition-colors duration-150"
           >
-            {copied ? <LuCheck size={16} aria-hidden="true" className="text-green-600 dark:text-green-400" /> : <LuCopy size={16} aria-hidden="true" />}
+            {copied ? <LuCheck size={16} aria-hidden="true" className="text-ok" /> : <LuCopy size={16} aria-hidden="true" />}
           </button>
           <span role="status" className="sr-only">{copied ? "Email address copied" : ""}</span>
         </div>
       </div>
 
       {/* Other channels: plain rows, no card */}
-      <ul className="border-t border-black/[0.08] dark:border-white/[0.08]">
+      <ul className="border-t border-line">
         {CHANNELS.map(({ icon: Icon, label, value, href }) => {
           const external = href.startsWith("http");
           return (
-            <li key={label} className="border-b border-black/[0.08] dark:border-white/[0.08]">
+            <li key={label} className="border-b border-line">
               <a
                 href={href}
                 target={external ? "_blank" : undefined}
@@ -98,13 +98,13 @@ function DirectLinks() {
                 className="group grid grid-cols-[1.25rem_5.5rem_minmax(0,1fr)_1rem] items-center gap-3 py-3.5 min-h-[48px]
                   outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent rounded-sm"
               >
-                <Icon size={16} aria-hidden="true" className="text-gray-500 dark:text-white/50 group-hover:text-amber-700 dark:group-hover:text-accent transition-colors duration-150" />
-                <span className="text-sm text-gray-500 dark:text-white/50">{label}</span>
-                <span className="truncate text-sm font-medium text-gray-900 dark:text-white">{value}</span>
+                <Icon size={16} aria-hidden="true" className="text-muted group-hover:text-accent-fg transition-colors duration-150" />
+                <span className="text-sm text-muted">{label}</span>
+                <span className="truncate text-sm font-medium text-fg">{value}</span>
                 <MdArrowOutward
                   size={15}
                   aria-hidden="true"
-                  className="text-gray-400 dark:text-white/35 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-150"
+                  className="text-muted group-hover:text-fg transition-colors duration-150"
                 />
               </a>
             </li>
@@ -121,9 +121,9 @@ function MessageForm() {
   const [status, setStatus] = useState<Status>(null);
 
   return (
-    <div className="lg:col-span-3 bg-white dark:bg-[#101015] border border-black/[0.08] dark:border-white/[0.07] rounded-2xl p-6 sm:p-8">
-      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Send a message</h3>
-      <p className="mt-1 mb-6 text-sm text-gray-600 dark:text-white/55">It goes straight to my inbox.</p>
+    <div className="lg:col-span-3 bg-surface-2 border border-line rounded-2xl p-6 sm:p-8">
+      <h3 className="text-lg font-semibold text-fg">Send a message</h3>
+      <p className="mt-1 mb-6 text-sm text-fg-2">It goes straight to my inbox.</p>
 
       <form
         ref={formRef}
@@ -182,7 +182,7 @@ function MessageForm() {
             <label htmlFor="message" className={LABEL}>
               Message
             </label>
-            <span id="message-count" className="text-xs tabular-nums text-gray-500 dark:text-white/45" aria-live="off">
+            <span id="message-count" className="text-xs tabular-nums text-muted" aria-live="off">
               {messageLength.toLocaleString()} / {CONTACT_LIMITS.messageMax.toLocaleString()}
             </span>
           </div>
@@ -218,8 +218,8 @@ function MessageForm() {
           <p
             role="status"
             className={`min-h-[1.25rem] text-sm ${
-              status?.kind === "error" ? "text-red-700 dark:text-red-300" : "text-green-700 dark:text-green-400/85"
-            }`}
+ status?.kind === "error" ? "text-danger " : "text-ok "
+ }`}
           >
             {status?.text ?? ""}
           </p>

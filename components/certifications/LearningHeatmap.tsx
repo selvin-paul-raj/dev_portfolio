@@ -14,25 +14,25 @@ function shade(c: Cell): string {
   return (ai ? goldSteps : greySteps)[step];
 }
 
-const darkText = (c: Cell) => (c.ai * 2 >= c.total && c.total >= 4 ? "text-[#1a1500]" : "text-gray-900 dark:text-white");
+const darkText = (c: Cell) => (c.ai * 2 >= c.total && c.total >= 4 ? "text-[#1a1500]" : "text-fg");
 
 export default function LearningHeatmap({ selection, onSelect }: { selection: Selection; onSelect: (s: Selection) => void }) {
   return (
-    <div className="rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#0c0c10] p-4 sm:p-6">
+    <div className="rounded-2xl border border-line bg-surface-2 p-4 sm:p-6">
       <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h3 className="text-base font-semibold text-gray-900 dark:text-white">When I learned it</h3>
-          <p className="mt-0.5 text-sm text-gray-600 dark:text-white/55">
+          <h3 className="text-base font-semibold text-fg">When I learned it</h3>
+          <p className="mt-0.5 text-sm text-fg-2">
             Certificates per month. Busiest: {monthLabel(busiest.key)}, {busiest.total}. Pick a month or a year.
           </p>
         </div>
-        <ul aria-label="Legend" className="flex gap-4 text-sm text-gray-600 dark:text-white/60">
+        <ul aria-label="Legend" className="flex gap-4 text-sm text-fg-2">
           <li className="flex items-center gap-1.5"><span aria-hidden="true" className="h-3 w-3 rounded-[3px] bg-amber-400 dark:bg-accent/75" />Mostly AI and agents</li>
           <li className="flex items-center gap-1.5"><span aria-hidden="true" className="h-3 w-3 rounded-[3px] bg-gray-400 dark:bg-white/[0.32]" />Mostly web and other</li>
         </ul>
       </div>
 
-      <p className="mb-2 text-xs text-gray-500 dark:text-white/45 [@media(pointer:fine)]:hidden sm:hidden">Swipe the grid for later months.</p>
+      <p className="mb-2 text-xs text-muted [@media(pointer:fine)]:hidden sm:hidden">Swipe the grid for later months.</p>
       <div className="overflow-x-auto -mx-1 px-1 pb-1">
         <table className="w-full table-fixed min-w-[19rem] [@media(pointer:coarse)]:min-w-[29rem] border-separate border-spacing-[3px] sm:border-spacing-1 text-center">
           <caption className="sr-only">Certificates earned per month, by year</caption>
@@ -40,7 +40,7 @@ export default function LearningHeatmap({ selection, onSelect }: { selection: Se
             <tr>
               <th scope="col" className="w-12"><span className="sr-only">Year</span></th>
               {MONTHS.map((m) => (
-                <th key={m} scope="col" className="text-[11px] sm:text-xs font-normal text-gray-500 dark:text-white/40">
+                <th key={m} scope="col" className="text-[11px] sm:text-xs font-normal text-muted">
                   <span className="sm:hidden">{m[0]}</span>
                   <span className="hidden sm:inline">{m}</span>
                 </th>
@@ -78,8 +78,8 @@ export default function LearningHeatmap({ selection, onSelect }: { selection: Se
                           aria-pressed={on}
                           onClick={() => onSelect(on ? { kind: "featured" } : { kind: "month", key: c.key })}
                           className={`flex h-8 sm:h-9 [@media(pointer:coarse)]:h-11 w-full items-center justify-center rounded-[4px] text-[11px] font-semibold tabular-nums ${shade(c)} ${darkText(c)}
-                            transition-transform duration-150 hover:scale-110 motion-reduce:hover:scale-100 outline-none focus-visible:ring-2 focus-visible:ring-accent
-                            ${on ? "ring-2 ring-gray-900 dark:ring-white ring-offset-1 ring-offset-white dark:ring-offset-[#0c0c10]" : ""}`}
+ transition-transform duration-150 hover:scale-110 motion-reduce:hover:scale-100 outline-none focus-visible:ring-2 focus-visible:ring-accent
+ ${on ? "ring-2 ring-gray-900 dark:ring-white ring-offset-1 ring-offset-white dark:ring-offset-[#0c0c10]" : ""}`}
                         >
                           <span aria-hidden="true" className="hidden sm:inline">{c.total}</span>
                         </button>

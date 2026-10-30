@@ -59,7 +59,7 @@ const SHORTCUT_PILL =
   "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#09090b] " +
   "transition-[color,border-color,background-color] duration-150";
 const SHORTCUT_ICON =
-  "shrink-0 text-gray-500 group-hover:text-amber-700 dark:text-white/45 dark:group-hover:text-accent transition-colors duration-150";
+  "shrink-0 text-muted group-hover:text-accent-fg transition-colors duration-150";
 
 const TECH_BADGES = [
   "LangGraph", "MCP", "RAG", "LangChain", "Python",
@@ -102,8 +102,8 @@ export default function Intro() {
       className="w-full max-w-5xl mx-auto px-0 sm:px-4 mb-16 scroll-mt-[100rem] md:pt-8"
     >
       {/* Mobile-only status pill */}
-      <div className="anim-fade-up anim-d0 lg:hidden flex items-center justify-center gap-2 mb-5 font-mono text-xs text-gray-600 dark:text-white/55">
-        <span className="flex items-center gap-2 bg-black/[0.04] dark:bg-white/[0.05] border border-black/6 dark:border-white/8 rounded-full px-4 py-1.5">
+      <div className="anim-fade-up anim-d0 lg:hidden flex items-center justify-center gap-2 mb-5 font-mono text-xs text-fg-2">
+        <span className="flex items-center gap-2 bg-black/[0.04] dark:bg-white/[0.05] border border-line rounded-full px-4 py-1.5">
           <span className="relative flex h-2 w-2" aria-hidden="true">
             <span className="animate-ping motion-reduce:animate-none absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
@@ -119,42 +119,42 @@ export default function Intro() {
         <div className="w-full lg:w-auto flex-1 min-w-0 flex flex-col items-center lg:items-start text-center lg:text-left">
 
           {/* Desktop status pill */}
-          <div className="anim-fade-up anim-d0 hidden lg:flex items-center gap-2 mb-5 font-mono text-xs text-gray-600 dark:text-white/55 bg-black/[0.04] dark:bg-white/[0.05] border border-black/6 dark:border-white/8 rounded-full px-4 py-1.5">
+          <div className="anim-fade-up anim-d0 hidden lg:flex items-center gap-2 mb-5 font-mono text-xs text-fg-2 bg-black/[0.04] dark:bg-white/[0.05] border border-line rounded-full px-4 py-1.5">
             <span className="relative flex h-2 w-2" aria-hidden="true">
               <span className="animate-ping motion-reduce:animate-none absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
             </span>
             Chennai, India &nbsp;·&nbsp; {time} &nbsp;·&nbsp;
-            <span className="text-green-700 dark:text-green-400/80">Open to AI Engineer roles</span>
+            <span className="text-ok">Open to AI Engineer roles</span>
           </div>
 
           {/* Name */}
-          <h1 className="anim-fade-up anim-d1 text-4xl sm:text-5xl lg:text-[3.6rem] font-bold tracking-tight text-gray-900 dark:text-white leading-[1.08] mb-3">
+          <h1 className="anim-fade-up anim-d1 text-4xl sm:text-5xl lg:text-[3.6rem] font-bold tracking-tight text-fg leading-[1.08] mb-3">
             Selvin{" "}
-            <span className="text-gray-500 dark:text-white/35">PaulRaj K</span>
+            <span className="text-muted">PaulRaj K</span>
             {/* Role — kept inside the H1 so search engines see the role keyword, styled identically to the old sibling <p> */}
-            <span className="anim-fade-up anim-d2 block font-mono text-sm sm:text-[0.9rem] font-normal normal-case tracking-wide text-accent-ink dark:text-accent/65 mt-3">
+            <span className="anim-fade-up anim-d2 block font-mono text-sm sm:text-[0.9rem] font-normal normal-case tracking-wide text-accent-fg mt-3">
               AI Engineer &nbsp;·&nbsp; MCP &nbsp;·&nbsp; Agentic Systems &nbsp;·&nbsp; RAG &nbsp;·&nbsp; LangGraph
             </span>
           </h1>
 
           {/* Mobile inline stats */}
           <div className="anim-fade-up anim-d3 lg:hidden flex flex-wrap items-center justify-center gap-x-2.5 sm:gap-x-3 gap-y-1 mt-1 mb-5 font-mono whitespace-nowrap">
-            <span className="text-lg font-bold text-gray-900 dark:text-white/90 tabular-nums">
+            <span className="text-lg font-bold text-fg tabular-nums">
               <NumberTicker value={_projectCount} />+
             </span>
-            <span className="text-xs uppercase tracking-[0.08em] sm:tracking-[0.15em] text-gray-600 dark:text-white/50">Projects</span>
+            <span className="text-xs uppercase tracking-[0.08em] sm:tracking-[0.15em] text-fg-2">Projects</span>
             <span className="w-px h-3.5 bg-black/10 dark:bg-white/10" />
-            <span className="text-lg font-bold text-gray-900 dark:text-white/90 tabular-nums" suppressHydrationWarning>
+            <span className="text-lg font-bold text-fg tabular-nums" suppressHydrationWarning>
               {_fmtDur(experienceMetrics.workRoleMonths)}
             </span>
-            <span className="text-xs uppercase tracking-[0.08em] sm:tracking-[0.15em] text-gray-600 dark:text-white/50">Full-time</span>
+            <span className="text-xs uppercase tracking-[0.08em] sm:tracking-[0.15em] text-fg-2">Full-time</span>
           </div>
 
           {/* Bio */}
-          <p className="anim-fade-up anim-d3 text-base text-gray-600 dark:text-white/50 leading-relaxed max-w-xl mb-3">
+          <p className="anim-fade-up anim-d3 text-base text-fg-2 leading-relaxed max-w-xl mb-3">
             I build{" "}
-            <span className="text-gray-900 dark:text-white/80 font-medium">
+            <span className="text-fg font-medium">
               AI agents, MCP servers, and LangGraph multi-agent pipelines
             </span>{" "}
             that run in production. Before agents I shipped full-stack MERN and Next.js apps,
@@ -162,9 +162,9 @@ export default function Intro() {
           </p>
 
           {/* Secondary bio — hidden on mobile so the CTAs land above the fold */}
-          <p className="anim-fade-up anim-d4 hidden sm:block text-sm text-gray-500 dark:text-white/55 leading-relaxed max-w-xl mb-7">
+          <p className="anim-fade-up anim-d4 hidden sm:block text-sm text-muted leading-relaxed max-w-xl mb-7">
             At{" "}
-            <span className="text-gray-700 dark:text-white/60 font-medium">Zinnov (Draup)</span>
+            <span className="text-fg-2 font-medium">Zinnov (Draup)</span>
              I built DRI-MAS (Data Request Intelligence Multi-Agent System), a LangGraph multi-agent system that turns plain-English
             requests into validated SQL reports. Analyst turnaround went from hours to under a
             minute. Outside work I publish MCP servers and CLI agents.
@@ -220,7 +220,7 @@ export default function Intro() {
             aria-label="For recruiters"
             className="anim-fade-up anim-d5 -mt-2 mb-7 flex flex-col items-center lg:items-start gap-3"
           >
-            <span className="lg:hidden text-sm text-green-700 dark:text-green-400/80 font-medium">Open to AI Engineer roles</span>
+            <span className="lg:hidden text-sm text-ok font-medium">Open to AI Engineer roles</span>
             <ul className="flex flex-wrap justify-center lg:justify-start gap-2">
               {RECRUITER_LINKS.map(({ href, label, title, Icon }) => (
                 <li key={href}>
@@ -237,7 +237,7 @@ export default function Intro() {
                   onClick={() => window.dispatchEvent(new Event("open-command-palette"))}
                   className={`${SHORTCUT_PILL} border-dashed`}
                 >
-                  <kbd className="font-mono text-xs leading-none px-1.5 py-1 rounded border border-black/15 dark:border-white/20 text-gray-600 dark:text-white/60">
+                  <kbd className="font-mono text-xs leading-none px-1.5 py-1 rounded border border-line-strong text-fg-2">
                     ⌘K
                   </kbd>
                   Everything else
@@ -279,7 +279,7 @@ export default function Intro() {
 
       {/* Tech stack badges */}
       <div className="anim-fade-up anim-d8 hidden lg:flex flex-wrap justify-start gap-2 mb-4">
-        <span className="font-mono text-xs text-gray-500 dark:text-white/50 self-center mr-1 tracking-widest uppercase">
+        <span className="font-mono text-xs text-muted self-center mr-1 tracking-widest uppercase">
           Core stack
         </span>
         {TECH_BADGES.map((tech) => (

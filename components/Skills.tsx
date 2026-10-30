@@ -46,18 +46,18 @@ function LayerRow({ layer, index }: { layer: (typeof layers)[number]; index: num
           <Icon size={16} />
         </span>
         <div>
-          <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+          <h3 className="text-base font-semibold text-fg">
             <span className="sr-only">Layer {index + 1}: </span>
             {layer.name}
           </h3>
-          <p className="mt-0.5 text-sm text-gray-600 dark:text-white/55">{layer.job}</p>
+          <p className="mt-0.5 text-sm text-fg-2">{layer.job}</p>
         </div>
       </div>
       <ul aria-label={`${layer.name} skills`} className="flex flex-wrap content-start gap-2">
         {layer.skills.map((skill) => (
           <li
             key={skill}
-            className="rounded-md border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-white/[0.03] px-2.5 py-1 text-sm text-gray-800 dark:text-[#e4e4e7]"
+            className="rounded-md border border-line bg-white dark:bg-white/[0.03] px-2.5 py-1 text-sm text-fg"
           >
             {skill}
           </li>
@@ -77,7 +77,7 @@ export default function Skills() {
       </SectionHeading>
 
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_9rem] gap-4">
-        <ol aria-label="Layers, top to bottom" className="rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-gray-50/60 dark:bg-[#0c0c10] overflow-hidden">
+        <ol aria-label="Layers, top to bottom" className="rounded-2xl border border-line bg-surface-2 overflow-hidden">
           {layers.map((layer, i) => (
             <LayerRow key={layer.name} layer={layer} index={i} />
           ))}
@@ -91,14 +91,14 @@ export default function Skills() {
               flex flex-col gap-3"
           >
             <div>
-              <h3 id="skills-languages" className="text-base font-semibold text-gray-900 dark:text-white">Languages</h3>
-              <p className="mt-0.5 text-sm text-gray-600 dark:text-white/55">Across every layer</p>
+              <h3 id="skills-languages" className="text-base font-semibold text-fg">Languages</h3>
+              <p className="mt-0.5 text-sm text-fg-2">Across every layer</p>
             </div>
             <ul className="flex flex-wrap lg:flex-col gap-2">
               {languages.map((lang) => (
                 <li
                   key={lang}
-                  className="rounded-md border border-amber-500/30 dark:border-accent/25 bg-amber-50/60 dark:bg-accent/[0.05] px-2.5 py-1 font-mono text-sm text-gray-900 dark:text-white/90"
+                  className="rounded-md border border-amber-500/30 dark:border-accent/25 bg-amber-50/60 dark:bg-accent/[0.05] px-2.5 py-1 font-mono text-sm text-fg"
                 >
                   {lang}
                 </li>

@@ -15,7 +15,7 @@ const Header = () => {
   const onHome = usePathname() === "/";
 
   return (
-    <header className="z-[999] md:border-r border-black/20 fixed bottom-0 border-t left-0 right-0 w-full h-16 md:w-16 md:h-dvh dark:border-white/20">
+    <header className="z-[999] md:border-r border-line-strong fixed bottom-0 border-t left-0 right-0 w-full h-16 md:w-16 md:h-dvh ">
       <nav aria-label="Primary" className="bg-white/60 md:bg-transparent bg-opacity-80 shadow-lg shadow-black/[0.03] backdrop-blur-[0.5rem] text-gray-800 h-full w-full px-4 md:px-1.5 py-2 flex items-center justify-center dark:bg-black/50">
         <ul className="w-full flex justify-between md:justify-center flex-row md:flex-col gap-1 md:gap-4 font-bold text-gray-500 h-full">
           {links.map((link) => (
@@ -30,7 +30,7 @@ const Header = () => {
                 className={clsx(
                   "group flex w-full h-11 [@media(pointer:fine)]:h-auto items-center justify-center p-1 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-accent",
                   {
-                    "text-gray-950 dark:text-gray-50":
+                    "text-fg":
                       onHome && activeSection === link.name,
                   }
                 )}

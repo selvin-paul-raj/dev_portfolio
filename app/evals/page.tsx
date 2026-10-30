@@ -24,7 +24,7 @@ interface Suite {
 
 function Status({ pass }: { pass: boolean }) {
   return (
-    <span className={`inline-flex items-center gap-1 font-mono text-xs tracking-wide ${pass ? "text-green-700 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
+    <span className={`inline-flex items-center gap-1 font-mono text-xs tracking-wide ${pass ? "text-ok " : "text-danger "}`}>
       <span aria-hidden="true">{pass ? "✓" : "✕"}</span>
       {pass ? "PASS" : "FAIL"}
     </span>
@@ -48,17 +48,17 @@ function CaseStrip({ cases, size = "sm" }: { cases: Suite["cases"]; size?: "sm" 
 }
 
 function Eyebrow({ children }: { children: ReactNode }) {
-  return <p className="font-mono text-xs uppercase tracking-[0.14em] text-gray-500 dark:text-white/50">{children}</p>;
+  return <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted">{children}</p>;
 }
 
 function SectionTitle({ index, children, aside }: { index: string; children: ReactNode; aside?: ReactNode }) {
   return (
-    <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-black/10 dark:border-white/10 pb-3 mb-6">
-      <h2 className="flex items-baseline gap-3 text-xl sm:text-2xl font-semibold tracking-tight text-gray-950 dark:text-white">
-        <span className="font-mono text-xs tabular-nums text-accent-ink dark:text-accent">{index}</span>
+    <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b border-line pb-3 mb-6">
+      <h2 className="flex items-baseline gap-3 text-xl sm:text-2xl font-semibold tracking-tight text-fg">
+        <span className="font-mono text-xs tabular-nums text-accent-fg">{index}</span>
         {children}
       </h2>
-      {aside && <span className="text-sm text-gray-500 dark:text-white/50">{aside}</span>}
+      {aside && <span className="text-sm text-muted">{aside}</span>}
     </div>
   );
 }
@@ -68,14 +68,14 @@ function CaseTable({ head, rows }: { head: string[]; rows: Array<{ key: string; 
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="text-left font-mono text-xs uppercase tracking-[0.1em] text-gray-500 dark:text-white/45">
+          <tr className="text-left font-mono text-xs uppercase tracking-[0.1em] text-muted">
             {head.map((h) => <th key={h} className="py-2 pr-4 font-normal">{h}</th>)}
             <th className="py-2 font-normal text-right">Result</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((r) => (
-            <tr key={r.key} className="border-t border-black/6 dark:border-white/8 text-gray-800 dark:text-white/75">
+            <tr key={r.key} className="border-t border-line text-fg">
               {r.cells.map((c, i) => <td key={i} className="py-2.5 pr-4 align-baseline">{c}</td>)}
               <td className="py-2.5 text-right align-baseline whitespace-nowrap"><Status pass={r.pass} /></td>
             </tr>
@@ -88,7 +88,7 @@ function CaseTable({ head, rows }: { head: string[]; rows: Array<{ key: string; 
 
 function Disclosure({ summary, children }: { summary: string; children: ReactNode }) {
   return (
-    <details className="group mt-6 rounded-xl border border-black/8 dark:border-white/10 [&_summary::-webkit-details-marker]:hidden">
+    <details className="group mt-6 rounded-xl border border-line [&_summary::-webkit-details-marker]:hidden">
       <summary className="flex cursor-pointer items-center justify-between gap-4 px-4 py-3 text-sm text-gray-700 dark:text-white/70 hover:text-gray-950 dark:hover:text-white
         outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-xl">
         {summary}
@@ -180,10 +180,10 @@ export default function EvalsPage() {
     <main id="content" className="w-full max-w-5xl mx-auto px-4 pt-14 pb-28 md:pl-24 md:pr-8">
       <header className="mb-14 max-w-2xl">
         <Eyebrow>Evals</Eyebrow>
-        <h1 className="mt-4 mb-5 text-[clamp(2.25rem,1.6rem+3vw,3.75rem)] font-semibold tracking-[-0.03em] leading-[1.02] text-gray-950 dark:text-white">
+        <h1 className="mt-4 mb-5 text-[clamp(2.25rem,1.6rem+3vw,3.75rem)] font-semibold tracking-[-0.03em] leading-[1.02] text-fg">
           Measured, failures included
         </h1>
-        <p className="text-lg leading-relaxed text-gray-600 dark:text-white/65">
+        <p className="text-lg leading-relaxed text-fg-2">
           Every AI feature on this site ships with a test set. These are the latest results for{" "}
           <Link href="/ask" className="underline decoration-accent/60 underline-offset-2 hover:decoration-accent">Ask Selvin</Link>, the{" "}
           <Link href="/fit" className="underline decoration-accent/60 underline-offset-2 hover:decoration-accent">fit check</Link>, and the{" "}
@@ -200,8 +200,8 @@ export default function EvalsPage() {
           <div>
             <Eyebrow>Cases passing</Eyebrow>
             <p className="mt-2 flex items-baseline gap-3">
-              <span className="text-6xl sm:text-7xl font-semibold tracking-[-0.04em] tabular-nums text-gray-950 dark:text-white">{passed}</span>
-              <span className="text-2xl tabular-nums text-gray-400 dark:text-white/40">/ {allCases.length}</span>
+              <span className="text-6xl sm:text-7xl font-semibold tracking-[-0.04em] tabular-nums text-fg">{passed}</span>
+              <span className="text-2xl tabular-nums text-muted">/ {allCases.length}</span>
             </p>
           </div>
           <dl className="grid grid-cols-3 gap-6 sm:gap-10 text-right">
@@ -211,8 +211,8 @@ export default function EvalsPage() {
               ["Indexed docs", String(evals.corpusDocs)],
             ].map(([k, v]) => (
               <div key={k}>
-                <dt className="font-mono text-xs uppercase tracking-[0.12em] text-gray-500 dark:text-white/45">{k}</dt>
-                <dd className="mt-1 text-2xl font-semibold tabular-nums text-gray-900 dark:text-white">{v}</dd>
+                <dt className="font-mono text-xs uppercase tracking-[0.12em] text-muted">{k}</dt>
+                <dd className="mt-1 text-2xl font-semibold tabular-nums text-fg">{v}</dd>
               </div>
             ))}
           </dl>
@@ -220,7 +220,7 @@ export default function EvalsPage() {
         <div className="mt-6">
           <CaseStrip cases={allCases} size="lg" />
         </div>
-        <p className="mt-4 font-mono text-xs text-gray-500 dark:text-white/45">
+        <p className="mt-4 font-mono text-xs text-muted">
           Generated {generated}
           {gate && <> · gate {gate.model}</>}
           {llm?.model && <> · answers {llm.model}</>}
@@ -232,24 +232,24 @@ export default function EvalsPage() {
         <SectionTitle index={next()} aside="Each cell is one test case">
           <span id="suites">Suites</span>
         </SectionTitle>
-        <ul className="grid gap-px overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 bg-black/10 dark:bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-px overflow-hidden rounded-2xl border border-line bg-black/10 dark:bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
           {suites.map((s) => (
-            <li key={s.id} className="flex flex-col gap-4 bg-[#FAFAF9] dark:bg-[#09090b] p-5">
+            <li key={s.id} className="flex flex-col gap-4 bg-surface p-5">
               <div className="flex items-start justify-between gap-3">
-                <a href={`#${s.id}`} className="inline-flex items-center min-h-11 [@media(pointer:fine)]:min-h-0 text-sm font-medium text-gray-900 dark:text-white hover:text-accent-ink dark:hover:text-accent">
+                <a href={`#${s.id}`} className="inline-flex items-center min-h-11 [@media(pointer:fine)]:min-h-0 text-sm font-medium text-fg hover:text-accent-fg">
                   {s.label}
                 </a>
-                <span className="shrink-0 rounded-full border border-black/10 dark:border-white/15 px-2 py-0.5 font-mono text-xs uppercase tracking-[0.1em] text-gray-500 dark:text-white/50">
+                <span className="shrink-0 rounded-full border border-line px-2 py-0.5 font-mono text-xs uppercase tracking-[0.1em] text-muted">
                   {s.method}
                 </span>
               </div>
               <p className="flex items-baseline gap-2">
-                <span className="text-4xl font-semibold tracking-tight tabular-nums text-gray-950 dark:text-white">{s.value}</span>
-                <span className="text-xs tabular-nums text-gray-500 dark:text-white/45">
+                <span className="text-4xl font-semibold tracking-tight tabular-nums text-fg">{s.value}</span>
+                <span className="text-xs tabular-nums text-muted">
                   {s.cases.filter((c) => c.pass).length}/{s.cases.length}
                 </span>
               </p>
-              <p className="text-sm leading-relaxed text-gray-600 dark:text-white/60">{s.measures}</p>
+              <p className="text-sm leading-relaxed text-fg-2">{s.measures}</p>
               <div className="mt-auto"><CaseStrip cases={s.cases} /></div>
             </li>
           ))}
@@ -261,14 +261,14 @@ export default function EvalsPage() {
         <SectionTitle index={next()} aside={`hit@${retrieval.k} ${pct(retrieval.hitAtK)} · MRR ${retrieval.mrr.toFixed(3)}`}>
           Retrieval
         </SectionTitle>
-        <p className="max-w-2xl text-gray-600 dark:text-white/65 leading-relaxed">
+        <p className="max-w-2xl text-fg-2 leading-relaxed">
           BM25 over the portfolio data. Each golden question names the source that should come back; the rank is where it landed.
         </p>
         <div className="mt-6 grid grid-cols-4 gap-3 max-w-xl">
           {[...rankCounts.map((n, i) => ({ k: `Rank ${i + 1}`, n })), { k: "Missed", n: misses }].map(({ k, n }) => (
-            <div key={k} className="rounded-xl border border-black/8 dark:border-white/10 p-3">
-              <p className="font-mono text-xs uppercase tracking-[0.1em] text-gray-500 dark:text-white/45">{k}</p>
-              <p className={`mt-1 text-2xl font-semibold tabular-nums ${k === "Missed" && n > 0 ? "text-red-600 dark:text-red-400" : "text-gray-950 dark:text-white"}`}>{n}</p>
+            <div key={k} className="rounded-xl border border-line p-3">
+              <p className="font-mono text-xs uppercase tracking-[0.1em] text-muted">{k}</p>
+              <p className={`mt-1 text-2xl font-semibold tabular-nums ${k === "Missed" && n > 0 ? "text-danger " : "text-fg "}`}>{n}</p>
             </div>
           ))}
         </div>
@@ -299,7 +299,7 @@ export default function EvalsPage() {
             Safety gate
           </SectionTitle>
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] items-start">
-            <div className="flex flex-col gap-4 text-gray-600 dark:text-white/65 leading-relaxed">
+            <div className="flex flex-col gap-4 text-fg-2 leading-relaxed">
               <p>
                 Before any LLM call, a TypeSafe decision model returns two calibrated probabilities: is this about Selvin, and is it an
                 injection attempt. A question is answered only when the first is at least 0.5 and the second is below it.
@@ -310,7 +310,7 @@ export default function EvalsPage() {
                 {gate.cases.filter((c) => c.kind === "injection").length} injection attempts, which must not.
               </p>
             </div>
-            <div className="rounded-2xl border border-black/10 dark:border-white/10 p-4 sm:p-5">
+            <div className="rounded-2xl border border-line p-4 sm:p-5">
               <GateScatter cases={gate.cases} />
             </div>
           </div>
@@ -337,8 +337,8 @@ export default function EvalsPage() {
         <SectionTitle index={next()} aside="Saying no is part of the job">Refusals</SectionTitle>
         <div className="grid gap-10 lg:grid-cols-2">
           <div>
-            <h3 className="mb-1 text-base font-medium text-gray-900 dark:text-white">Off-topic refusal · {pct(offTopic.passRate)}</h3>
-            <p className="mb-4 text-sm text-gray-600 dark:text-white/60">With no relevant evidence, Ask Selvin refuses instead of guessing.</p>
+            <h3 className="mb-1 text-base font-medium text-fg">Off-topic refusal · {pct(offTopic.passRate)}</h3>
+            <p className="mb-4 text-sm text-fg-2">With no relevant evidence, Ask Selvin refuses instead of guessing.</p>
             <CaseTable
               head={["Question"]}
               rows={offTopic.cases.map((c) => ({ key: c.q, pass: c.pass, cells: [c.q] }))}
@@ -346,8 +346,8 @@ export default function EvalsPage() {
           </div>
           {scope && (
             <div id="scope" className="scroll-mt-20">
-              <h3 className="mb-1 text-base font-medium text-gray-900 dark:text-white">Free-chat block · {pct(scope.passRate)}</h3>
-              <p className="mb-4 text-sm text-gray-600 dark:text-white/60">The challenge bot is not a general assistant ({scope.source}).</p>
+              <h3 className="mb-1 text-base font-medium text-fg">Free-chat block · {pct(scope.passRate)}</h3>
+              <p className="mb-4 text-sm text-fg-2">The challenge bot is not a general assistant ({scope.source}).</p>
               <CaseTable
                 head={["Attempt", "Kind"]}
                 rows={scope.cases.map((c) => ({
@@ -364,21 +364,21 @@ export default function EvalsPage() {
       {/* Fit */}
       <section id="fit" className="mb-20 scroll-mt-20">
         <SectionTitle index={next()} aside={`${pct(fit.passRate)} · no LLM`}>Fit check</SectionTitle>
-        <p className="max-w-2xl mb-6 text-gray-600 dark:text-white/65 leading-relaxed">
+        <p className="max-w-2xl mb-6 text-fg-2 leading-relaxed">
           Each labelled job description must match the required requirements, report the required gaps, and back every match with cited evidence.
         </p>
         <ul className="grid gap-3 sm:grid-cols-3">
           {fit.cases.map((c) => (
-            <li key={c.name} className="rounded-xl border border-black/8 dark:border-white/10 p-4">
+            <li key={c.name} className="rounded-xl border border-line p-4">
               <div className="flex items-start justify-between gap-3">
-                <span className="text-sm text-gray-800 dark:text-white/80">{c.name}</span>
+                <span className="text-sm text-fg">{c.name}</span>
                 <Status pass={c.pass} />
               </div>
-              <p className="mt-3 text-3xl font-semibold tabular-nums text-gray-950 dark:text-white">{c.score}</p>
+              <p className="mt-3 text-3xl font-semibold tabular-nums text-fg">{c.score}</p>
               <div className="mt-2 h-1.5 rounded-full bg-black/8 dark:bg-white/10 overflow-hidden">
                 <div className="h-full rounded-full bg-accent" style={{ width: `${c.score}%` }} />
               </div>
-              <p className="mt-2 font-mono text-xs uppercase tracking-[0.1em] text-gray-500 dark:text-white/45">fit score</p>
+              <p className="mt-2 font-mono text-xs uppercase tracking-[0.1em] text-muted">fit score</p>
             </li>
           ))}
         </ul>
@@ -388,7 +388,7 @@ export default function EvalsPage() {
       {llm && (
         <section id="llm" className="mb-20 scroll-mt-20">
           <SectionTitle index={next()} aside={`${pct(llm.passRate)} · ${llm.model ?? "LLM"}`}>Live answers</SectionTitle>
-          <p className="max-w-2xl text-gray-600 dark:text-white/65 leading-relaxed">
+          <p className="max-w-2xl text-fg-2 leading-relaxed">
             The golden questions go through the real answer path. An answer passes only if it cites a source and its claims are grounded
             in that source. Model output varies between runs, so this is the one number that can move by a case without any code change.
           </p>
@@ -412,15 +412,15 @@ export default function EvalsPage() {
       {/* Method */}
       <section aria-labelledby="method">
         <SectionTitle index={next()}><span id="method">How it runs</span></SectionTitle>
-        <ol className="grid gap-px overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 bg-black/10 dark:bg-white/10 sm:grid-cols-3">
+        <ol className="grid gap-px overflow-hidden rounded-2xl border border-line bg-black/10 dark:bg-white/10 sm:grid-cols-3">
           {[
             ["Deterministic", "Retrieval, off-topic refusal, and fit check are plain code over the same data the site serves. Free, and identical on every run."],
             ["Decision model", "The safety gate and free-chat block call TypeSafe. Without a key they fall back to keyword rules, and the source is shown."],
             ["Live LLM", "Answer grading runs only with --llm and an OpenAI-compatible key, against the same prompt and citations as /ask."],
           ].map(([h, b]) => (
-            <li key={h} className="bg-[#FAFAF9] dark:bg-[#09090b] p-5">
-              <p className="text-sm font-medium text-gray-900 dark:text-white">{h}</p>
-              <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-white/60">{b}</p>
+            <li key={h} className="bg-surface p-5">
+              <p className="text-sm font-medium text-fg">{h}</p>
+              <p className="mt-2 text-sm leading-relaxed text-fg-2">{b}</p>
             </li>
           ))}
         </ol>

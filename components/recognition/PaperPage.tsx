@@ -22,37 +22,37 @@ const SERIF = "var(--font-instrument-serif), ui-serif, Georgia, serif";
 export default function PaperPage({ pub }: { pub: Publication }) {
   const [y, m] = pub.publication_date.split("-");
   return (
-    <article className="relative h-full rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-[#fbfaf6] dark:bg-[#121210] p-6 sm:p-8 shadow-[0_1px_0_rgba(0,0,0,0.03)]">
+    <article className="relative h-full rounded-2xl border border-line bg-[#fbfaf6] dark:bg-[#121210] p-6 sm:p-8 shadow-[0_1px_0_rgba(0,0,0,0.03)]">
       {/* Running head, as on a journal page */}
-      <header className="flex items-start justify-between gap-4 border-b border-black/15 dark:border-white/15 pb-3">
-        <p className="text-xs leading-snug text-gray-600 dark:text-white/55">
-          <span className="block font-semibold text-gray-900 dark:text-white">{pub.publisher}</span>
+      <header className="flex items-start justify-between gap-4 border-b border-line-strong pb-3">
+        <p className="text-xs leading-snug text-fg-2">
+          <span className="block font-semibold text-fg">{pub.publisher}</span>
           {pub.publisherFull}
         </p>
-        <p className="shrink-0 text-right text-xs text-gray-600 dark:text-white/55">
+        <p className="shrink-0 text-right text-xs text-fg-2">
           {MONTHS[+m - 1]} {y}
-          <span className="block font-medium text-emerald-700 dark:text-emerald-400">{pub.status}</span>
+          <span className="block font-medium text-ok">{pub.status}</span>
         </p>
       </header>
 
-      <h3 className="mt-6 max-w-[34ch] text-[1.6rem] leading-[1.2] text-gray-900 dark:text-white" style={{ fontFamily: SERIF }}>
+      <h3 className="mt-6 max-w-[34ch] text-[1.6rem] leading-[1.2] text-fg" style={{ fontFamily: SERIF }}>
         {pub.title}
       </h3>
 
       <section aria-label="Abstract" className="mt-6">
-        <h4 className="text-sm font-semibold text-gray-900 dark:text-white">Abstract</h4>
-        <p className="mt-2 text-[15px] leading-relaxed text-gray-700 dark:text-[#d4d4d8] max-w-[72ch] sm:[text-align:justify] [hyphens:auto]">
+        <h4 className="text-sm font-semibold text-fg">Abstract</h4>
+        <p className="mt-2 text-[15px] leading-relaxed text-fg-2 max-w-[72ch] sm:[text-align:justify] [hyphens:auto]">
           {pub.description} {pub.abstract}
         </p>
       </section>
 
-      <p className="mt-5 text-sm leading-relaxed text-gray-700 dark:text-white/75">
-        <span className="font-semibold text-gray-900 dark:text-white">Keywords: </span>
+      <p className="mt-5 text-sm leading-relaxed text-fg-2">
+        <span className="font-semibold text-fg">Keywords: </span>
         {pub.technologies.join(", ")}
       </p>
 
-      <footer className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-black/10 dark:border-white/10 pt-3">
-        <p className="font-mono text-[11px] text-gray-500 dark:text-white/40 break-all">Paper ID {pub.paperId}</p>
+      <footer className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3">
+        <p className="font-mono text-[11px] text-muted break-all">Paper ID {pub.paperId}</p>
         {pub.research_link && (
           <a
             href={pub.research_link}

@@ -56,22 +56,22 @@ function CommitDetail({ entry }: { entry: Entry }) {
   const { bullets, stack } = parseDescription(entry.description);
   return (
     <div className="pb-5 pt-1 font-mono text-[13px] leading-relaxed">
-      <p className="text-gray-500 dark:text-white/50">Author: Selvin PaulRaj K</p>
-      <p className="text-gray-500 dark:text-white/50" suppressHydrationWarning>
+      <p className="text-muted">Author: Selvin PaulRaj K</p>
+      <p className="text-muted" suppressHydrationWarning>
         Date:   {entry.dateStart} to {entry.dateEnd} ({entry.duration})
       </p>
-      {entry.location && <p className="text-gray-500 dark:text-white/50">Where:  {entry.location}</p>}
+      {entry.location && <p className="text-muted">Where:  {entry.location}</p>}
       {bullets.length > 0 && (
         <ul className="mt-3 space-y-1.5 font-sans text-sm">
           {bullets.map((b) => (
-            <li key={b} className="flex gap-2.5 text-gray-700 dark:text-[#d4d4d8]">
-              <span aria-hidden="true" className="font-mono text-emerald-600 dark:text-emerald-400">+</span>
+            <li key={b} className="flex gap-2.5 text-fg-2">
+              <span aria-hidden="true" className="font-mono text-ok">+</span>
               <span className="max-w-[72ch]">{b}</span>
             </li>
           ))}
         </ul>
       )}
-      {stack.length > 0 && <p className="mt-3 text-gray-500 dark:text-white/45">stack: {stack.join(", ")}</p>}
+      {stack.length > 0 && <p className="mt-3 text-muted">stack: {stack.join(", ")}</p>}
     </div>
   );
 }
@@ -83,7 +83,7 @@ function CommitRow({ entry, row, open, onToggle }: { entry: Entry; row: GraphRow
   return (
     <li className="flex gap-3">
       <GraphCell row={row} />
-      <div className="min-w-0 flex-1 border-b border-black/[0.06] dark:border-white/[0.06]">
+      <div className="min-w-0 flex-1 border-b border-line">
         <button
           type="button"
           aria-expanded={open}
@@ -92,14 +92,14 @@ function CommitRow({ entry, row, open, onToggle }: { entry: Entry; row: GraphRow
           className="group flex w-full min-h-11 flex-wrap items-baseline gap-x-3 gap-y-1 py-3 text-left rounded-sm
             outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
         >
-          <span aria-hidden="true" className="font-mono text-[13px] text-amber-700 dark:text-accent/90">{shortHash(entry)}</span>
+          <span aria-hidden="true" className="font-mono text-[13px] text-accent-fg">{shortHash(entry)}</span>
           {ref && <span className={`font-mono text-[13px] ${lane.text}`}>({ref})</span>}
-          <span className="font-mono text-[13px] text-gray-500 dark:text-white/45">{entry.dateStart}</span>
-          <span className="basis-full sm:basis-auto text-[15px] font-semibold text-gray-900 dark:text-white group-hover:underline underline-offset-4 decoration-black/20 dark:decoration-white/25">
+          <span className="font-mono text-[13px] text-muted">{entry.dateStart}</span>
+          <span className="basis-full sm:basis-auto text-[15px] font-semibold text-fg group-hover:underline underline-offset-4 decoration-black/20 dark:decoration-white/25">
             {entry.title}
           </span>
-          <span className="text-sm text-gray-600 dark:text-white/60">{entry.company}</span>
-          <span aria-hidden="true" className="ml-auto font-mono text-xs text-gray-400 dark:text-white/35">{open ? "−" : "+"}</span>
+          <span className="text-sm text-fg-2">{entry.company}</span>
+          <span aria-hidden="true" className="ml-auto font-mono text-xs text-muted">{open ? "−" : "+"}</span>
         </button>
         <div id={panelId} hidden={!open}>
           <CommitDetail entry={entry} />
@@ -127,15 +127,15 @@ export default function Experience() {
         Experience
       </SectionHeading>
 
-      <div className="rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#0c0c10] overflow-hidden">
+      <div className="rounded-2xl border border-line bg-surface-2 overflow-hidden">
         {/* Terminal header: the command, then a legend of the branches */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-black/[0.06] dark:border-white/[0.06] px-4 sm:px-6 py-3">
-          <p className="font-mono text-[13px] text-gray-700 dark:text-white/75">
-            <span aria-hidden="true" className="text-gray-400 dark:text-white/35">$ </span>git log --graph career
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 sm:px-6 py-3">
+          <p className="font-mono text-[13px] text-fg-2">
+            <span aria-hidden="true" className="text-muted">$ </span>git log --graph career
           </p>
           <ul aria-label="Branches" className="flex flex-wrap gap-x-4 gap-y-1">
             {LANES.map((l) => (
-              <li key={l.name} className="flex items-center gap-1.5 font-mono text-[13px] text-gray-600 dark:text-white/60">
+              <li key={l.name} className="flex items-center gap-1.5 font-mono text-[13px] text-fg-2">
                 <span aria-hidden="true" className={`h-2 w-2 rounded-full ${l.dot}`} />
                 {l.name}
               </li>
@@ -150,18 +150,18 @@ export default function Experience() {
         </ol>
 
         {/* Like `git shortlog -s`: totals computed from the entries */}
-        <dl className="flex flex-wrap gap-x-8 gap-y-2 border-t border-black/[0.06] dark:border-white/[0.06] px-4 sm:px-6 py-4 font-mono text-[13px]">
+        <dl className="flex flex-wrap gap-x-8 gap-y-2 border-t border-line px-4 sm:px-6 py-4 font-mono text-[13px]">
           <div className="flex gap-2">
-            <dt className="text-gray-500 dark:text-white/45">full-time</dt>
-            <dd className="m-0 text-gray-900 dark:text-white" suppressHydrationWarning>{fmtMonths(experienceMetrics.workRoleMonths)}</dd>
+            <dt className="text-muted">full-time</dt>
+            <dd className="m-0 text-fg" suppressHydrationWarning>{fmtMonths(experienceMetrics.workRoleMonths)}</dd>
           </div>
           <div className="flex gap-2">
-            <dt className="text-gray-500 dark:text-white/45">internships</dt>
-            <dd className="m-0 text-gray-900 dark:text-white" suppressHydrationWarning>{fmtMonths(experienceMetrics.internMonths)}</dd>
+            <dt className="text-muted">internships</dt>
+            <dd className="m-0 text-fg" suppressHydrationWarning>{fmtMonths(experienceMetrics.internMonths)}</dd>
           </div>
           <div className="flex gap-2">
-            <dt className="text-gray-500 dark:text-white/45">commits</dt>
-            <dd className="m-0 text-gray-900 dark:text-white">{commits.length}</dd>
+            <dt className="text-muted">commits</dt>
+            <dd className="m-0 text-fg">{commits.length}</dd>
           </div>
         </dl>
       </div>

@@ -25,8 +25,8 @@ const STATS = [
   { value: certificationsData.length, label: "Certificates", format: String },
 ];
 
-const STRONG = "font-semibold text-gray-900 dark:text-white";
-const BODY = "text-base leading-[1.7] text-gray-600 dark:text-[#c9c9cf] max-w-[65ch]";
+const STRONG = "font-semibold text-fg";
+const BODY = "text-base leading-[1.7] text-fg-2 max-w-[65ch]";
 
 export default function About() {
   const { ref } = useSectionInView("About");
@@ -39,7 +39,7 @@ export default function About() {
         {/* Left: the claim, then the story behind it */}
         <div>
           <blockquote
-            className="mb-8 text-[clamp(1.5rem,1.2rem+1vw,1.875rem)] leading-[1.3] text-gray-900 dark:text-white"
+            className="mb-8 text-[clamp(1.5rem,1.2rem+1vw,1.875rem)] leading-[1.3] text-fg"
             style={{ fontFamily: SERIF, fontStyle: "italic" }}
           >
             &ldquo;My agent pipeline took analyst turnaround from hours to under a minute.&rdquo;
@@ -52,7 +52,7 @@ export default function About() {
               <strong className={STRONG}>B.Tech in Information Technology</strong>.
             </p>
             <p className={BODY}>
-              I specialise in <span className="font-semibold text-amber-700 dark:text-accent">agentic AI</span>: LangGraph
+              I specialise in <span className="font-semibold text-accent-fg">agentic AI</span>: LangGraph
               multi&#8209;agent pipelines, MCP servers, RAG systems and LLM&#8209;powered automation. I test them like
               production code, with test suites, retrieval metrics and red&#8209;team cases, and the full&#8209;stack side
               (Next.js, React, Node.js, Python) lets me ship the API and interface around the agent too.
@@ -65,22 +65,22 @@ export default function About() {
             </p>
           </div>
 
-          <p className="mt-8 text-sm text-gray-600 dark:text-[#a1a1aa]">
-            <span className="font-medium text-green-700 dark:text-green-400/85">Open to AI Engineer roles.</span>{" "}
+          <p className="mt-8 text-sm text-fg-2">
+            <span className="font-medium text-ok">Open to AI Engineer roles.</span>{" "}
             Chennai, India (GMT+5:30).
           </p>
 
           <div className="mt-8 flex flex-col gap-5">
-          <dl className="grid grid-cols-2 border border-black/[0.08] dark:border-white/[0.07] rounded-[14px] overflow-hidden bg-gray-50 dark:bg-[#101015]">
+          <dl className="grid grid-cols-2 border border-line rounded-[14px] overflow-hidden bg-surface-2">
               {STATS.map(({ value, label, format }, i) => (
                 <div
                   key={label}
                   className={`min-w-0 px-4 sm:px-5 py-4 flex flex-col-reverse gap-1.5
-                    ${i % 2 === 1 ? "border-l border-black/[0.08] dark:border-white/[0.07]" : ""}
-                    ${i >= 2 ? "border-t border-black/[0.08] dark:border-white/[0.07]" : ""}`}
+ ${i % 2 === 1 ? "border-l border-line " : ""}
+ ${i >= 2 ? "border-t border-line " : ""}`}
                 >
-                  <dt className="text-sm text-gray-600 dark:text-[#a1a1aa]">{label}</dt>
-                  <dd className="m-0 whitespace-nowrap text-2xl sm:text-[28px] font-semibold leading-none tracking-[-0.02em] tabular-nums text-gray-900 dark:text-[#ededee]">
+                  <dt className="text-sm text-fg-2">{label}</dt>
+                  <dd className="m-0 whitespace-nowrap text-2xl sm:text-[28px] font-semibold leading-none tracking-[-0.02em] tabular-nums text-fg">
                     <NumberTicker value={value} format={format} duration={1.6} className="!text-left" />
                   </dd>
                 </div>
@@ -88,12 +88,12 @@ export default function About() {
             </dl>
 
             <div className="flex flex-col gap-2.5">
-              <span className="text-sm text-gray-600 dark:text-[#a1a1aa]">Working with now</span>
+              <span className="text-sm text-fg-2">Working with now</span>
               <ul className="flex flex-wrap gap-2">
                 {STACK_NOW.map((tech) => (
                   <li
                     key={tech}
-                    className="font-mono text-xs text-gray-700 dark:text-[#d8d8de] px-2.5 py-1 border border-black/[0.08] dark:border-white/[0.07] rounded-full bg-white dark:bg-white/[0.015]"
+                    className="font-mono text-xs text-fg-2 px-2.5 py-1 border border-line rounded-full bg-white dark:bg-white/[0.015]"
                   >
                     {tech}
                   </li>

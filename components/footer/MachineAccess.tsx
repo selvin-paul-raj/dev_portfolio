@@ -22,9 +22,9 @@ function CommandRow({ label, command, note }: Entry) {
   return (
     <li className="flex items-start gap-3 py-3.5 first:pt-0 last:pb-0">
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-gray-900 dark:text-white">{label}</p>
-        <code className="mt-1 block break-all font-mono text-xs leading-relaxed text-amber-800 dark:text-accent/90">{command}</code>
-        <p className="mt-1 text-sm text-gray-600 dark:text-white/55">{note}</p>
+        <p className="text-sm font-medium text-fg">{label}</p>
+        <code className="mt-1 block break-all font-mono text-xs leading-relaxed text-accent-fg">{command}</code>
+        <p className="mt-1 text-sm text-fg-2">{note}</p>
       </div>
       <button
         type="button"
@@ -35,7 +35,7 @@ function CommandRow({ label, command, note }: Entry) {
           border border-black/10 dark:border-white/15 text-gray-600 dark:text-white/60 hover:text-gray-900 dark:hover:text-white
           hover:border-black/25 dark:hover:border-white/30 transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-accent"
       >
-        {copied ? <LuCheck size={15} aria-hidden="true" className="text-green-600 dark:text-green-400" /> : <LuCopy size={15} aria-hidden="true" />}
+        {copied ? <LuCheck size={15} aria-hidden="true" className="text-ok" /> : <LuCopy size={15} aria-hidden="true" />}
       </button>
     </li>
   );
@@ -43,10 +43,10 @@ function CommandRow({ label, command, note }: Entry) {
 
 export default function MachineAccess({ entries }: { entries: Entry[] }) {
   return (
-    <div className="rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#101015] p-5 sm:p-6">
-      <h2 className="text-base font-semibold text-gray-900 dark:text-white">For terminals and agents</h2>
-      <p className="mt-1 mb-5 text-sm text-gray-600 dark:text-white/55">This site also answers machines. Try one.</p>
-      <ul className="divide-y divide-black/[0.06] dark:divide-white/[0.06]">
+    <div className="rounded-2xl border border-line bg-surface-2 p-5 sm:p-6">
+      <h2 className="text-base font-semibold text-fg">For terminals and agents</h2>
+      <p className="mt-1 mb-5 text-sm text-fg-2">This site also answers machines. Try one.</p>
+      <ul className="divide-y divide-line">
         {entries.map((e) => (
           <CommandRow key={e.label} {...e} />
         ))}

@@ -18,8 +18,8 @@ type FilterValue = (typeof FILTERS)[number]["value"];
 
 const FOCUS = "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#09090b]";
 const ICON_LINK =
-  `relative z-10 inline-flex h-9 items-center gap-1.5 rounded-full border border-black/10 dark:border-white/15 px-3 text-sm ` +
-  `text-gray-700 dark:text-white/75 hover:border-black/30 hover:text-gray-950 dark:hover:border-white/35 dark:hover:text-white transition-colors duration-150 ${FOCUS}`;
+  `relative z-10 inline-flex h-9 items-center gap-1.5 rounded-full border border-line px-3 text-sm ` +
+  `text-fg-2 hover:border-line-strong hover:text-fg transition-colors duration-150 ${FOCUS}`;
 
 const matches = (p: Project, q: string) =>
   !q || [p.title, p.description, ...p.tags].join(" ").toLowerCase().includes(q);
@@ -51,7 +51,7 @@ function RowLinks({ project }: { project: Project }) {
         </a>
       )}
       {isPrivate(project) && !code && !live && (
-        <span className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-white/50">
+        <span className="inline-flex items-center gap-1.5 text-sm text-muted">
           <FaLock size={11} aria-hidden="true" /> Private
         </span>
       )}
@@ -66,7 +66,7 @@ function IndexRow({ project }: { project: Project }) {
     <li className="group relative grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] gap-x-6 gap-y-3 rounded-lg px-3 py-4
       hover:bg-black/[0.025] dark:hover:bg-white/[0.03] transition-colors duration-150">
       <div className="min-w-0">
-        <h5 className="text-base font-medium text-gray-900 dark:text-white">
+        <h5 className="text-base font-medium text-fg">
           {href ? (
             // Stretched link: the whole row opens the project; the links on the right sit above it.
             <a
@@ -81,8 +81,8 @@ function IndexRow({ project }: { project: Project }) {
             project.title
           )}
         </h5>
-        <p className="mt-1 line-clamp-2 max-w-[68ch] text-sm leading-relaxed text-gray-600 dark:text-[#c9c9cf]">{project.description}.</p>
-        <p className="mt-1.5 text-xs text-gray-500 dark:text-white/45">{project.tags.slice(0, 4).join(", ")}</p>
+        <p className="mt-1 line-clamp-2 max-w-[68ch] text-sm leading-relaxed text-fg-2">{project.description}.</p>
+        <p className="mt-1.5 text-xs text-muted">{project.tags.slice(0, 4).join(", ")}</p>
       </div>
       <RowLinks project={project} />
     </li>
@@ -92,16 +92,16 @@ function IndexRow({ project }: { project: Project }) {
 /** One year: the numeral stays pinned beside its projects while they scroll past. */
 function YearGroup({ year, projects }: { year: string; projects: Project[] }) {
   return (
-    <section aria-labelledby={`index-${year}`} className="grid grid-cols-1 lg:grid-cols-[9rem_minmax(0,1fr)] gap-x-8 border-t border-black/[0.08] dark:border-white/[0.08] pt-4">
+    <section aria-labelledby={`index-${year}`} className="grid grid-cols-1 lg:grid-cols-[9rem_minmax(0,1fr)] gap-x-8 border-t border-line pt-4">
       <div className="lg:sticky lg:top-24 self-start px-3 lg:px-0 pb-2">
-        <h4 id={`index-${year}`} className="text-4xl lg:text-5xl font-semibold tracking-[-0.03em] tabular-nums text-gray-400 dark:text-white/35">
+        <h4 id={`index-${year}`} className="text-4xl lg:text-5xl font-semibold tracking-[-0.03em] tabular-nums text-muted">
           {year}
         </h4>
-        <p className="mt-1 text-sm text-gray-500 dark:text-white/45">
+        <p className="mt-1 text-sm text-muted">
           {projects.length} {projects.length === 1 ? "project" : "projects"}
         </p>
       </div>
-      <ul className="divide-y divide-black/[0.06] dark:divide-white/[0.06]">
+      <ul className="divide-y divide-line">
         {projects.map((p) => (
           <IndexRow key={p.title} project={p} />
         ))}
@@ -138,19 +138,19 @@ function Toolbar({
               aria-pressed={on}
               disabled={counts[value] === 0}
               className={`inline-flex h-10 items-center gap-2 rounded-full border px-3.5 text-sm font-medium disabled:opacity-40 transition-colors duration-150 ${FOCUS}
-                ${on
-                  ? "border-gray-900 bg-gray-900 text-white dark:border-accent dark:bg-accent dark:text-[#1a1500]"
-                  : "border-black/[0.1] text-gray-700 hover:border-black/25 dark:border-white/[0.1] dark:text-[#d4d4d8] dark:hover:border-white/25"}`}
+ ${on
+ ? "border-gray-900 bg-gray-900 text-white dark:border-accent dark:bg-accent dark:text-[#1a1500]"
+ : "border-line text-fg-2 hover:border-line-strong "}`}
             >
               {label}
-              <span className={`text-xs tabular-nums ${on ? "opacity-80" : "text-gray-500 dark:text-[#a1a1aa]"}`}>{counts[value]}</span>
+              <span className={`text-xs tabular-nums ${on ? "opacity-80" : "text-muted "}`}>{counts[value]}</span>
             </button>
           );
         })}
       </div>
       <div className="relative sm:w-64">
         <label htmlFor="project-search" className="sr-only">Search projects</label>
-        <LuSearch size={15} aria-hidden="true" className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 dark:text-white/45" />
+        <LuSearch size={15} aria-hidden="true" className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted" />
         <input
           id="project-search"
           type="search"
@@ -165,7 +165,7 @@ function Toolbar({
             type="button"
             onClick={() => onQuery("")}
             aria-label="Clear search"
-            className="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex h-7 w-7 items-center justify-center rounded-full text-gray-500 hover:text-gray-900 dark:text-white/50 dark:hover:text-white outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex h-7 w-7 items-center justify-center rounded-full text-muted hover:text-fg outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             <LuX size={14} aria-hidden="true" />
           </button>
@@ -193,8 +193,8 @@ export default function ProjectIndex({ projects }: { projects: Project[] }) {
   return (
     <div className="mx-auto mt-24 max-w-5xl">
       <div className="mb-6">
-        <h3 className="text-2xl font-semibold text-gray-900 dark:text-white">Project index</h3>
-        <p className="mt-1 text-sm text-gray-600 dark:text-[#a1a1aa]">
+        <h3 className="text-2xl font-semibold text-fg">Project index</h3>
+        <p className="mt-1 text-sm text-fg-2">
           {projects.length} more: open-source tools, MCP servers and experiments, newest first.
         </p>
       </div>
@@ -212,28 +212,28 @@ export default function ProjectIndex({ projects }: { projects: Project[] }) {
           ))}
         </div>
       ) : (
-        <div className="mt-8 rounded-2xl border border-dashed border-black/15 dark:border-white/15 px-6 py-12 text-center">
-          <p className="text-base font-medium text-gray-900 dark:text-white">No projects match{q ? ` "${query.trim()}"` : ""}.</p>
+        <div className="mt-8 rounded-2xl border border-dashed border-line-strong px-6 py-12 text-center">
+          <p className="text-base font-medium text-fg">No projects match{q ? ` "${query.trim()}"` : ""}.</p>
           <button
             type="button"
             onClick={() => {
               setQuery("");
               setFilter("all");
             }}
-            className={`mt-3 text-sm font-medium text-amber-700 dark:text-accent underline underline-offset-4 rounded-sm ${FOCUS}`}
+            className={`mt-3 text-sm font-medium text-accent-fg underline underline-offset-4 rounded-sm ${FOCUS}`}
           >
             Clear filters
           </button>
         </div>
       )}
 
-      <p className="mt-10 text-sm text-gray-600 dark:text-[#a1a1aa]">
+      <p className="mt-10 text-sm text-fg-2">
         Everything else lives on{" "}
         <a
           href="https://github.com/selvin-paul-raj?tab=repositories"
           target="_blank"
           rel="noopener noreferrer"
-          className="rounded-sm font-medium text-gray-900 underline decoration-accent underline-offset-4 outline-none hover:decoration-2 focus-visible:ring-2 focus-visible:ring-accent dark:text-white"
+          className="rounded-sm font-medium text-fg underline decoration-accent underline-offset-4 outline-none hover:decoration-2 focus-visible:ring-2 focus-visible:ring-accent "
         >
           GitHub
         </a>

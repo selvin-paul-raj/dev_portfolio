@@ -70,20 +70,20 @@ function Plaque() {
 function Story({ a }: { a: Achievement }) {
   return (
     <div className="anim-detail-in">
-      <p className="text-sm text-gray-600 dark:text-white/55">
-        <span className="font-medium text-amber-700 dark:text-accent">{a.rank ? `${METAL[a.rank].name}, ${a.category}` : a.category}</span>, {fmtDate(a.date)}
+      <p className="text-sm text-fg-2">
+        <span className="font-medium text-accent-fg">{a.rank ? `${METAL[a.rank].name}, ${a.category}` : a.category}</span>, {fmtDate(a.date)}
       </p>
-      <h4 className="mt-2 text-xl font-semibold leading-snug text-gray-900 dark:text-white">{a.title}</h4>
+      <h4 className="mt-2 text-xl font-semibold leading-snug text-fg">{a.title}</h4>
       <dl className="mt-3 grid grid-cols-[6.5rem_minmax(0,1fr)] gap-x-3 gap-y-1.5 text-sm">
-        <dt className="text-gray-500 dark:text-white/45">Awarded by</dt>
-        <dd className="m-0 text-gray-800 dark:text-white/85">{a.issuer}</dd>
-        <dt className="text-gray-500 dark:text-white/45">Represented</dt>
-        <dd className="m-0 text-gray-800 dark:text-white/85">{a.associated_with}</dd>
+        <dt className="text-muted">Awarded by</dt>
+        <dd className="m-0 text-fg">{a.issuer}</dd>
+        <dt className="text-muted">Represented</dt>
+        <dd className="m-0 text-fg">{a.associated_with}</dd>
       </dl>
-      {a.description && <p className="mt-3 max-w-[65ch] text-[15px] leading-relaxed text-gray-600 dark:text-[#c9c9cf]">{a.description}</p>}
+      {a.description && <p className="mt-3 max-w-[65ch] text-[15px] leading-relaxed text-fg-2">{a.description}</p>}
       <div className="mt-4 flex flex-wrap items-center gap-3">
         {a.certificate_available && (
-          <span className="inline-flex items-center gap-1.5 text-sm text-emerald-700 dark:text-emerald-400">
+          <span className="inline-flex items-center gap-1.5 text-sm text-ok">
             <LuBadgeCheck size={15} aria-hidden="true" /> Certificate on file
           </span>
         )}
@@ -117,9 +117,9 @@ export default function TrophyShelf({ items }: { items: Achievement[] }) {
   };
 
   return (
-    <div className="rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-white dark:bg-[#0c0c10] p-4 sm:p-6">
-      <h3 className="text-base font-semibold text-gray-900 dark:text-white">Trophy shelf</h3>
-      <p className="mt-0.5 text-sm text-gray-600 dark:text-white/55">Pick one to read its story.</p>
+    <div className="rounded-2xl border border-line bg-surface-2 p-4 sm:p-6">
+      <h3 className="text-base font-semibold text-fg">Trophy shelf</h3>
+      <p className="mt-0.5 text-sm text-fg-2">Pick one to read its story.</p>
 
       {/* The shelf: objects stand on a ledge; the picked one lifts off it */}
       <div className="relative mt-4">
@@ -144,10 +144,10 @@ export default function TrophyShelf({ items }: { items: Achievement[] }) {
                 >
                   {a.rank ? <Medal rank={a.rank} /> : <Plaque />}
                 </span>
-                <span className={`mt-2 text-center text-[10.5px] sm:text-xs leading-tight [hyphens:auto] ${on ? "font-semibold text-gray-900 dark:text-white" : "text-gray-600 dark:text-white/60"}`}>
+                <span className={`mt-2 text-center text-[10.5px] sm:text-xs leading-tight [hyphens:auto] ${on ? "font-semibold text-fg " : "text-fg-2 "}`}>
                   {shortName(a)}
                 </span>
-                <span className="mt-0.5 font-mono text-[11px] text-gray-500 dark:text-white/40">{a.date.slice(0, 4)}</span>
+                <span className="mt-0.5 font-mono text-[11px] text-muted">{a.date.slice(0, 4)}</span>
               </button>
             );
           })}
@@ -156,7 +156,7 @@ export default function TrophyShelf({ items }: { items: Achievement[] }) {
         <div aria-hidden="true" className="mx-2 h-2 rounded-full bg-gradient-to-b from-gray-200 to-gray-300 dark:from-white/[0.12] dark:to-white/[0.05] shadow-[0_8px_16px_-8px_rgba(0,0,0,0.5)]" />
       </div>
 
-      <div aria-live="polite" className="mt-6 border-t border-black/[0.06] dark:border-white/[0.06] pt-5">
+      <div aria-live="polite" className="mt-6 border-t border-line pt-5">
         <Story key={active} a={items[active]} />
       </div>
     </div>

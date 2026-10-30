@@ -265,8 +265,8 @@ export default function PipelineDiagram({
               y={n.sub ? n.y - 4 : n.y + 4}
               textAnchor="middle"
               className={`font-sans text-[11px] font-medium ${
-                isActive ? "fill-gray-950 dark:fill-white" : isVisited ? "fill-gray-700 dark:fill-white/80" : "fill-gray-500 dark:fill-white/55"
-              }`}
+ isActive ? "fill-gray-950 dark:fill-white" : isVisited ? "fill-gray-700 dark:fill-white/80" : "fill-gray-500 dark:fill-white/55"
+ }`}
             >
               {n.label}
             </text>
@@ -304,10 +304,10 @@ export function DiagramLegend({ nodes, edges }: { nodes: DiagramNode[]; edges: E
   const shown = items.filter(([on]) => on);
   if (shown.length === 0) return null;
   return (
-    <ul aria-label="Diagram legend" className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs text-gray-500 dark:text-white/45">
+    <ul aria-label="Diagram legend" className="flex flex-wrap gap-x-4 gap-y-1 font-mono text-xs text-muted">
       {shown.map(([, mark, label]) => (
         <li key={label}>
-          <span className={mark === "HITL" ? "text-orange-600 dark:text-orange-400" : "text-accent-ink dark:text-accent"}>{mark}</span> {label}
+          <span className={mark === "HITL" ? "text-warn" : "text-accent-fg"}>{mark}</span> {label}
         </li>
       ))}
     </ul>

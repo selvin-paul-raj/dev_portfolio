@@ -11,8 +11,8 @@ import { isNpm, isPrivate, isWork, kindOf, yearOf, type Project } from "./meta";
 
 const FOCUS = "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#101015]";
 const SECONDARY_BTN =
-  `inline-flex h-10 items-center gap-1.5 rounded-full border border-black/15 dark:border-white/15 px-4 text-sm font-medium ` +
-  `text-gray-800 dark:text-white/85 hover:border-black/30 dark:hover:border-white/35 transition-colors duration-150 ${FOCUS}`;
+  `inline-flex h-10 items-center gap-1.5 rounded-full border border-line-strong px-4 text-sm font-medium ` +
+  `text-fg hover:border-line-strong transition-colors duration-150 ${FOCUS}`;
 
 function ProjectActions({ project }: { project: Project }) {
   const { title, code, live } = project;
@@ -45,7 +45,7 @@ function ProjectActions({ project }: { project: Project }) {
         </a>
       )}
       {isPrivate(project) && (
-        <span className="inline-flex items-center gap-1.5 text-sm text-gray-600 dark:text-white/55">
+        <span className="inline-flex items-center gap-1.5 text-sm text-fg-2">
           <FaLock size={11} aria-hidden="true" />
           {isWork(project) ? (slug ? "Private repo" : "Private repo, details on request") : "Private repo"}
         </span>
@@ -61,25 +61,25 @@ function ProjectDetail({ project }: { project: Project }) {
 
   return (
     <div className="anim-detail-in flex flex-col gap-6">
-      <p className="text-sm text-gray-600 dark:text-white/55">
-        <span className={isWork(project) ? "font-medium text-amber-700 dark:text-accent" : "font-medium text-gray-800 dark:text-white/80"}>
+      <p className="text-sm text-fg-2">
+        <span className={isWork(project) ? "font-medium text-accent-fg" : "font-medium text-fg"}>
           {kindOf(project)}
         </span>
         , {yearOf(project)}
       </p>
-      <h3 className="text-2xl sm:text-[1.75rem] font-semibold leading-tight tracking-[-0.01em] text-gray-900 dark:text-white text-balance">
+      <h3 className="text-2xl sm:text-[1.75rem] font-semibold leading-tight tracking-[-0.01em] text-fg text-balance">
         {project.title}
       </h3>
 
       {results.length > 0 && (
-        <dl className="grid grid-cols-3 border-y border-black/[0.08] dark:border-white/[0.08]">
+        <dl className="grid grid-cols-3 border-y border-line">
           {results.map((r, i) => (
             <div
               key={r.label}
-              className={`min-w-0 flex flex-col-reverse justify-end gap-1.5 py-4 ${i > 0 ? "pl-4 border-l border-black/[0.08] dark:border-white/[0.08]" : ""} pr-3`}
+              className={`min-w-0 flex flex-col-reverse justify-end gap-1.5 py-4 ${i > 0 ? "pl-4 border-l border-line " : ""} pr-3`}
             >
-              <dt className="text-xs leading-snug text-gray-600 dark:text-white/55">{r.label}</dt>
-              <dd className="m-0 text-xl sm:text-2xl font-semibold tabular-nums tracking-[-0.02em] text-gray-900 dark:text-white whitespace-nowrap">
+              <dt className="text-xs leading-snug text-fg-2">{r.label}</dt>
+              <dd className="m-0 text-xl sm:text-2xl font-semibold tabular-nums tracking-[-0.02em] text-fg whitespace-nowrap">
                 {r.value}
               </dd>
             </div>
@@ -87,11 +87,11 @@ function ProjectDetail({ project }: { project: Project }) {
         </dl>
       )}
 
-      <p className="text-[15px] leading-relaxed text-gray-600 dark:text-[#c9c9cf] max-w-[65ch]">{project.description}.</p>
+      <p className="text-[15px] leading-relaxed text-fg-2 max-w-[65ch]">{project.description}.</p>
 
       <ul aria-label="Tech stack" className="flex flex-wrap gap-1.5">
         {project.tags.map((tag) => (
-          <li key={tag} className="rounded-full border border-black/[0.08] dark:border-white/[0.1] px-2.5 py-1 font-mono text-xs text-gray-700 dark:text-[#d4d4d8]">
+          <li key={tag} className="rounded-full border border-line px-2.5 py-1 font-mono text-xs text-fg-2">
             {tag}
           </li>
         ))}
@@ -140,11 +140,11 @@ export default function FeaturedExplorer({ projects }: { projects: Project[] }) 
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] gap-6 lg:gap-12 items-start">
-      <ol className="border-t border-black/[0.08] dark:border-white/[0.08]" onPointerLeave={() => clearTimeout(hoverTimer.current)}>
+      <ol className="border-t border-line" onPointerLeave={() => clearTimeout(hoverTimer.current)}>
         {projects.map((p, i) => {
           const on = i === active;
           return (
-            <li key={p.title} className="border-b border-black/[0.08] dark:border-white/[0.08]">
+            <li key={p.title} className="border-b border-line">
               <button
                 ref={(el) => {
                   buttons.current[i] = el;
@@ -155,24 +155,24 @@ export default function FeaturedExplorer({ projects }: { projects: Project[] }) 
                 onKeyDown={(e) => onKey(e, i)}
                 onPointerEnter={(e) => onHover(e, i)}
                 className={`group grid w-full grid-cols-[2.25rem_minmax(0,1fr)_1rem] items-center gap-3 px-3 py-4 text-left rounded-lg
-                  transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent
-                  ${on ? "bg-black/[0.04] dark:bg-white/[0.05]" : "hover:bg-black/[0.025] dark:hover:bg-white/[0.03]"}`}
+ transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent
+ ${on ? "bg-black/[0.04] dark:bg-white/[0.05]" : "hover:bg-black/[0.025] dark:hover:bg-white/[0.03]"}`}
               >
-                <span className={`font-mono text-xs tabular-nums ${on ? "text-amber-700 dark:text-accent" : "text-gray-500 dark:text-white/45"}`}>
+                <span className={`font-mono text-xs tabular-nums ${on ? "text-accent-fg " : "text-muted "}`}>
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="min-w-0">
-                  <span className={`block lg:truncate text-base font-medium ${on ? "text-gray-900 dark:text-white" : "text-gray-700 dark:text-white/75"}`}>
+                  <span className={`block lg:truncate text-base font-medium ${on ? "text-fg " : "text-fg-2 "}`}>
                     {p.title}
                   </span>
-                  <span className="block text-sm text-gray-500 dark:text-white/45">
+                  <span className="block text-sm text-muted">
                     {kindOf(p)}, {yearOf(p)}
                   </span>
                 </span>
                 <LuArrowRight
                   size={16}
                   aria-hidden="true"
-                  className={`transition-opacity duration-150 text-amber-700 dark:text-accent ${on ? "opacity-100" : "opacity-0 group-hover:opacity-50"}`}
+                  className={`transition-opacity duration-150 text-accent-fg ${on ? "opacity-100" : "opacity-0 group-hover:opacity-50"}`}
                 />
               </button>
               {on && (
@@ -186,7 +186,7 @@ export default function FeaturedExplorer({ projects }: { projects: Project[] }) 
       </ol>
 
       <div className="hidden lg:block lg:sticky lg:top-24">
-        <div aria-live="polite" className="min-h-[32rem] rounded-2xl border border-black/[0.08] dark:border-white/[0.07] bg-white dark:bg-[#101015] p-8">
+        <div aria-live="polite" className="min-h-[32rem] rounded-2xl border border-line bg-surface-2 p-8">
           <ProjectDetail key={active} project={projects[active]} />
         </div>
       </div>

@@ -16,12 +16,12 @@ export default function Error({
 
   return (
     <main id="content" className="flex flex-col items-center justify-center min-h-[50vh] gap-5 text-center px-4">
-      <span className="font-mono text-5xl font-bold text-gray-200 dark:text-white/10">!</span>
+      <span className="font-mono text-5xl font-bold text-muted">!</span>
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white/90 mb-1">
+        <h2 className="text-lg font-semibold text-fg mb-1">
           Something went wrong
         </h2>
-        <p className="text-sm text-gray-500 dark:text-white/40">
+        <p className="text-sm text-muted">
           An unexpected error occurred. Try refreshing the page.
         </p>
       </div>
