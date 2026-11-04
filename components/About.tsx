@@ -46,7 +46,7 @@ export default function About() {
             className="mb-8 text-[clamp(1.5rem,1.2rem+1vw,1.875rem)] leading-[1.3] text-fg"
             style={{ fontFamily: SERIF, fontStyle: "italic" }}
           >
-            &ldquo;My agent pipeline took analyst turnaround from hours to under a minute.&rdquo;
+            &ldquo;My agent pipeline took analyst turnaround from hours to minutes.&rdquo;
           </blockquote>
 
           <div className="space-y-5">

@@ -22,7 +22,7 @@ Personal portfolio for **Selvin PaulRaj K** — AI Engineer at Zinnov (Draup), s
 
 | Case study | Access | Headline |
 |---|---|---|
-| [DRI-MAS](https://selvinpaulraj.vercel.app/work/dri-mas) | Work · private repo | < 1 min turnaround, down from hours |
+| [DRI-MAS](https://selvinpaulraj.vercel.app/work/dri-mas) | Work · private repo | Turnaround cut from hours to minutes |
 | [Akavizhi](https://selvinpaulraj.vercel.app/work/akavizhi) | Private repo | 9 specialist agents with scoped tools |
 | [Jobs with Joe](https://selvinpaulraj.vercel.app/work/jobs-with-joe) | Private repo · live product | 12 job source adapters |
 | [Company Synonym Agent](https://selvinpaulraj.vercel.app/work/company-synonym-agent) | Work · private repo | 2.67M company and subsidiary records indexed |

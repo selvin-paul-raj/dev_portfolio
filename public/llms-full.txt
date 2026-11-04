@@ -12,7 +12,7 @@
 - **Primary Website:** https://selvinpaulraj.vercel.app
 
 ### Professional Summary
-Selvin PaulRaj K builds agentic AI systems, MCP (Model Context Protocol) servers, RAG pipelines, and LangGraph multi-agent workflows. At Zinnov (Draup) he works as an Associate Data Analyst on the AI automation team, where he architected DRI-MAS — a LangGraph multi-agent system that turns natural-language business requests into validated SQL reports, cutting analyst turnaround from hours to under a minute. He is pursuing an M.E. in Computer Science (AI specialization) at Kings Engineering College.
+Selvin PaulRaj K builds agentic AI systems, MCP (Model Context Protocol) servers, RAG pipelines, and LangGraph multi-agent workflows. At Zinnov (Draup) he works as an Associate Data Analyst on the AI automation team, where he architected DRI-MAS — a LangGraph multi-agent system that turns natural-language business requests into validated SQL reports, cutting analyst turnaround from hours to minutes. He is pursuing an M.E. in Computer Science (AI specialization) at Kings Engineering College.
 
 ---
 
@@ -21,7 +21,7 @@ Selvin PaulRaj K builds agentic AI systems, MCP (Model Context Protocol) servers
 ### 1. Associate Data Analyst, AI Automation — Zinnov (Draup)
 **Duration:** September 2025 – Present (full-time)
 **Location:** Arakkonam, Tamil Nadu, India (On-site)
-- Architected DRI-MAS (Data Request Intelligence Multi-Agent System), a LangGraph multi-agent system that converts natural-language business requests into validated Trino SQL and structured Excel reports — analyst turnaround dropped from hours to under a minute
+- Architected DRI-MAS (Data Request Intelligence Multi-Agent System), a LangGraph multi-agent system that converts natural-language business requests into validated Trino SQL and structured Excel reports — analyst turnaround dropped from hours to minutes
 - Built its 10 core components (intent and manager agents, normalisation engine, schema router, SQL generator, memory layer, evaluation framework) behind 4 FastAPI endpoints, covered by 30 automated test suites
 - Implemented hybrid retrieval (FAISS + BM25) over 2.6M company records with human-in-the-loop validation
 - Built a Company Synonym Agent for entity resolution across 2.6M company and subsidiary records
@@ -161,10 +161,10 @@ A LangGraph multi-agent system that turns plain-English data requests into valid
 6. **The schema comes from a knowledge graph.** A schema knowledge graph of tables, fields, join paths, and semantic tags is loaded once per process. An LLM selects the relevant schema, the table selector resolves tables and join paths, and a DDL snippet is built for the SQL step. No match means a human interrupt, not a guess.
 7. **SQL is generated, then distrusted.** The SQL generator writes Trino SQL with the canonical names injected, using a query cache keyed by SQL hash. A validator allows SELECT only and rejects blocked keywords, and a dry run confirms every table exists before anything executes.
 8. **Invalid SQL is reviewed or retried.** If validation fails, the graph interrupts for review and can loop back to the generator with the error, instead of returning a broken query.
-9. **A typed result, in under a minute.** The assemble step returns a typed result with status (success, partial, or failed), the deliverable queries, and which steps completed, failed, or were skipped. Analyst turnaround went from hours to under a minute.
+9. **A typed result, in minutes.** The assemble step returns a typed result with status (success, partial, or failed), the deliverable queries, and which steps completed, failed, or were skipped. Analyst turnaround went from hours to minutes.
 
 **Measured**
-- < 1 min: Turnaround, down from hours
+- Minutes: Turnaround, down from hours
 - 2.6M: Company records in hybrid retrieval
 - 4: Human-in-the-loop interrupt points
 - 3: Subgraphs under one manager graph

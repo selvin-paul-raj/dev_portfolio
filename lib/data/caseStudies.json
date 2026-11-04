@@ -847,8 +847,8 @@
         ]
       },
       {
-        "title": "A client deliverable, in under a minute",
-        "body": "The assemble step returns a typed result with status (success, partial, or failed), the filled deliverable, the queries behind it, and which steps completed, failed, or were skipped. Analyst turnaround went from hours to under a minute.",
+        "title": "A client deliverable, in minutes",
+        "body": "The assemble step returns a typed result with status (success, partial, or failed), the filled deliverable, the queries behind it, and which steps completed, failed, or were skipped. Analyst turnaround went from hours to minutes.",
         "nodes": [
           "assemble",
           "output"
@@ -867,7 +867,7 @@
     ],
     "results": [
       {
-        "value": "< 1 min",
+        "value": "Minutes",
         "label": "Turnaround, down from hours"
       },
       {
