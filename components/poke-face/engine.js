@@ -1,6 +1,5 @@
 // PokeFace engine: interactive, stretchy portrait (WebGL with 2D fallback). No audio.
 // mountPokeFace(rootEl, { base: '/poke-face/faces' }) -> returns a cleanup function.
-/* eslint-disable */
 // @ts-nocheck
 export function mountPokeFace(root, opts = {}) {
 const base = (opts.base || '/poke-face/faces').replace(/\/$/, '');
@@ -13,9 +12,9 @@ const on = (t, f, o) => { window.addEventListener(t, f, o); offs.push(() => wind
 
 const NAMES=["idle","look_left","look_right","look_up","look_down","ouch","squeeze","laugh","angry","wink","blink","sleep","dizzy","whistle","suspicious","grimace","whistle_l","whistle_r"];const texs={};
 const stage=$('stage'),cv=$('cv');
-let gl=null;try{gl=cv.getContext('webgl',{premultipliedAlpha:true,alpha:true,antialias:true})||cv.getContext('experimental-webgl')}catch(e){}
+let gl=null;try{gl=cv.getContext('webgl',{premultipliedAlpha:true,alpha:true,antialias:true})||cv.getContext('experimental-webgl')}catch{gl=null/* WebGL can throw on blocked or lost GPUs; the 2D canvas path below takes over. */}
 const ctx=gl?null:cv.getContext('2d');
-const bubble=$('bubble'),ghost=$('ghost'),hit=$('hit'),countEl={textContent:0};
+const ghost=$('ghost'),hit=$('hit');
 // layout in units (stage width = 1)
 const CX=.5,CY=.56,R=.38, IW=.92, IH=IW*869/900, IX=(1-IW)/2, IY=(CY+R)-IH;
 const COLS=40, ROWS=38;
@@ -30,7 +29,13 @@ function upload(c){if(!gl)return c;const t=gl.createTexture();gl.bindTexture(gl.
   gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,c);
   for(const p of [gl.TEXTURE_WRAP_S,gl.TEXTURE_WRAP_T])gl.texParameteri(gl.TEXTURE_2D,p,gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);return t}
-const img=new Image();img.src=base+'/idle.webp';img.onload=()=>{if(dead)return;init();NAMES.slice(1).forEach(n=>{const i=new Image();i.onload=()=>{texs[n]=mask(i);gtex[n]=upload(texs[n])};i.src=base+'/'+n+'.webp'})};
+// The idle face loads first; the other expressions wait for the visitor's first interaction with the page.
+let extrasLoaded=false,offWake=[];
+function loadExtras(){if(extrasLoaded||dead)return;extrasLoaded=true;
+  NAMES.slice(1).forEach(n=>{const i=new Image();i.onload=()=>{if(dead)return;texs[n]=mask(i);gtex[n]=upload(texs[n])};i.src=base+'/'+n+'.webp'})}
+const onIdle=(f,ms)=>typeof requestIdleCallback==='function'?requestIdleCallback(f,{timeout:ms}):setTimeout(f,ms);
+const cancelIdle=h=>{if(!h)return;if(typeof cancelIdleCallback==='function')cancelIdleCallback(h);else clearTimeout(h)};
+const img=new Image();img.src=base+'/idle.webp';img.onload=()=>{if(dead)return;init()};
 // ---- GL program
 const VS=`attribute vec2 aP;attribute vec2 aU;attribute vec3 aN;varying vec2 vU;varying vec3 vN;
 void main(){vU=aU;vN=aN;gl_Position=vec4(aP.x*2.-1.,1.-aP.y*2.,0.,1.);}`;
@@ -49,17 +54,17 @@ aP=gl.getAttribLocation(prog,'aP');aU=gl.getAttribLocation(prog,'aU');aN=gl.getA
 uA=gl.getUniformLocation(prog,'uA');uB=gl.getUniformLocation(prog,'uB');uMix=gl.getUniformLocation(prog,'uMix');
 gl.uniform1i(uA,0);gl.uniform1i(uB,1);gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);}
 // which face shows right now
-let sleeping=false,hoverFace=false,whistled=false,lastMove=0;const notes=$('notes');
+let sleeping=false,hoverFace=false,lastMove=0;const notes=$('notes');
 const zzz=$('zzz');
-function wake(){if(!sleeping)return;sleeping=false;lastAct=performance.now();zzz.classList.remove('on');react('squeeze',700);say(pick(["Huh?! I'm awake! 😳","Wasn't sleeping. Just resting my eyes.","Who's there?!"]))}
+function wake(){if(!sleeping)return;sleeping=false;lastAct=performance.now();zzz.classList.remove('on');react('squeeze',700)}
 let face='idle',fromFace='idle',fadeT=0,reactFace=null,reactUntil=0,lastAct=performance.now();
-function react(n,ms){reactFace=n;reactUntil=performance.now()+ms;dirty=true}
+function react(n,ms){reactFace=n;reactUntil=performance.now()+ms;dirty=true;kick()}
 function pickFace(){const now=performance.now(),moving=now-lastMove<700;
   if(now<reactUntil&&gtex[reactFace])return reactFace;
   if(grab&&grab.dx!==undefined){const m=Math.hypot(grab.dx,grab.dy);return m>.6?'ouch':m>.05?'grimace':'squeeze'}
   if(sleeping)return gtex.sleep?'sleep':'idle';
-  if(now-lastAct>14000){sleeping=true;zzz.classList.add('on');notes.classList.remove('on');snore();return 'sleep'}
-  const wh=now-lastAct>6000;notes.classList.toggle('on',wh);if(wh){if(!whistled){whistled=true;whistleTune()}const ph=Math.floor((now-lastAct-6000)/1300)%4;return ['whistle','whistle_r','whistle','whistle_l'][ph]}else whistled=false;
+  if(now-lastAct>14000){sleeping=true;zzz.classList.add('on');notes.classList.remove('on');return 'sleep'}
+  const wh=now-lastAct>6000;notes.classList.toggle('on',wh);if(wh){const ph=Math.floor((now-lastAct-6000)/1300)%4;return ['whistle','whistle_r','whistle','whistle_l'][ph]}
   if(now>nextBlink){blinkUntil=now+140;nextBlink=now+2500+Math.random()*3500;if(Math.random()<.2)nextBlink=now+300}
   if(now<blinkUntil&&gtex.blink)return 'blink';
   if(!moving)return 'idle';               // mouse still: back to the main face, never a side look
@@ -84,7 +89,11 @@ function init(){
   posBuf=gl.createBuffer();nrmBuf=gl.createBuffer();}
   else{tris=[];for(let k=0;k<ix.length;k+=3)tris.push([ix[k],ix[k+1],ix[k+2]]);uvs=uv}
   resize();on('resize',resize);kick();
-  if(!reduceMotion)ghostTimer=setTimeout(()=>{if(!touched)ghostDemo()},2500);
+  // Nothing beyond the idle face runs until the visitor first scrolls, points or types: then the
+  // other expressions load and, after an idle moment, the ghost-hand demo starts.
+  const wake=()=>{offWake.forEach(f=>f());offWake=[];loadExtras();
+    if(!reduceMotion)ghostTimer=setTimeout(()=>{ghostIdle=onIdle(()=>{ghostIdle=0;if(!touched)ghostDemo()},2000)},1500)};
+  for(const t of ['pointermove','pointerdown','scroll','keydown','touchstart']){window.addEventListener(t,wake,{passive:true,once:true});offWake.push(()=>window.removeEventListener(t,wake))}
 }
 function resize(){W=stage.clientWidth;dpr=Math.min(2,devicePixelRatio||1);cv.width=W*dpr;cv.height=W*dpr;if(gl)gl.viewport(0,0,cv.width,cv.height);dirty=true}
 // ---- physics
@@ -95,19 +104,18 @@ function startGrab(px,py){
   for(const p of verts){const d2=(p.x-px)**2+(p.y-py)**2;p.w=Math.exp(-d2/(2*SIG*SIG));p.bx=p.x;p.by=p.y}
 }
 function moveGrab(px,py){
-  if(!grab)return;let dx=px-grab.x0,dy=py-grab.y0;const m=Math.hypot(dx,dy),max=1.1;
+  if(!grab)return;kick();let dx=px-grab.x0,dy=py-grab.y0;const m=Math.hypot(dx,dy),max=1.1;
   if(m>max){dx*=max/m;dy*=max/m}
-  grab.moved=Math.max(grab.moved,m);grab.dx=dx;grab.dy=dy;squeak(Math.hypot(dx,dy));
+  grab.moved=Math.max(grab.moved,m);grab.dx=dx;grab.dy=dy;
 }
 function endGrab(){
   if(!grab)return;const g=grab;grab=null;
   if(g.moved<.012&&performance.now()-g.t<300)poke(g.x0,g.y0);
-  else{twang(g.moved);if(g.moved>.25){react('dizzy',1900);say(pick(["Whoa… the room is spinning 😵","My face! It's still wobbling!","Was that necessary?"]))}else react('ouch',500)}
+  else if(g.moved>.25)react('dizzy',1900);else react('ouch',500);
 }
-function poke(px,py){
+function poke(px,py){kick();
   for(const p of verts){const dx=p.x-px,dy=p.y-py,d=Math.hypot(dx,dy)||1,w=Math.exp(-(d*d)/(2*.08*.08));p.vx+=dx/d*w*.03;p.vy+=dy/d*w*.03}
-  pokes++;wake();lastAct=performance.now();react(pokes%10===0?'angry':(pokes%2?'ouch':'squeeze'),pokes%10===0?1400:900);boing();
-  say(pokes%10===0?"Okay okay. Hire me already 😤":pick(POKE));dirty=true;
+  pokes++;wake();lastAct=performance.now();react(pokes%10===0?'angry':(pokes%2?'ouch':'squeeze'),pokes%10===0?1400:900);dirty=true;
 }
 // water: drag the surface along with the cursor as it glides over the face
 let hx=-1,hy=-1;
@@ -120,10 +128,11 @@ function placeMouth(){if(!verts.length)return;if(mouthI<0){let b=1e9;verts.forEa
   const p=verts[mouthI],L=(p.x*100).toFixed(2)+'%',T=(p.y*100-30).toFixed(2)+'%';
   if(notes.style.left!==L||notes.style.top!==T){notes.style.left=L;notes.style.top=T;zzz.style.left=L;zzz.style.top=T}}
 function kick(){if(!running&&visible&&!dead&&verts.length){running=true;requestAnimationFrame(loop)}}
+let dX=null,dY=null,hArr=null;
 function loop(){if(dead||!visible){running=false;return}
   const now=performance.now();let energy=0;
   if(now-lastMove>700){look.x*=.9;look.y*=.9}
-  const n=verts.length,dX=new Float32Array(n),dY=new Float32Array(n);
+  const n=verts.length;if(!dX||dX.length!==n){dX=new Float32Array(n);dY=new Float32Array(n)}
   for(let i=0;i<n;i++){dX[i]=verts[i].x-verts[i].rx;dY[i]=verts[i].y-verts[i].ry}
   for(let i=0;i<n;i++){const p=verts[i];
     if(grab&&grab.dx!==undefined){
@@ -140,14 +149,28 @@ function loop(){if(dead||!visible){running=false;return}
   const nf=pickFace();if(nf!==face){fromFace=face;face=nf;fadeT=now;FADE=(face.startsWith('whistle')&&fromFace.startsWith('whistle'))?420:160}
   placeMouth();
   const fading=now-fadeT<FADE;
-  if(energy>1e-5||dirty||fading)draw(now);dirty=false;
+  const settled=energy<=1e-5&&!grab&&!fading;
+  if(!settled||dirty)draw(now);dirty=false;
+  // Settled and nothing pending: stop requesting frames until input, a reaction or the clock wakes it.
+  if(settled&&!ghostOn&&Math.abs(look.x)+Math.abs(look.y)<1e-3){running=false;scheduleWake(now);return}
   requestAnimationFrame(loop);
 }
+// While parked, wake for the next timed face change (blink, whistle, sleep, end of a reaction).
+let wakeT=0;
+function scheduleWake(now){clearTimeout(wakeT);if(dead)return;
+  const idleFor=now-lastAct;let at=nextBlink;
+  if(now<reactUntil)at=Math.min(at,reactUntil);
+  if(sleeping)at=Infinity;
+  else if(idleFor<6000)at=Math.min(at,lastAct+6000);
+  else if(idleFor<14000)at=Math.min(now+1300-((idleFor-6000)%1300),lastAct+14000);
+  if(now<blinkUntil)at=Math.min(at,blinkUntil);
+  if(at===Infinity)return;
+  wakeT=setTimeout(()=>{dirty=true;kick()},Math.max(16,at-now+1))}
 function draw(now){
   if(!gl)return draw2d(now);
   gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);if(!tex)return;
   const cw=COLS+1,cellX=IW/COLS,cellY=IH/ROWS,HK=.9;
-  const h=new Float32Array(verts.length);
+  if(!hArr||hArr.length!==verts.length)hArr=new Float32Array(verts.length);const h=hArr;
   verts.forEach((p,i)=>{posArr[i*2]=p.x;posArr[i*2+1]=p.y;h[i]=Math.hypot(p.x-p.rx,p.y-p.ry)*HK});
   verts.forEach((p,i)=>{const l=p.i>0?h[i-1]:h[i],r=p.i<COLS?h[i+1]:h[i],u=p.j>0?h[i-cw]:h[i],d=p.j<ROWS?h[i+cw]:h[i];
     let nx=-(r-l)/(2*cellX),ny=-(d-u)/(2*cellY),nz=1,m=Math.hypot(nx,ny,nz);nrmArr[i*3]=nx/m;nrmArr[i*3+1]=ny/m;nrmArr[i*3+2]=nz/m});
@@ -181,56 +204,48 @@ function onFace(x,y){
   if(x<IX||x>IX+IW||y<IY||y>IY+IH)return false;
   const s=tex.width/IW, d=tex.getContext('2d').getImageData(Math.floor((x-IX)*s),Math.floor((y-IY)*s),1,1).data;return d[3]>40;
 }
-cv.addEventListener('pointerdown',e=>{const[x,y]=toUnit(e);if(!tex||!onFace(x,y))return;stopGhost();touched=true;cv.setPointerCapture(e.pointerId);cv.classList.add('grabbing');startGrab(x,y);lastAct=performance.now()});
+cv.addEventListener('pointerdown',e=>{loadExtras();const[x,y]=toUnit(e);if(!tex||!onFace(x,y))return;kick();stopGhost();touched=true;cv.setPointerCapture(e.pointerId);cv.classList.add('grabbing');startGrab(x,y);lastAct=performance.now()});
 cv.addEventListener('pointerleave',()=>{hoverFace=false;hx=-1});
-cv.addEventListener('pointermove',e=>{const[x,y]=toUnit(e);hoverFace=!!tex&&onFace(x,y);if(grab)moveGrab(x,y);else flow(x,y)});
+cv.addEventListener('pointerenter',loadExtras);
+cv.addEventListener('pointermove',e=>{const[x,y]=toUnit(e);hoverFace=!!tex&&onFace(x,y);if(grab)moveGrab(x,y);else flow(x,y);kick()});
 const up=()=>{cv.classList.remove('grabbing');endGrab()};
 cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',up);on('pointerup',up);on('mouseup',up);on('blur',up);cv.addEventListener('lostpointercapture',up);
-on('pointermove',e=>{lastMove=performance.now();if(grab)return;const r=cv.getBoundingClientRect();look.x=Math.max(-1,Math.min(1,((e.clientX-r.left)/r.width-.5)*2));look.y=Math.max(-1,Math.min(1,((e.clientY-r.top)/r.height-.4)*2))});
-['mousemove','mousedown','pointerdown','touchstart','keydown','wheel','scroll'].forEach(t=>on(t,()=>{wake();lastAct=performance.now()},{passive:true,capture:true}));
+on('pointermove',e=>{lastMove=performance.now();kick();if(grab)return;const r=cv.getBoundingClientRect();look.x=Math.max(-1,Math.min(1,((e.clientX-r.left)/r.width-.5)*2));look.y=Math.max(-1,Math.min(1,((e.clientY-r.top)/r.height-.4)*2))});
+['mousemove','mousedown','pointerdown','touchstart','keydown','wheel','scroll'].forEach(t=>on(t,()=>{wake();lastAct=performance.now();kick()},{passive:true,capture:true}));
 let winkCd=0,overBtn=null;const BTNS=[];
 on('pointermove',e=>{wake();lastAct=performance.now();
   const b=BTNS.find(b=>{const r=b.getBoundingClientRect();return e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom})||null;
-  if(b&&b!==overBtn&&lastAct>winkCd){winkCd=lastAct+1500;react('wink',1100);say(b.classList.contains('b1')?'Good choice 😉':'Follow for daily AI 😉')}
+  if(b&&b!==overBtn&&lastAct>winkCd){winkCd=lastAct+1500;react('wink',1100)}
   overBtn=b;BTNS.forEach(x=>x.classList.toggle('hov',x===b))},{passive:true});
 hit.addEventListener('click',()=>{touched=true;stopGhost();poke(.5,.38)});
-// ---- talk
-let pokes=0,sayT;
-const POKE=["Ouch!","Hey! I'm shipping code here.","That's my coding face.","Rude. Accurate, but rude.","Poke me again and I'll build an app about it.","Easy! This face is on camera daily.","AI did not prepare me for this.","Vanakkam to you too!"];
-const STRETCH=["My faaaace!","Is this how you treat developers?","Elastic, like my deadlines.","Stretch goals, literally."];
-const pick=a=>a[Math.random()*a.length|0];
-function say(t){return;bubble.textContent=t;bubble.classList.add('on');clearTimeout(sayT);sayT=setTimeout(()=>bubble.classList.remove('on'),1800)}
-let lastSq=0;function squeak(m){}
-function boing(){}
-function twang(m){}
-function whistleTune(){}
-function snore(){}
+// ---- poke count (every tenth poke gets the angry face)
+let pokes=0;
 // ---- ghost hand demo
-let ghostTimer=null,ghostOn=false;
+let ghostTimer=null,ghostOn=false,ghostIdle=0;
 function placeGhost(x,y){ghost.style.transform=`translate(${x*W-16}px,${y*W-14}px)`}
 function ghostDemo(){if(dead||reduceMotion)return;
-  if(touched)return;if(!visible){ghostTimer=setTimeout(ghostDemo,7000);return}ghostOn=true;ghost.classList.add('on');ghost.classList.remove('hold');
+  if(touched)return;if(!visible){ghostTimer=setTimeout(ghostDemo,7000);return}ghostOn=true;kick();ghost.classList.add('on');ghost.classList.remove('hold');
   const from=[.95,.95],at=[.47,.4],to=[.78,.62];const T0=performance.now();
   (function step(now){
     if(!ghostOn)return;const t=(now-T0)/1000;
     if(t<.9){const k=ease(t/.9);placeGhost(lerp(from[0],at[0],k),lerp(from[1],at[1],k))}
     else if(t<1.1){if(!grab){ghost.classList.add('hold');startGrab(at[0],at[1])}}
     else if(t<1.9){const k=ease((t-1.1)/.8),x=lerp(at[0],to[0],k),y=lerp(at[1],to[1],k);placeGhost(x,y);moveGrab(x,y)}
-    else if(t<2.1){if(grab){grab.moved=0.3;grab=null;ghost.classList.remove('hold');say("Go on, grab me 👆")}}
+    else if(t<2.1){if(grab){grab.moved=0.3;grab=null;ghost.classList.remove('hold')}}
     else if(t<2.8){const k=ease((t-2.1)/.7);placeGhost(lerp(to[0],from[0],k),lerp(to[1],from[1],k))}
     else{ghost.classList.remove('on');ghostTimer=setTimeout(ghostDemo,7000);return}
     requestAnimationFrame(step);
   })(T0);
 }
-function stopGhost(){ghostOn=false;clearTimeout(ghostTimer);ghost.classList.remove('on','hold');if(grab&&!touched)grab=null}
+function stopGhost(){ghostOn=false;clearTimeout(ghostTimer);cancelIdle(ghostIdle);ghostIdle=0;ghost.classList.remove('on','hold');if(grab&&!touched)grab=null}
 const lerp=(a,b,k)=>a+(b-a)*k,ease=k=>k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
 
-const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => { try { resize(); } catch (e) {} }) : null;
+const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => { if (!dead) resize(); }) : null;
 if (ro) ro.observe(stage);
 let onScreen = true;
 const sync = () => { visible = onScreen && !document.hidden; if (visible) { dirty = true; kick(); } };
 const io = typeof IntersectionObserver !== 'undefined' ? new IntersectionObserver((es) => { onScreen = es[0].isIntersecting; sync(); }) : null;
 if (io) io.observe(stage);
 document.addEventListener('visibilitychange', sync);
-return () => { dead = true; offs.forEach(f => f()); if (ro) ro.disconnect(); if (io) io.disconnect(); document.removeEventListener('visibilitychange', sync); try { stopGhost(); } catch (e) {} };
+return () => { dead = true; offs.forEach(f => f()); if (ro) ro.disconnect(); if (io) io.disconnect(); document.removeEventListener('visibilitychange', sync); clearTimeout(wakeT); offWake.forEach(f => f()); stopGhost(); };
 }

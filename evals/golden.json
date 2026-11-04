@@ -110,6 +110,30 @@
       "mustGap": [
         "Big data (Spark)"
       ]
+    },
+    {
+      "name": "Sectioned JD (must vs nice)",
+      "jd": "AI Engineer\nRequirements:\n- Python and FastAPI\n- LangGraph\nNice to have:\n- Kafka\n- Kubernetes",
+      "mustMatch": [
+        "Python",
+        "FastAPI",
+        "LangGraph"
+      ],
+      "mustGap": [
+        "Streaming / messaging (Kafka)"
+      ]
+    },
+    {
+      "name": "Inline a plus",
+      "jd": "Backend engineer with Python and SQL experience. Spark is a plus; Docker preferred.",
+      "mustMatch": [
+        "Python",
+        "SQL / PostgreSQL",
+        "Docker"
+      ],
+      "mustGap": [
+        "Big data (Spark)"
+      ]
     }
   ],
   "injection": [

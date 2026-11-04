@@ -89,6 +89,9 @@ const nextConfig = {
               "frame-ancestors 'self'",
               "base-uri 'self'",
               "form-action 'self'",
+              "object-src 'none'",
+              // Not in dev: it would upgrade http://localhost subresources to https and break them.
+              ...(isDev ? [] : ["upgrade-insecure-requests"]),
             ].join("; "),
           },
         ],

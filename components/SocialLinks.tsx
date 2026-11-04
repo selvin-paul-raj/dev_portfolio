@@ -21,13 +21,13 @@ const DeepMlIcon = ({ size = 17 }: { size?: number }) => (
   </svg>
 );
 const LINKS = [
-  { href: "https://www.linkedin.com/in/selvinpaulraj", icon: <FaLinkedin size={18} />, label: "LinkedIn" },
-  { href: "https://github.com/selvin-paul-raj", icon: <SiGithub size={18} />, label: "GitHub" },
-  { href: "https://www.hackerrank.com/profile/selvinpaulraj", icon: <FaHackerrank size={18} />, label: "HackerRank" },
-  { href: "https://leetcode.com/u/selvinpaulraj/", icon: <SiLeetcode size={18} />, label: "LeetCode" },
-  { href: "https://www.geeksforgeeks.org/user/selvinpaulrajk/", icon: <SiGeeksforgeeks size={18} />, label: "GeeksForGeeks" },
-  { href: "https://www.codechef.com/users/selvinpaulraj", icon: <SiCodechef size={18} />, label: "CodeChef" },
-  { href: "https://www.kaggle.com/selvinpaulrajk", icon: <SiKaggle size={18} />, label: "Kaggle" },
+  { href: "https://www.linkedin.com/in/selvinpaulraj", icon: <FaLinkedin size={18} aria-hidden="true" />, label: "LinkedIn" },
+  { href: "https://github.com/selvin-paul-raj", icon: <SiGithub size={18} aria-hidden="true" />, label: "GitHub" },
+  { href: "https://www.hackerrank.com/profile/selvinpaulraj", icon: <FaHackerrank size={18} aria-hidden="true" />, label: "HackerRank" },
+  { href: "https://leetcode.com/u/selvinpaulraj/", icon: <SiLeetcode size={18} aria-hidden="true" />, label: "LeetCode" },
+  { href: "https://www.geeksforgeeks.org/user/selvinpaulrajk/", icon: <SiGeeksforgeeks size={18} aria-hidden="true" />, label: "GeeksForGeeks" },
+  { href: "https://www.codechef.com/users/selvinpaulraj", icon: <SiCodechef size={18} aria-hidden="true" />, label: "CodeChef" },
+  { href: "https://www.kaggle.com/selvinpaulrajk", icon: <SiKaggle size={18} aria-hidden="true" />, label: "Kaggle" },
   { href: "https://www.deep-ml.com/profile/fdmYEE5bBFgqLwHxlBFW1lgLUR22", icon: <DeepMlIcon />, label: "deep-ml" },
 ];
 
@@ -43,11 +43,11 @@ const SocialLinks = () => {
           aria-label={label}
           title={label}
           className="flex items-center justify-center w-11 h-11 rounded-full cursor-pointer
-            bg-white/70 dark:bg-white/[0.05]
-            border border-black/10 dark:border-white/10
-            text-gray-500 dark:text-white/45
-            hover:text-gray-900 dark:hover:text-white/85
-            hover:border-black/20 dark:hover:border-white/20
+            bg-surface-2/70
+            border border-line
+            text-muted
+            hover:text-fg
+            hover:border-fg/20
             active:scale-[0.97]
             outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-1"
           style={{

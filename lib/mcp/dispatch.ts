@@ -3,12 +3,16 @@
 // parameters instead of importing JSON directly, so this one implementation
 // can serve both the Next.js route (JSON imported via "@/lib/data/*") and the
 // standalone Alpic server (JSON loaded via readFileSync). No "@/" aliases or
-// JSON imports here — required for the plain-tsc build (tsconfig.server.json).
+// JSON imports here: required for the plain-tsc build (tsconfig.server.json).
+// Failures a caller can fix throw ToolError (reported as an isError result).
 import { PROFILE } from "./definitions";
-import { McpError, MCP_RESOURCE_NOT_FOUND } from "./errors";
+import { McpError, MCP_RESOURCE_NOT_FOUND, ToolError } from "./errors";
+import { evalResults } from "./insights";
 import { monthsBetween, formatDuration } from "../../utils/calculateDuration";
 import { matchJob } from "../fit/matchJob";
 import type { FitData } from "../fit/matchJob";
+import type { AskData } from "../ask/retrieve";
+import type { EvalsReport, HistoryEntry } from "../../evals/report";
 
 export interface Project {
   show: boolean;
@@ -72,26 +76,24 @@ function caseStudyView(c: CaseStudyData) {
   };
 }
 
-export function getCaseStudyTool(all: CaseStudyData[], slug: unknown): string {
-  if (typeof slug !== "string" || !slug.trim()) {
-    return JSON.stringify(
-      { count: all.length, caseStudies: all.map((c) => ({ slug: c.slug, title: c.title, summary: c.subtitle, url: `${PROFILE.portfolio}/work/${c.slug}` })) },
-      null,
-      2
-    );
+/** Lists every case study when `slug` is empty, else the one matching it (slug, then title). */
+export function getCaseStudy(all: CaseStudyData[], slug: string | undefined): Record<string, unknown> {
+  if (!slug) {
+    return {
+      count: all.length,
+      caseStudies: all.map((c) => ({ slug: c.slug, title: c.title, summary: c.subtitle, url: `${PROFILE.portfolio}/work/${c.slug}` })),
+    };
   }
-  const q = slug.trim().toLowerCase();
+  const q = slug.toLowerCase();
   const study = all.find((c) => c.slug === q) ?? all.find((c) => c.title.toLowerCase().includes(q));
-  if (!study) return JSON.stringify({ error: `No case study "${slug}". Available: ${all.map((c) => c.slug).join(", ")}` });
-  return JSON.stringify(caseStudyView(study), null, 2);
+  if (!study) throw new ToolError(`No case study "${slug}". Available slugs: ${all.map((c) => c.slug).join(", ")}`);
+  return caseStudyView(study);
 }
 
-export interface ResourceData {
+interface ResourceData {
   projects: Project[];
-  skills: unknown;
-  experiences: unknown;
   certifications: Certification[];
-  recognition: unknown;
+  recognition: AskData["recognition"];
   caseStudies: CaseStudyData[];
 }
 
@@ -159,14 +161,31 @@ export function computeExperienceStats(allExperiences: ExperienceEntry[]) {
   };
 }
 
+/** Everything the MCP server and A2A agent read, injected so both builds share one implementation. */
+export interface PortfolioData extends ResourceData {
+  experiences: ExperienceEntry[];
+  skills: SkillsData;
+  evals: EvalsReport;
+  evalsHistory: HistoryEntry[];
+}
+
+export interface SkillsData {
+  skills: Record<string, string[]>;
+}
+
+function page<T>(items: T[], offset: number, limit: number) {
+  const slice = items.slice(offset, offset + limit);
+  const hasMore = offset + slice.length < items.length;
+  return { total: items.length, count: slice.length, offset, has_more: hasMore, ...(hasMore ? { next_offset: offset + slice.length } : {}), slice };
+}
+
 export function searchProjects(
   allProjects: Project[],
-  args: { query?: string; category?: string; tech?: string; featured?: unknown }
-): string {
-  const str = (v: unknown) => (typeof v === "string" ? v : undefined);
-  const query = str(args.query)?.toLowerCase() ?? "";
-  const category = str(args.category);
-  const tech = str(args.tech)?.toLowerCase();
+  args: { query?: string; category?: string; tech?: string; featured?: boolean; limit: number; offset: number }
+): Record<string, unknown> {
+  const query = args.query?.trim().toLowerCase() ?? "";
+  const tech = args.tech?.trim().toLowerCase();
+  const category = args.category;
 
   let results = allProjects.filter((p) => p.show);
   if (query) {
@@ -177,108 +196,118 @@ export function searchProjects(
         p.tags.some((t) => t.toLowerCase().includes(query))
     );
   }
-  if (category && category !== "all") {
-    results = results.filter((p) => p.categories.includes(category));
-  }
-  if (tech) {
-    results = results.filter((p) => p.tags.some((t) => t.toLowerCase().includes(tech)));
-  }
-  if (args.featured === true) {
-    results = results.filter((p) => p.featured === true);
-  }
-  return JSON.stringify({ count: results.length, projects: results }, null, 2);
+  if (category) results = results.filter((p) => p.categories.includes(category));
+  if (tech) results = results.filter((p) => p.tags.some((t) => t.toLowerCase().includes(tech)));
+  if (args.featured === true) results = results.filter((p) => p.featured === true);
+  const { slice, ...meta } = page(results, args.offset, args.limit);
+  return { ...meta, projects: slice };
 }
 
-export function getProjectByTitle(allProjects: Project[], title: unknown): string {
-  if (typeof title !== "string" || !title.trim()) return JSON.stringify({ error: "title is required" });
+/** Exact title first, then the first partial match, among visible projects. */
+export function findProject(allProjects: Project[], title: string): Project {
   const query = title.trim().toLowerCase();
-  const project = allProjects.find((p) => p.show && p.title.toLowerCase().includes(query));
-  if (!project) return JSON.stringify({ error: `No project found matching "${title}"` });
-  return JSON.stringify(project, null, 2);
+  const visible = allProjects.filter((p) => p.show);
+  const project = visible.find((p) => p.title.toLowerCase() === query) ?? visible.find((p) => p.title.toLowerCase().includes(query));
+  if (!project) throw new ToolError(`No project found matching "${title}". Use search_projects to list titles.`);
+  return project;
 }
 
 export function filterCertifications(
   allCertifications: Certification[],
-  args: { category?: string; issuer?: string }
-): string {
+  args: { category?: string; issuer?: string; limit: number; offset: number }
+): Record<string, unknown> {
   let certs = allCertifications.filter((c) => c.show);
   if (args.category) {
     const cat = args.category.toLowerCase();
-    certs = certs.filter((c) => c.category.toLowerCase().includes(cat));
+    certs = certs.filter((c) => c.category.toLowerCase() === cat);
   }
   if (args.issuer) {
     const iss = args.issuer.toLowerCase();
     certs = certs.filter((c) => c.issuer.toLowerCase().includes(iss));
   }
-  return JSON.stringify({ count: certs.length, certifications: certs }, null, 2);
+  const { slice, ...meta } = page(certs, args.offset, args.limit);
+  return { ...meta, certifications: slice };
+}
+
+const TECH_PER_GROUP = 2;
+
+/** The leading skills of each skills.json group (each group lists its strongest first). */
+export function topTechnologies(skills: SkillsData): string[] {
+  return Object.entries(skills.skills)
+    .filter(([group]) => group !== "all")
+    .flatMap(([, list]) => list.slice(0, TECH_PER_GROUP));
 }
 
 export function getProfileSummary(
-  allProjects: Project[],
-  allCertifications: Certification[],
-  allExperiences: ExperienceEntry[]
-): string {
-  const visibleProjects = allProjects.filter((p) => p.show);
-  const visibleCerts = allCertifications.filter((c) => c.show);
-  return JSON.stringify(
-    {
-      ...PROFILE,
-      totalVisibleProjects: visibleProjects.length,
-      featuredProjects: visibleProjects.filter((p) => p.featured === true).map((p) => p.title),
-      totalCertifications: visibleCerts.length,
-      experience: computeExperienceStats(allExperiences),
-      topTechnologies: [
-        "LangGraph",
-        "MCP",
-        "RAG",
-        "Next.js",
-        "Python",
-        "FastAPI",
-        "LangChain",
-        "Claude",
-        "GPT-4",
-      ],
-    },
-    null,
-    2
-  );
+  data: Pick<PortfolioData, "projects" | "certifications" | "experiences" | "skills">
+): Record<string, unknown> {
+  const visibleProjects = data.projects.filter((p) => p.show);
+  return {
+    ...PROFILE,
+    totalVisibleProjects: visibleProjects.length,
+    featuredProjects: visibleProjects.filter((p) => p.featured === true).map((p) => p.title),
+    totalCertifications: data.certifications.filter((c) => c.show).length,
+    experience: computeExperienceStats(data.experiences),
+    topTechnologies: topTechnologies(data.skills),
+  };
 }
 
 export function matchJobTool(
-  jd: unknown,
-  allProjects: Project[],
-  allCertifications: Certification[],
-  allExperiences: ExperienceEntry[]
-): string {
-  if (typeof jd !== "string" || jd.trim().length < 40) {
-    return JSON.stringify({ error: "job_description is required (paste the full JD, at least 40 characters)" });
-  }
-  const data: FitData = {
-    projects: allProjects,
-    certifications: allCertifications,
-    experiences: allExperiences,
+  args: { job_description: string; max_evidence: number; only?: "matched" | "gaps" },
+  data: FitData
+): Record<string, unknown> {
+  const { matched, gaps, gapDetails, ...rest } = matchJob(args.job_description, data, { maxEvidence: args.max_evidence });
+  return {
+    ...rest,
+    ...(args.only === "gaps" ? {} : { matched }),
+    ...(args.only === "matched" ? {} : { gaps, gapDetails }),
+    fullReport: PROFILE.fitCheckUrl,
+    resume: PROFILE.resumeUrl,
   };
-  const report = matchJob(jd, data);
-  return JSON.stringify({ ...report, fullReport: PROFILE.fitCheckUrl, resume: PROFILE.resumeUrl }, null, 2);
 }
 
-export function buildResourceText(uri: string, data: ResourceData): string {
+const json = (value: unknown) => JSON.stringify(value, null, 2);
+
+export function buildResourceText(uri: string, data: PortfolioData): string {
   switch (uri) {
     case "selvin://profile":
-      return JSON.stringify(PROFILE, null, 2);
+      return json(PROFILE);
     case "selvin://projects":
-      return JSON.stringify(data.projects.filter((p) => p.show), null, 2);
+      return json(data.projects.filter((p) => p.show));
     case "selvin://skills":
-      return JSON.stringify(data.skills, null, 2);
+      return json(data.skills);
     case "selvin://experience":
-      return JSON.stringify(data.experiences, null, 2);
+      return json(data.experiences);
     case "selvin://certifications":
-      return JSON.stringify(data.certifications.filter((c) => c.show), null, 2);
+      return json(data.certifications.filter((c) => c.show));
     case "selvin://recognition":
-      return JSON.stringify(data.recognition, null, 2);
+      return json(data.recognition);
     case "selvin://case-studies":
-      return JSON.stringify(data.caseStudies.map(caseStudyView), null, 2);
+      return json(data.caseStudies.map(caseStudyView));
+    case "selvin://evals":
+      return json(evalResults(data.evals, data.evalsHistory, { include_cases: false, history: false }));
     default:
-      throw new McpError(MCP_RESOURCE_NOT_FOUND, `Resource not found: ${uri}`);
+      return readTemplatedResource(uri, data);
+  }
+}
+
+const TEMPLATED_URI = /^selvin:\/\/(case-studies|projects)\/(.+)$/;
+
+/** selvin://case-studies/{slug} and selvin://projects/{title} (URL-encoded). */
+function readTemplatedResource(uri: string, data: PortfolioData): string {
+  const notFound = (detail?: string) => new McpError(MCP_RESOURCE_NOT_FOUND, detail ?? `Resource not found: ${uri}`);
+  const match = TEMPLATED_URI.exec(uri);
+  if (!match) throw notFound();
+  let key: string;
+  try {
+    key = decodeURIComponent(match[2]);
+  } catch {
+    throw notFound();
+  }
+  try {
+    return json(match[1] === "projects" ? findProject(data.projects, key) : getCaseStudy(data.caseStudies, key));
+  } catch (err) {
+    if (err instanceof ToolError) throw notFound(err.message);
+    throw err;
   }
 }

@@ -60,8 +60,8 @@ function Plaque() {
   return (
     <span aria-hidden="true" className="flex flex-col items-center">
       <span className="mt-3 sm:mt-5 flex h-[3.25rem] w-11 sm:h-[4.25rem] sm:w-14 flex-col items-center justify-center gap-1 rounded-md border-2 border-[#a07a06] bg-[#1a1408] shadow-[0_6px_14px_-6px_rgba(0,0,0,0.6)]">
-        <LuAward size={18} className="text-[#f5c518]" />
-        <span className="text-[9px] font-bold tracking-wide text-[#f5c518]">SPOT</span>
+        <LuAward size={18} className="text-accent" />
+        <span className="text-[9px] font-bold tracking-wide text-accent">SPOT</span>
       </span>
     </span>
   );
@@ -92,8 +92,8 @@ function Story({ a }: { a: Achievement }) {
             href={a.links.linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-10 items-center gap-1.5 rounded-full border border-black/15 dark:border-white/15 px-4 text-sm font-medium text-gray-800 dark:text-white/85
-              hover:border-black/30 dark:hover:border-white/35 transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="inline-flex h-10 items-center gap-1.5 rounded-full border border-line-strong px-4 text-sm font-medium text-fg
+              hover:border-fg/35 transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             <FaLinkedin size={14} aria-hidden="true" /> See the post <MdArrowOutward size={13} aria-hidden="true" />
           </a>
@@ -134,7 +134,7 @@ export default function TrophyShelf({ items }: { items: Achievement[] }) {
                 }}
                 type="button"
                 aria-pressed={on}
-                aria-label={`${a.title}, ${a.issuer}, ${fmtDate(a.date)}`}
+                aria-label={`${shortName(a)} ${a.date.slice(0, 4)}: ${a.title}, ${a.issuer}, ${fmtDate(a.date)}`}
                 onClick={() => setActive(i)}
                 onKeyDown={(e) => onKey(e, i)}
                 className="group flex min-w-0 flex-col items-center rounded-xl pb-3 outline-none focus-visible:ring-2 focus-visible:ring-accent"
@@ -153,7 +153,7 @@ export default function TrophyShelf({ items }: { items: Achievement[] }) {
           })}
         </div>
         {/* The ledge */}
-        <div aria-hidden="true" className="mx-2 h-2 rounded-full bg-gradient-to-b from-gray-200 to-gray-300 dark:from-white/[0.12] dark:to-white/[0.05] shadow-[0_8px_16px_-8px_rgba(0,0,0,0.5)]" />
+        <div aria-hidden="true" className="mx-2 h-2 rounded-full bg-gradient-to-b from-line to-line-strong dark:from-fg/[0.12] dark:to-fg/[0.05] shadow-[0_8px_16px_-8px_rgba(0,0,0,0.5)]" />
       </div>
 
       <div aria-live="polite" className="mt-6 border-t border-line pt-5">

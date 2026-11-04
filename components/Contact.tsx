@@ -22,9 +22,9 @@ const CHANNELS = [
 ];
 
 const FIELD =
-  "w-full px-4 rounded-xl text-base sm:text-sm bg-gray-50 dark:bg-white/[0.06] border border-line-strong" +
-  "text-fg placeholder-gray-500 dark:placeholder-[#8a8a93] " +
-  "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#101015] " +
+  "w-full px-4 rounded-xl text-base sm:text-sm bg-surface-3 border border-line-strong " +
+  "text-fg placeholder:text-muted " +
+  "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2 " +
   "transition-colors duration-150";
 const LABEL = "text-sm font-medium text-fg-2";
 
@@ -64,7 +64,7 @@ function DirectLinks() {
         <div className="flex items-center gap-2 min-w-0">
           <a
             href={`mailto:${EMAIL}`}
-            className="min-w-0 truncate py-2 text-lg sm:text-xl font-semibold text-gray-900 dark:text-white underline decoration-accent decoration-2 underline-offset-[6px]
+            className="min-w-0 truncate py-2 text-lg sm:text-xl font-semibold text-fg underline decoration-accent decoration-2 underline-offset-[6px]
               hover:decoration-[3px] rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-accent"
           >
             {EMAIL}
@@ -74,8 +74,8 @@ function DirectLinks() {
             onClick={handleCopyEmail}
             aria-label={copied ? "Email address copied" : "Copy email address"}
             title="Copy email address"
-            className="shrink-0 inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/10 dark:border-white/15
-              text-gray-600 dark:text-white/65 hover:text-gray-900 dark:hover:text-white hover:border-black/25 dark:hover:border-white/30
+            className="shrink-0 inline-flex h-10 w-10 items-center justify-center rounded-full border border-line
+              text-muted hover:text-fg hover:border-fg/30
               outline-none focus-visible:ring-2 focus-visible:ring-accent transition-colors duration-150"
           >
             {copied ? <LuCheck size={16} aria-hidden="true" className="text-ok" /> : <LuCopy size={16} aria-hidden="true" />}
@@ -94,13 +94,13 @@ function DirectLinks() {
                 href={href}
                 target={external ? "_blank" : undefined}
                 rel={external ? "noopener noreferrer" : undefined}
-                aria-label={`${label}: ${value}${external ? " (opens in new tab)" : ""}`}
                 className="group grid grid-cols-[1.25rem_5.5rem_minmax(0,1fr)_1rem] items-center gap-3 py-3.5 min-h-[48px]
                   outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent rounded-sm"
               >
                 <Icon size={16} aria-hidden="true" className="text-muted group-hover:text-accent-fg transition-colors duration-150" />
                 <span className="text-sm text-muted">{label}</span>
                 <span className="truncate text-sm font-medium text-fg">{value}</span>
+                {external && <span className="sr-only"> (opens in new tab)</span>}
                 <MdArrowOutward
                   size={15}
                   aria-hidden="true"

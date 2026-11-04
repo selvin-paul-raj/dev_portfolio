@@ -32,8 +32,8 @@ function CommandRow({ label, command, note }: Entry) {
         aria-label={copied ? `${label} copied` : `Copy ${label}`}
         title="Copy"
         className="shrink-0 inline-flex h-11 w-11 [@media(pointer:fine)]:h-9 [@media(pointer:fine)]:w-9 items-center justify-center rounded-full
-          border border-black/10 dark:border-white/15 text-gray-600 dark:text-white/60 hover:text-gray-900 dark:hover:text-white
-          hover:border-black/25 dark:hover:border-white/30 transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          border border-line text-muted hover:text-fg
+          hover:border-fg/30 transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-accent"
       >
         {copied ? <LuCheck size={15} aria-hidden="true" className="text-ok" /> : <LuCopy size={15} aria-hidden="true" />}
       </button>

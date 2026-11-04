@@ -10,13 +10,14 @@ website=https://selvinpaulraj.vercel.app
 
 [MCP]
 endpoint=https://selvinpaulraj.vercel.app/api/mcp
-protocol=MCP-2024-11-05
+protocol=MCP-2025-06-18 (negotiates down to 2024-11-05)
 transport=http-json-rpc
 discovery=https://selvinpaulraj.vercel.app/.well-known/mcp.json
 
 [CAPABILITIES]
-resources=selvin://profile,selvin://projects,selvin://skills,selvin://experience,selvin://certifications,selvin://recognition
-tools=search_projects,get_project_by_title,list_github_repos,get_github_repo,filter_certifications,get_profile_summary,contact_selvin
+resources=selvin://profile,selvin://projects,selvin://skills,selvin://experience,selvin://certifications,selvin://recognition,selvin://case-studies
+tools=search_projects,get_project_by_title,list_github_repos,get_github_repo,filter_certifications,get_profile_summary,get_case_study,match_job,ask_selvin,get_eval_results,get_challenge_info,contact_selvin
+pages=https://selvinpaulraj.vercel.app/fit,https://selvinpaulraj.vercel.app/ask,https://selvinpaulraj.vercel.app/evals,https://selvinpaulraj.vercel.app/challenge,https://selvinpaulraj.vercel.app/work
 
 [PERMISSIONS]
 indexing=allowed

@@ -7,7 +7,7 @@ import { certs, featured, isAI, monthKey, monthLabel, yearOf, type Cert } from "
 import type { Selection } from "./LearningHeatmap";
 
 const PAGE = 12;
-const FOCUS = "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#09090b]";
+const FOCUS = "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface";
 
 function pick(selection: Selection): { list: Cert[]; title: string } {
   switch (selection.kind) {
@@ -74,7 +74,7 @@ export default function CredentialList({ selection, onSelect }: { selection: Sel
   const chip = (on: boolean) =>
     `inline-flex h-10 items-center rounded-full border px-4 text-sm font-medium transition-colors duration-150 ${FOCUS} ${
  on
- ? "border-gray-900 bg-gray-900 text-white dark:border-accent dark:bg-accent dark:text-[#1a1500]"
+ ? "border-primary bg-primary text-on-primary"
  : "border-line text-fg-2 hover:border-line-strong "
  }`;
 
@@ -101,8 +101,8 @@ export default function CredentialList({ selection, onSelect }: { selection: Sel
               setLimit(PAGE);
             }}
             placeholder="Title, issuer, skill or ID"
-            className="h-10 w-full rounded-full border border-black/15 dark:border-white/15 bg-white dark:bg-white/[0.04] pl-9 pr-9 text-base sm:text-sm
-              text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-white/40 outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="h-10 w-full rounded-full border border-line-strong bg-surface-2 pl-9 pr-9 text-base sm:text-sm
+              text-fg placeholder:text-muted outline-none focus-visible:ring-2 focus-visible:ring-accent"
           />
           {query && (
             <button

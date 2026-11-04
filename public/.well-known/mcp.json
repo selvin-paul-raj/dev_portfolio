@@ -1,37 +1,128 @@
 {
   "schema_version": "1.0",
   "server_name": "selvin-portfolio-mcp",
-  "server_version": "1.0.0",
+  "server_version": "2.0.0",
   "display_name": "Selvin PaulRaj K — Portfolio MCP Server",
-  "description": "MCP server for Selvin PaulRaj K's portfolio — AI engineer from Chennai, India specializing in AI Agents, MCP, LangGraph, RAG.",
+  "description": "MCP server for Selvin PaulRaj K's portfolio (AI engineer, Chennai, India: AI agents, MCP, LangGraph, RAG). Job-fit scoring with cited evidence, grounded Q&A with citations, case studies, eval results, and live GitHub stats.",
   "endpoint": "https://selvinpaulraj.vercel.app/api/mcp",
-  "protocol_version": "2024-11-05",
-  "transport": "http",
+  "protocol_version": "2025-11-25",
+  "supported_protocol_versions": [
+    "2025-11-25",
+    "2025-06-18",
+    "2025-03-26",
+    "2024-11-05"
+  ],
+  "transport": "streamable-http",
   "capabilities": {
     "tools": true,
     "resources": true,
-    "prompts": false,
+    "resource_templates": true,
+    "prompts": true,
     "sampling": false
   },
   "resources": [
-    { "uri": "selvin://profile", "name": "Professional Profile" },
-    { "uri": "selvin://projects", "name": "Projects (44+)" },
-    { "uri": "selvin://skills", "name": "Technical Skills" },
-    { "uri": "selvin://experience", "name": "Work & Education" },
-    { "uri": "selvin://certifications", "name": "Certifications (20+)" },
-    { "uri": "selvin://recognition", "name": "Recognition & Awards" },
-    { "uri": "selvin://case-studies", "name": "Case Studies" }
+    {
+      "uri": "selvin://profile",
+      "name": "Professional Profile"
+    },
+    {
+      "uri": "selvin://projects",
+      "name": "Projects"
+    },
+    {
+      "uri": "selvin://skills",
+      "name": "Technical Skills"
+    },
+    {
+      "uri": "selvin://experience",
+      "name": "Work & Education"
+    },
+    {
+      "uri": "selvin://certifications",
+      "name": "Certifications"
+    },
+    {
+      "uri": "selvin://recognition",
+      "name": "Recognition & Awards"
+    },
+    {
+      "uri": "selvin://case-studies",
+      "name": "Case Studies"
+    },
+    {
+      "uri": "selvin://evals",
+      "name": "Eval Results"
+    }
+  ],
+  "resource_templates": [
+    {
+      "uri_template": "selvin://case-studies/{slug}",
+      "name": "Case Study"
+    },
+    {
+      "uri_template": "selvin://projects/{title}",
+      "name": "Project"
+    }
   ],
   "tools": [
-    { "name": "search_projects", "description": "Search projects by keyword, category, or tech" },
-    { "name": "get_project_by_title", "description": "Get project by title" },
-    { "name": "list_github_repos", "description": "Live GitHub repo stats" },
-    { "name": "get_github_repo", "description": "Detailed stats for one repo" },
-    { "name": "filter_certifications", "description": "Filter certifications" },
-    { "name": "get_profile_summary", "description": "Full professional summary" },
-    { "name": "get_case_study", "description": "In-depth case study: flow, measured results, design decisions" },
-    { "name": "match_job", "description": "Score fit against a job description with cited evidence and gaps" },
-    { "name": "contact_selvin", "description": "Send a contact message" }
+    {
+      "name": "search_projects",
+      "description": "Search projects by keyword, category, tech, or featured flag (paged)"
+    },
+    {
+      "name": "get_project_by_title",
+      "description": "Get one project by title"
+    },
+    {
+      "name": "list_github_repos",
+      "description": "Live GitHub repo stats"
+    },
+    {
+      "name": "get_github_repo",
+      "description": "Live details for one repo"
+    },
+    {
+      "name": "filter_certifications",
+      "description": "Filter certifications by category or issuer (paged)"
+    },
+    {
+      "name": "get_profile_summary",
+      "description": "Profile with exact experience totals and top technologies"
+    },
+    {
+      "name": "get_case_study",
+      "description": "In-depth case study: flow, measured results, design decisions"
+    },
+    {
+      "name": "match_job",
+      "description": "Score fit against a job description with cited evidence and gaps"
+    },
+    {
+      "name": "ask_selvin",
+      "description": "Grounded answer to a question about Selvin, with validated citations"
+    },
+    {
+      "name": "get_eval_results",
+      "description": "Pass rates and trends of the Ask/Fit eval suites"
+    },
+    {
+      "name": "get_challenge_info",
+      "description": "Levels and defense layers of the prompt-injection challenge"
+    },
+    {
+      "name": "contact_selvin",
+      "description": "Send Selvin one contact email"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "evaluate_fit",
+      "description": "Assess fit for a job description using match_job"
+    },
+    {
+      "name": "summarize_for_role",
+      "description": "Evidence-backed summary tailored to a role"
+    }
   ],
   "owner": {
     "name": "Selvin PaulRaj K",

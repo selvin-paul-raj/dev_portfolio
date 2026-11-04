@@ -39,14 +39,14 @@ export default function Pagination({
   const isPill = variant === "pill";
   const r = isPill ? "rounded-full" : "rounded-lg";
   const activeBtn = isPill
-    ? "bg-accent text-[#1a1500] border-accent font-semibold"
-    : "bg-gray-900 dark:bg-accent text-white dark:text-black shadow-sm";
+    ? "bg-accent text-fg dark:text-on-primary border-accent font-semibold"
+    : "bg-primary text-on-primary shadow-sm";
   const inactiveBtn = isPill
     ? "border border-line text-fg-2 hover:border-line-strong hover:text-fg"
-    : "bg-white dark:bg-white/5 border border-line text-fg-2 hover:bg-gray-50 dark:hover:bg-white/10";
+    : "bg-surface-2 border border-line text-fg-2 hover:bg-surface-3";
   const navBtn = isPill
     ? "border border-line text-muted disabled:opacity-30 hover:not-disabled:border-line-strong"
-    : "bg-white dark:bg-white/5 border border-line text-muted disabled:opacity-30 disabled:cursor-not-allowed hover:not-disabled:bg-gray-50 dark:hover:not-disabled:bg-white/10";
+    : "bg-surface-2 border border-line text-muted disabled:opacity-30 disabled:cursor-not-allowed hover:not-disabled:bg-surface-3";
 
   return (
     <nav

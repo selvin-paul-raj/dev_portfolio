@@ -9,12 +9,13 @@ import ThemeSwitch from "@/components/ThemeSwitch";
 import CommandPalette from "@/components/CommandPalette";
 import { caseStudies } from "@/lib/work";
 import { Toaster } from "react-hot-toast";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import ActiveSectionContextProvider from "@/context/active-section-context";
 import ThemeContextProvider from "@/context/theme-context";
-import { projectsData } from "@/lib/data";
 import { SITE_URL } from "@/lib/site";
+import { JsonLd, PERSON_ID, WEBSITE_ID } from "@/lib/seo";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -38,22 +39,115 @@ const instrumentSerif = Instrument_Serif({
   preload: false,
 });
 
-// Open-source featured projects only — private work projects have no public URL to point at.
-const featuredProjectsItemList = projectsData
-  .filter((p) => p.featured && p.code)
-  .map((p, i) => ({
-    "@type": "ListItem",
-    position: i + 1,
-    item: {
-      "@type": "SoftwareSourceCode",
-      name: p.title,
-      description: p.description,
-      author: { "@id": `${SITE_URL}/#person` },
-      programmingLanguage: p.tags,
-      codeRepository: p.code,
-      ...(p.live ? { url: p.live } : {}),
+const CREDENTIALS: Array<[name: string, issuer: string, year: string]> = [
+  ["Introduction to Model Context Protocol", "Anthropic", "2026"],
+  ["Claude Code in Action", "Anthropic", "2026"],
+  ["Claude with the Anthropic API", "Anthropic", "2026"],
+  ["AI Agents Fundamentals", "Hugging Face", "2025"],
+];
+
+const PERSON = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": PERSON_ID,
+  name: "Selvin PaulRaj K",
+  url: SITE_URL,
+  image: `${SITE_URL}/Selvin_PaulRaj.webp`,
+  sameAs: [
+    "https://github.com/selvin-paul-raj",
+    "https://linkedin.com/in/selvinpaulraj",
+    "https://www.hackerrank.com/profile/selvinpaulraj",
+    "https://leetcode.com/u/selvinpaulraj/",
+  ],
+  jobTitle: "Associate Data Analyst, AI Automation",
+  hasOccupation: {
+    "@type": "Occupation",
+    name: "AI Engineer",
+    description:
+      "Builds LangGraph multi-agent systems, hybrid retrieval (FAISS + BM25), MCP servers, and LLM evaluation pipelines. Open to AI Engineer roles.",
+  },
+  description:
+    "AI engineer specializing in agentic AI systems, MCP servers, LangGraph multi-agent pipelines, RAG systems, and enterprise AI automation. SPOT Recognition awardee at Zinnov (Draup). Claude Certified Architect – Foundations.",
+  award:
+    "SPOT Recognition — Automation CoE, Zinnov/Draup (June 2026) — for designing AI agents and automation solutions that improved operational efficiency and drove cross-team innovation.",
+  knowsAbout: [
+    "AI Agents",
+    "Agentic AI Systems",
+    "Model Context Protocol",
+    "LangGraph",
+    "LangChain",
+    "RAG",
+    "LLM Engineering",
+    "Multi-Agent Systems",
+    "Next.js",
+    "Python",
+    "FastAPI",
+    "Vector Databases",
+    "FAISS",
+    "BM25 Retrieval",
+    "Hybrid Retrieval",
+    "Anthropic Claude",
+    "Trino SQL",
+    "Workforce Intelligence",
+    "Entity Resolution",
+    "Semantic Search",
+    "Enterprise Data Automation",
+  ],
+  hasCredential: [
+    {
+      "@type": "EducationalOccupationalCredential",
+      credentialCategory: "certification",
+      name: "Claude Certified Architect - Foundations",
+      description:
+        "Credential for solution architects who can design and build production-grade applications with Claude using Claude Code, the Claude Agent SDK, the Claude API, and MCP.",
+      recognizedBy: { "@type": "Organization", name: "Anthropic" },
+      dateCreated: "2026",
     },
-  }));
+    ...CREDENTIALS.map(([name, issuer, year]) => ({
+      "@type": "EducationalOccupationalCredential",
+      credentialCategory: "certificate",
+      name,
+      recognizedBy: { "@type": "Organization", name: issuer },
+      dateCreated: year,
+    })),
+  ],
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Chennai",
+    addressRegion: "Tamil Nadu",
+    addressCountry: "IN",
+  },
+  worksFor: {
+    "@type": "Organization",
+    name: "Zinnov (Draup)",
+    url: "https://draup.com",
+  },
+  alumniOf: [
+    {
+      "@type": "EducationalOrganization",
+      name: "Kings Engineering College",
+      description: "M.E Computer Science with AI specialization (2025–Present)",
+    },
+    {
+      "@type": "EducationalOrganization",
+      name: "DMI College of Engineering",
+      description: "B.Tech Information Technology, CGPA 8.4 (2021–2025)",
+    },
+  ],
+};
+
+const WEBSITE = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": WEBSITE_ID,
+  name: "Selvin PaulRaj K — AI Engineer Portfolio",
+  url: SITE_URL,
+  inLanguage: "en",
+  author: { "@id": PERSON_ID },
+  publisher: { "@id": PERSON_ID },
+  description:
+    "Portfolio of Selvin PaulRaj K — AI Engineer building AI Agents, MCP servers, RAG systems, and agentic workflows.",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -157,8 +251,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://leetcode.com" />
         <link rel="dns-prefetch" href="https://www.hackerrank.com" />
 
-        {/* Preconnect for analytics CDN */}
-        <link rel="preconnect" href="https://www.clarity.ms" />
+        {/* Analytics CDN: Clarity loads late (see public/clarity.js), so only resolve DNS early */}
         <link rel="dns-prefetch" href="https://www.clarity.ms" />
 
         {/* AI/LLM discovery link-rels */}
@@ -166,198 +259,12 @@ export default function RootLayout({
         <link rel="ai-plugin" type="application/json" href="/.well-known/ai-plugin.json" />
         <link rel="mcp-server" type="application/json" href="/.well-known/mcp.json" />
 
-        {/* Person structured data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Person",
-              "@id": `${SITE_URL}/#person`,
-              name: "Selvin PaulRaj K",
-              url: SITE_URL,
-              image: `${SITE_URL}/Selvin_PaulRaj.webp`,
-              sameAs: [
-                "https://github.com/selvin-paul-raj",
-                "https://linkedin.com/in/selvinpaulraj",
-                "https://www.hackerrank.com/profile/selvinpaulraj",
-                "https://leetcode.com/u/selvinpaulraj/",
-              ],
-              jobTitle: "Associate Data Analyst, AI Automation",
-              hasOccupation: {
-                "@type": "Occupation",
-                name: "AI Engineer",
-                description:
-                  "Builds LangGraph multi-agent systems, hybrid retrieval (FAISS + BM25), MCP servers, and LLM evaluation pipelines. Open to AI Engineer roles.",
-              },
-              description:
-                "AI engineer specializing in agentic AI systems, MCP servers, LangGraph multi-agent pipelines, RAG systems, and enterprise AI automation. SPOT Recognition awardee at Zinnov (Draup). Claude Certified Architect – Foundations.",
-              award:
-                "SPOT Recognition — Automation CoE, Zinnov/Draup (June 2026) — for designing AI agents and automation solutions that improved operational efficiency and drove cross-team innovation.",
-              knowsAbout: [
-                "AI Agents",
-                "Agentic AI Systems",
-                "Model Context Protocol",
-                "LangGraph",
-                "LangChain",
-                "RAG",
-                "LLM Engineering",
-                "Multi-Agent Systems",
-                "Next.js",
-                "Python",
-                "FastAPI",
-                "Vector Databases",
-                "FAISS",
-                "BM25 Retrieval",
-                "Hybrid Retrieval",
-                "Anthropic Claude",
-                "Trino SQL",
-                "Workforce Intelligence",
-                "Entity Resolution",
-                "Semantic Search",
-                "Enterprise Data Automation",
-              ],
-              hasCredential: [
-                {
-                  "@type": "EducationalOccupationalCredential",
-                  credentialCategory: "certification",
-                  name: "Claude Certified Architect - Foundations",
-                  description:
-                    "Credential for solution architects who can design and build production-grade applications with Claude using Claude Code, the Claude Agent SDK, the Claude API, and MCP.",
-                  recognizedBy: { "@type": "Organization", name: "Anthropic" },
-                  dateCreated: "2026",
-                },
-                {
-                  "@type": "EducationalOccupationalCredential",
-                  credentialCategory: "certificate",
-                  name: "Introduction to Model Context Protocol",
-                  recognizedBy: { "@type": "Organization", name: "Anthropic" },
-                  dateCreated: "2026",
-                },
-                {
-                  "@type": "EducationalOccupationalCredential",
-                  credentialCategory: "certificate",
-                  name: "Claude Code in Action",
-                  recognizedBy: { "@type": "Organization", name: "Anthropic" },
-                  dateCreated: "2026",
-                },
-                {
-                  "@type": "EducationalOccupationalCredential",
-                  credentialCategory: "certificate",
-                  name: "Claude with the Anthropic API",
-                  recognizedBy: { "@type": "Organization", name: "Anthropic" },
-                  dateCreated: "2026",
-                },
-                {
-                  "@type": "EducationalOccupationalCredential",
-                  credentialCategory: "certificate",
-                  name: "AI Agents Fundamentals",
-                  recognizedBy: { "@type": "Organization", name: "Hugging Face" },
-                  dateCreated: "2025",
-                },
-              ],
-              address: {
-                "@type": "PostalAddress",
-                addressLocality: "Chennai",
-                addressRegion: "Tamil Nadu",
-                addressCountry: "IN",
-              },
-              worksFor: {
-                "@type": "Organization",
-                name: "Zinnov (Draup)",
-                url: "https://draup.com",
-              },
-              alumniOf: [
-                {
-                  "@type": "EducationalOrganization",
-                  name: "Kings Engineering College",
-                  description: "M.E Computer Science with AI specialization (2025–Present)",
-                },
-                {
-                  "@type": "EducationalOrganization",
-                  name: "DMI College of Engineering",
-                  description: "B.Tech Information Technology, CGPA 8.4 (2021–2025)",
-                },
-              ],
-            }),
-          }}
-        />
-
-        {/* ProfilePage structured data — key for AI Overviews (AIO) */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "ProfilePage",
-              "@id": `${SITE_URL}/#profile`,
-              name: "Selvin PaulRaj K — AI Engineer Portfolio",
-              url: SITE_URL,
-              description:
-                "Portfolio of Selvin PaulRaj K, AI Engineer and Associate Data Analyst at Zinnov/Draup. Specializes in agentic AI, MCP servers, LangGraph pipelines, hybrid retrieval, and enterprise AI automation. SPOT Recognition awardee.",
-              dateCreated: "2024",
-              dateModified: "2026",
-              author: {
-                "@type": "Person",
-                "@id": `${SITE_URL}/#person`,
-                name: "Selvin PaulRaj K",
-              },
-              mainEntity: {
-                "@type": "Person",
-                "@id": `${SITE_URL}/#person`,
-                name: "Selvin PaulRaj K",
-                image: `${SITE_URL}/Selvin_PaulRaj.webp`,
-                url: SITE_URL,
-              },
-            }),
-          }}
-        />
-
-        {/* WebSite structured data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              name: "Selvin PaulRaj K — AI Engineer Portfolio",
-              url: SITE_URL,
-              author: {
-                "@type": "Person",
-                name: "Selvin PaulRaj K",
-              },
-              description:
-                "Portfolio of Selvin PaulRaj K — AI Engineer building AI Agents, MCP servers, RAG systems, and agentic workflows.",
-            }),
-          }}
-        />
-
-        {/* Top AI projects structured data */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "ItemList",
-              name: "Selvin PaulRaj K — Featured AI Engineering Projects",
-              itemListElement: featuredProjectsItemList,
-            }),
-          }}
-        />
+        <JsonLd data={PERSON} />
+        <JsonLd data={WEBSITE} />
       </head>
       <body className="bg-surface text-fg relative pt-20 pb-16 md:pb-0 md:pl-16 ">
-        {/* Microsoft Clarity Analytics — deferred until page is idle */}
-        <Script
-          id="clarity-analytics"
-          strategy="lazyOnload"
-          dangerouslySetInnerHTML={{
-            __html: `(function(c,l,a,r,i,t,y){
-              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-            })(window, document, "clarity", "script", "oo7sqjfgyt");`,
-          }}
-        />
+        {/* Microsoft Clarity: public/clarity.js waits for the first interaction or a few idle seconds */}
+        <Script id="clarity-analytics" src="/clarity.js" strategy="lazyOnload" />
 
         <ThemeContextProvider>
           <ActiveSectionContextProvider>
@@ -373,6 +280,7 @@ export default function RootLayout({
             <ThemeSwitch />
             <CommandPalette studies={caseStudies.map((c) => ({ slug: c.slug, title: c.title, headline: c.results[0].value }))} />
             <Toaster position="top-right" />
+            <Analytics />
             <SpeedInsights />
           </ActiveSectionContextProvider>
         </ThemeContextProvider>

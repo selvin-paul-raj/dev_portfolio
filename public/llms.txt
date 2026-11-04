@@ -26,7 +26,7 @@
 
 ## Case Studies
 
-In-depth, stage-by-stage walkthroughs with measured results and how each system is verified (also via MCP: `get_case_study`, resource `selvin://case-studies`):
+14 in-depth, stage-by-stage walkthroughs with measured results and how each system is verified (also via MCP: `get_case_study`, resource `selvin://case-studies`):
 
 - [DRI-MAS](https://selvinpaulraj.vercel.app/work/dri-mas): Data Request Intelligence Multi-Agent System. A LangGraph multi-agent system that turns plain-English data requests into validated Trino SQL, with four human-in-the-loop interrupts and resumable state.
 - [Akavizhi](https://selvinpaulraj.vercel.app/work/akavizhi): A single-user personal AI: a two-stage router hands each request to one of nine specialist agents, and every consequential action has to match what the owner actually said.
@@ -48,11 +48,11 @@ In-depth, stage-by-stage walkthroughs with measured results and how each system 
 - **Fit check (web)**: https://selvinpaulraj.vercel.app/fit — paste a JD; every matched requirement cites the work bullet, project, or certification behind it, and unmatched requirements are listed as gaps. Deterministic, no LLM.
 - **Fit check (MCP)**: tool `match_job(job_description)` on the MCP server below.
 - **A2A agent**: https://selvinpaulraj.vercel.app/.well-known/agent-card.json (JSON-RPC `message/send`, skills `job_fit` and `profile`).
-- **Case studies**: https://selvinpaulraj.vercel.app/work — DRI-MAS, Company Synonym Agent, Invoice-to-PO workflow, Finn Advisor, ChunkLab; each walked through stage by stage with measured results.
+- **Case studies**: https://selvinpaulraj.vercel.app/work: 14 builds (listed above), each walked through stage by stage with measured results.
 - **Terminal / agents**: `curl selvinpaulraj.vercel.app` returns a plain-text resume card; requests with `Accept: text/markdown` get this documentation as markdown.
 - **Ask Selvin**: https://selvinpaulraj.vercel.app/ask — grounded Q&A over this portfolio (BM25 retrieval, validated citations, refuses off-topic questions).
-- **Evals**: https://selvinpaulraj.vercel.app/evals — published retrieval hit@k/MRR, off-topic refusal, and fit-check accuracy for the features above.
-- **Prompt-injection challenge**: https://selvinpaulraj.vercel.app/challenge — five stacked LLM defenses (instructions, input filter, output filter, guard model).
+- **Evals**: https://selvinpaulraj.vercel.app/evals: published results for the features above: retrieval hit@k and MRR, off-topic refusal, safety gate, free-chat block, fit-check accuracy, and live LLM grounding, with run history and failures included.
+- **Prompt-injection challenge**: https://selvinpaulraj.vercel.app/challenge: five levels, each adding one defense layer: scope filter, system prompt, input filter, output filter, guard model.
 - **Machine-readable resume**: https://selvinpaulraj.vercel.app/resume.json (JSON Resume schema).
 - **Open to**: AI Engineer, GenAI / LLM Engineer, Agentic AI Engineer, Applied AI Engineer roles. Official title is Associate Data Analyst; the work is AI engineering.
 
@@ -61,7 +61,7 @@ In-depth, stage-by-stage walkthroughs with measured results and how each system 
 Connect any MCP-compatible AI assistant directly to Selvin's portfolio data.
 
 **Endpoint**: https://selvinpaulraj.vercel.app/api/mcp
-**Protocol**: MCP 2024-11-05 (JSON-RPC 2.0 over HTTP)
+**Protocol**: MCP 2025-06-18 (negotiates down to 2024-11-05), JSON-RPC 2.0 over HTTP
 
 ### MCP Resources
 
@@ -73,6 +73,7 @@ Connect any MCP-compatible AI assistant directly to Selvin's portfolio data.
 | selvin://experience | Work history and education |
 | selvin://certifications | 20+ verified certifications |
 | selvin://recognition | Awards and achievements |
+| selvin://case-studies | Case studies with architecture, results, and decisions |
 
 ### MCP Tools
 
@@ -84,6 +85,11 @@ Connect any MCP-compatible AI assistant directly to Selvin's portfolio data.
 | get_github_repo(repo) | Detailed stats for one repo |
 | filter_certifications(category, issuer) | Filter certifications |
 | get_profile_summary() | Full professional summary |
+| get_case_study(slug) | One case study: problem, stages, measured results, decisions |
+| match_job(job_description) | Deterministic fit check of a job description, with cited evidence and gaps |
+| ask_selvin(question) | Grounded, cited answer to a question about Selvin's work |
+| get_eval_results() | Latest published eval results for this site's AI features |
+| get_challenge_info() | Levels and defenses of the prompt-injection challenge |
 | contact_selvin(name, email, message) | Send Selvin a message |
 
 ## Key Work at Zinnov/Draup

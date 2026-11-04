@@ -24,6 +24,8 @@
   --warn: 180 83 9;         /* #b45309 */
   --danger: 185 28 28;      /* #b91c1c */
   --portrait-bg: 246 231 166; /* #f6e7a6 pale gold, so the face leads in light mode */
+  --primary: 24 24 27;      /* #18181b solid button fill */
+  --on-primary: 250 250 249; /* #fafaf9 */
 }
 .dark {
   --surface: 9 9 11;        /* #09090b */
@@ -41,6 +43,15 @@
   --warn: 253 186 116;      /* #fdba74 */
   --danger: 252 165 165;    /* #fca5a5 */
   --portrait-bg: 245 197 24; /* #f5c518 brand gold, matches the CTA */
+  --primary: 245 197 24;    /* #f5c518 gold button fill */
+  --on-primary: 26 21 0;    /* #1a1500 */
+}
+
+/* Easing tokens; ease-out-expo and ease-out-quart are also Tailwind classes (tailwind.config.ts). */
+:root {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 html,
@@ -125,14 +136,14 @@ pre {
 /* Hero ring: slow, ambient — a full turn every 18s */
 .anim-ring-spin { animation: ring-spin 18s linear infinite; }
 
-.anim-fade-up  { animation: fadeUp  0.45s cubic-bezier(0.23,1,0.32,1) both; }
+.anim-fade-up  { animation: fadeUp  0.45s var(--ease-out) both; }
 /* Projects explorer: the detail panel settles in when a project is picked */
 @keyframes detailIn {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.anim-detail-in { animation: detailIn 0.22s cubic-bezier(0.23,1,0.32,1) both; }
-.anim-fade-in  { animation: fadeIn  0.45s cubic-bezier(0.23,1,0.32,1) both; }
+.anim-detail-in { animation: detailIn 0.22s var(--ease-out) both; }
+.anim-fade-in  { animation: fadeIn  0.45s var(--ease-out) both; }
 
 .anim-d0 { animation-delay: 0.05s; }
 .anim-d1 { animation-delay: 0.15s; }
@@ -176,7 +187,7 @@ pre {
 .pipeline-draw {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  animation: pipeline-draw 700ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  animation: pipeline-draw 700ms var(--ease-out-quart) forwards;
 }
 @keyframes pipeline-draw {
   to { stroke-dashoffset: 0; }
@@ -184,7 +195,7 @@ pre {
 .pipeline-packet {
   offset-distance: 0%;
   opacity: 0;
-  animation: pipeline-packet 1800ms cubic-bezier(0.22, 1, 0.36, 1) 500ms 3;
+  animation: pipeline-packet 1800ms var(--ease-out-expo) 500ms 3;
 }
 @keyframes pipeline-packet {
   0% { offset-distance: 0%; opacity: 0; }
@@ -205,5 +216,167 @@ pre {
 }
 .pipeline-pan {
   transform: translateY(min(0px, calc(var(--pan-center) - var(--focus, 0px))));
-  transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 600ms var(--ease-out-expo);
+}
+@media (prefers-reduced-motion: reduce) {
+  .pipeline-pan { transition: none; }
+}
+
+/* Search fields draw their own clear button; hide the browser's so there are never two. */
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Printing a tool report (e.g. /fit): drop the site chrome and the tool strip. */
+@media print {
+  header:has(> nav[aria-label="Primary"]),
+  footer,
+  nav[aria-label="Recruiter tools"] {
+    display: none !important;
+  }
+}
+
+/*
+ * Recruiter tools (/fit, /ask, /evals, /challenge). Motion only marks a state change:
+ * a new score, a finished answer, a new message. Transform and opacity only.
+ */
+
+/* Meter fill: retargets smoothly when the value changes; grows from 0 on first paint. */
+.meter-fill {
+  transform: scaleX(var(--v, 0));
+  transition: transform 250ms var(--ease-out);
+}
+@starting-style {
+  .meter-fill { transform: scaleX(0); }
+}
+
+/* Fit score breakdown: each earned segment grows from the left, staggered by inline delay. */
+@keyframes grow-x {
+  from { transform: scaleX(0); }
+}
+.fit-seg {
+  transform: scaleX(var(--v, 0));
+  animation: grow-x 450ms var(--ease-out-quart) both;
+}
+
+/* Citation popover: scales from the chip it belongs to. */
+.cite-pop {
+  transition: opacity 125ms var(--ease-out), transform 125ms var(--ease-out);
+}
+.cite-pop[data-side="top"] { translate: 0 -100%; }
+@starting-style {
+  .cite-pop { opacity: 0; transform: scale(0.97); }
+}
+
+/* Challenge chat: each new message settles in. */
+.chat-row {
+  transition: opacity 200ms var(--ease-out), transform 200ms var(--ease-out);
+}
+@starting-style {
+  .chat-row { opacity: 0; transform: translateY(6px); }
+}
+
+/* Challenge win: the card settles in, then one gold ring pulse. */
+@keyframes win-in {
+  from { opacity: 0; transform: scale(0.97); }
+}
+@keyframes win-ring {
+  from { opacity: 0.7; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.03); }
+}
+.win-in { animation: win-in 300ms var(--ease-out-expo) both; }
+.win-ring::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 2px solid theme("colors.accent.DEFAULT");
+  opacity: 0;
+  pointer-events: none;
+  animation: win-ring 700ms var(--ease-out) 200ms 1 both;
+}
+
+/* /evals sparklines: drawn by default (no JS); the reveal island arms and plays them. */
+@keyframes spark-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+.spark-line { stroke-dasharray: 1; stroke-dashoffset: 0; }
+[data-spark="armed"] .spark-line { stroke-dashoffset: 1; }
+[data-spark="armed"] .spark-dot { opacity: 0; }
+[data-spark="play"] .spark-line { animation: spark-draw 700ms var(--ease-out-quart) both; }
+[data-spark="play"] .spark-dot { animation: fadeIn 200ms var(--ease-out) 550ms both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .meter-fill,
+  .cite-pop,
+  .chat-row { transition: none; }
+  .fit-seg,
+  .win-in,
+  .win-ring::after,
+  [data-spark] .spark-line,
+  [data-spark] .spark-dot { animation: none; }
+  [data-spark] .spark-line { stroke-dashoffset: 0; }
+  [data-spark] .spark-dot { opacity: 1; }
+}
+
+/* /evals case tables: shared classes keep the per-row markup (and the RSC payload) small. */
+@layer components {
+  .ev-row {
+    @apply scroll-mt-24 border-t border-line text-fg outline-none transition-colors duration-300 target:bg-accent/10 focus:bg-accent/10;
+  }
+  .ev-cell {
+    @apply py-2.5 pr-4 align-baseline;
+  }
+  .ev-try {
+    @apply ml-1.5 inline-flex items-center gap-0.5 whitespace-nowrap rounded text-xs text-muted underline decoration-line-strong underline-offset-2 transition-colors duration-150 hover:text-fg hover:decoration-accent outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface;
+  }
+  .ev-cell-link {
+    @apply grid h-6 w-6 place-items-center rounded-md outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface;
+  }
+  .ev-mark {
+    @apply transition-transform duration-150 group-hover:scale-125 motion-reduce:transition-none;
+  }
+  .ev-mark-fail path {
+    stroke-width: 3.5;
+  }
+  .ev-icon {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+}
+
+/*
+ * View transitions between the tool pages (React <ViewTransition> in components/tools).
+ * The active tab highlight morphs to the new tab; the tool body crossfades.
+ */
+html:active-view-transition-type(tool-tab)::view-transition {
+  pointer-events: none;
+}
+html:active-view-transition-type(tool-tab)::view-transition-old(root),
+html:active-view-transition-type(tool-tab)::view-transition-new(root) {
+  animation-duration: 200ms;
+  animation-timing-function: var(--ease-out);
+}
+::view-transition-group(.tool-tab) {
+  animation-duration: 200ms;
+  animation-timing-function: var(--ease-out);
+}
+::view-transition-old(.tool-body) {
+  animation: 120ms var(--ease-out) both fadeIn reverse;
+}
+::view-transition-new(.tool-body) {
+  animation: 200ms var(--ease-out) 60ms both fadeIn;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
 }

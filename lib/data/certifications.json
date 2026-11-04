@@ -774,7 +774,7 @@
       "Penetration Testing"
     ],
     "duration": null,
-    "show": false,
+    "show": true,
     "featured": false
   },
   {
@@ -887,7 +887,7 @@
       "Web3"
     ],
     "duration": null,
-    "show": false,
+    "show": true,
     "featured": false
   },
   {
@@ -906,7 +906,7 @@
       "Smart Contracts"
     ],
     "duration": null,
-    "show": false,
+    "show": true,
     "featured": false
   },
   {
@@ -925,7 +925,7 @@
       "Smart Contracts"
     ],
     "duration": null,
-    "show": false,
+    "show": true,
     "featured": false
   },
   {
@@ -944,7 +944,7 @@
       "Blockchain"
     ],
     "duration": null,
-    "show": false,
+    "show": true,
     "featured": false
   },
   {
@@ -962,7 +962,7 @@
       "DApp Development"
     ],
     "duration": null,
-    "show": false,
+    "show": true,
     "featured": false
   },
   {
@@ -982,7 +982,7 @@
       "Development Tools"
     ],
     "duration": null,
-    "show": false,
+    "show": true,
     "featured": false
   },
   {
@@ -1322,7 +1322,7 @@
       "Cost Optimization"
     ],
     "duration": null,
-    "show": false,
+    "show": true,
     "featured": false
   },
   {
@@ -1340,7 +1340,7 @@
       "Developer Tools"
     ],
     "duration": null,
-    "show": false,
+    "show": true,
     "featured": false
   },
   {
@@ -1358,7 +1358,7 @@
       "Data Analysis"
     ],
     "duration": null,
-    "show": false,
+    "show": true,
     "featured": false
   },
   {
@@ -1376,7 +1376,7 @@
       "Professional Development"
     ],
     "duration": null,
-    "show": false,
+    "show": true,
     "featured": false
   },
   {
@@ -1394,7 +1394,7 @@
       "Distributed Ledger"
     ],
     "duration": null,
-    "show": false,
+    "show": true,
     "featured": false
   },
   {
@@ -1412,7 +1412,7 @@
       "Data Science"
     ],
     "duration": null,
-    "show": false,
+    "show": true,
     "featured": false
   },
   {
@@ -1449,7 +1449,7 @@
       "Network Security"
     ],
     "duration": null,
-    "show": false,
+    "show": true,
     "featured": false
   },
   {
@@ -1467,7 +1467,7 @@
       "Labs"
     ],
     "duration": null,
-    "show": false,
+    "show": true,
     "featured": false
   },
   {
@@ -1522,7 +1522,7 @@
       "Network Security"
     ],
     "duration": null,
-    "show": false,
+    "show": true,
     "featured": false
   },
   {
@@ -1539,7 +1539,7 @@
       "Technology Fundamentals"
     ],
     "duration": null,
-    "show": false,
+    "show": true,
     "featured": false
   },
   {

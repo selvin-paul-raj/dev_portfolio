@@ -1,20 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { BsArrowRight } from "react-icons/bs";
-import { HiDownload } from "react-icons/hi";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { LuArrowRight } from "react-icons/lu";
 import { matchJob } from "@/lib/fit/matchJob";
-import type { FitData, FitReport, RequirementMatch } from "@/lib/fit/matchJob";
-import projectsData from "@/lib/data/projects.json";
-import experiencesData from "@/lib/data/experiences.json";
-import certificationsData from "@/lib/data/certifications.json";
+import type { FitData, FitReport } from "@/lib/fit/matchJob";
+import { FIELD, FOCUS, GHOST_BTN, LABEL, PANEL, PRIMARY_BTN } from "@/components/tools/styles";
+import FitReportPanel from "@/components/fit/FitReportPanel";
+import JdMarkup from "@/components/fit/JdMarkup";
+import { reqId } from "@/components/fit/labels";
+import { readInitialJd, shareUrl } from "@/components/fit/share";
 
-const DATA: FitData = {
-  projects: projectsData,
-  experiences: experiencesData,
-  certifications: certificationsData,
-};
+const MIN_CHARS = 40;
+const MAX_CHARS = 20_000;
 
 const SAMPLE_JD = `AI Engineer, Agentic Systems
 We're looking for an engineer to build LLM-powered agents in production.
@@ -24,176 +21,212 @@ We're looking for an engineer to build LLM-powered agents in production.
 - Evaluation of LLM systems and guardrails against prompt injection
 - Nice to have: MCP, AWS, Docker, Kubernetes, fine-tuning`;
 
-const STRENGTH_LABEL: Record<RequirementMatch["strength"], string> = {
-  production: "Production work",
-  project: "Shipped project",
-  certified: "Certified",
-};
+// Hides the site chrome when the report is printed; the page's own controls use print:hidden.
+interface Run {
+  /** Bumps on every check, so the score and breakdown replay their reveal for each new report. */
+  id: number;
+  jd: string;
+  report: FitReport;
+}
 
-const STRENGTH_STYLE: Record<RequirementMatch["strength"], string> = {
-  production: "bg-green-500/10 text-ok border-green-500/25",
-  project: "bg-accent/10 text-accent-fg border-accent/30",
-  certified: "bg-black/[0.04] dark:bg-white/[0.06] text-fg-2 border-line",
-};
+type View = "edit" | "markup";
 
-export default function FitCheck() {
-  const [jd, setJd] = useState("");
-  const [report, setReport] = useState<FitReport | null>(null);
 
-  const run = (text: string) => setReport(matchJob(text, DATA));
+const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+function EmptyState() {
   return (
-    <div className="w-full max-w-3xl mx-auto">
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          run(jd);
-        }}
-        className="flex flex-col gap-3"
-      >
-        <label htmlFor="jd" className="font-mono text-xs uppercase tracking-[0.15em] text-muted">
-          Job description
-        </label>
-        <textarea
-          id="jd"
-          value={jd}
-          onChange={(e) => setJd(e.target.value)}
-          maxLength={20000}
-          rows={10}
-          placeholder="Paste the full job description here…"
-          className="w-full rounded-xl p-4 text-sm leading-relaxed resize-y
-            bg-white dark:bg-white/[0.04] border border-black/10 dark:border-white/10
-            text-gray-900 dark:text-white/85 placeholder:text-gray-400 dark:placeholder:text-white/25
-            outline-none focus-visible:ring-2 focus-visible:ring-accent"
-        />
-        <div className="flex flex-wrap items-center gap-2.5">
-          <button
-            type="submit"
-            disabled={jd.trim().length < 40}
-            className="group flex items-center gap-3 pl-5 pr-1.5 py-1.5 rounded-full
-              bg-gray-900 dark:bg-accent text-white dark:text-black text-sm font-semibold
-              disabled:opacity-40 active:scale-[0.97]
-              outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-            style={{ transition: "opacity 150ms ease, transform 160ms cubic-bezier(0.23,1,0.32,1)" }}
-          >
-            Check fit
-            <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white/15 dark:bg-black/15">
-              <BsArrowRight size={13} />
-            </span>
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setJd(SAMPLE_JD);
-              run(SAMPLE_JD);
-            }}
-            className="px-4 py-2.5 rounded-full text-sm font-medium
-              border border-black/10 dark:border-white/10 text-gray-700 dark:text-white/65
-              hover:bg-black/[0.04] dark:hover:bg-white/[0.06]
-              outline-none focus-visible:ring-2 focus-visible:ring-accent"
-          >
-            Try a sample JD
-          </button>
-          <span className="text-xs text-muted">
-            Runs in your browser. Nothing is sent or stored.
-          </span>
-        </div>
-      </form>
-
-      {report && <FitResult report={report} />}
+    <div className={`${PANEL} p-5 sm:p-6`}>
+      <h2 className={LABEL}>What the report shows</h2>
+      <ul className="mt-3 flex list-disc flex-col gap-1.5 pl-5 text-sm leading-relaxed text-fg-2 marker:text-muted">
+        <li>A score out of 100 and a one line verdict.</li>
+        <li>Your job description with every recognised requirement highlighted. Select one to jump to its evidence.</li>
+        <li>For each match, the work, project or certification that backs it.</li>
+        <li>Gaps, split into must have and nice to have, each with a link to ask about it.</li>
+        <li>How every requirement moved the score.</li>
+      </ul>
     </div>
   );
 }
 
-function FitResult({ report }: { report: FitReport }) {
+function ViewToggle({ view, onChange }: { view: View; onChange: (v: View) => void }) {
+  const btn = (v: View, label: string) => (
+    <button
+      type="button"
+      aria-pressed={view === v}
+      onClick={() => onChange(v)}
+      className={`h-8 rounded-full px-3 text-xs font-medium transition-colors duration-150 ${FOCUS} ${
+        view === v ? "bg-surface-3 text-fg" : "text-muted hover:text-fg"
+      }`}
+    >
+      {label}
+    </button>
+  );
   return (
-    <section aria-live="polite" className="mt-10 flex flex-col gap-8">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-5 rounded-2xl p-6
-        bg-black/[0.03] dark:bg-white/[0.04] border border-black/8 dark:border-white/10">
-        <div className="flex items-baseline gap-1 font-mono">
-          <span className="text-5xl font-bold tabular-nums text-fg">{report.score}</span>
-          <span className="text-lg text-muted">/100</span>
+    <div role="group" aria-label="Job description view" className="flex rounded-full border border-line p-0.5">
+      {btn("edit", "Edit")}
+      {btn("markup", "Marked up")}
+    </div>
+  );
+}
+
+/** `data` is the trimmed evidence and `samples` the golden JDs by name, both built on the server in app/fit/page.tsx. */
+export default function FitCheck({ data, samples }: { data: FitData; samples: Record<string, string> }) {
+  const [jd, setJd] = useState("");
+  const [run, setRun] = useState<Run | null>(null);
+  const [view, setView] = useState<View>("edit");
+  const [notice, setNotice] = useState<string | null>(null);
+  const [share, setShare] = useState<{ jd: string; url: string } | null>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const focusReport = useRef(false);
+  const runCount = useRef(0);
+
+  const analyse = useCallback(
+    (text: string): Run => ({ id: ++runCount.current, jd: text, report: matchJob(text, data, { maxEvidence: Infinity }) }),
+    [data],
+  );
+
+  const check = (text: string) => {
+    focusReport.current = true;
+    setRun(analyse(text));
+    setView("markup");
+  };
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const initial = await readInitialJd(window.location, samples);
+      if (cancelled || !initial) return;
+      if ("error" in initial) {
+        setNotice(initial.error);
+        return;
+      }
+      setJd(initial.jd);
+      setRun(analyse(initial.jd));
+      setView("markup");
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [analyse, samples]);
+
+  useEffect(() => {
+    if (!run) return;
+    if (focusReport.current) headingRef.current?.focus();
+    focusReport.current = false;
+    let cancelled = false;
+    void shareUrl(run.jd)
+      .then((url) => {
+        if (!cancelled) setShare({ jd: run.jd, url });
+      })
+      .catch((err: unknown) => console.warn("fit: could not build share link", err));
+    return () => {
+      cancelled = true;
+    };
+  }, [run]);
+
+  const jump = (requirement: string) => {
+    const el = document.getElementById(reqId(requirement));
+    if (!el) return;
+    el.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "center" });
+    el.focus({ preventScroll: true });
+  };
+
+  const length = jd.trim().length;
+  const short = length < MIN_CHARS;
+  const stale = run !== null && run.jd !== jd;
+
+  return (
+    <div className="grid w-full items-start gap-8 lg:grid-cols-2 lg:gap-10">
+      <section aria-labelledby="jd-label" className="flex min-w-0 flex-col gap-3 lg:sticky lg:top-24 print:hidden">
+        <div className="flex min-h-9 flex-wrap items-center justify-between gap-2">
+          {view === "edit" ? (
+            <label id="jd-label" htmlFor="jd" className={LABEL}>
+              Job description
+            </label>
+          ) : (
+            <h2 id="jd-label" className={LABEL}>
+              Job description, marked up
+            </h2>
+          )}
+          {run && <ViewToggle view={view} onChange={setView} />}
         </div>
-        <div>
-          <p className="font-semibold text-fg">{report.verdict}</p>
-          <p className="mt-1 text-sm text-fg-2">
-            {report.matched.length} requirement{report.matched.length === 1 ? "" : "s"} backed by evidence ·{" "}
-            {report.gaps.length} gap{report.gaps.length === 1 ? "" : "s"}
+
+        {view === "markup" && run ? (
+          <>
+            <div className={`${PANEL} max-h-[32rem] overflow-y-auto p-4`}>
+              <JdMarkup jd={run.jd} report={run.report} onJump={jump} />
+            </div>
+            <p className="text-xs leading-relaxed text-muted">
+              <span className="rounded-sm bg-accent/15 px-0.5 text-fg underline decoration-accent decoration-2 underline-offset-4">Solid gold</span> is backed by
+              evidence,{" "}
+              <span className="text-fg underline decoration-danger decoration-dashed decoration-2 underline-offset-4">dashed red</span> is a gap. Select a phrase to
+              jump to it in the report.
+            </p>
+          </>
+        ) : (
+          <textarea
+            id="jd"
+            value={jd}
+            onChange={(e) => setJd(e.target.value)}
+            maxLength={MAX_CHARS}
+            rows={14}
+            aria-describedby="jd-hint"
+            placeholder="Paste the full job description here"
+            className={`${FIELD} resize-y rounded-xl p-4 leading-relaxed`}
+          />
+        )}
+
+        {stale && (
+          <p className="text-xs text-warn" role="status">
+            The report is for the earlier text. Check fit again to update it.
           </p>
-        </div>
-      </div>
+        )}
+        {notice && (
+          <p role="alert" className="rounded-xl border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-fg">
+            {notice}
+          </p>
+        )}
 
-      {report.matched.length > 0 && (
-        <div>
-          <h2 className="mb-4 font-mono text-xs uppercase tracking-[0.15em] text-muted">
-            Matched, with evidence
-          </h2>
-          <ul className="flex flex-col gap-3">
-            {report.matched.map((m) => (
-              <li key={m.requirement} className="rounded-xl p-4 border border-line">
-                <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                  <span className="font-semibold text-fg">{m.requirement}</span>
-                  <span className={`text-xs font-mono px-2.5 py-0.5 rounded-full border ${STRENGTH_STYLE[m.strength]}`}>
-                    {STRENGTH_LABEL[m.strength]}
-                  </span>
-                </div>
-                <ul className="flex flex-col gap-1.5">
-                  {m.evidence.map((ev, i) => (
-                    <li key={i} className="text-sm leading-relaxed text-fg-2">
-                      <span className="text-fg font-medium">
-                        {ev.url ? (
-                          <a href={ev.url} target="_blank" rel="noopener noreferrer" className="underline decoration-accent/60 underline-offset-2 hover:decoration-accent">
-                            {ev.source}
-                          </a>
-                        ) : (
-                          ev.source
-                        )}
-                      </span>
-                      {": "}
-                      {ev.text.length > 220 ? `${ev.text.slice(0, 220)}…` : ev.text}
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {report.gaps.length > 0 && (
-        <div>
-          <h2 className="mb-3 font-mono text-xs uppercase tracking-[0.15em] text-muted">
-            No evidence yet
-          </h2>
-          <div className="flex flex-wrap gap-2">
-            {report.gaps.map((g) => (
-              <span key={g} className="text-sm px-3 py-1 rounded-full border border-dashed border-line-strong text-fg-2">
-                {g}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <p className="text-xs leading-relaxed text-muted">{report.method}</p>
-
-      <div className="flex flex-wrap gap-2.5">
-        <Link
-          href="/#contact"
-          className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-gray-900 dark:bg-accent text-white dark:text-black text-sm font-semibold
-            outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (short) return;
+            setNotice(null);
+            if (window.location.hash) history.replaceState(null, "", window.location.pathname + window.location.search);
+            check(jd);
+          }}
+          className="flex flex-wrap items-center gap-2.5"
         >
-          Talk to Selvin <BsArrowRight size={13} />
-        </Link>
-        <a
-          href="/view/Selvin_Resume.pdf"
-          download
-          className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-black/10 dark:border-white/10 text-sm font-semibold text-gray-800 dark:text-white/75
-            hover:bg-black/[0.04] dark:hover:bg-white/[0.06] outline-none focus-visible:ring-2 focus-visible:ring-accent"
-        >
-          Resume <HiDownload size={13} />
-        </a>
+          <button type="submit" disabled={short} aria-describedby="jd-hint" className={PRIMARY_BTN}>
+            Check fit <LuArrowRight size={14} aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setNotice(null);
+              setJd(SAMPLE_JD);
+              check(SAMPLE_JD);
+            }}
+            className={GHOST_BTN}
+          >
+            Try a sample JD
+          </button>
+        </form>
+        <p id="jd-hint" className="text-xs text-muted">
+          {short
+            ? `Paste at least ${MIN_CHARS} characters (${length} so far).`
+            : `${length.toLocaleString("en")} characters. Runs in your browser; nothing is sent or stored.`}
+        </p>
+      </section>
+
+      <div className="min-w-0">
+        {run ? (
+          <FitReportPanel key={run.id} report={run.report} shareLink={share?.jd === run.jd ? share.url : null} headingRef={headingRef} />
+        ) : (
+          <EmptyState />
+        )}
       </div>
-    </section>
+    </div>
   );
 }

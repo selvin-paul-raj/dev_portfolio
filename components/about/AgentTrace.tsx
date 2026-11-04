@@ -3,30 +3,26 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { LuArrowRight, LuRotateCcw } from "react-icons/lu";
-import { getCaseStudy } from "@/lib/work";
 
-const study = getCaseStudy("dri-mas");
 const STEP_MS = 520;
 
-type TraceLine = { title: string; actors: string[]; human: boolean };
+export type TraceLine = { title: string; actors: string[]; human: boolean };
 
-// Each pipeline stage from the case study: its title, the agents and nodes that run it, and
-// whether a person can be pulled in there. Stores (checkpointer, memory) are left out of the line.
-const LINES: TraceLine[] = (study?.steps ?? []).map((s) => {
-  const nodes = s.nodes.map((id) => study!.diagram.nodes.find((n) => n.id === id)).filter((n) => n !== undefined);
-  return {
-    title: s.title,
-    actors: nodes.filter((n) => n.kind !== "hitl" && n.kind !== "store").slice(0, 2).map((n) => n.label),
-    human: nodes.some((n) => n.kind === "hitl"),
-  };
-});
+type Props = {
+  /** Case-study slug the footer link opens. */
+  slug: string;
+  /** One line per pipeline stage, resolved on the server from the case study. */
+  lines: TraceLine[];
+  /** The measured result shown after the last stage. */
+  result: { value: string; label: string };
+};
 
 /**
  * Replays a DRI-MAS run as a terminal trace: one stage per line, then the measured result.
  * Plays once when it scrolls into view; Replay runs it again. Reduced motion shows it whole.
  */
-export default function AgentTrace() {
-  const total = LINES.length + 1; // the stages, then the result line
+export default function AgentTrace({ slug, lines, result }: Props) {
+  const total = lines.length + 1; // the stages, then the result line
   // Server and no-JS render the finished trace; the client rewinds it once it's on screen.
   const [shown, setShown] = useState(total);
   const timer = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
@@ -66,9 +62,7 @@ export default function AgentTrace() {
     };
   }, [play]);
 
-  if (!study) return null;
   const done = shown >= total;
-  const result = study.results[0];
 
   return (
     <div ref={root} className="rounded-[18px] border border-line bg-surface-2 overflow-hidden">
@@ -81,8 +75,8 @@ export default function AgentTrace() {
           type="button"
           onClick={play}
           disabled={!done}
-          className="shrink-0 inline-flex min-h-11 [@media(pointer:fine)]:min-h-8 items-center gap-1.5 rounded-full border border-black/10 dark:border-white/15 px-3 text-xs font-medium
-            text-gray-700 dark:text-white/75 hover:border-black/25 dark:hover:border-white/30 disabled:opacity-40 transition-colors duration-150
+          className="shrink-0 inline-flex min-h-11 [@media(pointer:fine)]:min-h-8 items-center gap-1.5 rounded-full border border-line px-3 text-xs font-medium
+            text-fg-2 hover:border-fg/30 disabled:opacity-40 transition-colors duration-150
             outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           <LuRotateCcw size={13} aria-hidden="true" /> Replay
@@ -90,7 +84,7 @@ export default function AgentTrace() {
       </div>
 
       <ol className="px-4 sm:px-5 py-4 font-mono text-[13px] leading-relaxed">
-        {LINES.map((line, i) => {
+        {lines.map((line, i) => {
           const visible = i < shown;
           const running = i === shown - 1 && !done;
           return (
@@ -123,8 +117,8 @@ export default function AgentTrace() {
 
       <div className="border-t border-line px-4 sm:px-5 py-3">
         <Link
-          href={`/work/${study.slug}`}
-          className="inline-flex min-h-11 [@media(pointer:fine)]:min-h-0 items-center gap-1.5 rounded-sm text-sm font-medium text-gray-700 dark:text-white/75 hover:text-gray-950 dark:hover:text-white
+          href={`/work/${slug}`}
+          className="inline-flex min-h-11 [@media(pointer:fine)]:min-h-0 items-center gap-1.5 rounded-sm text-sm font-medium text-fg-2 hover:text-fg
             outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           See the full pipeline <LuArrowRight size={14} aria-hidden="true" />

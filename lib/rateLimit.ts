@@ -68,9 +68,28 @@ export function checkContactRateLimit(ip: string): string | null {
 export const askIpLimiter = createRateLimiter({ limit: 12, windowMs: 10 * 60_000 });
 export const llmGlobalLimiter = createRateLimiter({ limit: 500, windowMs: 24 * 60 * 60_000 });
 
-/** Applies both LLM limiters; returns an error message if blocked. */
-export function checkLlmRateLimit(ip: string, scope: string): string | null {
-  if (!askIpLimiter.check(`${scope}:${ip}`).allowed) return "Too many requests. Please wait a few minutes.";
-  if (!llmGlobalLimiter.check("global").allowed) return "Daily limit reached. Please try again tomorrow.";
+export type RateLimited = { error: string; retryAfterMs: number };
+
+/** Applies both LLM limiters; returns the message and wait time if blocked. */
+export function checkLlmRateLimit(ip: string, scope: string): RateLimited | null {
+  const perIp = askIpLimiter.check(`${scope}:${ip}`);
+  if (!perIp.allowed) return { error: "Too many requests. Please wait a few minutes.", retryAfterMs: perIp.retryAfterMs };
+  const global = llmGlobalLimiter.check("global");
+  if (!global.allowed) return { error: "Daily limit reached. Please try again tomorrow.", retryAfterMs: global.retryAfterMs };
   return null;
+}
+
+// Agent endpoints (/api/mcp, /api/a2a, the standalone MCP server): per-IP
+// damping on every request. LLM-backed calls also go through checkLlmRateLimit.
+export const agentIpLimiter = createRateLimiter({ limit: 60, windowMs: 10 * 60_000 });
+
+/** Applies the agent-endpoint limiter for `scope` ("mcp", "a2a"); returns the message and wait time if blocked. */
+export function checkAgentRateLimit(ip: string, scope: string): RateLimited | null {
+  const perIp = agentIpLimiter.check(`${scope}:${ip}`);
+  return perIp.allowed ? null : { error: "Too many requests. Please slow down and retry shortly.", retryAfterMs: perIp.retryAfterMs };
+}
+
+/** A 429 body plus a Retry-After header, so pages can count down instead of guessing. */
+export function rateLimitedInit(retryAfterMs: number): ResponseInit {
+  return { status: 429, headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) } };
 }

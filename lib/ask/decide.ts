@@ -49,11 +49,13 @@ export async function decideNoul<K extends string>(
   // Never surface provider error bodies to clients.
   if (!res.ok) throw new DecideError(`TypeSafe HTTP ${res.status}`);
 
-  const json = (await res.json()) as { answers?: Record<string, { noul?: number }> };
+  const json = (await res.json().catch(() => {
+    throw new DecideError("TypeSafe returned non-JSON");
+  })) as { answers?: Record<string, { noul?: unknown } | null> } | null;
   const out = {} as Record<K, number>;
   for (const name of Object.keys(questions) as K[]) {
-    const p = json.answers?.[name]?.noul;
-    if (typeof p !== "number") throw new DecideError(`TypeSafe returned no answer for ${name}`);
+    const p = json?.answers?.[name]?.noul;
+    if (typeof p !== "number" || !Number.isFinite(p)) throw new DecideError(`TypeSafe returned no answer for ${name}`);
     out[name] = p;
   }
   return out;

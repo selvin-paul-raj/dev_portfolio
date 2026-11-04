@@ -3,7 +3,7 @@ import { FaLinkedin, FaGithub, FaInstagram, FaHackerrank } from "react-icons/fa"
 import { HiDownload } from "react-icons/hi";
 import { LuArrowUp } from "react-icons/lu";
 import { SiLeetcode } from "react-icons/si";
-import { links } from "@/lib/data";
+import { links } from "@/lib/links";
 import { SITE_URL } from "@/lib/site";
 import MachineAccess from "./footer/MachineAccess";
 
@@ -39,7 +39,7 @@ const MACHINE_ENTRIES = [
 const CURRENT_YEAR = new Date().getFullYear();
 
 const LINK =
-  "inline-flex items-center gap-2 min-h-11 min-w-11 [@media(pointer:fine)]:min-h-0 [@media(pointer:fine)]:min-w-0 rounded-sm text-sm text-fg-2" +
+  "inline-flex items-center gap-2 min-h-11 min-w-11 [@media(pointer:fine)]:min-h-0 [@media(pointer:fine)]:min-w-0 rounded-sm text-sm text-fg-2 " +
   "hover:text-fg transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-accent";
 const COL_HEAD = "mb-3 text-sm font-semibold text-fg";
 
@@ -99,16 +99,16 @@ const Footer = () => {
               <div className="mt-6 flex flex-wrap gap-3">
                 <a
                   href={`mailto:${EMAIL}`}
-                  className="inline-flex h-11 items-center rounded-full bg-gray-900 dark:bg-accent px-5 text-sm font-semibold text-white dark:text-[#1a1500]
-                    outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#09090b]"
+                  className="inline-flex h-11 items-center rounded-full bg-primary px-5 text-sm font-semibold text-on-primary
+                    outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
                 >
                   Email me
                 </a>
                 <a
                   href="/view/Selvin_Resume.pdf"
                   download
-                  className="inline-flex h-11 items-center gap-2 rounded-full border border-black/15 dark:border-white/15 px-5 text-sm font-semibold
-                    text-gray-800 dark:text-white/85 hover:border-black/30 dark:hover:border-white/35 transition-colors duration-150
+                  className="inline-flex h-11 items-center gap-2 rounded-full border border-line-strong px-5 text-sm font-semibold
+                    text-fg hover:border-fg/35 transition-colors duration-150
                     outline-none focus-visible:ring-2 focus-visible:ring-accent"
                 >
                   <HiDownload size={15} aria-hidden="true" /> Download CV

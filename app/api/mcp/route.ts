@@ -1,70 +1,46 @@
 // app/api/mcp/route.ts
-import { NextRequest, NextResponse } from "next/server";
-import { handleMcpRequest, parseErrorResponse } from "@/lib/mcp/server";
+// MCP over Streamable HTTP (stateless, JSON responses). The protocol and HTTP
+// rules live in lib/mcp/router.ts; this file only adapts Request/Response.
+import { handleMcpPost, mcpHandlers } from "@/lib/mcp/server";
+import { getReply, MAX_BODY_BYTES, tooLargeReply } from "@/lib/mcp/router";
+import type { HttpReply } from "@/lib/mcp/router";
+import { readCappedText } from "@/lib/mcp/http";
 import { getClientIp } from "@/lib/rateLimit";
-import { SITE_URL } from "@/lib/site";
+import { PROFILE } from "@/lib/mcp/definitions";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 // Public, unauthenticated, read-mostly server: any origin may call it, but only
 // the methods/headers the Streamable HTTP transport actually uses are allowed.
-const CORS: HeadersInit = {
+const CORS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Accept, Mcp-Session-Id, Mcp-Protocol-Version",
   "Access-Control-Max-Age": "86400",
 };
 
-/** Discovery endpoint — returns server manifest */
-export function GET() {
-  return NextResponse.json(
-    {
-      name: "Selvin PaulRaj K — Portfolio MCP Server",
-      version: "1.0.0",
-      protocolVersion: "2024-11-05",
-      transport: "http (JSON-RPC 2.0)",
-      description:
-        "MCP server exposing Selvin's portfolio: projects, skills, experience, certifications, and live GitHub repos.",
-      endpoint: `${SITE_URL}/api/mcp`,
-      resources: [
-        "selvin://profile",
-        "selvin://projects",
-        "selvin://skills",
-        "selvin://experience",
-        "selvin://certifications",
-        "selvin://recognition",
-        "selvin://case-studies",
-      ],
-      tools: [
-        "search_projects",
-        "get_project_by_title",
-        "list_github_repos",
-        "get_github_repo",
-        "filter_certifications",
-        "get_profile_summary",
-        "get_case_study",
-        "match_job",
-        "contact_selvin",
-      ],
-    },
-    { headers: CORS }
-  );
+function toResponse(reply: HttpReply): Response {
+  const headers = { ...CORS, ...reply.headers };
+  if (reply.body === null) return new Response(null, { status: reply.status, headers });
+  return Response.json(reply.body, { status: reply.status, headers });
+}
+
+/** Discovery manifest; 405 when a client asks for a server-initiated SSE stream. */
+export function GET(req: Request) {
+  return toResponse(getReply(mcpHandlers, req.headers.get("accept"), PROFILE.mcpEndpoint));
 }
 
 /** MCP JSON-RPC handler */
-export async function POST(req: NextRequest) {
-  let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json(parseErrorResponse(), { status: 400, headers: CORS });
-  }
-
-  const response = await handleMcpRequest(body, { ip: getClientIp((h) => req.headers.get(h)) });
-  // Notifications get 202 Accepted with no body (MCP Streamable HTTP).
-  if (response === null) return new Response(null, { status: 202, headers: CORS });
-  return NextResponse.json(response, { headers: CORS });
+export async function POST(req: Request) {
+  const raw = await readCappedText(req, MAX_BODY_BYTES);
+  if (raw === null) return toResponse(tooLargeReply());
+  return toResponse(
+    await handleMcpPost(raw, {
+      ip: getClientIp((h) => req.headers.get(h)),
+      protocolVersion: req.headers.get("mcp-protocol-version"),
+    })
+  );
 }
 
 /** CORS preflight */

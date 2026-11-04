@@ -11,7 +11,7 @@ const SubmitBtn = () => {
       disabled={pending}
       aria-busy={pending}
       className="group w-full flex items-center justify-between gap-3 pl-6 pr-2 py-2 rounded-full
-        bg-gray-900 dark:bg-accent text-white dark:text-black
+        bg-primary text-on-primary
         text-sm font-semibold tracking-wide
         focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 outline-none
         active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none"
@@ -21,12 +21,12 @@ const SubmitBtn = () => {
     >
       <span>{pending ? "Sending…" : "Send message"}</span>
       <span
-        className="flex items-center justify-center w-9 h-9 rounded-full bg-white/15 dark:bg-black/15
-          group-hover:scale-110 group-hover:bg-white/25 dark:group-hover:bg-black/25"
+        className="flex items-center justify-center w-9 h-9 rounded-full bg-on-primary/15
+          group-hover:scale-110 group-hover:bg-on-primary/25"
         style={{ transition: "transform 150ms cubic-bezier(0.23,1,0.32,1), background-color 150ms ease" }}
       >
         {pending ? (
-          <span className="h-4 w-4 motion-reduce:animate-none animate-spin rounded-full border-b-2 border-white dark:border-black" />
+          <span className="h-4 w-4 motion-reduce:animate-none animate-spin rounded-full border-b-2 border-on-primary" />
         ) : (
           <FaPaperPlane size={12} />
         )}

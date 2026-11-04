@@ -16,7 +16,7 @@ const FILTERS = [
 ] as const;
 type FilterValue = (typeof FILTERS)[number]["value"];
 
-const FOCUS = "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#09090b]";
+const FOCUS = "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface";
 const ICON_LINK =
   `relative z-10 inline-flex h-9 items-center gap-1.5 rounded-full border border-line px-3 text-sm ` +
   `text-fg-2 hover:border-line-strong hover:text-fg transition-colors duration-150 ${FOCUS}`;
@@ -36,7 +36,7 @@ function RowLinks({ project }: { project: Project }) {
   return (
     <div className="flex flex-wrap items-center gap-2 sm:justify-end">
       {slug && (
-        <Link href={`/work/${slug}`} aria-label={`${title} case study`} className={ICON_LINK}>
+        <Link href={`/work/${slug}`} aria-label={`How it works: ${title} case study`} className={ICON_LINK}>
           How it works
         </Link>
       )}
@@ -46,7 +46,7 @@ function RowLinks({ project }: { project: Project }) {
         </a>
       )}
       {live && (
-        <a href={live} target="_blank" rel="noopener noreferrer" aria-label={`${title}, ${isNpm(live) ? "npm package" : "live demo"}`} className={ICON_LINK}>
+        <a href={live} target="_blank" rel="noopener noreferrer" aria-label={isNpm(live) ? `npm: ${title} package` : `Live: ${title} demo`} className={ICON_LINK}>
           {isNpm(live) ? "npm" : "Live"} <MdArrowOutward size={14} aria-hidden="true" />
         </a>
       )}
@@ -64,7 +64,7 @@ function IndexRow({ project }: { project: Project }) {
   const external = href?.startsWith("http");
   return (
     <li className="group relative grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] gap-x-6 gap-y-3 rounded-lg px-3 py-4
-      hover:bg-black/[0.025] dark:hover:bg-white/[0.03] transition-colors duration-150">
+      hover:bg-fg/[0.03] transition-colors duration-150">
       <div className="min-w-0">
         <h5 className="text-base font-medium text-fg">
           {href ? (
@@ -139,7 +139,7 @@ function Toolbar({
               disabled={counts[value] === 0}
               className={`inline-flex h-10 items-center gap-2 rounded-full border px-3.5 text-sm font-medium disabled:opacity-40 transition-colors duration-150 ${FOCUS}
  ${on
- ? "border-gray-900 bg-gray-900 text-white dark:border-accent dark:bg-accent dark:text-[#1a1500]"
+ ? "border-primary bg-primary text-on-primary"
  : "border-line text-fg-2 hover:border-line-strong "}`}
             >
               {label}
@@ -157,8 +157,8 @@ function Toolbar({
           value={query}
           onChange={(e) => onQuery(e.target.value)}
           placeholder={`Search ${total} projects`}
-          className="h-10 w-full rounded-full border border-black/15 dark:border-white/15 bg-white dark:bg-white/[0.04] pl-9 pr-9 text-base sm:text-sm
-            text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-white/40 outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          className="h-10 w-full rounded-full border border-line-strong bg-surface-2 pl-9 pr-9 text-base sm:text-sm
+            text-fg placeholder:text-muted outline-none focus-visible:ring-2 focus-visible:ring-accent"
         />
         {query && (
           <button

@@ -2,7 +2,7 @@
 import React from "react";
 
 const Sh = ({ className, style }: { className: string; style?: React.CSSProperties }) => (
-  <div className={`animate-pulse motion-reduce:animate-none rounded-md bg-gray-100 dark:bg-white/[0.06] ${className}`} style={style} />
+  <div className={`animate-pulse motion-reduce:animate-none rounded-md bg-surface-3 ${className}`} style={style} />
 );
 
 /* ── Projects ── */
@@ -113,7 +113,7 @@ export function RecognitionSkeleton() {
 
       {/* Tab switcher */}
       <div className="flex justify-center mb-10">
-        <div className="flex gap-1 p-1 border border-line rounded-full bg-black/[0.02] dark:bg-white/[0.03]">
+        <div className="flex gap-1 p-1 border border-line rounded-full bg-fg/[0.03]">
           <Sh className="h-9 w-32 rounded-full" />
           <Sh className="h-9 w-36 rounded-full" />
         </div>
