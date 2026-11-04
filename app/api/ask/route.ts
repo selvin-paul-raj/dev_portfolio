@@ -12,7 +12,7 @@ import { checkLlmRateLimit, getClientIp, rateLimitedInit } from "@/lib/rateLimit
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 120;
+export const maxDuration = 60;
 
 const Body = z.object({
   question: z.string().trim().min(3).max(MAX_QUESTION_CHARS),
