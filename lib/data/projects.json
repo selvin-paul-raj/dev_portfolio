@@ -1,7 +1,7 @@
 [
   {
     "title": "DRI-MAS: Data Request Intelligence Multi-Agent System",
-    "description": "Analysts spent hours turning emailed business questions into SQL and client reports. I architected a LangGraph multi-agent system that reads requests straight from an Outlook inbox, screens each one for prompt injection, and has an LLM judge check every decision (intent, entity match, schema, SQL). A ReAct agent writes and repairs Trino SQL against its validator and a dry run, with hybrid FAISS + BM25 retrieval over 2.6M company records and human-in-the-loop checks. After a final dry run, an Airflow DAG runs the query on the production warehouse and the result is shaped into the client deliverable template. Turnaround dropped from hours to under a minute",
+    "description": "Analysts spent hours turning emailed business questions into SQL and client reports. I architected a LangGraph multi-agent system that reads requests straight from an Outlook inbox, screens each one for prompt injection, and has an LLM judge check every decision (intent, entity match, schema, SQL). A ReAct agent writes and repairs Trino SQL against its validator and a dry run, with hybrid FAISS + BM25 retrieval over 2.6M company records and human-in-the-loop checks. After a final dry run, an Airflow DAG runs the query on the production warehouse and the result is shaped into the client deliverable template. Turnaround dropped from hours to minutes",
     "tags": [
       "LangGraph",
       "Claude API",
