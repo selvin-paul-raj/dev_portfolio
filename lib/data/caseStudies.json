@@ -4,7 +4,7 @@
     "projectTitle": "DRI-MAS: Data Request Intelligence Multi-Agent System",
     "title": "DRI-MAS",
     "subtitle": "Data Request Intelligence Multi-Agent System. A LangGraph multi-agent system that reads data requests straight from an Outlook inbox, screens each decision with an LLM judge, writes Trino SQL with a ReAct agent, runs it on the production warehouse through Airflow after a final dry run, and fills the client deliverable template.",
-    "role": "Architect and lead engineer",
+    "role": "Designed and built",
     "org": "Zinnov (Draup)",
     "period": "Sep 2025 to present",
     "visibility": "Work · private repo",
