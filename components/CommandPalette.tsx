@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@/context/theme-context";
-import { links } from "@/lib/data";
+import { links } from "@/lib/links";
 import { PROFILE } from "@/lib/mcp/definitions";
 
 type Command = { id: string; label: string; group: string; hint?: string; run: () => void | Promise<void> };
@@ -29,10 +29,11 @@ export default function CommandPalette({ studies }: { studies: PaletteStudy[] })
   const router = useRouter();
   const { toggleTheme } = useTheme();
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState("");
   const [index, setIndex] = useState(0);
   const [notice, setNotice] = useState<string | null>(null);
+  // The list only mounts while the dialog is open, so pages don't pay for it in the DOM.
+  const [isOpen, setIsOpen] = useState(false);
 
   const close = useCallback(() => dialogRef.current?.close(), []);
 
@@ -82,8 +83,8 @@ export default function CommandPalette({ studies }: { studies: PaletteStudy[] })
     setQuery("");
     setIndex(0);
     setNotice(null);
+    setIsOpen(true);
     dialog.showModal();
-    inputRef.current?.focus();
     // Warm the routes the palette can jump to so Enter navigates instantly.
     ["/work", "/fit", "/ask", "/evals", "/challenge", ...studies.map((s) => `/work/${s.slug}`)].forEach((href) => router.prefetch(href));
   }, [router, studies]);
@@ -135,13 +136,16 @@ export default function CommandPalette({ studies }: { studies: PaletteStudy[] })
       ref={dialogRef}
       aria-label="Command palette"
       onClick={(e) => e.target === dialogRef.current && close()}
-      className="command-palette w-[min(36rem,calc(100vw-2rem))] p-0 rounded-xl border border-black/10 dark:border-white/12
-        bg-[#FAFAF9] dark:bg-[#111113] text-gray-900 dark:text-white shadow-2xl backdrop:bg-black/40 dark:backdrop:bg-black/60 mt-[12vh]"
+      onClose={() => setIsOpen(false)}
+      className="command-palette w-[min(36rem,calc(100vw-2rem))] p-0 rounded-xl border border-line
+        bg-surface dark:bg-surface-2 text-fg shadow-2xl backdrop:bg-black/40 dark:backdrop:bg-black/60 mt-[12vh]"
     >
+      {isOpen && (
+      <>
       <div className="flex items-center gap-3 px-4 border-b border-line">
         <span aria-hidden="true" className="font-mono text-xs text-accent-fg">⌘K</span>
         <input
-          ref={inputRef}
+          autoFocus
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -178,7 +182,7 @@ export default function CommandPalette({ studies }: { studies: PaletteStudy[] })
                 onMouseMove={() => setIndex(i)}
                 onClick={() => execute(cmd)}
                 className={`mx-2 px-3 py-2.5 rounded-lg flex items-center justify-between gap-4 cursor-pointer text-sm ${
- i === index ? "bg-black/[0.05] dark:bg-white/[0.07] text-fg " : "text-fg-2 "
+ i === index ? "bg-fg/[0.06] text-fg " : "text-fg-2 "
  }`}
               >
                 <span className="flex items-center gap-2.5">
@@ -196,6 +200,8 @@ export default function CommandPalette({ studies }: { studies: PaletteStudy[] })
         <span>↑↓ to move · enter to run</span>
         <span className="text-accent-fg">{notice}</span>
       </output>
+      </>
+      )}
     </dialog>
   );
 }

@@ -1,5 +1,7 @@
 // lib/mcp/github.ts
-import { McpError, JSONRPC_INTERNAL_ERROR, JSONRPC_INVALID_PARAMS } from "./errors";
+// Live GitHub data for list_github_repos / get_github_repo. Failures throw
+// ToolError, so clients get an isError result rather than a protocol error.
+import { ToolError } from "./errors";
 
 const API = "https://api.github.com";
 const OWNER = "selvin-paul-raj";
@@ -55,49 +57,42 @@ function shape(r: GithubRepo) {
   };
 }
 
-const SORT_VALUES = ["created", "updated", "pushed", "full_name"] as const;
-type RepoSort = (typeof SORT_VALUES)[number];
-const REPO_NAME_RE = /^[A-Za-z0-9._-]{1,100}$/;
-
-function clampInt(value: unknown, min: number, max: number, fallback: number): number {
-  const n = typeof value === "string" ? Number(value) : value;
-  if (typeof n !== "number" || !Number.isFinite(n)) return fallback;
-  return Math.min(max, Math.max(min, Math.trunc(n)));
-}
+const TIMEOUT_MS = 10_000;
 
 async function githubGet<T>(path: string, notFoundMessage: string): Promise<T> {
-  const res = await fetch(`${API}${path}`, {
-    headers: headers(),
-    next: { revalidate: 3600 },
-  } as FetchInitWithNext);
-  if (res.status === 404) throw new McpError(JSONRPC_INVALID_PARAMS, notFoundMessage);
+  let res: Response;
+  try {
+    res = await fetch(`${API}${path}`, {
+      headers: headers(),
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+      next: { revalidate: 3600 },
+    } as FetchInitWithNext);
+  } catch (err) {
+    console.error(`[mcp/github] GET ${path} failed:`, err);
+    const timedOut = err instanceof Error && err.name === "TimeoutError";
+    throw new ToolError(timedOut ? "GitHub did not respond within 10s. Please try again." : "Could not reach GitHub. Please try again later.");
+  }
+  if (res.status === 404) throw new ToolError(notFoundMessage);
   if (!res.ok) {
     // Log upstream details server-side only; clients get a generic message.
     console.error(`[mcp/github] GET ${path} -> ${res.status}: ${(await res.text()).slice(0, 500)}`);
-    throw new McpError(JSONRPC_INTERNAL_ERROR, "GitHub API request failed. Please try again later.");
+    const limited = res.status === 403 || res.status === 429;
+    throw new ToolError(limited ? "GitHub rate limit reached. Please try again later." : "GitHub API request failed. Please try again later.");
   }
   return (await res.json()) as T;
 }
 
-/** Lists public repos. Accepts raw tool arguments and normalises them. */
-export async function listRepos(
-  args: { per_page?: unknown; page?: unknown; sort?: unknown } = {},
-): Promise<ReturnType<typeof shape>[]> {
-  const sort: RepoSort = SORT_VALUES.includes(args.sort as RepoSort) ? (args.sort as RepoSort) : "updated";
-  const query = new URLSearchParams({
-    per_page: String(clampInt(args.per_page, 1, 100, 20)),
-    page: String(clampInt(args.page, 1, 1000, 1)),
-    sort,
-    type: "public",
-  });
+/** Lists public repos; arguments are already validated by the tool schema. */
+export async function listRepos(args: { per_page: number; page: number; sort: string }): Promise<ReturnType<typeof shape>[]> {
+  const query = new URLSearchParams({ per_page: String(args.per_page), page: String(args.page), sort: args.sort, type: "public" });
   const data = await githubGet<GithubRepo[]>(`/users/${OWNER}/repos?${query}`, "GitHub user not found");
   return data.map(shape);
 }
 
-export async function getRepo(repo: unknown): Promise<ReturnType<typeof shape>> {
-  if (typeof repo !== "string" || !REPO_NAME_RE.test(repo)) {
-    throw new McpError(JSONRPC_INVALID_PARAMS, "repo must be a repository name (letters, digits, '.', '_', '-'; max 100 chars)");
-  }
-  const data = await githubGet<GithubRepo>(`/repos/${OWNER}/${encodeURIComponent(repo)}`, `Repository not found: ${repo}`);
+export async function getRepo(repo: string): Promise<ReturnType<typeof shape>> {
+  const data = await githubGet<GithubRepo>(
+    `/repos/${OWNER}/${encodeURIComponent(repo)}`,
+    `Repository not found: ${repo}. Use list_github_repos to see repository names.`
+  );
   return shape(data);
 }

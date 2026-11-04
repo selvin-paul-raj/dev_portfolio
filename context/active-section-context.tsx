@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState } from "react";
-import type { SectionName } from "@/lib/types";
+import type { SectionName } from "@/lib/links";
 type activeSectionContextProps = { children: React.ReactNode };
 type activeSectionContextType = {
   activeSection: SectionName;
@@ -17,7 +17,7 @@ const ActiveSectionContextProvider = ({
   children,
 }: activeSectionContextProps) => {
   const [activeSection, setActiveSection] = useState<SectionName>("Home");
-  //TODO: we need to keep track of this to disable the observer temporarily when user clicks on a link
+  // Set on nav clicks so useSectionInView ignores the observer for a second while the page scrolls.
   const [timeOfLastClick, setTimeOfLastClick] = useState(0);
   return (
     <ActiveSectionContext.Provider

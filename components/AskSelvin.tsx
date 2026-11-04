@@ -1,136 +1,147 @@
 "use client";
 
-import { useState } from "react";
-import { BsArrowRight } from "react-icons/bs";
-import type { AskResult } from "@/lib/ask/answer";
+import { useEffect, useRef, useState } from "react";
+import type { RefObject } from "react";
+import { LuArrowRight, LuSquarePen } from "react-icons/lu";
+import RateLimitNotice from "@/components/tools/RateLimitNotice";
+import { FIELD, ICON_BTN, PRIMARY_BTN } from "@/components/tools/styles";
+import TurnView from "./ask/TurnView";
+import { useConversation, useHydrated } from "./ask/useConversation";
+import { CHIP, COUNTER_FROM, followUps, MAX_CHARS, SUGGESTIONS } from "./ask/model";
+import type { Turn } from "./ask/model";
 
-const SUGGESTIONS = [
-  "What did Selvin build at Zinnov (Draup)?",
-  "Has he built MCP servers?",
-  "How does he evaluate LLM systems?",
-  "What retrieval experience does he have?",
-];
+/** Questions not yet asked, for the chips under the log and on refusals. */
+function unasked(turns: Turn[], count: number): string[] {
+  const asked = new Set(turns.map((t) => t.question.toLowerCase()));
+  return SUGGESTIONS.filter((s) => !asked.has(s.toLowerCase())).slice(0, count);
+}
 
-type Turn = { question: string; result?: AskResult; error?: string };
+/** Scrolls the newest turn into view when one is added (not when a saved conversation is restored). */
+function useScrollToNewest(list: RefObject<HTMLOListElement | null>, count: number, restored: boolean) {
+  const seen = useRef<number | null>(null);
+  useEffect(() => {
+    if (!restored) return;
+    const grew = seen.current !== null && count > seen.current;
+    seen.current = count;
+    if (!grew) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    list.current?.lastElementChild?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  }, [list, count, restored]);
+}
 
 export default function AskSelvin() {
-  const [question, setQuestion] = useState("");
-  const [turns, setTurns] = useState<Turn[]>([]);
-  const [busy, setBusy] = useState(false);
+  const hydrated = useHydrated();
+  // Remounts once after hydration so the conversation can start from sessionStorage without a mismatch.
+  return <Conversation key={hydrated ? "client" : "server"} restored={hydrated} />;
+}
 
-  async function ask(q: string) {
-    const text = q.trim();
-    if (text.length < 3 || busy) return;
-    setBusy(true);
+function Conversation({ restored }: { restored: boolean }) {
+  const { turns, busy, limit, status, ask, reset, clearLimit } = useConversation(restored);
+  const [question, setQuestion] = useState("");
+  const list = useRef<HTMLOListElement>(null);
+  const autoAsked = useRef(false);
+  const blocked = busy || limit !== null;
+
+  useScrollToNewest(list, turns.length, restored);
+
+  // /fit and /evals link here with ?q=; ask it once, then drop it so a reload doesn't repeat it.
+  useEffect(() => {
+    if (!restored || autoAsked.current) return;
+    autoAsked.current = true;
+    const q = new URLSearchParams(window.location.search).get("q");
+    if (!q) return;
+    window.history.replaceState(null, "", window.location.pathname);
+    void ask(q.slice(0, MAX_CHARS));
+  }, [restored, ask]);
+
+  const submit = (q: string) => {
+    if (blocked) return;
     setQuestion("");
-    setTurns((t) => [...t, { question: text }]);
-    let turn: Turn;
-    try {
-      const res = await fetch("/api/ask", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: text }),
-      });
-      const json = await res.json();
-      turn = res.ok ? { question: text, result: json } : { question: text, error: json.error ?? "Something went wrong." };
-    } catch {
-      turn = { question: text, error: "Network error. Please try again." };
-    }
-    setTurns((t) => [...t.slice(0, -1), turn]);
-    setBusy(false);
-  }
+    void ask(q);
+  };
+
+  const latestDone = [...turns].reverse().find((t) => t.result)?.id;
+  const asked = turns.map((t) => t.question);
+  const suggestions = unasked(turns, 4);
 
   return (
-    <div className="w-full max-w-3xl mx-auto flex flex-col gap-6">
-      {turns.length === 0 && (
-        <div className="flex flex-wrap gap-2">
-          {SUGGESTIONS.map((s) => (
-            <button
-              key={s}
-              type="button"
-              onClick={() => ask(s)}
-              className="text-sm px-3.5 py-2 rounded-full border border-black/10 dark:border-white/10 text-gray-700 dark:text-white/65
-                hover:bg-black/[0.04] dark:hover:bg-white/[0.06] outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            >
-              {s}
-            </button>
-          ))}
+    <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+      <output aria-live="polite" className="sr-only">
+        {status}
+      </output>
+
+      {turns.length > 0 && (
+        <div className="flex justify-end">
+          <button type="button" onClick={reset} className={ICON_BTN}>
+            <LuSquarePen size={14} aria-hidden="true" />
+            New conversation
+          </button>
         </div>
       )}
 
-      <ol aria-live="polite" className="flex flex-col gap-6">
-        {turns.map((t, i) => (
-          <li key={i} className="flex flex-col gap-3">
-            <p className="self-end max-w-[85%] rounded-2xl rounded-br-sm px-4 py-2.5 text-sm bg-gray-900 dark:bg-white/[0.08] text-white dark:text-white/90">
-              {t.question}
-            </p>
-            {!t.result && !t.error && <p className="text-sm text-muted animate-pulse motion-reduce:animate-none">Searching the portfolio…</p>}
-            {t.error && <p className="text-sm text-danger">{t.error}</p>}
-            {t.result && <Answer result={t.result} />}
-          </li>
-        ))}
-      </ol>
+      {turns.length > 0 && (
+        <ol ref={list} aria-label="Conversation" className="flex flex-col gap-10">
+          {turns.map((t) => (
+            <TurnView
+              key={t.id}
+              turn={t}
+              next={t.result?.refused ? unasked(turns, 3) : t.id === latestDone && t.result ? followUps(t.result, asked) : []}
+              disabled={blocked}
+              onAsk={submit}
+              onRetry={() => void ask(t.question, t.id)}
+            />
+          ))}
+        </ol>
+      )}
+
+      {suggestions.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <p className="text-sm text-fg-2">{turns.length ? "Or try" : "Try one of these"}</p>
+          <div className="flex flex-wrap gap-2">
+            {suggestions.map((s) => (
+              <button key={s} type="button" disabled={blocked} onClick={() => submit(s)} className={CHIP}>
+                {s}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {limit && <RateLimitNotice message={limit.message} until={limit.until} onDone={clearLimit} />}
 
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          ask(question);
+          submit(question);
         }}
-        className="flex gap-2"
+        className="flex flex-col gap-1.5"
       >
-        <label htmlFor="ask" className="sr-only">Ask a question about Selvin</label>
-        <input
-          id="ask"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          maxLength={500}
-          placeholder="Ask about projects, skills, experience…"
-          className="flex-1 rounded-full px-5 py-3 text-sm bg-white dark:bg-white/[0.04] border border-black/10 dark:border-white/10
-            text-gray-900 dark:text-white/85 placeholder:text-gray-500 dark:placeholder:text-white/40
-            outline-none focus-visible:ring-2 focus-visible:ring-accent"
-        />
-        <button
-          type="submit"
-          disabled={busy || question.trim().length < 3}
-          aria-label="Ask"
-          className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-900 dark:bg-accent text-white dark:text-black
-            disabled:opacity-40 active:scale-[0.97] outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-        >
-          <BsArrowRight size={15} />
-        </button>
+        <label htmlFor="ask" className="sr-only">
+          Ask a question about Selvin
+        </label>
+        <div className="flex gap-2">
+          <input
+            id="ask"
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            maxLength={MAX_CHARS}
+            enterKeyHint="send"
+            autoComplete="off"
+            aria-describedby={question.length >= COUNTER_FROM ? "ask-count" : undefined}
+            placeholder="Ask about projects, skills, experience…"
+            className={`${FIELD} h-12 flex-1 rounded-full px-5`}
+          />
+          <button type="submit" disabled={blocked || question.trim().length < 3} className={`${PRIMARY_BTN} h-12`}>
+            <span className="sr-only sm:not-sr-only">Ask</span>
+            <LuArrowRight size={16} aria-hidden="true" />
+          </button>
+        </div>
+        {question.length >= COUNTER_FROM && (
+          <p id="ask-count" className={`px-5 text-right text-xs tabular-nums ${question.length >= MAX_CHARS ? "text-danger" : "text-fg-2"}`}>
+            {question.length}/{MAX_CHARS} characters
+          </p>
+        )}
       </form>
-    </div>
-  );
-}
-
-function Answer({ result }: { result: AskResult }) {
-  return (
-    <div className="flex flex-col gap-3">
-      <p className="text-[0.95rem] leading-relaxed text-fg">{result.answer}</p>
-      {result.citations.length > 0 && (
-        <ul className="flex flex-col gap-1.5">
-          {result.citations.map((c) => (
-            <li key={c.n} className="text-xs leading-relaxed text-fg-2">
-              <span className="font-mono text-muted">[{c.n}] bm25 {c.score.toFixed(2)} · </span>
-              <a
-                href={c.url}
-                {...(c.url.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                className="font-medium text-fg underline decoration-accent/60 underline-offset-2 hover:decoration-accent"
-              >
-                {c.title}
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
-      <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted">
-        {result.mode === "llm" ? "LLM answer, grounded in the cited snippets" : "Retrieval-only (no LLM): quoted from the portfolio"}
-      </p>
-      {result.gate.source === "typesafe" && (
-        <p className="font-mono text-xs tracking-[0.04em] text-muted">
-          Gate · TypeSafe {result.gate.model} · on-topic {result.gate.onTopic?.toFixed(2)} · injection {result.gate.injection?.toFixed(2)}
-        </p>
-      )}
     </div>
   );
 }

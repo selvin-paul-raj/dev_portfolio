@@ -28,13 +28,13 @@ export default function Error({
       <button
         onClick={reset}
         className="group flex items-center justify-between gap-3 pl-5 pr-1.5 py-1.5 rounded-full
-          bg-gray-900 dark:bg-accent text-white dark:text-black text-sm font-semibold
+          bg-primary text-on-primary text-sm font-semibold
           active:scale-[0.97]"
         style={{ transition: "transform 160ms cubic-bezier(0.23,1,0.32,1)" }}
       >
         <span>Try again</span>
         <span
-          className="flex items-center justify-center w-8 h-8 rounded-full bg-white/15 dark:bg-black/15
+          className="flex items-center justify-center w-8 h-8 rounded-full bg-on-primary/15
             group-hover:scale-110"
           style={{ transition: "transform 150ms cubic-bezier(0.23,1,0.32,1)" }}
         >

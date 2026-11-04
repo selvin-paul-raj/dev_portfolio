@@ -9,7 +9,7 @@ import { MdArrowOutward } from "react-icons/md";
 import { caseStudySlugByProject, getCaseStudy } from "@/lib/work";
 import { isNpm, isPrivate, isWork, kindOf, yearOf, type Project } from "./meta";
 
-const FOCUS = "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#101015]";
+const FOCUS = "outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2";
 const SECONDARY_BTN =
   `inline-flex h-10 items-center gap-1.5 rounded-full border border-line-strong px-4 text-sm font-medium ` +
   `text-fg hover:border-line-strong transition-colors duration-150 ${FOCUS}`;
@@ -22,14 +22,14 @@ function ProjectActions({ project }: { project: Project }) {
       {slug && (
         <Link
           href={`/work/${slug}`}
-          aria-label={`${title} case study`}
-          className={`inline-flex h-10 items-center gap-1.5 rounded-full bg-gray-900 dark:bg-accent px-4 text-sm font-semibold text-white dark:text-[#1a1500] ${FOCUS}`}
+          aria-label={`How it works: ${title} case study`}
+          className={`inline-flex h-10 items-center gap-1.5 rounded-full bg-primary px-4 text-sm font-semibold text-on-primary ${FOCUS}`}
         >
           How it works <LuArrowRight size={15} aria-hidden="true" />
         </Link>
       )}
       {!isPrivate(project) && code && (
-        <a href={code} target="_blank" rel="noopener noreferrer" aria-label={`${title} source code on GitHub`} className={SECONDARY_BTN}>
+        <a href={code} target="_blank" rel="noopener noreferrer" aria-label={`GitHub: ${title} source code`} className={SECONDARY_BTN}>
           <FaGithub size={14} aria-hidden="true" /> GitHub
         </a>
       )}
@@ -38,7 +38,7 @@ function ProjectActions({ project }: { project: Project }) {
           href={live}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label={`${title}, ${isNpm(live) ? "npm package" : isPrivate(project) ? "live site" : "live demo"}`}
+          aria-label={isNpm(live) ? `npm: ${title} package` : `Live: ${title} ${isPrivate(project) ? "site" : "demo"}`}
           className={SECONDARY_BTN}
         >
           {isNpm(live) ? "npm" : "Live"} <MdArrowOutward size={14} aria-hidden="true" />
@@ -156,7 +156,7 @@ export default function FeaturedExplorer({ projects }: { projects: Project[] }) 
                 onPointerEnter={(e) => onHover(e, i)}
                 className={`group grid w-full grid-cols-[2.25rem_minmax(0,1fr)_1rem] items-center gap-3 px-3 py-4 text-left rounded-lg
  transition-colors duration-150 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent
- ${on ? "bg-black/[0.04] dark:bg-white/[0.05]" : "hover:bg-black/[0.025] dark:hover:bg-white/[0.03]"}`}
+ ${on ? "bg-fg/[0.05]" : "hover:bg-fg/[0.03]"}`}
               >
                 <span className={`font-mono text-xs tabular-nums ${on ? "text-accent-fg " : "text-muted "}`}>
                   {String(i + 1).padStart(2, "0")}

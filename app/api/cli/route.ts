@@ -31,6 +31,8 @@ function wrap(text: string, indent: string): string {
   return out.join("\n");
 }
 
+const tryLine = (label: string, url: string, note: string) => `  ${label.padEnd(10)}${url.padEnd(44)}${dim(note)}`;
+
 export function GET() {
   const current = [...experiencesData].sort((a, b) => a.order - b.order).find((e) => e.icon === "work");
   const highlights = (current?.description ?? "")
@@ -64,6 +66,12 @@ export function GET() {
     `  linkedin ${PROFILE.linkedin}`,
     `  email    ${PROFILE.email}`,
     `  resume   ${PROFILE.resumeUrl}`,
+    "",
+    `  ${bold("Try it")}`,
+    tryLine("ask", `${PROFILE.portfolio}/ask`, "Q&A with cited sources"),
+    tryLine("fit", PROFILE.fitCheckUrl, "paste a JD"),
+    tryLine("evals", `${PROFILE.portfolio}/evals`, "eval scores"),
+    tryLine("challenge", `${PROFILE.portfolio}/challenge`, "prompt-injection CTF"),
     "",
     `  ${bold("For agents")}`,
     `  ${dim("$")} curl -s ${PROFILE.portfolio}/resume.json`,

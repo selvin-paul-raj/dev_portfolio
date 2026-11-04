@@ -6,8 +6,15 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  // Hover styles apply only where hover exists, so a tap never leaves a transform stuck on touch.
+  future: { hoverOnlyWhenSupported: true },
   theme: {
     extend: {
+      // Easing tokens from app/globals.css: `ease-out-expo`, `ease-out-quart`.
+      transitionTimingFunction: {
+        "out-expo": "var(--ease-out-expo)",
+        "out-quart": "var(--ease-out-quart)",
+      },
       colors: {
         // Brand gold. DEFAULT is the fill (buttons, rings); `ink` is the legacy darkened gold.
         // For gold *text* use `accent-fg`, which swaps to an AA-safe shade in light mode.
@@ -36,6 +43,9 @@ const config: Config = {
         info: "rgb(var(--info) / <alpha-value>)",
         warn: "rgb(var(--warn) / <alpha-value>)",
         danger: "rgb(var(--danger) / <alpha-value>)",
+        // Solid primary action: ink in light mode, gold in dark.
+        primary: "rgb(var(--primary) / <alpha-value>)",
+        "on-primary": "rgb(var(--on-primary) / <alpha-value>)",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

@@ -1,32 +1,21 @@
-// mcp-server.ts — Standalone MCP 2024-11-05 HTTP server for Alpic.ai
-// Same resources + tools as /api/mcp (Next.js/Vercel) — both entry points
-// share their tool/resource definitions and dispatch logic from lib/mcp/*, so
-// they cannot drift apart. Only the transport (raw Node http server) and data
-// loading (readFileSync from a copied dist/data/, vs. Next.js JSON imports)
-// are standalone-specific.
+// mcp-server.ts: standalone MCP Streamable HTTP server for Alpic.ai.
+// Same tools, resources, and prompts as /api/mcp (Next.js/Vercel): both entry
+// points bind lib/mcp/portfolio.ts's handlers and lib/mcp/router.ts's HTTP
+// rules to their own data, so they cannot drift apart. Only the transport (raw
+// Node http server) and data loading (readFileSync from a copied dist/data/,
+// vs. Next.js JSON imports) are standalone-specific.
 // Compiled to dist/mcp-server.js by tsconfig.server.json.
 // Data files are copied to dist/data/ during build (see build:mcp in package.json).
 
 import { createServer } from "http";
+import type { IncomingMessage, ServerResponse } from "http";
 import { readFileSync } from "fs";
 import { join } from "path";
-import { TOOLS, RESOURCE_DEFS } from "./lib/mcp/definitions";
-import {
-  searchProjects,
-  getProjectByTitle,
-  filterCertifications,
-  getProfileSummary,
-  buildResourceText,
-  matchJobTool,
-  getCaseStudyTool,
-} from "./lib/mcp/dispatch";
-import type { Project, Certification, ResourceData, ExperienceEntry, CaseStudyData } from "./lib/mcp/dispatch";
-import { sendContactMessage } from "./lib/mcp/contact";
-import { listRepos, getRepo } from "./lib/mcp/github";
-import { createMcpHandler, parseErrorResponse } from "./lib/mcp/router";
-import { McpError, JSONRPC_INVALID_PARAMS } from "./lib/mcp/errors";
+import { createPortfolioHandlers } from "./lib/mcp/portfolio";
+import { createMcpHttpHandler, getReply, MAX_BODY_BYTES, tooLargeReply } from "./lib/mcp/router";
+import type { HttpReply } from "./lib/mcp/router";
+import type { PortfolioData } from "./lib/mcp/dispatch";
 import { getClientIp } from "./lib/rateLimit";
-import type { McpRequestContext } from "./lib/mcp/types";
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 const DATA = join(__dirname, "data");
@@ -35,53 +24,19 @@ function load<T>(name: string): T {
   return JSON.parse(readFileSync(join(DATA, `${name}.json`), "utf8")) as T;
 }
 
-const projects = load<Project[]>("projects");
-const skills = load<unknown>("skills");
-const experiences = load<unknown>("experiences");
-const certifications = load<Certification[]>("certifications");
-const recognition = load<unknown>("recognition");
-const caseStudies = load<CaseStudyData[]>("caseStudies");
+const data: PortfolioData = {
+  projects: load("projects"),
+  skills: load("skills"),
+  experiences: load("experiences"),
+  certifications: load("certifications"),
+  recognition: load("recognition"),
+  caseStudies: load("caseStudies"),
+  evals: load("evals"),
+  evalsHistory: load("evals-history"),
+};
 
-const RESOURCE_DATA: ResourceData = { projects, skills, experiences, certifications, recognition, caseStudies };
-
-// ── Tool dispatch ─────────────────────────────────────────────────────────────
-async function callTool(name: string, args: Record<string, unknown>, ctx: McpRequestContext): Promise<string> {
-  switch (name) {
-    case "search_projects":
-      return searchProjects(projects, args as { query?: string; category?: string; tech?: string; featured?: unknown });
-    case "get_project_by_title":
-      return getProjectByTitle(projects, args.title);
-    case "list_github_repos": {
-      const repos = await listRepos({ per_page: args.per_page, page: args.page, sort: args.sort });
-      return JSON.stringify({ count: repos.length, repos }, null, 2);
-    }
-    case "get_github_repo": {
-      const repo = await getRepo(args.repo);
-      return JSON.stringify(repo, null, 2);
-    }
-    case "filter_certifications":
-      return filterCertifications(certifications, args as { category?: string; issuer?: string });
-    case "get_profile_summary":
-      return getProfileSummary(projects, certifications, experiences as ExperienceEntry[]);
-    case "get_case_study":
-      return getCaseStudyTool(caseStudies, args.slug);
-    case "match_job":
-      return matchJobTool(args.job_description, projects, certifications, experiences as ExperienceEntry[]);
-    case "contact_selvin":
-      return sendContactMessage(args, ctx);
-    default:
-      throw new McpError(JSONRPC_INVALID_PARAMS, `Unknown tool: ${name}`);
-  }
-}
-
-const handleMcpRequest = createMcpHandler({
-  listTools: () => TOOLS,
-  callTool: async (name, args, ctx) => ({ content: [{ type: "text", text: await callTool(name, args, ctx) }] }),
-  listResources: () => RESOURCE_DEFS,
-  readResource: (uri) => [
-    { uri, mimeType: "application/json", type: "text", text: buildResourceText(uri, RESOURCE_DATA) },
-  ],
-});
+const handlers = createPortfolioHandlers(data);
+const handlePost = createMcpHttpHandler(handlers);
 
 // ── HTTP Server ───────────────────────────────────────────────────────────────
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
@@ -93,60 +48,76 @@ const CORS_HEADERS: Record<string, string> = {
   "Access-Control-Max-Age": "86400",
 };
 
-const MAX_BODY_BYTES = 1_000_000;
+function header(req: IncomingMessage, name: string): string | undefined {
+  const v = req.headers[name];
+  return Array.isArray(v) ? v[0] : v;
+}
+
+function send(res: ServerResponse, reply: HttpReply): void {
+  for (const [k, v] of Object.entries(reply.headers ?? {})) res.setHeader(k, v);
+  if (reply.body === null) {
+    res.writeHead(reply.status);
+    res.end();
+    return;
+  }
+  res.setHeader("Content-Type", "application/json");
+  res.writeHead(reply.status);
+  res.end(JSON.stringify(reply.body));
+}
+
+function endpointOf(req: IncomingMessage): string {
+  return `https://${header(req, "host") ?? "localhost"}/`;
+}
+
+function handlePostRequest(req: IncomingMessage, res: ServerResponse): void {
+  if (Number(header(req, "content-length")) > MAX_BODY_BYTES) {
+    send(res, tooLargeReply());
+    req.resume();
+    return;
+  }
+  const chunks: Buffer[] = [];
+  let size = 0;
+  req.on("data", (c: Buffer) => {
+    size += c.length;
+    if (size > MAX_BODY_BYTES) {
+      if (!res.headersSent) send(res, tooLargeReply());
+      req.destroy();
+      return;
+    }
+    chunks.push(c);
+  });
+  req.on("end", async () => {
+    if (res.writableEnded) return;
+    const ip = getClientIp((h) => header(req, h));
+    const reply = await handlePost(Buffer.concat(chunks).toString("utf8"), {
+      ip: ip === "unknown" ? (req.socket.remoteAddress ?? ip) : ip,
+      protocolVersion: header(req, "mcp-protocol-version") ?? null,
+    });
+    send(res, reply);
+  });
+}
 
 const httpServer = createServer((req, res) => {
-  Object.entries(CORS_HEADERS).forEach(([k, v]) => res.setHeader(k, v));
+  for (const [k, v] of Object.entries(CORS_HEADERS)) res.setHeader(k, v);
 
-  if (req.method === "OPTIONS") { res.writeHead(204); res.end(); return; }
-
-  if (req.method === "GET") {
-    res.setHeader("Content-Type", "application/json");
-    res.writeHead(200);
-    res.end(JSON.stringify({
-      name: "Selvin PaulRaj K — Portfolio MCP Server",
-      version: "1.0.0",
-      protocolVersion: "2024-11-05",
-      transport: "http",
-      resources: RESOURCE_DEFS.map((r) => r.uri),
-      tools: TOOLS.map((t) => t.name),
-    }));
-    return;
+  switch (req.method) {
+    case "OPTIONS":
+      res.writeHead(204);
+      res.end();
+      return;
+    case "GET":
+      send(res, getReply(handlers, header(req, "accept") ?? null, endpointOf(req)));
+      return;
+    case "POST":
+      handlePostRequest(req, res);
+      return;
+    default:
+      res.setHeader("Allow", "GET, POST, OPTIONS");
+      res.writeHead(405);
+      res.end();
   }
-
-  if (req.method === "POST") {
-    const chunks: Buffer[] = [];
-    let size = 0;
-    req.on("data", (c: Buffer) => {
-      size += c.length;
-      if (size > MAX_BODY_BYTES) { res.writeHead(413); res.end(); req.destroy(); return; }
-      chunks.push(c);
-    });
-    req.on("end", async () => {
-      if (res.writableEnded) return;
-      let body: unknown;
-      try { body = JSON.parse(Buffer.concat(chunks).toString()); }
-      catch {
-        res.setHeader("Content-Type", "application/json"); res.writeHead(400);
-        res.end(JSON.stringify(parseErrorResponse()));
-        return;
-      }
-      const ip = getClientIp((h) => {
-        const v = req.headers[h];
-        return Array.isArray(v) ? v[0] : v;
-      });
-      const response = await handleMcpRequest(body, { ip: ip === "unknown" ? req.socket.remoteAddress ?? ip : ip });
-      // Notifications get 202 Accepted with no body (MCP Streamable HTTP).
-      if (response === null) { res.writeHead(202); res.end(); return; }
-      res.setHeader("Content-Type", "application/json"); res.writeHead(200);
-      res.end(JSON.stringify(response));
-    });
-    return;
-  }
-
-  res.writeHead(405); res.end();
 });
 
 httpServer.listen(PORT, () => {
-  console.log(`Portfolio MCP server listening on port ${PORT}`);
+  process.stdout.write(`Portfolio MCP server listening on port ${PORT}\n`);
 });

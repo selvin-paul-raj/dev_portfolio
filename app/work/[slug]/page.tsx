@@ -3,8 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BsArrowRight, BsArrowUpRight } from "react-icons/bs";
 import CaseStudyScrolly from "@/components/work/CaseStudyScrolly";
-import { caseStudies, getCaseStudy } from "@/lib/work";
-import { SITE_URL } from "@/lib/site";
+import { caseStudies, getCaseStudy, type CaseStudy } from "@/lib/work";
+import { DATA_UPDATED, JsonLd, PERSON_ID, absoluteUrl, breadcrumbList, pageMetadata } from "@/lib/seo";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -18,13 +18,39 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const study = getCaseStudy((await params).slug);
   if (!study) return {};
-  return {
+  return pageMetadata({
     title: `${study.title}: case study`,
+    socialTitle: `${study.title}: how it works`,
     description: study.subtitle,
+    path: `/work/${study.slug}`,
+    type: "article",
     keywords: [...(study.keywords ?? []), ...study.stack],
-    openGraph: { title: `${study.title}: how it works`, description: study.subtitle, type: "article", url: `/work/${study.slug}` },
-    alternates: { canonical: `/work/${study.slug}` },
-  };
+  });
+}
+
+function structuredData(study: CaseStudy) {
+  const url = absoluteUrl(`/work/${study.slug}`);
+  const source = study.links.find((l) => l.label === "Source");
+  return [
+    {
+      "@context": "https://schema.org",
+      "@type": "TechArticle",
+      headline: `${study.title}: how it works`,
+      description: study.subtitle,
+      url,
+      mainEntityOfPage: url,
+      image: `${url}/opengraph-image`,
+      // caseStudies.json carries no per-study dates, so both use the data update date.
+      datePublished: DATA_UPDATED,
+      dateModified: DATA_UPDATED,
+      keywords: [...(study.keywords ?? []), ...study.stack].join(", "),
+      author: { "@id": PERSON_ID },
+      publisher: { "@id": PERSON_ID },
+      about: study.stack.map((name) => ({ "@type": "Thing", name })),
+      ...(source && { isBasedOn: source.href }),
+    },
+    breadcrumbList([["Home", "/"], ["Work", "/work"], [study.title, `/work/${study.slug}`]]),
+  ];
 }
 
 const ASSURANCE_ROWS = [
@@ -45,25 +71,7 @@ export default async function CaseStudyPage({ params }: Params) {
 
   return (
     <main id="content" className="w-full max-w-6xl mx-auto px-4 pt-14 pb-28 md:pl-24 md:pr-8">
-      <script
-        type="application/ld+json"
-        // Static, server-built JSON from our own data file; no user input.
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "TechArticle",
-            headline: `${study.title}: how it works`,
-            description: study.subtitle,
-            url: `${SITE_URL}/work/${study.slug}`,
-            keywords: [...(study.keywords ?? []), ...study.stack].join(", "),
-            author: { "@id": `${SITE_URL}/#person` },
-            about: study.stack.map((name) => ({ "@type": "Thing", name })),
-            ...(study.links.find((l) => l.label === "Source") && {
-              isBasedOn: study.links.find((l) => l.label === "Source")!.href,
-            }),
-          }).replace(/</g, "\\u003c"),
-        }}
-      />
+      <JsonLd data={structuredData(study)} />
       <nav aria-label="Breadcrumb" className="mb-10">
         <Link href="/work" className={`${label} hover:text-fg outline-none focus-visible:ring-2 focus-visible:ring-accent rounded`}>
           Work / {String(index + 1).padStart(2, "0")}

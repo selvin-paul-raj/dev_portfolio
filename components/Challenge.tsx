@@ -1,222 +1,251 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { FormEvent } from "react";
+import { LuSend } from "react-icons/lu";
+import RateLimitNotice, { retryAfterFrom } from "@/components/tools/RateLimitNotice";
+import { FIELD, GHOST_BTN, LABEL, PRIMARY_BTN, FOCUS } from "@/components/tools/styles";
+import ChatLog from "./challenge/ChatLog";
+import LevelTabs, { LevelTabsSkeleton, PANEL_ID, tabId } from "./challenge/LevelTabs";
+import Offline from "./challenge/Offline";
+import Pipeline from "./challenge/Pipeline";
+import { appendLog, recordAttempt, recordClear, recordGuess, statsFor, useLog, useProgress } from "./challenge/store";
+import { GUESS_LIMIT, LAST_LEVEL, type Level, type Msg } from "./challenge/types";
+import WinCard from "./challenge/WinCard";
 
-type Level = { level: number; name: string; defense: string; clues: readonly string[] };
-type Msg = { role: "you" | "gate"; text: string; blocked?: boolean };
+type Limit = { message: string; until: number };
+type Config = { enabled: boolean; stack: string[]; levels: Level[] };
 
-const STORAGE_KEY = "spr-challenge-level";
+const MAX_ATTACK = 400;
+const msgId = () => `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 
-// Saved progress lives in localStorage; read it as an external store so the
-// server render (no storage → 0) and hydration agree, with no setState-in-effect.
-function readSavedLevel(): number {
-  try {
-    const saved = Number(localStorage.getItem(STORAGE_KEY));
-    return saved >= 1 ? saved : 0;
-  } catch {
-    // Storage unavailable (private mode): progress just won't persist.
-    return 0;
-  }
+async function post(body: object): Promise<Response> {
+  return fetch("/api/challenge", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
 }
 
-function subscribeSavedLevel(onChange: () => void) {
-  window.addEventListener("storage", onChange);
-  return () => window.removeEventListener("storage", onChange);
+async function errorText(res: Response): Promise<string> {
+  const json = (await res.json().catch(() => ({}))) as { error?: string };
+  return json.error ?? "Something went wrong.";
 }
 
 export default function Challenge() {
-  const [levels, setLevels] = useState<Level[]>([]);
-  const [enabled, setEnabled] = useState<boolean | null>(null);
-  const savedLevel = useSyncExternalStore(subscribeSavedLevel, readSavedLevel, () => 0);
-  const [unlockedState, setUnlocked] = useState(1);
-  const [levelState, setLevel] = useState<number | null>(null);
-  const unlocked = Math.max(unlockedState, savedLevel);
-  const level = levelState ?? (savedLevel >= 1 ? Math.min(savedLevel, 5) : 1);
-  const [log, setLog] = useState<Msg[]>([]);
+  const [config, setConfig] = useState<Config | null>(null);
+  const progress = useProgress();
+  const [selectedState, setSelected] = useState<number | null>(null);
+  const level = selectedState ?? Math.min(progress.unlocked, LAST_LEVEL);
+  const log = useLog(level);
   const [input, setInput] = useState("");
   const [guess, setGuess] = useState("");
   const [status, setStatus] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [cluesShown, setCluesShown] = useState(0);
+  const [guessBusy, setGuessBusy] = useState(false);
+  const [cluesShown, setCluesShown] = useState<Record<number, number>>({});
+  const [guessesLeft, setGuessesLeft] = useState<number | null>(null);
+  const [attackLimit, setAttackLimit] = useState<Limit | null>(null);
+  const [guessLimit, setGuessLimit] = useState<Limit | null>(null);
+  const clearAttackLimit = useCallback(() => setAttackLimit(null), []);
+  const clearGuessLimit = useCallback(() => {
+    setGuessLimit(null);
+    setGuessesLeft(null);
+  }, []);
 
   useEffect(() => {
     fetch("/api/challenge")
       .then((r) => r.json())
-      .then((j) => {
-        setLevels(j.levels);
-        setEnabled(j.enabled);
-      })
-      .catch(() => setEnabled(false));
+      .then((j: Config) => setConfig({ enabled: Boolean(j.enabled), stack: j.stack ?? [], levels: j.levels ?? [] }))
+      .catch(() => setConfig({ enabled: false, stack: [], levels: [] }));
   }, []);
 
-  async function post(body: object) {
-    const res = await fetch("/api/challenge", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error ?? "Something went wrong.");
-    return json;
+  if (!config) return <div className="w-full max-w-3xl"><LevelTabsSkeleton /></div>;
+  if (!config.enabled) {
+    return (
+      <div className="w-full max-w-3xl">
+        <Offline levels={config.levels} stack={config.stack} />
+      </div>
+    );
+  }
+
+  const { levels, stack } = config;
+  const current = levels.find((l) => l.level === level);
+  const stats = statsFor(progress, level);
+  const won = Boolean(statsFor(progress, LAST_LEVEL).cleared);
+  const lastTraced = [...log].reverse().find((m) => m.trace);
+  const shown = cluesShown[level] ?? 0;
+
+  function select(next: number) {
+    setSelected(next);
+    setStatus(null);
   }
 
   async function send(e: FormEvent) {
     e.preventDefault();
     const text = input.trim();
-    if (!text || busy) return;
+    if (!text || busy || attackLimit) return;
+    const at = level;
     setBusy(true);
     setInput("");
-    setLog((l) => [...l, { role: "you", text }]);
+    appendLog(at, { id: msgId(), role: "you", text });
     try {
-      const r = await post({ action: "attack", level, input: text });
-      setLog((l) => [...l, { role: "gate", text: r.reply, blocked: Boolean(r.blockedBy) }]);
-    } catch (err) {
-      setLog((l) => [...l, { role: "gate", text: (err as Error).message, blocked: true }]);
+      const res = await post({ action: "attack", level: at, input: text });
+      if (res.status === 429) {
+        const { error, retryAfterMs } = await retryAfterFrom(res);
+        setAttackLimit({ message: error, until: Date.now() + retryAfterMs });
+        setInput(text);
+        appendLog(at, { id: msgId(), role: "gate", text: "Not sent: you hit the message limit.", error: true });
+      } else if (!res.ok) {
+        appendLog(at, { id: msgId(), role: "gate", text: await errorText(res), error: true });
+      } else {
+        const r = (await res.json()) as Pick<Msg, "blockedBy" | "trace"> & { reply: string };
+        recordAttempt(at, Date.now());
+        appendLog(at, { id: msgId(), role: "gate", text: r.reply, blockedBy: r.blockedBy ?? null, trace: r.trace });
+      }
+    } catch {
+      appendLog(at, { id: msgId(), role: "gate", text: "Couldn't reach the gatekeeper. Check your connection and try again.", error: true });
     }
     setBusy(false);
   }
 
   async function submitGuess(e: FormEvent) {
     e.preventDefault();
-    if (!guess.trim()) return;
+    if (!guess.trim() || guessBusy || guessLimit) return;
+    const at = level;
+    setGuessBusy(true);
     try {
-      const r = await post({ action: "guess", level, input: guess });
-      if (r.correct) {
-        const next = Math.max(unlocked, level + 1);
-        setUnlocked(next);
-        try {
-          localStorage.setItem(STORAGE_KEY, String(next));
-        } catch {
-          // Storage unavailable (private mode): the unlock still applies for this session.
-        }
-        setStatus(level === 5 ? "You beat all five levels. Tell Selvin how; he'd like to patch it." : `Correct! Level ${level + 1} unlocked.`);
-        setGuess("");
-        if (level < 5) {
-          setLevel(level + 1);
-          setLog([]);
-          setCluesShown(0);
-        }
+      const res = await post({ action: "guess", level: at, input: guess });
+      if (res.status === 429) {
+        const { error, retryAfterMs } = await retryAfterFrom(res);
+        setGuessLimit({ message: error, until: Date.now() + retryAfterMs });
+        setGuessesLeft(0);
+        setStatus(null);
+      } else if (!res.ok) {
+        setStatus(await errorText(res));
       } else {
-        setStatus("Not quite. Keep probing.");
+        const { correct } = (await res.json()) as { correct: boolean };
+        const now = Date.now();
+        setGuessesLeft(Math.max(0, GUESS_LIMIT - recordGuess(at, now)));
+        if (correct) {
+          recordClear(at, now, LAST_LEVEL);
+          setGuess("");
+          if (at < LAST_LEVEL) {
+            setSelected(at + 1);
+            setStatus(`Correct. Level ${at + 1} is open.`);
+          } else {
+            setStatus("Correct. That was the last level.");
+          }
+        } else {
+          setStatus("Not quite. Keep probing.");
+        }
       }
-    } catch (err) {
-      setStatus((err as Error).message);
+    } catch {
+      setStatus("Couldn't check that guess. Check your connection and try again.");
     }
+    setGuessBusy(false);
   }
-
-  if (enabled === false) {
-    return (
-      <p className="text-center text-sm text-fg-2">
-        The challenge is offline right now (no model configured). Check back soon.
-      </p>
-    );
-  }
-
-  const current = levels.find((l) => l.level === level);
 
   return (
-    <div className="w-full max-w-3xl mx-auto flex flex-col gap-6">
-      <div role="tablist" aria-label="Levels" className="flex flex-wrap gap-2">
-        {levels.map((l) => (
-          <button
-            key={l.level}
-            role="tab"
-            aria-selected={l.level === level}
-            disabled={l.level > unlocked}
-            onClick={() => {
-              setLevel(l.level);
-              setLog([]);
-              setStatus(null);
-              setCluesShown(0);
-            }}
-            className={`font-mono text-xs px-3 min-h-11 [@media(pointer:fine)]:min-h-0 py-1.5 rounded-full border outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-35
- ${l.level === level ? "bg-gray-900 dark:bg-accent text-white dark:text-[#1a1500] border-transparent" : "border-line text-fg-2"}`}
-          >
-            {l.level <= unlocked - 1 ? "✓ " : ""}L{l.level} · {l.name}
-          </button>
-        ))}
-      </div>
+    <div className="flex w-full max-w-3xl flex-col gap-6">
+      <LevelTabs
+        levels={levels}
+        selected={level}
+        unlocked={progress.unlocked}
+        isCleared={(n) => Boolean(statsFor(progress, n).cleared)}
+        onSelect={select}
+      />
+
+      {won && <WinCard levels={levels} progress={progress} />}
 
       {current && (
-        <p className="text-sm text-fg-2">
-          <span className="font-mono text-xs uppercase tracking-[0.12em] text-muted">Defense · </span>
-          {current.defense}
-        </p>
-      )}
+        <div id={PANEL_ID} role="tabpanel" aria-labelledby={tabId(level)} className="flex flex-col gap-6">
+          <section aria-labelledby="challenge-defense" className="flex flex-col gap-3">
+            <h2 id="challenge-defense" className={LABEL}>
+              How level {level} defends
+            </h2>
+            <p className="text-sm text-fg">{current.defense}</p>
+            <Pipeline stack={stack} active={current.layers} trace={lastTraced?.trace} runId={lastTraced?.id} />
+          </section>
 
-      {current && current.clues.length > 0 && (
-        <div className="flex flex-col gap-2">
-          {cluesShown > 0 && (
-            <ol aria-label="Clues" className="list-decimal pl-5 flex flex-col gap-1.5 text-sm text-fg-2">
-              {current.clues.slice(0, cluesShown).map((clue) => (
-                <li key={clue}>{clue}</li>
-              ))}
-            </ol>
+          {current.clues.length > 0 && (
+            <div className="flex flex-col gap-2">
+              {shown > 0 && (
+                <ol aria-label="Clues" className="flex list-decimal flex-col gap-1.5 pl-5 text-sm text-fg-2">
+                  {current.clues.slice(0, shown).map((clue) => (
+                    <li key={clue}>{clue}</li>
+                  ))}
+                </ol>
+              )}
+              {shown < current.clues.length && (
+                <button
+                  type="button"
+                  onClick={() => setCluesShown((c) => ({ ...c, [level]: shown + 1 }))}
+                  className={`self-start rounded text-sm font-medium text-accent-fg underline decoration-dotted underline-offset-4 min-h-11 [@media(pointer:fine)]:min-h-0 ${FOCUS}`}
+                >
+                  {shown === 0 ? "Stuck? Show a clue" : `Show clue ${shown + 1} of ${current.clues.length}`}
+                </button>
+              )}
+            </div>
           )}
-          {cluesShown < current.clues.length && (
-            <button
-              type="button"
-              onClick={() => setCluesShown((n) => n + 1)}
-              className="self-start inline-flex items-center min-h-11 [@media(pointer:fine)]:min-h-0 rounded text-sm font-medium text-amber-700 dark:text-accent underline underline-offset-4 decoration-dotted
-                outline-none focus-visible:ring-2 focus-visible:ring-accent"
-            >
-              {cluesShown === 0 ? "Stuck? Show a clue" : `Show clue ${cluesShown + 1} of ${current.clues.length}`}
-            </button>
-          )}
+
+          <ChatLog messages={log} />
+
+          <form onSubmit={send} className="flex flex-col gap-2">
+            <label htmlFor="attack" className={LABEL}>
+              Message the gatekeeper
+            </label>
+            <div className="flex gap-2">
+              <input
+                id="attack"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                maxLength={MAX_ATTACK}
+                autoComplete="off"
+                placeholder="Convince it to talk"
+                disabled={Boolean(attackLimit)}
+                className={`${FIELD} h-11 min-w-0 flex-1 rounded-full px-5 disabled:opacity-60`}
+              />
+              <button type="submit" disabled={busy || !input.trim() || Boolean(attackLimit)} aria-busy={busy} className={PRIMARY_BTN}>
+                <LuSend size={15} aria-hidden="true" />
+                <span className="sr-only sm:not-sr-only">{busy ? "Sending" : "Send"}</span>
+              </button>
+            </div>
+            <p className="text-xs text-muted">
+              {stats.attempts} {stats.attempts === 1 ? "message" : "messages"} at this level
+              {stats.best !== undefined && `, best clear in ${stats.best}`}
+              {stats.guesses > 0 && `, ${stats.guesses} ${stats.guesses === 1 ? "guess" : "guesses"}`}
+            </p>
+          </form>
+          {attackLimit && <RateLimitNotice message={attackLimit.message} until={attackLimit.until} onDone={clearAttackLimit} />}
+
+          <form onSubmit={submitGuess} className="flex flex-col gap-2">
+            <label htmlFor="guess" className={LABEL}>
+              Think you have it? Enter the password
+            </label>
+            <div className="flex flex-col gap-2 sm:flex-row">
+              <input
+                id="guess"
+                value={guess}
+                onChange={(e) => setGuess(e.target.value)}
+                maxLength={40}
+                autoComplete="off"
+                spellCheck={false}
+                disabled={Boolean(guessLimit)}
+                className={`${FIELD} h-11 rounded-full px-5 font-mono uppercase sm:w-64 disabled:opacity-60`}
+              />
+              <button type="submit" disabled={guessBusy || !guess.trim() || Boolean(guessLimit)} aria-busy={guessBusy} className={GHOST_BTN}>
+                {guessBusy ? "Checking" : "Check"}
+              </button>
+            </div>
+            {guessesLeft !== null && !guessLimit && (
+              <p className="text-xs text-muted">
+                About {guessesLeft} of {GUESS_LIMIT} guesses left in this 10 minute window.
+              </p>
+            )}
+            <p role="status" className="min-h-5 text-sm text-fg-2">
+              {status}
+            </p>
+          </form>
+          {guessLimit && <RateLimitNotice message={guessLimit.message} until={guessLimit.until} onDone={clearGuessLimit} />}
         </div>
       )}
-
-      <ol aria-live="polite" className="flex flex-col gap-3 min-h-[6rem]">
-        {log.map((m, i) => (
-          <li
-            key={i}
-            className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${
- m.role === "you"
- ? "self-end rounded-br-sm bg-gray-900 dark:bg-white/[0.08] text-white dark:text-white/90"
- : `self-start rounded-bl-sm border ${m.blocked ? "border-red-500/30 text-danger" : "border-line text-fg"}`
-            }`}
-          >
-            {m.text}
-          </li>
-        ))}
-      </ol>
-
-      <form onSubmit={send} className="flex gap-2">
-        <label htmlFor="attack" className="sr-only">Message the gatekeeper</label>
-        <input
-          id="attack"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          maxLength={400}
-          placeholder="Convince the gatekeeper…"
-          className="flex-1 min-w-0 rounded-full px-5 py-3 text-base sm:text-sm bg-white dark:bg-white/[0.04] border border-black/10 dark:border-white/10
-            text-gray-900 dark:text-white/85 placeholder:text-gray-500 dark:placeholder:text-white/40 outline-none focus-visible:ring-2 focus-visible:ring-accent"
-        />
-        <button
-          type="submit"
-          disabled={busy || !input.trim()}
-          className="px-5 rounded-full bg-gray-900 dark:bg-accent text-white dark:text-black text-sm font-semibold disabled:opacity-40
-            outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-        >
-          {busy ? "…" : "Send"}
-        </button>
-      </form>
-
-      <form onSubmit={submitGuess} className="flex flex-wrap items-center gap-2">
-        <label htmlFor="guess" className="font-mono text-xs uppercase tracking-[0.12em] text-muted">
-          Password
-        </label>
-        <input
-          id="guess"
-          value={guess}
-          onChange={(e) => setGuess(e.target.value)}
-          maxLength={40}
-          autoComplete="off"
-          className="w-48 rounded-full px-4 py-2 text-sm font-mono uppercase bg-white dark:bg-white/[0.04] border border-black/10 dark:border-white/10
-            text-gray-900 dark:text-white/85 outline-none focus-visible:ring-2 focus-visible:ring-accent"
-        />
-        <button type="submit" className="px-4 py-2 rounded-full border border-line text-sm font-medium text-fg outline-none focus-visible:ring-2 focus-visible:ring-accent">
-          Check
-        </button>
-        {status && <span role="status" className="text-sm text-fg-2">{status}</span>}
-      </form>
     </div>
   );
 }

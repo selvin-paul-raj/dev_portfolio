@@ -18,6 +18,12 @@ type ThemeContextType = {
   toggleTheme: () => void;
 };
 
+const TOGGLE_TOAST: Record<Theme, { message: string; icon: string }> = {
+  dark: { message: "Eyes in the dark!", icon: "🌚" },
+  light: { message: "Illuminate your screen!", icon: "☀️" },
+};
+const TOAST_STYLE = { borderRadius: "10px", background: "#333", color: "#fff" };
+
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
 function persistTheme(theme: Theme) {
@@ -59,31 +65,11 @@ export default function ThemeContextProvider({
   }, [theme, hydrated]);
 
   const toggleTheme = () => {
-    if (theme === "light") {
-      setTheme("dark");
-      persistTheme("dark");
-      toast("Eyes in the dark!", {
-        icon: "🌚",
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
-        },
-        position: "top-left",
-      });
-    } else {
-      setTheme("light");
-      persistTheme("light");
-      toast("Illuminate your screen!", {
-        icon: "☀️",
-        style: {
-          borderRadius: "10px",
-          background: "#333",
-          color: "#fff",
-        },
-        position: "top-left",
-      });
-    }
+    const next: Theme = theme === "light" ? "dark" : "light";
+    setTheme(next);
+    persistTheme(next);
+    const { message, icon } = TOGGLE_TOAST[next];
+    toast(message, { icon, style: TOAST_STYLE, position: "top-left" });
   };
 
   return (

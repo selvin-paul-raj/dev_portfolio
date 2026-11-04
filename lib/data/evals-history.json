@@ -1,0 +1,302 @@
+[
+  {
+    "generatedAt": "2026-10-29T10:47:19.179Z",
+    "corpusDocs": 303,
+    "mrr": 0.917,
+    "suites": {
+      "retrieval": {
+        "passed": 18,
+        "total": 18,
+        "rate": 1
+      },
+      "off-topic": {
+        "passed": 4,
+        "total": 4,
+        "rate": 1
+      },
+      "fit": {
+        "passed": 3,
+        "total": 3,
+        "rate": 1
+      },
+      "gate": {
+        "passed": 26,
+        "total": 26,
+        "rate": 1
+      },
+      "scope": {
+        "passed": 12,
+        "total": 12,
+        "rate": 1
+      },
+      "llm": {
+        "passed": 22,
+        "total": 22,
+        "rate": 1
+      }
+    }
+  },
+  {
+    "generatedAt": "2026-10-30T16:06:09.188Z",
+    "corpusDocs": 320,
+    "mrr": 0.917,
+    "suites": {
+      "retrieval": {
+        "passed": 18,
+        "total": 18,
+        "rate": 1
+      },
+      "off-topic": {
+        "passed": 4,
+        "total": 4,
+        "rate": 1
+      },
+      "fit": {
+        "passed": 3,
+        "total": 3,
+        "rate": 1
+      },
+      "gate": {
+        "passed": 26,
+        "total": 26,
+        "rate": 1
+      },
+      "scope": {
+        "passed": 12,
+        "total": 12,
+        "rate": 1
+      },
+      "llm": {
+        "passed": 22,
+        "total": 22,
+        "rate": 1,
+        "stale": true
+      }
+    }
+  },
+  {
+    "generatedAt": "2026-10-30T16:09:43.117Z",
+    "corpusDocs": 320,
+    "mrr": 0.917,
+    "suites": {
+      "retrieval": {
+        "passed": 18,
+        "total": 18,
+        "rate": 1
+      },
+      "off-topic": {
+        "passed": 4,
+        "total": 4,
+        "rate": 1
+      },
+      "fit": {
+        "passed": 5,
+        "total": 5,
+        "rate": 1
+      },
+      "gate": {
+        "passed": 26,
+        "total": 26,
+        "rate": 1
+      },
+      "scope": {
+        "passed": 12,
+        "total": 12,
+        "rate": 1
+      },
+      "llm": {
+        "passed": 22,
+        "total": 22,
+        "rate": 1,
+        "stale": true
+      }
+    }
+  },
+  {
+    "generatedAt": "2026-10-30T16:10:40.259Z",
+    "corpusDocs": 320,
+    "mrr": 0.917,
+    "suites": {
+      "retrieval": {
+        "passed": 18,
+        "total": 18,
+        "rate": 1
+      },
+      "off-topic": {
+        "passed": 4,
+        "total": 4,
+        "rate": 1
+      },
+      "fit": {
+        "passed": 5,
+        "total": 5,
+        "rate": 1
+      },
+      "gate": {
+        "passed": 26,
+        "total": 26,
+        "rate": 1
+      },
+      "scope": {
+        "passed": 12,
+        "total": 12,
+        "rate": 1
+      },
+      "llm": {
+        "passed": 22,
+        "total": 22,
+        "rate": 1
+      }
+    }
+  },
+  {
+    "generatedAt": "2026-10-30T16:20:44.768Z",
+    "corpusDocs": 320,
+    "mrr": 0.917,
+    "suites": {
+      "retrieval": {
+        "passed": 18,
+        "total": 18,
+        "rate": 1
+      },
+      "off-topic": {
+        "passed": 4,
+        "total": 4,
+        "rate": 1
+      },
+      "fit": {
+        "passed": 5,
+        "total": 5,
+        "rate": 1
+      },
+      "gate": {
+        "passed": 26,
+        "total": 26,
+        "rate": 1
+      },
+      "scope": {
+        "passed": 12,
+        "total": 12,
+        "rate": 1
+      },
+      "llm": {
+        "passed": 22,
+        "total": 22,
+        "rate": 1
+      }
+    }
+  },
+  {
+    "generatedAt": "2026-10-30T16:55:16.849Z",
+    "corpusDocs": 320,
+    "mrr": 0.917,
+    "suites": {
+      "retrieval": {
+        "passed": 18,
+        "total": 18,
+        "rate": 1
+      },
+      "off-topic": {
+        "passed": 4,
+        "total": 4,
+        "rate": 1
+      },
+      "fit": {
+        "passed": 5,
+        "total": 5,
+        "rate": 1
+      },
+      "gate": {
+        "passed": 26,
+        "total": 26,
+        "rate": 1
+      },
+      "scope": {
+        "passed": 12,
+        "total": 12,
+        "rate": 1
+      },
+      "llm": {
+        "passed": 22,
+        "total": 22,
+        "rate": 1,
+        "stale": true
+      }
+    }
+  },
+  {
+    "generatedAt": "2026-10-30T17:02:22.156Z",
+    "corpusDocs": 320,
+    "mrr": 0.917,
+    "suites": {
+      "retrieval": {
+        "passed": 18,
+        "total": 18,
+        "rate": 1
+      },
+      "off-topic": {
+        "passed": 4,
+        "total": 4,
+        "rate": 1
+      },
+      "fit": {
+        "passed": 5,
+        "total": 5,
+        "rate": 1
+      },
+      "gate": {
+        "passed": 26,
+        "total": 26,
+        "rate": 1
+      },
+      "scope": {
+        "passed": 12,
+        "total": 12,
+        "rate": 1
+      },
+      "llm": {
+        "passed": 22,
+        "total": 22,
+        "rate": 1
+      }
+    }
+  },
+  {
+    "generatedAt": "2026-11-04T09:14:55.231Z",
+    "corpusDocs": 325,
+    "mrr": 0.917,
+    "suites": {
+      "retrieval": {
+        "passed": 18,
+        "total": 18,
+        "rate": 1
+      },
+      "off-topic": {
+        "passed": 4,
+        "total": 4,
+        "rate": 1
+      },
+      "fit": {
+        "passed": 5,
+        "total": 5,
+        "rate": 1
+      },
+      "gate": {
+        "passed": 26,
+        "total": 26,
+        "rate": 1
+      },
+      "scope": {
+        "passed": 12,
+        "total": 12,
+        "rate": 1
+      },
+      "llm": {
+        "passed": 22,
+        "total": 22,
+        "rate": 1,
+        "stale": true
+      }
+    }
+  }
+]

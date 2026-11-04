@@ -1,7 +1,7 @@
 // Framer Motion feature bundle, loaded lazily by <LazyMotion> in
 // context/theme-context.tsx so it stays out of the initial JS chunk.
-// domMax (not domAnimation) because Projects/Certifications use `layout` and
-// AnimatePresence mode="popLayout".
-import { domMax } from "framer-motion";
+// domAnimation is enough: nothing renders `layout`, `layoutId`, AnimatePresence or drag.
+// Switch to domMax if one of those comes back.
+import { domAnimation } from "framer-motion";
 
-export default domMax;
+export default domAnimation;

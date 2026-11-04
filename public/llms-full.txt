@@ -115,6 +115,22 @@ More: ChatDex AI, Dynamic AI Agent System, LinkedIn MCP servers, Company Logo Fi
 
 ---
 
+## Tools on this site
+
+### Role fit check: https://selvinpaulraj.vercel.app/fit
+Paste a job description and it is marked up requirement by requirement. Each matched requirement cites the work bullet, project, or certification behind it; anything without evidence is listed as a gap, and each item shows how it moves the score. It checks against a fixed catalogue of about 62 requirements and runs without an LLM, so nothing is generated. The same matcher is available as the MCP tool `match_job` and the A2A skill `job_fit`.
+
+### Ask Selvin: https://selvinpaulraj.vercel.app/ask
+Questions are answered only from this portfolio's data. Retrieval is BM25 over the profile, projects, experience, case studies, skills, certifications, and recognition; every claim cites the snippet it came from, and citations are validated before the answer is shown. A gate runs before any LLM call and refuses off-topic questions, free-chat requests, and prompt-injection attempts. With no LLM configured it falls back to extractive answers.
+
+### Evals: https://selvinpaulraj.vercel.app/evals
+Published evaluation results for the AI features above, measured case by case with failures included: retrieval hit@k and MRR, off-topic refusal, the safety gate (on-topic and injection scores), free-chat blocking, fit-check accuracy against labelled job descriptions, and live LLM grounding and citation. A run history shows how each suite has changed across runs.
+
+### Prompt-injection challenge: https://selvinpaulraj.vercel.app/challenge
+A model guards a password across five levels. Each level stacks one more defense used in production LLM systems: scope filter, system prompt, input filter, output filter, and a guard model. Getting the model to reveal the password unlocks the next level.
+
+---
+
 ## SITE TECHNICAL SPECIFICATIONS
 
 - **Framework:** Next.js 16 (App Router, Turbopack)

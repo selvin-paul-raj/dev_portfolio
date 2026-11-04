@@ -15,16 +15,29 @@ const FREE_CHAT_IN_CHALLENGE =
 const FREE_CHAT_PATTERN =
   /\b(write|generate|create|give me|show me|implement|build|solve|explain|debug|fix)\b[\s\S]{0,60}\b(code|script|program|function|class|regex|algorithm|sql query|python|javascript|typescript|java|c\+\+|html|css|essay|homework|assignment|cover letter|email|recipe|summary)\b/i;
 
-/** True when a challenge message is a request for free general-purpose help. */
-export async function isFreeChatRequest(message: string): Promise<boolean> {
+export interface FreeChatVerdict {
+  freeChat: boolean;
+  /** P(free-chat request) from the decision model; absent when the keyword rule judged. */
+  probability?: number;
+  judge: "typesafe" | "rule";
+}
+
+/** Judges whether a challenge message asks for free general-purpose help, and says who judged. */
+export async function checkFreeChat(message: string): Promise<FreeChatVerdict> {
   if (decideConfigured()) {
     try {
-      return (await decideNoul({ message }, { freeChat: FREE_CHAT_IN_CHALLENGE })).freeChat >= 0.5;
+      const probability = (await decideNoul({ message }, { freeChat: FREE_CHAT_IN_CHALLENGE })).freeChat;
+      return { freeChat: probability >= 0.5, probability, judge: "typesafe" };
     } catch (e) {
       if (!(e instanceof DecideError)) throw e;
     }
   }
-  return FREE_CHAT_PATTERN.test(message);
+  return { freeChat: FREE_CHAT_PATTERN.test(message), judge: "rule" };
+}
+
+/** True when a challenge message is a request for free general-purpose help. */
+export async function isFreeChatRequest(message: string): Promise<boolean> {
+  return (await checkFreeChat(message)).freeChat;
 }
 
 const CODE_LINE = /^\s*(def |class |import |from \S+ import|function |const |let |var |public |#include|SELECT |print\(|console\.log|return )/im;

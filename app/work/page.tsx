@@ -2,13 +2,39 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { BsArrowRight } from "react-icons/bs";
 import { caseStudies } from "@/lib/work";
+import { JsonLd, PERSON_ID, WEBSITE_ID, absoluteUrl, breadcrumbList, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Work",
-  description:
-    "Case studies: how Selvin PaulRaj K built multi-agent systems, entity resolution, guarded LLM workflows, and RAG tooling, step by step with measured results.",
-  alternates: { canonical: "/work" },
-};
+const DESCRIPTION =
+  "Case studies: how Selvin PaulRaj K built multi-agent systems, entity resolution, guarded LLM workflows, and RAG tooling, step by step with measured results.";
+
+export const metadata: Metadata = pageMetadata({
+  title: "AI Engineering Case Studies",
+  description: DESCRIPTION,
+  path: "/work",
+});
+
+const STRUCTURED_DATA = [
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "AI Engineering Case Studies",
+    description: DESCRIPTION,
+    url: absoluteUrl("/work"),
+    isPartOf: { "@id": WEBSITE_ID },
+    author: { "@id": PERSON_ID },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: caseStudies.length,
+      itemListElement: caseStudies.map((c, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: c.title,
+        url: absoluteUrl(`/work/${c.slug}`),
+      })),
+    },
+  },
+  breadcrumbList([["Home", "/"], ["Work", "/work"]]),
+];
 
 const workCount = caseStudies.filter((c) => c.org.includes("Draup")).length;
 const personalCount = caseStudies.filter((c) => !c.org.includes("Draup") && c.visibility.startsWith("Private")).length;
@@ -16,6 +42,7 @@ const personalCount = caseStudies.filter((c) => !c.org.includes("Draup") && c.vi
 export default function WorkIndex() {
   return (
     <main id="content" className="w-full max-w-5xl mx-auto px-4 pt-14 pb-28 md:pl-24 md:pr-8">
+      <JsonLd data={STRUCTURED_DATA} />
       <header className="mb-14 max-w-2xl">
         <p className="font-mono text-xs uppercase tracking-[0.14em] text-muted mb-4">Work</p>
         <h1 className="text-[clamp(2.25rem,1.6rem+3vw,3.75rem)] font-semibold tracking-[-0.03em] leading-[1.02] text-fg mb-5">

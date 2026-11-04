@@ -1,172 +1,53 @@
 // lib/mcp/definitions.ts
-// Single source of truth for tool/resource schemas and static profile data.
-// Shared by both MCP entry points (Next.js route + standalone Alpic server) —
-// keep this file free of "@/" aliases and JSON imports so plain `tsc` (see
-// tsconfig.server.json) can compile it without a bundler.
+// Server identity, resource/prompt definitions, and static profile data (tool
+// schemas live in catalog.ts). Shared by both MCP entry points and imported by
+// client components (PROFILE), so keep it free of zod, "@/" aliases, and JSON
+// imports: plain `tsc` (tsconfig.server.json) compiles it without a bundler.
 import { SITE_URL } from "../site";
-import type { McpTool, McpResource } from "./types";
+import type { McpPrompt, McpResource, McpResourceTemplate } from "./types";
 
-export const PROTOCOL_VERSION = "2024-11-05";
+/** Newest first. Initialize echoes the client's version when listed here, else the first entry. */
+export const SUPPORTED_PROTOCOL_VERSIONS = ["2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05"] as const;
+export const LATEST_PROTOCOL_VERSION = SUPPORTED_PROTOCOL_VERSIONS[0];
 export const SERVER_NAME = "selvin-portfolio-mcp";
-export const SERVER_VERSION = "1.0.0";
+export const SERVER_TITLE = "Selvin PaulRaj K: Portfolio MCP Server";
+export const SERVER_VERSION = "2.0.0";
 export const SERVER_INSTRUCTIONS =
-  "You have access to Selvin PaulRaj K's professional portfolio. Use resources to read structured data and tools to search, filter, or send contact messages. Selvin is an AI Engineer specializing in MCP, LangGraph, RAG, and agentic systems based in Chennai, India.";
-
-export const TOOLS: McpTool[] = [
-  {
-    name: "search_projects",
-    description:
-      "Search and filter Selvin's projects by keyword, technology, category, or featured flag. Returns matching visible projects; `code` is null for private (closed-source) projects.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        query: { type: "string", description: "Keyword to match in title, description, or tags" },
-        category: { type: "string", description: "Category filter: 'web', 'ai', 'tool', 'android'" },
-        tech: { type: "string", description: "Technology tag to match (e.g. 'LangGraph', 'Python', 'Next.js')" },
-        featured: { type: "boolean", description: "If true, only return featured projects" },
-      },
-    },
-  },
-  {
-    name: "get_project_by_title",
-    description: "Get a specific project by its title. Accepts partial matches.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        title: { type: "string", description: "Project title (partial match supported)" },
-      },
-      required: ["title"],
-    },
-  },
-  {
-    name: "list_github_repos",
-    description:
-      "List Selvin's public GitHub repositories with live stats: stars, forks, language, topics, last updated. Calls the GitHub REST API (subject to GitHub's rate limits — 60/hr unauthenticated, 5000/hr with GITHUB_TOKEN).",
-    inputSchema: {
-      type: "object",
-      properties: {
-        per_page: { type: "number", description: "Results per page, max 100 (default: 20)" },
-        page: { type: "number", description: "Page number (default: 1)" },
-        sort: { type: "string", description: "Sort by 'updated', 'created', or 'pushed' (default: 'updated')" },
-      },
-    },
-  },
-  {
-    name: "get_github_repo",
-    description:
-      "Get full details for a specific GitHub repository by name. Calls the GitHub REST API (subject to GitHub's rate limits).",
-    inputSchema: {
-      type: "object",
-      properties: {
-        repo: { type: "string", description: "Repository name, e.g. 'Linkedin-MCP-Server'" },
-      },
-      required: ["repo"],
-    },
-  },
-  {
-    name: "filter_certifications",
-    description: "Filter Selvin's certifications by category and/or issuer.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        category: {
-          type: "string",
-          description: "'AI Engineering', 'Web Development', 'Technology', 'Cloud Computing', 'Data Science'",
-        },
-        issuer: {
-          type: "string",
-          description: "Issuer name (e.g. 'Anthropic', 'Hugging Face', 'LinkedIn', 'IBM')",
-        },
-      },
-    },
-  },
-  {
-    name: "get_profile_summary",
-    description:
-      "Get Selvin's full professional profile: contact links, resume URL, exact total experience (in years/months, split by internship vs full-time), a per-role duration breakdown, education history, and portfolio stats. Always prefer the numeric fields here over summarizing in prose — return the exact numbers.",
-    inputSchema: { type: "object", properties: {} },
-  },
-  {
-    name: "get_case_study",
-    description:
-      "Get an in-depth case study of one of Selvin's systems: the problem, each pipeline stage in order, measured results with exact numbers, deeper notes (state, failure handling, evaluation), and design decisions. Call without a slug to list available case studies. Quote numbers exactly as returned.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        slug: { type: "string", description: "Case study slug, e.g. 'dri-mas'. Omit to list all." },
-      },
-    },
-  },
-  {
-    name: "match_job",
-    description:
-      "Check how well Selvin fits a job description. Paste the full JD; returns a 0-100 fit score, each recognised requirement with cited evidence (production work bullets, projects with links, verifiable certifications), and the requirements with no evidence (gaps). Deterministic — no LLM, nothing is inferred. Quote the evidence and gaps as returned.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        job_description: { type: "string", description: "Full job description text (max 20,000 chars)" },
-      },
-      required: ["job_description"],
-    },
-  },
-  {
-    name: "contact_selvin",
-    description:
-      "Send a contact message to Selvin via email (one email per call — no bulk sending). Use when the user wants to hire, collaborate, or ask a question.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        name: { type: "string", description: "Sender's full name (max 200 chars)" },
-        email: { type: "string", description: "Sender's email address" },
-        message: { type: "string", description: "The message to send to Selvin (max 5000 chars)" },
-      },
-      required: ["name", "email", "message"],
-    },
-  },
-];
+  "Selvin PaulRaj K's professional portfolio (AI Engineer, Chennai, India: MCP, LangGraph, RAG, agentic systems). " +
+  "For a job description, call match_job: a deterministic 0-100 fit score with cited evidence and gaps. " +
+  "For a free-form question, call ask_selvin: a grounded answer whose [n] markers cite portfolio snippets; quote it with its citations, and treat refused=true as 'not in the portfolio'. " +
+  "get_case_study (or selvin://case-studies/{slug}) gives architecture walkthroughs with exact measured results. " +
+  "get_eval_results reports how the Ask/Fit pipelines score on their golden test sets; get_challenge_info describes the prompt-injection challenge's defense layers. " +
+  "get_profile_summary has exact experience totals: quote numbers as returned, never estimate. contact_selvin sends a real email, so only call it when the user explicitly asks to contact him.";
 
 export const RESOURCE_DEFS: McpResource[] = [
+  { uri: "selvin://profile", name: "profile", title: "Professional Profile", description: "Bio, contact info, social links, and expertise areas", mimeType: "application/json" },
+  { uri: "selvin://projects", name: "projects", title: "Projects", description: "Every visible project: AI agents, MCP servers, web apps, and tools", mimeType: "application/json" },
+  { uri: "selvin://skills", name: "skills", title: "Technical Skills", description: "Skills grouped by layer (agentic AI, LLMs, retrieval, evaluation, ...)", mimeType: "application/json" },
+  { uri: "selvin://experience", name: "experience", title: "Work & Education", description: "Professional history and educational background", mimeType: "application/json" },
+  { uri: "selvin://certifications", name: "certifications", title: "Certifications", description: "Professional certifications from Anthropic, Hugging Face, IBM, LinkedIn, and more", mimeType: "application/json" },
+  { uri: "selvin://recognition", name: "recognition", title: "Recognition & Awards", description: "Publications, awards, and achievements", mimeType: "application/json" },
+  { uri: "selvin://case-studies", name: "case-studies", title: "Case Studies", description: "In-depth architecture walkthroughs of Selvin's main systems: problem, stage-by-stage flow, measured results, design decisions", mimeType: "application/json" },
+  { uri: "selvin://evals", name: "evals", title: "Eval Results", description: "Latest pass rates of the Ask Selvin and Fit Check eval suites, with run-over-run trend", mimeType: "application/json" },
+];
+
+export const RESOURCE_TEMPLATES: McpResourceTemplate[] = [
+  { uriTemplate: "selvin://case-studies/{slug}", name: "case-study", title: "Case Study", description: "One case study by slug (list slugs via selvin://case-studies or get_case_study)", mimeType: "application/json" },
+  { uriTemplate: "selvin://projects/{title}", name: "project", title: "Project", description: "One project by URL-encoded title (partial, case-insensitive match)", mimeType: "application/json" },
+];
+
+export const PROMPT_DEFS: McpPrompt[] = [
   {
-    uri: "selvin://profile",
-    name: "Professional Profile",
-    description: "Bio, contact info, social links, and expertise areas",
-    mimeType: "application/json",
+    name: "evaluate_fit",
+    title: "Evaluate fit for a job",
+    description: "Assess how well Selvin fits a job description, using match_job evidence and gaps.",
+    arguments: [{ name: "job_description", description: "The full job description text", required: true }],
   },
   {
-    uri: "selvin://projects",
-    name: "Projects",
-    description: "44+ projects including AI agents, MCP servers, web apps, and tools",
-    mimeType: "application/json",
-  },
-  {
-    uri: "selvin://skills",
-    name: "Technical Skills",
-    description: "Complete list of technical skills and technologies",
-    mimeType: "application/json",
-  },
-  {
-    uri: "selvin://experience",
-    name: "Work & Education",
-    description: "Professional history and educational background",
-    mimeType: "application/json",
-  },
-  {
-    uri: "selvin://certifications",
-    name: "Certifications",
-    description: "20+ professional certifications from Anthropic, Hugging Face, IBM, LinkedIn, and more",
-    mimeType: "application/json",
-  },
-  {
-    uri: "selvin://recognition",
-    name: "Recognition & Awards",
-    description: "Awards, recognition, and achievements",
-    mimeType: "application/json",
-  },
-  {
-    uri: "selvin://case-studies",
-    name: "Case Studies",
-    description: "In-depth architecture walkthroughs of Selvin's main systems: problem, stage-by-stage flow, measured results, design decisions",
-    mimeType: "application/json",
+    name: "summarize_for_role",
+    title: "Summarize for a role",
+    description: "Write a short, evidence-backed summary of Selvin tailored to a target role.",
+    arguments: [{ name: "role", description: "Target role, e.g. 'GenAI Engineer'", required: true }],
   },
 ];
 

@@ -52,10 +52,37 @@ export interface Evidence {
   url: string | null;
 }
 
+export type Strength = "production" | "project" | "certified";
+
+/** "nice" when every mention sits under a Preferred / Nice to have heading or in a sentence marked "a plus". */
+export type Priority = "must" | "nice";
+
+/** Where a requirement phrase sits in the JD: character offsets into the original text. */
+export interface JdSpan {
+  start: number;
+  end: number;
+  text: string;
+  priority: Priority;
+}
+
 export interface RequirementMatch {
   requirement: string;
-  strength: "production" | "project" | "certified";
+  strength: Strength;
   evidence: Evidence[];
+  priority: Priority;
+  spans: JdSpan[];
+  /** Every evidence hit found, even when `evidence` is capped. */
+  evidenceTotal: number;
+  /** Score points this requirement earned, and the most it could have earned. */
+  points: number;
+  maxPoints: number;
+}
+
+export interface GapDetail {
+  requirement: string;
+  priority: Priority;
+  spans: JdSpan[];
+  maxPoints: number;
 }
 
 export interface FitReport {
@@ -63,8 +90,18 @@ export interface FitReport {
   verdict: string;
   matched: RequirementMatch[];
   gaps: string[];
+  gapDetails: GapDetail[];
   method: string;
 }
+
+export interface MatchOptions {
+  /** Evidence lines kept per requirement (default 3). The /fit page passes Infinity. */
+  maxEvidence?: number;
+}
+
+export const STRENGTH_WEIGHT: Record<Strength, number> = { production: 1, project: 0.75, certified: 0.4 };
+export const PRIORITY_WEIGHT: Record<Priority, number> = { must: 1, nice: 0.5 };
+export const VERDICT_THRESHOLDS = { strong: 80, good: 60, partial: 40 } as const;
 
 // Canonical requirement → phrases that signal it in a JD. Those phrases plus
 // the optional third list (evidence-only synonyms) are searched in the
@@ -135,16 +172,66 @@ const REQUIREMENTS: Array<[string, string[], string[]?]> = [
   ["Excel / reporting automation", ["excel", "openpyxl", "reporting automation", "powerpoint"]],
 ];
 
+/** How many requirements the taxonomy knows, for explaining an empty result. */
+export const REQUIREMENT_COUNT = REQUIREMENTS.length;
+
 const toRegex = (patterns: string[]) =>
   new RegExp(`(?:^|[^a-z0-9+])(?:${patterns.join("|")})(?![a-z0-9+])`, "i");
+
+// Same match as toRegex, with the phrase captured so its offset can be recovered.
+const toSpanRegex = (patterns: string[]) =>
+  new RegExp(`(?:^|[^a-z0-9+])(${patterns.join("|")})(?![a-z0-9+])`, "gi");
 
 const COMPILED = REQUIREMENTS.map(([name, patterns, evidenceOnly = []]) => ({
   name,
   re: toRegex(patterns),
+  spanRe: toSpanRegex(patterns),
   evidenceRe: toRegex([...patterns, ...evidenceOnly]),
 }));
 
 const MAX_EVIDENCE = 3;
+
+// Section headings that switch the priority of every line below them.
+const NICE_HEADING =
+  /^(?:preferred|nice[- ]to[- ]haves?|good[- ]to[- ]haves?|bonus(?: points)?|pluses|plus|desired|desirable)\b[^:]{0,40}:?$/i;
+const MUST_HEADING =
+  /^(?:requirements?|required|must[- ]haves?|minimum qualifications|basic qualifications|qualifications|what you(?:'ll)? need|responsibilities|what you(?:'ll)? do)\b[^:]{0,40}:?$/i;
+// Inline markers that make one sentence a nice-to-have.
+const NICE_INLINE = /\b(?:preferred|nice[- ]to[- ]have|good[- ]to[- ]have|a plus|bonus|desirable)\b/i;
+
+interface Region {
+  start: number;
+  end: number;
+  priority: Priority;
+}
+
+/** Splits the JD into sentence regions, each tagged must or nice. */
+function priorityRegions(text: string): Region[] {
+  const regions: Region[] = [];
+  let section: Priority = "must";
+  let lineStart = 0;
+  for (const line of text.split("\n")) {
+    const heading = line.replace(/^[\s#*•-]+/, "").replace(/[*\s]+$/, "");
+    if (NICE_HEADING.test(heading)) section = "nice";
+    else if (MUST_HEADING.test(heading)) section = "must";
+    const sentence = /(?:[^.;!?]|[.;!?](?=\S))+[.;!?]?|[.;!?]+/g;
+    for (const m of line.matchAll(sentence)) {
+      const priority: Priority = section === "nice" || NICE_INLINE.test(m[0]) ? "nice" : "must";
+      const start = lineStart + (m.index ?? 0);
+      regions.push({ start, end: start + m[0].length, priority });
+    }
+    lineStart += line.length + 1;
+  }
+  return regions;
+}
+
+function findSpans(re: RegExp, text: string, regions: Region[]): JdSpan[] {
+  return Array.from(text.matchAll(re), (m) => {
+    const start = (m.index ?? 0) + m[0].length - m[1].length;
+    const region = regions.find((r) => start >= r.start && start < r.end);
+    return { start, end: start + m[1].length, text: m[1], priority: region?.priority ?? "must" };
+  });
+}
 const MAX_JD_CHARS = 20_000;
 
 function bullets(description: string): string[] {
@@ -182,7 +269,7 @@ function buildCorpus(data: FitData): Evidence[] {
     if (!c.show) continue;
     corpus.push({
       kind: "certification",
-      source: `${c.title} — ${c.issuer}`,
+      source: `${c.title} · ${c.issuer}`,
       text: [c.title, ...(c.skills ?? [])].join(", "),
       url: c.verifyUrl ?? null,
     });
@@ -192,47 +279,67 @@ function buildCorpus(data: FitData): Evidence[] {
 }
 
 function verdictFor(score: number): string {
-  if (score >= 80) return "Strong fit. Most requirements are backed by production work.";
-  if (score >= 60) return "Good fit. Core requirements are covered; a few are project-level or gaps.";
-  if (score >= 40) return "Partial fit. Some core requirements are covered.";
+  if (score >= VERDICT_THRESHOLDS.strong) return "Strong fit. Most requirements are backed by production work.";
+  if (score >= VERDICT_THRESHOLDS.good) return "Good fit. Core requirements are covered; a few are project-level or gaps.";
+  if (score >= VERDICT_THRESHOLDS.partial) return "Partial fit. Some core requirements are covered.";
   return "Limited fit. Few requirements in this JD overlap with Selvin's evidence.";
 }
 
-/** Matches a job description against portfolio evidence. */
-export function matchJob(jd: string, data: FitData): FitReport {
+function strengthOf(hits: Evidence[]): Strength {
+  if (hits.some((h) => h.kind === "work")) return "production";
+  if (hits.some((h) => h.kind === "project")) return "project";
+  return "certified";
+}
+
+const round2 = (n: number) => Math.round(n * 100) / 100;
+
+// Score = sum(priority weight x strength weight) / sum(priority weight). With no
+// nice-to-haves every priority weight is 1, which is the plain average.
+export function matchJob(jd: string, data: FitData, options: MatchOptions = {}): FitReport {
   const text = jd.slice(0, MAX_JD_CHARS);
+  const maxEvidence = options.maxEvidence ?? MAX_EVIDENCE;
   const corpus = buildCorpus(data);
-  const matched: RequirementMatch[] = [];
-  const gaps: string[] = [];
+  const regions = priorityRegions(text);
+  const matched: Omit<RequirementMatch, "points" | "maxPoints">[] = [];
+  const gapDetails: Omit<GapDetail, "maxPoints">[] = [];
 
   for (const req of COMPILED) {
     if (!req.re.test(text)) continue;
+    const spans = findSpans(req.spanRe, text, regions);
+    const priority: Priority = spans.some((sp) => sp.priority === "must") ? "must" : "nice";
     const hits = corpus.filter((ev) => req.evidenceRe.test(ev.text) || req.evidenceRe.test(ev.source));
     if (hits.length === 0) {
-      gaps.push(req.name);
+      gapDetails.push({ requirement: req.name, priority, spans });
       continue;
     }
     // Corpus order already ranks work > featured projects > projects > certs.
-    const evidence = hits.slice(0, MAX_EVIDENCE);
-    const strength = hits.some((h) => h.kind === "work")
-      ? "production"
-      : hits.some((h) => h.kind === "project")
-        ? "project"
-        : "certified";
-    matched.push({ requirement: req.name, strength, evidence });
+    matched.push({
+      requirement: req.name,
+      strength: strengthOf(hits),
+      evidence: hits.slice(0, maxEvidence),
+      evidenceTotal: hits.length,
+      priority,
+      spans,
+    });
   }
 
-  const weight = { production: 1, project: 0.75, certified: 0.4 } as const;
-  const total = matched.length + gaps.length;
-  const score =
-    total === 0 ? 0 : Math.round((matched.reduce((s, m) => s + weight[m.strength], 0) / total) * 100);
+  const totalWeight = [...matched, ...gapDetails].reduce((s, r) => s + PRIORITY_WEIGHT[r.priority], 0);
+  const share = (p: Priority) => (totalWeight === 0 ? 0 : (PRIORITY_WEIGHT[p] / totalWeight) * 100);
+  const earned = matched.reduce((s, m) => s + PRIORITY_WEIGHT[m.priority] * STRENGTH_WEIGHT[m.strength], 0);
+  const score = totalWeight === 0 ? 0 : Math.round((earned / totalWeight) * 100);
+  const scored: RequirementMatch[] = matched.map((m) => ({
+    ...m,
+    maxPoints: round2(share(m.priority)),
+    points: round2(share(m.priority) * STRENGTH_WEIGHT[m.strength]),
+  }));
 
   return {
     score,
-    verdict: total === 0 ? "No recognised technical requirements found in this text." : verdictFor(score),
-    matched: matched.sort((a, b) => weight[b.strength] - weight[a.strength]),
-    gaps,
+    verdict: totalWeight === 0 ? "No recognised technical requirements found in this text." : verdictFor(score),
+    matched: scored.sort((a, b) => STRENGTH_WEIGHT[b.strength] - STRENGTH_WEIGHT[a.strength]),
+    gaps: gapDetails.map((g) => g.requirement),
+    gapDetails: gapDetails.map((g) => ({ ...g, maxPoints: round2(share(g.priority)) })),
     method:
-      "Deterministic phrase matching over portfolio data, no LLM. Every match cites the work bullet, project, or certification it came from; requirements with no evidence are listed as gaps.",
+      "Deterministic phrase matching over portfolio data, no LLM. Every match cites the work bullet, project, or certification it came from; requirements with no evidence are listed as gaps. Nice-to-have requirements count half.",
   };
 }

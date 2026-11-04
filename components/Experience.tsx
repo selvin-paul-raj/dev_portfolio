@@ -44,7 +44,7 @@ function GraphCell({ row }: { row: GraphRow }) {
         </span>
       ))}
       <span
-        className={`absolute top-[17px] h-[11px] w-[11px] rounded-full ring-4 ring-white dark:ring-[#0c0c10] ${LANES[row.lane].dot}`}
+        className={`absolute top-[17px] h-[11px] w-[11px] rounded-full ring-4 ring-surface-2 ${LANES[row.lane].dot}`}
         style={{ left: row.lane * LANE_W + LANE_W / 2 - 5.5 }}
       />
     </div>

@@ -2,17 +2,7 @@ import React from "react";
 
 import { CgWorkAlt } from "react-icons/cg";
 import { FaLaptopCode } from "react-icons/fa";
-import {
-  LuGraduationCap,
-  LuHouse,
-  LuUser,
-  LuBrain,
-  LuLayoutGrid,
-  LuMail,
-  LuTrophy,
-  LuAward,
-  LuBriefcase,
-} from "react-icons/lu";
+import { LuGraduationCap } from "react-icons/lu";
 
 import rawProjects from "./data/projects.json";
 import rawExperiences from "./data/experiences.json";
@@ -21,54 +11,7 @@ import rawRecognition from "./data/recognition.json";
 import rawCertifications from "./data/certifications.json";
 import calculateDuration, { monthsBetween } from "@/utils/calculateDuration";
 
-interface Link {
-  readonly name: string;
-  readonly hash: `#${string}`;
-  readonly icon: React.ReactElement;
-}
-
-export const links = [
-  {
-    name: "Home",
-    hash: "#home",
-    icon: <LuHouse />,
-  },
-  {
-    name: "About",
-    hash: "#about",
-    icon: <LuUser />,
-  },
-  {
-    name: "Skills",
-    hash: "#skills",
-    icon: <LuBrain />,
-  },
-  {
-    name: "Projects",
-    hash: "#projects",
-    icon: <LuLayoutGrid />,
-  },
-  {
-    name: "Experience",
-    hash: "#experience",
-    icon: <LuBriefcase />,
-  },
-  {
-    name: "Recognition",
-    hash: "#recognition",
-    icon: <LuTrophy />,
-  },
-  {
-    name: "Certifications",
-    hash: "#certifications",
-    icon: <LuAward />,
-  },
-  {
-    name: "Contact",
-    hash: "#contact",
-    icon: <LuMail />,
-  },
-] as const satisfies readonly Link[];
+export { links, type SectionName } from "./links";
 
 const iconMap: Record<string, React.ReactElement> = {
   graduation: React.createElement(LuGraduationCap),

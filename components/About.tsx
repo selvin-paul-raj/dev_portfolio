@@ -1,38 +1,42 @@
-"use client";
-
-import { useSectionInView } from "@/lib/hooks";
 import { projectsData, certificationsData, experienceMetrics } from "@/lib/data";
-import AgentTrace from "./about/AgentTrace";
+import { getCaseStudy } from "@/lib/work";
+import AboutSection from "./about/AboutSection";
+import AboutStats, { type Stat } from "./about/AboutStats";
+import AgentTrace, { type TraceLine } from "./about/AgentTrace";
 import SectionHeading from "./SectionHeading";
-import NumberTicker from "./ui/NumberTicker";
 
 const SERIF = "var(--font-instrument-serif), ui-serif, Georgia, serif";
 const STACK_NOW = ["LangGraph", "MCP", "RAG", "Next.js", "Python", "FastAPI"];
 
-const fmtMonths = (n: number) => {
-  const y = Math.floor(n / 12);
-  const m = n % 12;
-  if (y === 0) return `${m} mo`;
-  if (m === 0) return `${y} yr`;
-  return `${y} yr ${m} mo`;
-};
-
 // Every figure is computed from lib/data; internships are counted apart from full-time work.
-const STATS = [
-  { value: projectsData.length, label: "Projects shipped", format: (n: number) => `${n}+` },
-  { value: experienceMetrics.workRoleMonths, label: "Full-time", format: fmtMonths },
-  { value: experienceMetrics.internMonths, label: "Internships", format: fmtMonths },
-  { value: certificationsData.length, label: "Certificates", format: String },
+const STATS: Stat[] = [
+  { value: projectsData.length, label: "Projects shipped", format: "plus" },
+  { value: experienceMetrics.workRoleMonths, label: "Full-time", format: "months" },
+  { value: experienceMetrics.internMonths, label: "Internships", format: "months" },
+  { value: certificationsData.length, label: "Certificates", format: "plain" },
 ];
+
+// The case study is resolved here on the server so caseStudies.json stays out of the client bundle.
+const study = getCaseStudy("dri-mas");
+
+// Each pipeline stage from the case study: its title, the agents and nodes that run it, and
+// whether a person can be pulled in there. Stores (checkpointer, memory) are left out of the line.
+const TRACE: TraceLine[] = (study?.steps ?? []).map((s) => {
+  const nodes = s.nodes.map((id) => study?.diagram.nodes.find((n) => n.id === id)).filter((n) => n !== undefined);
+  return {
+    title: s.title,
+    actors: nodes.filter((n) => n.kind !== "hitl" && n.kind !== "store").slice(0, 2).map((n) => n.label),
+    human: nodes.some((n) => n.kind === "hitl"),
+  };
+});
+const TRACE_RESULT = study?.results[0];
 
 const STRONG = "font-semibold text-fg";
 const BODY = "text-base leading-[1.7] text-fg-2 max-w-[65ch]";
 
 export default function About() {
-  const { ref } = useSectionInView("About");
-
   return (
-    <section ref={ref} id="about" className="mb-28 w-full max-w-[1240px] mx-auto px-4 sm:px-10 scroll-mt-28">
+    <AboutSection>
       <SectionHeading>About</SectionHeading>
 
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] gap-10 lg:gap-14 items-start">
@@ -71,21 +75,7 @@ export default function About() {
           </p>
 
           <div className="mt-8 flex flex-col gap-5">
-          <dl className="grid grid-cols-2 border border-line rounded-[14px] overflow-hidden bg-surface-2">
-              {STATS.map(({ value, label, format }, i) => (
-                <div
-                  key={label}
-                  className={`min-w-0 px-4 sm:px-5 py-4 flex flex-col-reverse gap-1.5
- ${i % 2 === 1 ? "border-l border-line " : ""}
- ${i >= 2 ? "border-t border-line " : ""}`}
-                >
-                  <dt className="text-sm text-fg-2">{label}</dt>
-                  <dd className="m-0 whitespace-nowrap text-2xl sm:text-[28px] font-semibold leading-none tracking-[-0.02em] tabular-nums text-fg">
-                    <NumberTicker value={value} format={format} duration={1.6} className="!text-left" />
-                  </dd>
-                </div>
-              ))}
-            </dl>
+          <AboutStats stats={STATS} />
 
             <div className="flex flex-col gap-2.5">
               <span className="text-sm text-fg-2">Working with now</span>
@@ -93,7 +83,7 @@ export default function About() {
                 {STACK_NOW.map((tech) => (
                   <li
                     key={tech}
-                    className="font-mono text-xs text-fg-2 px-2.5 py-1 border border-line rounded-full bg-white dark:bg-white/[0.015]"
+                    className="font-mono text-xs text-fg-2 px-2.5 py-1 border border-line rounded-full bg-surface-2"
                   >
                     {tech}
                   </li>
@@ -106,12 +96,14 @@ export default function About() {
         {/* Right: a replay of the system behind the quote, then the numbers */}
         <div className="flex flex-col gap-5">
           <figure>
-            <AgentTrace />
+            {study && TRACE_RESULT && (
+              <AgentTrace slug={study.slug} lines={TRACE} result={{ value: TRACE_RESULT.value, label: TRACE_RESULT.label }} />
+            )}
             <figcaption className="sr-only">A replay of one DRI-MAS run, stage by stage, from the case study.</figcaption>
           </figure>
 
         </div>
       </div>
-    </section>
+    </AboutSection>
   );
 }

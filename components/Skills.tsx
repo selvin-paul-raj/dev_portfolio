@@ -29,7 +29,7 @@ function LayerRow({ layer, index }: { layer: (typeof layers)[number]; index: num
   return (
     <li
       className="group relative grid grid-cols-1 md:grid-cols-[14rem_minmax(0,1fr)] gap-x-6 gap-y-3 px-4 sm:px-6 py-5
-        border-t border-black/[0.06] dark:border-white/[0.06] first:border-t-0
+        border-t border-line first:border-t-0
         transition-colors duration-150 hover:bg-amber-50/70 dark:hover:bg-accent/[0.04] focus-within:bg-amber-50/70 dark:focus-within:bg-accent/[0.04]"
     >
       {/* Lit edge on hover: an inset ring, not a side stripe */}
@@ -40,7 +40,7 @@ function LayerRow({ layer, index }: { layer: (typeof layers)[number]; index: num
       <div className="flex items-start gap-3">
         <span
           aria-hidden="true"
-          className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-black/10 dark:border-white/10 text-gray-500 dark:text-white/50
+          className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-line text-muted
             group-hover:text-amber-700 dark:group-hover:text-accent group-hover:border-amber-500/40 dark:group-hover:border-accent/35 transition-colors duration-150"
         >
           <Icon size={16} />
@@ -57,7 +57,7 @@ function LayerRow({ layer, index }: { layer: (typeof layers)[number]; index: num
         {layer.skills.map((skill) => (
           <li
             key={skill}
-            className="rounded-md border border-line bg-white dark:bg-white/[0.03] px-2.5 py-1 text-sm text-fg"
+            className="rounded-md border border-line bg-surface-2 px-2.5 py-1 text-sm text-fg"
           >
             {skill}
           </li>
@@ -87,7 +87,7 @@ export default function Skills() {
         {languages.length > 0 && (
           <aside
             aria-labelledby="skills-languages"
-            className="order-first lg:order-none rounded-2xl border border-black/[0.08] dark:border-white/[0.08] bg-gray-50/60 dark:bg-[#0c0c10] p-4 sm:p-5
+            className="order-first lg:order-none rounded-2xl border border-line bg-surface-3/40 p-4 sm:p-5
               flex flex-col gap-3"
           >
             <div>
