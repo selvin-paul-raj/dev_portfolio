@@ -9,7 +9,7 @@ import { checkLlmRateLimit, createRateLimiter, getClientIp, rateLimitedInit } fr
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 120;
+export const maxDuration = 60;
 
 const Body = z.discriminatedUnion("action", [
   z.object({ action: z.literal("attack"), level: z.number().int().min(1).max(LEVELS.length), input: z.string().trim().min(1).max(MAX_ATTACK_CHARS) }),
