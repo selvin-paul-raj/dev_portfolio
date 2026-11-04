@@ -3,7 +3,7 @@
     "slug": "dri-mas",
     "projectTitle": "DRI-MAS: Data Request Intelligence Multi-Agent System",
     "title": "DRI-MAS",
-    "subtitle": "Data Request Intelligence Multi-Agent System. A LangGraph multi-agent system that turns plain-English data requests into validated Trino SQL, with four human-in-the-loop interrupts and resumable state.",
+    "subtitle": "Data Request Intelligence Multi-Agent System. A LangGraph multi-agent system that reads data requests straight from an Outlook inbox, screens each decision with an LLM judge, writes Trino SQL with a ReAct agent, runs it on the production warehouse through Airflow after a final dry run, and fills the client deliverable template.",
     "role": "Architect and lead engineer",
     "org": "Zinnov (Draup)",
     "period": "Sep 2025 to present",
@@ -12,7 +12,9 @@
       "LangGraph",
       "Claude API",
       "FastAPI",
+      "Outlook CLI",
       "Trino",
+      "Apache Airflow",
       "FAISS",
       "BM25",
       "Pydantic v2",
@@ -22,32 +24,44 @@
     "keywords": [
       "LangGraph multi-agent system",
       "text-to-SQL",
+      "ReAct agent",
+      "LLM-as-judge",
+      "prompt injection detection",
       "human-in-the-loop",
       "hybrid retrieval FAISS BM25",
       "entity normalization",
-      "LangGraph subgraphs",
+      "Apache Airflow",
       "LangGraph checkpointer"
     ],
-    "problem": "Analysts spent hours turning business questions into SQL and Excel reports. Each request meant finding the right tables in a large warehouse, resolving company, location, and vertical names across millions of records, writing the query, and checking it by hand. A single LLM prompt could not do this reliably: it guessed table names, merged different companies, and gave no way for a person to step in when it was unsure.",
+    "problem": "Analysts spent hours turning emailed business questions into SQL and client-ready Excel reports. Each request meant copying it out of the inbox, finding the right tables in a large warehouse, resolving company, location, and vertical names across millions of records, writing and checking the query, running it on production, and pasting the result into the client's template. A single LLM prompt could not do this reliably: it guessed table names, merged different companies, trusted whatever text the email contained, and gave no way for a person to step in when it was unsure.",
     "diagram": {
       "width": 500,
-      "height": 1580,
+      "height": 1954,
       "clusters": [
+        {
+          "id": "intake",
+          "label": "Intake",
+          "sub": "Outlook CLI",
+          "x": 14,
+          "y": 14,
+          "w": 472,
+          "h": 300
+        },
         {
           "id": "manager",
           "label": "Manager graph",
           "sub": "StateGraph",
           "x": 14,
-          "y": 14,
+          "y": 332,
           "w": 472,
-          "h": 366
+          "h": 234
         },
         {
           "id": "normalize",
           "label": "Normalize subgraph",
           "sub": "entity resolution",
           "x": 14,
-          "y": 398,
+          "y": 584,
           "w": 472,
           "h": 356
         },
@@ -56,67 +70,100 @@
           "label": "Schema subgraph",
           "sub": "knowledge graph",
           "x": 14,
-          "y": 772,
+          "y": 958,
           "w": 472,
           "h": 340
         },
         {
           "id": "sql",
           "label": "SQL subgraph",
-          "sub": "generate · validate",
+          "sub": "ReAct · validate",
           "x": 14,
-          "y": 1130,
+          "y": 1316,
           "w": 472,
           "h": 272
+        },
+        {
+          "id": "delivery",
+          "label": "Delivery",
+          "sub": "Airflow · templates",
+          "x": 14,
+          "y": 1606,
+          "w": 472,
+          "h": 176
         }
       ],
       "nodes": [
         {
           "id": "request",
-          "label": "Plain-English request",
+          "label": "Request email",
           "x": 210,
           "y": 62,
           "kind": "io",
-          "sub": "CLI · API · batch CSV",
+          "sub": "Outlook inbox",
           "w": 170
+        },
+        {
+          "id": "mail_fetch",
+          "label": "Mail reader",
+          "x": 210,
+          "y": 128,
+          "kind": "tool",
+          "sub": "Outlook CLI · attachments"
         },
         {
           "id": "preprocess",
           "label": "Preprocess",
           "x": 210,
-          "y": 128,
+          "y": 194,
           "kind": "process",
-          "sub": "PII mask · attachments"
+          "sub": "PII mask · parse files"
         },
         {
-          "id": "checkpoint",
-          "label": "Checkpointer",
+          "id": "inj_judge",
+          "label": "Injection judge",
+          "x": 210,
+          "y": 262,
+          "kind": "gate"
+        },
+        {
+          "id": "quarantine",
+          "label": "Quarantine",
           "x": 405,
-          "y": 128,
-          "kind": "store",
-          "sub": "state for HITL resume",
+          "y": 262,
+          "kind": "process",
+          "sub": "held, never planned",
           "w": 130
         },
         {
           "id": "intent",
           "label": "Intent agent",
           "x": 210,
-          "y": 194,
+          "y": 380,
           "kind": "llm",
           "sub": "entities · metrics"
         },
         {
+          "id": "checkpoint",
+          "label": "Checkpointer",
+          "x": 405,
+          "y": 380,
+          "kind": "store",
+          "sub": "state for HITL resume",
+          "w": 130
+        },
+        {
           "id": "route_intent",
-          "label": "Confidence",
+          "label": "Intent judge",
           "x": 210,
-          "y": 262,
+          "y": 448,
           "kind": "gate"
         },
         {
           "id": "hitl_intent",
           "label": "Clarify intent",
           "x": 405,
-          "y": 262,
+          "y": 448,
           "kind": "hitl",
           "sub": "low confidence",
           "w": 130
@@ -125,7 +172,7 @@
           "id": "plan",
           "label": "Manager agent",
           "x": 210,
-          "y": 336,
+          "y": 522,
           "kind": "llm",
           "sub": "task plan from corpus"
         },
@@ -133,7 +180,7 @@
           "id": "plan_memory",
           "label": "Plan memory",
           "x": 405,
-          "y": 336,
+          "y": 522,
           "kind": "store",
           "sub": "cache by request type",
           "w": 130
@@ -142,21 +189,21 @@
           "id": "splitter",
           "label": "Entity splitter",
           "x": 210,
-          "y": 446,
+          "y": 632,
           "kind": "process"
         },
         {
           "id": "route_entities",
           "label": "Route entities",
           "x": 210,
-          "y": 514,
+          "y": 700,
           "kind": "gate"
         },
         {
           "id": "company",
           "label": "Company norm",
           "x": 95,
-          "y": 590,
+          "y": 776,
           "kind": "fanout",
           "sub": "FAISS + BM25 · 2.6M",
           "w": 140
@@ -165,7 +212,7 @@
           "id": "location",
           "label": "Location norm",
           "x": 262,
-          "y": 590,
+          "y": 776,
           "kind": "process",
           "w": 112
         },
@@ -173,7 +220,7 @@
           "id": "vertical",
           "label": "Vertical norm",
           "x": 392,
-          "y": 590,
+          "y": 776,
           "kind": "process",
           "w": 112
         },
@@ -181,22 +228,22 @@
           "id": "merge",
           "label": "Merge results",
           "x": 210,
-          "y": 660,
+          "y": 846,
           "kind": "process",
           "sub": "detect ambiguity"
         },
         {
           "id": "norm_gate",
-          "label": "Ambiguous?",
+          "label": "Match judge",
           "x": 210,
-          "y": 722,
+          "y": 908,
           "kind": "gate"
         },
         {
           "id": "hitl_ambiguous",
           "label": "Pick the entity",
           "x": 405,
-          "y": 722,
+          "y": 908,
           "kind": "hitl",
           "sub": "ambiguous match",
           "w": 130
@@ -205,7 +252,7 @@
           "id": "kg",
           "label": "Schema knowledge graph",
           "x": 210,
-          "y": 820,
+          "y": 1006,
           "kind": "store",
           "sub": "tables · joins · tags",
           "w": 178
@@ -214,7 +261,7 @@
           "id": "selector",
           "label": "Schema selector",
           "x": 210,
-          "y": 888,
+          "y": 1074,
           "kind": "llm",
           "sub": "choose schema"
         },
@@ -222,7 +269,7 @@
           "id": "tables",
           "label": "Table selector",
           "x": 210,
-          "y": 952,
+          "y": 1138,
           "kind": "process",
           "sub": "tables · join paths"
         },
@@ -230,92 +277,133 @@
           "id": "ddl",
           "label": "DDL builder",
           "x": 210,
-          "y": 1016,
+          "y": 1202,
           "kind": "process",
           "sub": "schema snippet"
         },
         {
           "id": "schema_gate",
-          "label": "Schema found?",
+          "label": "Schema judge",
           "x": 210,
-          "y": 1080,
+          "y": 1266,
           "kind": "gate"
         },
         {
           "id": "hitl_schema",
           "label": "No schema match",
           "x": 405,
-          "y": 1080,
+          "y": 1266,
           "kind": "hitl",
           "sub": "ask for scope",
           "w": 130
         },
         {
           "id": "sql_gen",
-          "label": "SQL generator",
+          "label": "SQL ReAct agent",
           "x": 210,
-          "y": 1178,
+          "y": 1364,
           "kind": "llm",
-          "sub": "canonical names · cache"
+          "sub": "reason · act · observe"
         },
         {
           "id": "validator",
           "label": "SQL validator",
           "x": 210,
-          "y": 1242,
-          "kind": "process",
+          "y": 1428,
+          "kind": "tool",
           "sub": "SELECT-only · blocklist"
         },
         {
           "id": "dry_run",
-          "label": "Dry run",
+          "label": "Final dry run",
           "x": 210,
-          "y": 1306,
-          "kind": "process",
-          "sub": "tables exist"
+          "y": 1492,
+          "kind": "tool",
+          "sub": "EXPLAIN · tables exist"
         },
         {
           "id": "sql_gate",
-          "label": "Valid SQL?",
+          "label": "SQL judge",
           "x": 210,
-          "y": 1370,
+          "y": 1556,
           "kind": "gate"
         },
         {
           "id": "hitl_sql",
           "label": "Invalid SQL",
           "x": 405,
-          "y": 1370,
+          "y": 1556,
           "kind": "hitl",
           "sub": "review or retry",
+          "w": 130
+        },
+        {
+          "id": "airflow",
+          "label": "Airflow DAG",
+          "x": 210,
+          "y": 1654,
+          "kind": "tool",
+          "sub": "production warehouse"
+        },
+        {
+          "id": "prepare",
+          "label": "Prepare data",
+          "x": 210,
+          "y": 1730,
+          "kind": "process",
+          "sub": "shape · checks"
+        },
+        {
+          "id": "templates",
+          "label": "Deliverable templates",
+          "x": 405,
+          "y": 1730,
+          "kind": "store",
+          "sub": "per deliverable type",
           "w": 130
         },
         {
           "id": "assemble",
           "label": "Assemble result",
           "x": 210,
-          "y": 1456,
+          "y": 1830,
           "kind": "process",
           "sub": "status · errors · steps"
         },
         {
           "id": "output",
-          "label": "SQL deliverable",
+          "label": "Client deliverable",
           "x": 210,
-          "y": 1530,
+          "y": 1904,
           "kind": "io",
-          "sub": "dry-run queries",
-          "w": 160
+          "sub": "template-filled report",
+          "w": 170
         }
       ],
       "edges": [
         [
           "request",
+          "mail_fetch"
+        ],
+        [
+          "mail_fetch",
           "preprocess"
         ],
         [
           "preprocess",
-          "intent"
+          "inj_judge"
+        ],
+        [
+          "inj_judge",
+          "quarantine",
+          "conditional",
+          "flagged"
+        ],
+        [
+          "inj_judge",
+          "intent",
+          "conditional",
+          "clean"
         ],
         [
           "intent",
@@ -454,10 +542,32 @@
           "retry"
         ],
         [
-          "sql_gate",
           "assemble",
+          "output"
+        ],
+        [
+          "dry_run",
+          "sql_gen",
+          "retry",
+          "observe"
+        ],
+        [
+          "sql_gate",
+          "airflow",
           "conditional",
           "valid"
+        ],
+        [
+          "airflow",
+          "prepare"
+        ],
+        [
+          "templates",
+          "prepare"
+        ],
+        [
+          "prepare",
+          "assemble"
         ],
         [
           "assemble",
@@ -467,22 +577,45 @@
     },
     "steps": [
       {
-        "title": "A request in plain English",
-        "body": "Requests arrive from a CLI, a FastAPI service, or a batch CSV. Attachments (CSV, Excel, PDF) are parsed and personal data is masked before any model sees the text.",
+        "title": "A request straight from the inbox",
+        "body": "Requests are read directly from an Outlook inbox through the Outlook CLI, with their attachments (CSV, Excel, PDF). The API and batch CSV paths still work. Attachments are parsed and personal data is masked before any model sees the text.",
         "nodes": [
           "request",
+          "mail_fetch",
           "preprocess"
         ],
         "edges": [
           [
             "request",
+            "mail_fetch"
+          ],
+          [
+            "mail_fetch",
             "preprocess"
           ]
         ]
       },
       {
-        "title": "Intent, with a confidence gate",
-        "body": "The intent agent extracts the entities and metrics being asked for. When its confidence is below the threshold, the graph interrupts and asks a person to clarify; the checkpointer saves state so the run resumes exactly where it stopped.",
+        "title": "Every email is screened for prompt injection",
+        "body": "An email is untrusted input. An LLM judge reads the masked request and decides whether it is a genuine data request or an attempt to steer the agents. A flagged email is quarantined and never reaches the planner.",
+        "nodes": [
+          "inj_judge",
+          "quarantine"
+        ],
+        "edges": [
+          [
+            "preprocess",
+            "inj_judge"
+          ],
+          [
+            "inj_judge",
+            "quarantine"
+          ]
+        ]
+      },
+      {
+        "title": "Intent, checked by a judge",
+        "body": "The intent agent extracts the entities and metrics being asked for, and an LLM judge scores that reading. When the judge is not satisfied, the graph interrupts and asks a person to clarify; the checkpointer saves state so the run resumes exactly where it stopped.",
         "nodes": [
           "intent",
           "route_intent",
@@ -491,7 +624,7 @@
         ],
         "edges": [
           [
-            "preprocess",
+            "inj_judge",
             "intent"
           ],
           [
@@ -565,7 +698,7 @@
       },
       {
         "title": "Ambiguity goes to a person",
-        "body": "Results are merged and checked for ambiguous matches. A name that could be two different companies interrupts the graph for a human choice instead of silently picking one.",
+        "body": "Results are merged and a judge checks each match. A name that could be two different companies interrupts the graph for a human choice instead of silently picking one.",
         "nodes": [
           "merge",
           "norm_gate",
@@ -596,7 +729,7 @@
       },
       {
         "title": "The schema comes from a knowledge graph",
-        "body": "A schema knowledge graph of tables, fields, join paths, and semantic tags is loaded once per process. An LLM selects the relevant schema, the table selector resolves tables and join paths, and a DDL snippet is built for the SQL step. No match means a human interrupt, not a guess.",
+        "body": "A schema knowledge graph of tables, fields, join paths, and semantic tags is loaded once per process. An LLM selects the relevant schema, the table selector resolves tables and join paths, and a DDL snippet is built for the SQL step. A judge checks the choice; no match means a human interrupt, not a guess.",
         "nodes": [
           "kg",
           "selector",
@@ -633,8 +766,8 @@
         ]
       },
       {
-        "title": "SQL is generated, then distrusted",
-        "body": "The SQL generator writes Trino SQL with the canonical names injected, using a query cache keyed by SQL hash. A validator allows SELECT only and rejects blocked keywords, and a dry run confirms every table exists before anything executes.",
+        "title": "A ReAct agent writes the SQL",
+        "body": "The SQL step is a ReAct agent: it reasons about the request, acts with its tools (the SELECT-only validator and a dry run against the warehouse), observes the result, and revises until the query passes. Canonical names are injected, and a query cache keyed by SQL hash skips repeat work.",
         "nodes": [
           "sql_gen",
           "validator",
@@ -652,13 +785,18 @@
           [
             "validator",
             "dry_run"
+          ],
+          [
+            "dry_run",
+            "sql_gen"
           ]
         ]
       },
       {
-        "title": "Invalid SQL is reviewed or retried",
-        "body": "If validation fails, the graph interrupts for review and can loop back to the generator with the error, instead of returning a broken query.",
+        "title": "A final dry run, then a judge",
+        "body": "The last dry run confirms every table exists and the plan is valid. An LLM judge then checks that the query answers the request. If it does not, the graph interrupts for review and can loop back to the agent with the error, instead of sending a broken query to production.",
         "nodes": [
+          "dry_run",
           "sql_gate",
           "hitl_sql"
         ],
@@ -678,15 +816,46 @@
         ]
       },
       {
-        "title": "A typed result, in under a minute",
-        "body": "The assemble step returns a typed result with status (success, partial, or failed), the deliverable queries, and which steps completed, failed, or were skipped. Analyst turnaround went from hours to under a minute.",
+        "title": "Airflow runs it on production",
+        "body": "Only a query that passed the final dry run and the judge is handed to an Airflow DAG, which runs it on the production warehouse. The agent never executes against production itself, so every run is scheduled, retried, and logged like the rest of the data pipelines.",
+        "nodes": [
+          "airflow"
+        ],
+        "edges": [
+          [
+            "sql_gate",
+            "airflow"
+          ]
+        ]
+      },
+      {
+        "title": "The data is shaped into the client template",
+        "body": "The result set is cleaned, checked, and mapped onto the matching client deliverable template, so the output is the report the client receives, not a raw export.",
+        "nodes": [
+          "prepare",
+          "templates"
+        ],
+        "edges": [
+          [
+            "airflow",
+            "prepare"
+          ],
+          [
+            "templates",
+            "prepare"
+          ]
+        ]
+      },
+      {
+        "title": "A client deliverable, in under a minute",
+        "body": "The assemble step returns a typed result with status (success, partial, or failed), the filled deliverable, the queries behind it, and which steps completed, failed, or were skipped. Analyst turnaround went from hours to under a minute.",
         "nodes": [
           "assemble",
           "output"
         ],
         "edges": [
           [
-            "sql_gate",
+            "prepare",
             "assemble"
           ],
           [
@@ -733,6 +902,17 @@
         ]
       },
       {
+        "heading": "A judge at every decision",
+        "body": "Confidence scores from the agent that made a decision are easy to inflate. A separate LLM judge reviews each decision before the graph moves on, and a failing verdict routes to the same human interrupts as before.",
+        "points": [
+          "Injection: is this email a real data request, or an attempt to steer the agents?",
+          "Intent: do the extracted entities and metrics match the request?",
+          "Normalize: is each entity match the right record?",
+          "Schema: are these the right tables and joins?",
+          "SQL: does the query answer what was asked?"
+        ]
+      },
+      {
         "heading": "Four places a person can step in",
         "body": "Human review sits where a wrong answer is expensive, not everywhere.",
         "points": [
@@ -763,20 +943,23 @@
       },
       {
         "heading": "Read-only by construction",
-        "body": "The SQL path is built so a bad query cannot change data: SELECT-only validation, a keyword blocklist, and a dry run that checks table existence. The deliverable is the validated query set, marked as dry-run."
+        "body": "The SQL path is built so a bad query cannot change data: SELECT-only validation, a keyword blocklist, and a final dry run that checks the plan and table existence. Production execution goes through an Airflow DAG, never from the agent directly."
       }
     ],
     "decisions": [
       "A manager agent over three subgraphs instead of one prompt, so normalization, schema selection, and SQL generation are each tested and evaluated on their own.",
+      "An LLM judge at each decision instead of trusting the deciding agent's own confidence, with prompt injection screened before anything is planned.",
+      "A ReAct agent for SQL: it can call the validator and a dry run and fix its own query before a human or production ever sees it.",
       "Hybrid FAISS + BM25 for entity names: semantic search handles paraphrase, BM25 keeps exact names and acronyms from drifting.",
       "Interrupts plus a checkpointer instead of full autonomy: a person resolves the four expensive failure modes and the run resumes without starting over.",
+      "Production runs go through Airflow, not the agent: a final dry run gates the hand-off, and the DAG owns scheduling, retries, and logs.",
       "Batch mode trades interactivity for throughput: no interrupts, failures recorded per row."
     ],
     "links": [],
     "assurance": {
-      "harness": "LangGraph manager graph over three subgraphs, typed state with merge reducers, a SQLite checkpointer for interrupt and resume, and per-stage model routing.",
-      "evals": "An evaluation framework is one of the ten core components; per-agent call statistics are saved for every session.",
-      "guardrails": "Personal data is masked before any model call; SQL is SELECT-only with a keyword blocklist and a dry run; four human-in-the-loop interrupts cover the expensive failure modes.",
+      "harness": "Outlook CLI intake, a LangGraph manager graph over three subgraphs with a ReAct SQL agent, typed state with merge reducers, a SQLite checkpointer for interrupt and resume, per-stage model routing, and an Airflow DAG for production runs.",
+      "evals": "An LLM judge scores every decision (injection, intent, entity match, schema, SQL); an evaluation framework is one of the ten core components, and per-agent call statistics are saved for every session.",
+      "guardrails": "Every email is screened for prompt injection and personal data is masked before any model call; SQL is SELECT-only with a keyword blocklist and a final dry run before Airflow runs it; four human-in-the-loop interrupts cover the expensive failure modes.",
       "testing": "281 tests across 31 test files."
     }
   },
