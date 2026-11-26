@@ -253,6 +253,7 @@ export default function RootLayout({
 
         {/* Analytics CDN: Clarity loads late (see public/clarity.js), so only resolve DNS early */}
         <link rel="dns-prefetch" href="https://www.clarity.ms" />
+        <link rel="dns-prefetch" href="https://wajo.ai" />
 
         {/* AI/LLM discovery link-rels */}
         <link rel="llms-txt" href="/llms.txt" />
@@ -265,6 +266,14 @@ export default function RootLayout({
       <body className="bg-surface text-fg relative pt-20 pb-16 md:pb-0 md:pl-16 ">
         {/* Microsoft Clarity: public/clarity.js waits for the first interaction or a few idle seconds */}
         <Script id="clarity-analytics" src="/clarity.js" strategy="lazyOnload" />
+
+        {/* Wajo chat widget (deferred, loaded late like Clarity) */}
+        <Script
+          id="wajo-widget"
+          src="https://wajo.ai/widget/loader.js"
+          data-wajo-widget="1092c4d2-f386-4f18-a6c8-6495749b4cad"
+          strategy="lazyOnload"
+        />
 
         <ThemeContextProvider>
           <ActiveSectionContextProvider>
