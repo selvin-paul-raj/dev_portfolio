@@ -80,12 +80,14 @@ const nextConfig = {
               "default-src 'self'",
               // Microsoft Clarity: loader on www.clarity.ms pulls its runtime from
               // scripts.clarity.ms, beacons to *.clarity.ms and pixels via c.bing.com.
-              `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.clarity.ms https://*.clarity.ms https://va.vercel-scripts.com`,
+              `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.clarity.ms https://*.clarity.ms https://va.vercel-scripts.com https://wajo.ai`,
               "style-src 'self' 'unsafe-inline'",
               // Hugging Face certificate images redirect from huggingface.co to its *.hf.co CDN.
-              "img-src 'self' data: https://images.unsplash.com https://huggingface.co https://*.huggingface.co https://*.hf.co https://*.clarity.ms https://c.bing.com",
+              "img-src 'self' data: https://images.unsplash.com https://huggingface.co https://*.huggingface.co https://*.hf.co https://*.clarity.ms https://c.bing.com https://wajo.ai",
               "font-src 'self' data:",
-              "connect-src 'self' https://www.clarity.ms https://*.clarity.ms https://c.bing.com https://vitals.vercel-insights.com https://va.vercel-scripts.com",
+              "connect-src 'self' https://www.clarity.ms https://*.clarity.ms https://c.bing.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://wajo.ai",
+              // Wajo chat widget: opens its chat panel in a wajo.ai iframe.
+              "frame-src https://wajo.ai",
               "frame-ancestors 'self'",
               "base-uri 'self'",
               "form-action 'self'",
